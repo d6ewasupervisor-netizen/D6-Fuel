@@ -286,7 +286,7 @@ const App = {
                 : r.is_changed ? '<span class="badge badge-changed">CHANGED</span>' : '';
             card.innerHTML = `
                 <div class="search-result-info">
-                    <h3 class="search-result-name">${r.description || 'Unknown'} ${badgeHtml}</h3>
+                    <h3 class="search-result-name">${r.full_name || r.description || 'Unknown'} ${badgeHtml}</h3>
                     <p class="search-result-detail">UPC: ${r.upc} | ${r.size || '-'}</p>
                     <p class="search-result-location">Aisle ${r.aisle || '?'} &bull; Bay ${r.bay} / Shelf ${r.shelf} / Pos ${r.position}</p>
                 </div>
@@ -320,7 +320,7 @@ const App = {
     // --- Product Overlay ---
     async showProductOverlay(product, shelfIdx, prodIdx, shelf, bayData) {
         const overlay = document.getElementById('product-overlay');
-        document.getElementById('overlay-name').textContent = product.description || 'Unknown';
+        document.getElementById('overlay-name').textContent = product.full_name || product.description || 'Unknown';
         document.getElementById('overlay-upc').textContent = product.upc;
         document.getElementById('overlay-size').textContent = product.size || '-';
         document.getElementById('overlay-pos-detail').textContent =

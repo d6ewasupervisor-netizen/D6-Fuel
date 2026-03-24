@@ -148,7 +148,7 @@ const Planogram = {
                     // Text fallback (hidden when image loads)
                     const text = document.createElement('span');
                     text.className = 'slot-text';
-                    text.textContent = (product.description || 'UNK').substring(0, 12);
+                    text.textContent = (product.full_name || product.description || 'UNK').substring(0, 12);
                     text.style.display = 'none';
                     slot.appendChild(text);
 
