@@ -6,6 +6,7 @@ import sqlite3
 DB_PATH = os.path.join(os.path.dirname(__file__), "..", "db", "planograms.db")
 TOKEN_URL = "https://api.kroger.com/v1/connect/oauth2/token"
 PRODUCT_URL = "https://api.kroger.com/v1/products"
+LOCATIONS_URL = "https://api.kroger.com/v1/locations"
 
 _token_cache = {"token": None, "expires_at": 0}
 
@@ -90,6 +91,64 @@ def _extract_image_url(product):
     return ""
 
 
+def _get_location_id():
+    """Get optional Kroger location ID (8-digit store identifier).
+
+    Format: 3-digit division number + 5-digit store number.
+    Example: division 701, store 351 -> '70100351'
+    """
+    return os.environ.get("KROGER_LOCATION_ID", "")
+
+
+def lookup_location_by_zip(zip_code, chain="Kroger"):
+    """Look up Kroger store locations by zip code.
+
+    Returns a list of dicts with locationId, name, storeNumber, divisionNumber, address.
+    """
+    token = _get_token()
+    if not token:
+        return []
+
+    try:
+        params = {
+            "filter.zipCode.near": zip_code,
+            "filter.chain": chain,
+            "filter.limit": 10,
+            "filter.radiusInMiles": 25,
+        }
+        resp = httpx.get(
+            LOCATIONS_URL,
+            params=params,
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        locations = []
+        for loc in data.get("data", []):
+            addr = loc.get("address", {})
+            locations.append({
+                "locationId": loc.get("locationId", ""),
+                "name": loc.get("name", ""),
+                "storeNumber": loc.get("storeNumber", ""),
+                "divisionNumber": loc.get("divisionNumber", ""),
+                "address": f"{addr.get('addressLine1', '')}, {addr.get('city', '')}, {addr.get('state', '')} {addr.get('zipCode', '')}",
+            })
+        return locations
+    except Exception:
+        return []
+
+
+def _build_product_params(extra_params=None):
+    """Build query params dict, including locationId if configured."""
+    params = extra_params or {}
+    location_id = _get_location_id()
+    if location_id:
+        params["filter.locationId"] = location_id
+    return params
+
+
 def get_product_image(upc):
     cached = _get_cached_image(upc)
     if cached is not None:
@@ -100,9 +159,10 @@ def get_product_image(upc):
         return None
 
     try:
+        params = _build_product_params({"filter.productId": upc})
         resp = httpx.get(
             PRODUCT_URL,
-            params={"filter.productId": upc},
+            params=params,
             headers={"Authorization": f"Bearer {token}"},
             timeout=10,
         )
@@ -130,12 +190,13 @@ def get_product_images_batch(upcs):
 
     results = {}
     try:
+        params = _build_product_params({
+            "filter.productId": ",".join(upcs),
+            "filter.limit": 50,
+        })
         resp = httpx.get(
             PRODUCT_URL,
-            params={
-                "filter.productId": ",".join(upcs),
-                "filter.limit": 50,
-            },
+            params=params,
             headers={"Authorization": f"Bearer {token}"},
             timeout=30,
         )
