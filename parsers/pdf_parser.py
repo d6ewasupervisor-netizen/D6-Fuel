@@ -3,7 +3,7 @@ Parse Kroger planogram PDFs to extract product position data.
 
 Each PDF contains:
 - Page 1: Metadata (name, DBKey, dimensions, counts)
-- Pages 2-4: Product adds/removes/changes (skipped)
+- Pages 2-4: Product adds/removes/changes
 - Pages 5+: Bay-Fixture-Position data with product details
 """
 
@@ -43,7 +43,7 @@ POSITION_PREFIX_RE = re.compile(r"^(\d{1,3})\s+")
 # First line of section has bay+shelf+position before UPC: "1 8 1 0030573475592..."
 FIRST_LINE_RE = re.compile(r"^(\d{1,2})\s+(\d{1,2})\s+(\d{1,3})\s+(\d{10,14})")
 
-# Lines to skip
+# Lines to skip in position section
 SKIP_PATTERNS = [
     "Effective Date:",
     "Period Week:",
@@ -57,6 +57,15 @@ SKIP_PATTERNS = [
     "UPC Change From",
     "UPC Product Size",
 ]
+
+# Regex for removed product lines on pages 2-4
+# Format: UPC Description Size (various formats)
+REMOVED_PRODUCT_RE = re.compile(
+    r"(\d{10,14})\s+"        # UPC
+    r"(.+?)\s+"              # Description (non-greedy)
+    r"(\d+(?:[/.]\d+)?\s*(?:CT|OZ|EA|PC|ML|MG|IU|SG|FL|LB|GM|GRM|G|CAP|TAB|TABS|CHWS|SFTGL|SFTGEL|TBLTS|GMMY|GUMS|GUMMIES|CAPS|PKTS|PKT|SRV|DZ|BG|BX|PT|QT|GAL)(?:\s+\S+)?)\s*$",
+    re.IGNORECASE,
+)
 
 
 def parse_metadata(pdf):
@@ -257,6 +266,120 @@ def _find_position_start_page(pdf):
     return None
 
 
+def parse_removed_products(pdf):
+    """Extract removed/deleted products from pages 2-4 of the PDF.
+
+    These pages use a two-column layout:
+    Left column: Products Added (NEW)
+    Right column: Products Removed (DELETE)
+
+    Each line contains both an added and removed entry, like:
+    1 0003076800460 OSTBFLX TRPL STR TUMERIC 120 CT 1 0001111035353 KRO PRENATAL VITAMIN 100 CT
+    """
+    removed = []
+    in_add_remove_section = False
+
+    # Regex to find removed entries in the right column
+    # Pattern: sequence_num UPC description size (in the right half of the line)
+    # We look for ALL UPC-like patterns in a line, the rightmost one(s) are "removed"
+    UPC_PATTERN = re.compile(r"(\d{10,14})")
+
+    end_page = min(6, len(pdf.pages))
+    for page_idx in range(1, end_page):
+        page = pdf.pages[page_idx]
+        text = page.extract_text()
+        if not text:
+            continue
+
+        # Only process pages that have "Removed" header
+        if "Products Removed" not in text and "DELETE" not in text:
+            continue
+
+        lines = text.split("\n")
+        for line in lines:
+            stripped = line.strip()
+
+            # Skip headers
+            if not stripped:
+                continue
+            if "Products Added" in stripped or "Products Removed" in stripped:
+                in_add_remove_section = True
+                continue
+            if "UPC" in stripped and "Product" in stripped and "Size" in stripped:
+                continue
+            if stripped.startswith("Effective Date:") or stripped.startswith("Period Week:"):
+                in_add_remove_section = False
+                continue
+            if stripped.startswith("D701_") or stripped.startswith("Property of"):
+                continue
+            if "Products Changed" in stripped or "Bay - Fixture" in stripped:
+                in_add_remove_section = False
+                continue
+
+            if not in_add_remove_section:
+                continue
+
+            # Find all UPCs in the line. In the two-column layout, the line
+            # typically has: seqnum UPC1 desc1 size1 seqnum UPC2 desc2 size2
+            # where UPC2 is the removed product
+            all_upcs = list(UPC_PATTERN.finditer(stripped))
+            if len(all_upcs) < 2:
+                # Single UPC line - could be removed-only (no added product)
+                # or added-only. Check if it's after a column split
+                if len(all_upcs) == 1:
+                    # Check context: if only removed products on this page
+                    upc_match = all_upcs[0]
+                    upc = upc_match.group(1)
+                    after_upc = stripped[upc_match.end():].strip()
+                    # Parse description and size
+                    m = REMOVED_PRODUCT_RE.match(upc + " " + after_upc)
+                    if m:
+                        removed.append({
+                            "upc": m.group(1),
+                            "description": m.group(2).strip(),
+                            "size": m.group(3).strip(),
+                        })
+                continue
+
+            # Two or more UPCs: the second (and beyond) are typically removed products
+            # The first UPC belongs to "added" column, second to "removed" column
+            for upc_idx in range(1, len(all_upcs)):
+                upc_match = all_upcs[upc_idx]
+                upc = upc_match.group(1)
+
+                # Extract text after this UPC until the next UPC or end of line
+                start = upc_match.end()
+                if upc_idx + 1 < len(all_upcs):
+                    end = all_upcs[upc_idx + 1].start()
+                else:
+                    end = len(stripped)
+                after_text = stripped[start:end].strip()
+
+                # Parse description and size from after_text
+                desc = after_text
+                size = ""
+                size_m = re.search(
+                    r"\s+(\d+(?:[/.]\d+)?\s*(?:CT|OZ|EA|PC|ML|MG|IU|SG|FL|LB|GM|GRM|G|CAP|TAB|TABS|CHWS|SFTGL|SFTGEL|TBLTS|GMMY|GUMS|GUMMIES|CAPS|PKTS|PKT|SRV|DZ|BG|BX|PT|QT|GAL)(?:\s+\S+)?)\s*$",
+                    after_text,
+                    re.IGNORECASE,
+                )
+                if size_m:
+                    desc = after_text[:size_m.start()].strip()
+                    size = size_m.group(1).strip()
+
+                # Clean up: remove leading sequence numbers from description
+                desc = re.sub(r"^\d{1,3}\s+", "", desc)
+
+                if upc and len(upc) >= 10:
+                    removed.append({
+                        "upc": upc,
+                        "description": desc,
+                        "size": size,
+                    })
+
+    return removed
+
+
 def parse_products(pdf):
     """Extract all product positions from the PDF."""
     products = []
@@ -331,21 +454,22 @@ def parse_products(pdf):
 
 
 def parse_pdf(filepath):
-    """Parse a single PDF file and return metadata + products."""
+    """Parse a single PDF file and return metadata, products, and removed products."""
     pdf = pdfplumber.open(filepath)
     metadata = parse_metadata(pdf)
     if not metadata or "dbkey" not in metadata:
         pdf.close()
-        return None, []
+        return None, [], []
 
     metadata["pdf_filename"] = os.path.basename(filepath)
     products = parse_products(pdf)
+    removed = parse_removed_products(pdf)
     pdf.close()
-    return metadata, products
+    return metadata, products, removed
 
 
 def parse_all_pdfs(pdf_dir):
-    """Parse all PDFs in a directory. Returns list of (metadata, products) tuples."""
+    """Parse all PDFs in a directory. Returns list of (metadata, products, removed) tuples."""
     results = []
     pdf_files = sorted(
         f for f in os.listdir(pdf_dir) if f.endswith(".pdf")
@@ -355,10 +479,10 @@ def parse_all_pdfs(pdf_dir):
         filepath = os.path.join(pdf_dir, filename)
         print(f"  Parsing {filename}...", end=" ")
         try:
-            metadata, products = parse_pdf(filepath)
+            metadata, products, removed = parse_pdf(filepath)
             if metadata:
-                print(f"{len(products)} products (expected {metadata.get('num_products', '?')})")
-                results.append((metadata, products))
+                print(f"{len(products)} products (expected {metadata.get('num_products', '?')}), {len(removed)} removed")
+                results.append((metadata, products, removed))
             else:
                 print("SKIPPED (no metadata)")
         except Exception as e:
