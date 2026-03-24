@@ -6,3 +6,4 @@ cache/
 dist/
 build/
 .venv/
+static/images/products/

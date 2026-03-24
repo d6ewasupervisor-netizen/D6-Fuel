@@ -1,8 +1,12 @@
+import os
+
 from fastapi import APIRouter, Query, HTTPException
 from .database import query
 from .kroger_api import get_product_image
 
 router = APIRouter(prefix="/api")
+
+LOCAL_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "..", "static", "images", "products")
 
 
 @router.get("/stores")
@@ -144,5 +148,11 @@ def get_bay(dbkey: int, bay_num: int):
 
 @router.get("/product-image/{upc}")
 def product_image(upc: str):
+    # Serve preloaded local image if available
+    local_path = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.jpg")
+    if os.path.isfile(local_path):
+        return {"upc": upc, "image_url": f"/static/images/products/{upc}.jpg"}
+
+    # Fall back to Kroger API (lazy fetch)
     url = get_product_image(upc)
     return {"upc": upc, "image_url": url}
