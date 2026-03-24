@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Planogram Viewer</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- View 1: Store Entry -->
+    <div id="view-store" class="view active">
+        <div class="container center-content">
+            <h1 class="logo">Planogram<br>Viewer</h1>
+            <p class="subtitle">Enter your store number to begin</p>
+            <div class="input-group">
+                <input type="text" id="store-input" inputmode="numeric" pattern="[0-9]*"
+                       placeholder="Store #" maxlength="5" autocomplete="off">
+                <button id="store-submit" class="btn btn-primary">Go</button>
+            </div>
+            <p id="store-error" class="error hidden"></p>
+        </div>
+    </div>
+
+    <!-- View 2: Scanner/Search -->
+    <div id="view-search" class="view">
+        <div class="container">
+            <div class="top-bar">
+                <button id="back-to-store" class="btn-icon">&larr;</button>
+                <span id="store-label" class="store-badge">Store #00000</span>
+            </div>
+            <h2>Find a Product</h2>
+            <div id="scanner-container" class="scanner-box">
+                <div id="scanner-region"></div>
+                <button id="toggle-scanner" class="btn btn-secondary">Start Camera Scanner</button>
+            </div>
+            <div class="input-group">
+                <input type="text" id="upc-input" inputmode="numeric"
+                       placeholder="Type last 4+ digits of UPC" autocomplete="off">
+                <button id="upc-submit" class="btn btn-primary">Search</button>
+            </div>
+            <p id="search-error" class="error hidden"></p>
+            <div id="search-spinner" class="spinner hidden"></div>
+        </div>
+    </div>
+
+    <!-- View 3: Results -->
+    <div id="view-results" class="view">
+        <div class="container">
+            <div class="top-bar">
+                <button id="back-to-search" class="btn-icon">&larr;</button>
+                <span id="results-store-label" class="store-badge">Store #00000</span>
+            </div>
+            <div id="no-results" class="hidden">
+                <div class="empty-state">
+                    <div class="empty-icon">&#10060;</div>
+                    <h2>Not Found</h2>
+                    <p>This product is not on any planogram for your store.</p>
+                    <button id="search-again" class="btn btn-primary">Search Again</button>
+                </div>
+            </div>
+            <div id="has-results" class="hidden">
+                <div class="result-nav">
+                    <button id="prev-result" class="btn-icon">&larr;</button>
+                    <span id="result-counter">1 of 1</span>
+                    <button id="next-result" class="btn-icon">&rarr;</button>
+                </div>
+                <div id="result-card" class="product-card">
+                    <div class="product-header">
+                        <h2 id="result-name"></h2>
+                        <span id="result-badge" class="badge"></span>
+                    </div>
+                    <div class="product-details">
+                        <div class="detail-row">
+                            <span class="label">UPC</span>
+                            <span id="result-upc" class="value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Size</span>
+                            <span id="result-size" class="value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Planogram</span>
+                            <span id="result-planogram" class="value"></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Aisle</span>
+                            <span id="result-aisle" class="value"></span>
+                        </div>
+                        <div class="detail-row location-highlight">
+                            <span class="label">Location</span>
+                            <span id="result-location" class="value"></span>
+                        </div>
+                    </div>
+                    <button id="view-on-shelf" class="btn btn-primary btn-full">View on Shelf</button>
+                </div>
+                <button id="results-search-again" class="btn btn-secondary btn-full">New Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View 4: Planogram View -->
+    <div id="view-planogram" class="view">
+        <div class="container">
+            <div class="top-bar">
+                <button id="back-to-results" class="btn-icon">&larr;</button>
+                <span id="pog-name" class="pog-badge"></span>
+            </div>
+            <div class="bay-selector">
+                <span class="label">Bay:</span>
+                <div id="bay-tabs" class="bay-tabs"></div>
+            </div>
+            <div id="shelf-container" class="shelf-container"></div>
+        </div>
+        <!-- Product detail overlay -->
+        <div id="product-overlay" class="overlay hidden">
+            <div class="overlay-content">
+                <button id="close-overlay" class="btn-icon close-btn">&times;</button>
+                <div id="overlay-image" class="overlay-image"></div>
+                <h3 id="overlay-name"></h3>
+                <div class="overlay-details">
+                    <div class="detail-row">
+                        <span class="label">UPC</span>
+                        <span id="overlay-upc" class="value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Size</span>
+                        <span id="overlay-size" class="value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Position</span>
+                        <span id="overlay-position" class="value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Facings</span>
+                        <span id="overlay-facings" class="value"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Dimensions</span>
+                        <span id="overlay-dims" class="value"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/scanner.js"></script>
+    <script src="/static/js/planogram.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
