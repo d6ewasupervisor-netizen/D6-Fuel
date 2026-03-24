@@ -29,7 +29,7 @@ IMAGE_DIR = os.path.join(os.path.dirname(__file__), "static", "images", "product
 BATCH_SIZE = 50  # Kroger API max for filter.productId
 
 # Reuse auth and API logic from the app
-from app.kroger_api import get_product_images_batch, _get_token
+from app.kroger_api import get_product_images_batch, _get_token, _get_location_id
 
 
 def get_unique_upcs():
@@ -72,6 +72,14 @@ def preload(delay=1.0, limit=0):
         print("ERROR: Kroger API credentials not configured.")
         print("Set KROGER_CLIENT_ID and KROGER_CLIENT_SECRET in your .env file.")
         sys.exit(1)
+
+    location_id = _get_location_id()
+    if location_id:
+        print(f"Using Kroger location ID: {location_id}")
+    else:
+        print("TIP: Set KROGER_LOCATION_ID in .env for better results")
+        print("     (8-digit store ID from Kroger Locations API)")
+    print()
 
     os.makedirs(IMAGE_DIR, exist_ok=True)
 

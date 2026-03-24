@@ -90,6 +90,20 @@ def _extract_image_url(product):
     return ""
 
 
+def _get_location_id():
+    """Get optional Kroger location ID (8-digit store identifier)."""
+    return os.environ.get("KROGER_LOCATION_ID", "")
+
+
+def _build_product_params(extra_params=None):
+    """Build query params dict, including locationId if configured."""
+    params = extra_params or {}
+    location_id = _get_location_id()
+    if location_id:
+        params["filter.locationId"] = location_id
+    return params
+
+
 def get_product_image(upc):
     cached = _get_cached_image(upc)
     if cached is not None:
@@ -100,9 +114,10 @@ def get_product_image(upc):
         return None
 
     try:
+        params = _build_product_params({"filter.productId": upc})
         resp = httpx.get(
             PRODUCT_URL,
-            params={"filter.productId": upc},
+            params=params,
             headers={"Authorization": f"Bearer {token}"},
             timeout=10,
         )
@@ -130,12 +145,13 @@ def get_product_images_batch(upcs):
 
     results = {}
     try:
+        params = _build_product_params({
+            "filter.productId": ",".join(upcs),
+            "filter.limit": 50,
+        })
         resp = httpx.get(
             PRODUCT_URL,
-            params={
-                "filter.productId": ",".join(upcs),
-                "filter.limit": 50,
-            },
+            params=params,
             headers={"Authorization": f"Bearer {token}"},
             timeout=30,
         )
