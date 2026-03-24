@@ -164,7 +164,7 @@ const App = {
         hasResults.classList.remove('hidden');
 
         const r = this.searchResults[this.resultIndex];
-        document.getElementById('result-name').textContent = r.description || 'Unknown Product';
+        document.getElementById('result-name').textContent = r.full_name || r.description || 'Unknown Product';
 
         const badge = document.getElementById('result-badge');
         if (r.is_new) {

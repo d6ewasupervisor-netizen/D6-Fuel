@@ -52,6 +52,12 @@ CREATE TABLE IF NOT EXISTS product_images (
     fetched_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS product_descriptions (
+    upc TEXT PRIMARY KEY,
+    full_name TEXT,
+    fetched_at TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_products_upc ON products(upc);
 CREATE INDEX IF NOT EXISTS idx_store_planograms_store ON store_planograms(store_id);
 CREATE INDEX IF NOT EXISTS idx_products_planogram ON products(planogram_dbkey, bay, shelf, position);

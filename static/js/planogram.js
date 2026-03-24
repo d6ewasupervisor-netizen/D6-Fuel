@@ -74,7 +74,7 @@ const Planogram = {
                     // Text
                     const text = document.createElement('span');
                     text.className = 'slot-text';
-                    text.textContent = (product.description || 'UNK').substring(0, 12);
+                    text.textContent = (product.full_name || product.description || 'UNK').substring(0, 12);
                     slot.appendChild(text);
 
                     // Highlight check
@@ -104,7 +104,7 @@ const Planogram = {
 
     async showProductOverlay(product) {
         const overlay = document.getElementById('product-overlay');
-        document.getElementById('overlay-name').textContent = product.description || 'Unknown';
+        document.getElementById('overlay-name').textContent = product.full_name || product.description || 'Unknown';
         document.getElementById('overlay-upc').textContent = product.upc;
         document.getElementById('overlay-size').textContent = product.size || '-';
         document.getElementById('overlay-position').textContent =
