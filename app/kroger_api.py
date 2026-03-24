@@ -66,6 +66,30 @@ def _cache_image(upc, url):
         pass
 
 
+def _extract_image_url(product):
+    """Extract the best image URL from a Kroger product object."""
+    images = product.get("images", [])
+    if not images:
+        return ""
+    # Prefer "front" perspective
+    for img in images:
+        if img.get("perspective") == "front":
+            sizes = img.get("sizes", [])
+            for s in sizes:
+                if s.get("size") == "medium":
+                    return s.get("url", "")
+            if sizes:
+                return sizes[0].get("url", "")
+    # Fall back to first image
+    sizes = images[0].get("sizes", [])
+    for s in sizes:
+        if s.get("size") == "medium":
+            return s.get("url", "")
+    if sizes:
+        return sizes[0].get("url", "")
+    return ""
+
+
 def get_product_image(upc):
     cached = _get_cached_image(upc)
     if cached is not None:
@@ -78,7 +102,7 @@ def get_product_image(upc):
     try:
         resp = httpx.get(
             PRODUCT_URL,
-            params={"filter.term": upc},
+            params={"filter.productId": upc},
             headers={"Authorization": f"Bearer {token}"},
             timeout=10,
         )
@@ -86,19 +110,52 @@ def get_product_image(upc):
         data = resp.json()
         products = data.get("data", [])
         if products:
-            images = products[0].get("images", [])
-            if images:
-                sizes = images[0].get("sizes", [])
-                for s in sizes:
-                    if s.get("size") == "medium":
-                        url = s.get("url", "")
-                        _cache_image(upc, url)
-                        return url
-                if sizes:
-                    url = sizes[0].get("url", "")
-                    _cache_image(upc, url)
-                    return url
+            url = _extract_image_url(products[0])
+            _cache_image(upc, url)
+            return url
         _cache_image(upc, "")
         return ""
     except Exception:
         return None
+
+
+def get_product_images_batch(upcs):
+    """Fetch image URLs for up to 50 UPCs in a single API call.
+
+    Returns a dict mapping UPC -> image URL (or empty string if no image).
+    """
+    token = _get_token()
+    if not token:
+        return {}
+
+    results = {}
+    try:
+        resp = httpx.get(
+            PRODUCT_URL,
+            params={
+                "filter.productId": ",".join(upcs),
+                "filter.limit": 50,
+            },
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        # Map returned products by productId
+        for product in data.get("data", []):
+            pid = product.get("productId", "")
+            url = _extract_image_url(product)
+            results[pid] = url
+            _cache_image(pid, url)
+
+        # Mark UPCs not returned by API as having no image
+        for upc in upcs:
+            if upc not in results:
+                results[upc] = ""
+                _cache_image(upc, "")
+
+    except Exception:
+        pass
+
+    return results
