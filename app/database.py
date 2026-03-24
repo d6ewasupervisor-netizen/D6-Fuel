@@ -19,3 +19,14 @@ def query(sql, params=(), one=False):
         return dict(rows[0]) if one and rows else [dict(r) for r in rows]
     finally:
         conn.close()
+
+
+def execute(sql, params=()):
+    """Execute an INSERT/UPDATE/DELETE and return lastrowid."""
+    conn = get_connection()
+    try:
+        cursor = conn.execute(sql, params)
+        conn.commit()
+        return cursor.lastrowid
+    finally:
+        conn.close()

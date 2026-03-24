@@ -1,13 +1,69 @@
 import os
+import uuid
 
 from fastapi import APIRouter, Query, HTTPException
-from .database import query
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
+from .database import query, execute
 from .kroger_api import get_product_image
 
 router = APIRouter(prefix="/api")
 
 LOCAL_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "..", "static", "images", "products")
+PDF_DIR = os.path.join(os.path.dirname(__file__), "..", "P3W3 C180 C678 Vitamins")
 
+
+# --- Login & Activity Tracking ---
+
+class LoginRequest(BaseModel):
+    user_name: str
+    store_id: str
+
+
+class ActivityRequest(BaseModel):
+    session_token: str
+    action: str
+    detail: str = ""
+
+
+@router.post("/login")
+def login(req: LoginRequest):
+    store_padded = req.store_id.strip().zfill(5)
+    # Validate store exists
+    stores = query(
+        "SELECT DISTINCT store_id FROM store_planograms WHERE store_id = ?",
+        (store_padded,),
+    )
+    if not stores:
+        raise HTTPException(404, f"Store {store_padded} not found")
+
+    token = uuid.uuid4().hex
+    execute(
+        "INSERT INTO user_sessions (user_name, store_id, session_token) VALUES (?, ?, ?)",
+        (req.user_name.strip(), store_padded, token),
+    )
+    # Log login activity
+    execute(
+        "INSERT INTO user_activity (session_token, action, detail) VALUES (?, ?, ?)",
+        (token, "login", f"Store {store_padded}"),
+    )
+    return {"session_token": token, "store_id": store_padded, "user_name": req.user_name.strip()}
+
+
+@router.post("/activity")
+def log_activity(req: ActivityRequest):
+    execute(
+        "UPDATE user_sessions SET last_active_at = datetime('now') WHERE session_token = ?",
+        (req.session_token,),
+    )
+    execute(
+        "INSERT INTO user_activity (session_token, action, detail) VALUES (?, ?, ?)",
+        (req.session_token, req.action, req.detail),
+    )
+    return {"ok": True}
+
+
+# --- Store & Planogram Types ---
 
 @router.get("/stores")
 def list_stores():
@@ -16,6 +72,36 @@ def list_stores():
     )
     return {"stores": [r["store_id"] for r in rows]}
 
+
+@router.get("/store/{store_id}/planogram-types")
+def get_planogram_types(store_id: str):
+    """Return available vitamin types (C180=Regular, C678=Natural) for a store."""
+    store_padded = store_id.zfill(5)
+    rows = query(
+        """SELECT DISTINCT p.category, sp.pog_description, p.dbkey, p.name, p.num_bays
+           FROM store_planograms sp
+           JOIN planograms p ON sp.planogram_dbkey = p.dbkey
+           WHERE sp.store_id = ?
+           ORDER BY p.category""",
+        (store_padded,),
+    )
+    if not rows:
+        raise HTTPException(404, f"No planograms found for store {store_padded}")
+
+    types = []
+    for r in rows:
+        types.append({
+            "category": r["category"],
+            "label": "Natural Vitamins" if r["category"] == "C678" else "Regular Vitamins",
+            "description": r["pog_description"],
+            "planogram_dbkey": r["dbkey"],
+            "planogram_name": r["name"],
+            "num_bays": r["num_bays"],
+        })
+    return {"types": types, "store_id": store_padded}
+
+
+# --- Search ---
 
 @router.get("/search")
 def search_product(
@@ -41,7 +127,6 @@ def search_product(
     upc_clean = upc.strip()
 
     if len(upc_clean) >= 10:
-        # Full or near-full UPC: exact match
         sql = (
             f"SELECT p.*, pg.name as planogram_name, pg.category "
             f"FROM products p JOIN planograms pg ON p.planogram_dbkey = pg.dbkey "
@@ -50,7 +135,6 @@ def search_product(
         )
         params = dbkeys + [upc_clean]
     else:
-        # Partial UPC: suffix match
         sql = (
             f"SELECT p.*, pg.name as planogram_name, pg.category "
             f"FROM products p JOIN planograms pg ON p.planogram_dbkey = pg.dbkey "
@@ -67,9 +151,52 @@ def search_product(
         r["aisle"] = info.get("aisle", "")
         r["orientation"] = info.get("orientation", "")
         r["sequence"] = info.get("sequence", "")
+        r["is_deleted"] = False
 
-    return {"results": results, "count": len(results), "store": store_padded}
+    # Also check deleted products
+    if len(upc_clean) >= 10:
+        del_sql = (
+            f"SELECT dp.*, pg.name as planogram_name, pg.category "
+            f"FROM deleted_products dp JOIN planograms pg ON dp.planogram_dbkey = pg.dbkey "
+            f"WHERE dp.planogram_dbkey IN ({placeholders}) AND dp.upc = ?"
+        )
+        del_params = dbkeys + [upc_clean]
+    else:
+        del_sql = (
+            f"SELECT dp.*, pg.name as planogram_name, pg.category "
+            f"FROM deleted_products dp JOIN planograms pg ON dp.planogram_dbkey = pg.dbkey "
+            f"WHERE dp.planogram_dbkey IN ({placeholders}) AND dp.upc LIKE ?"
+        )
+        del_params = dbkeys + [f"%{upc_clean}"]
 
+    deleted_results = query(del_sql, del_params)
+    for dr in deleted_results:
+        dr["is_deleted"] = True
+        dr["bay"] = 0
+        dr["shelf"] = 0
+        dr["position"] = 0
+
+    all_results = results + deleted_results
+    return {
+        "results": all_results,
+        "count": len(all_results),
+        "store": store_padded,
+        "has_deleted": len(deleted_results) > 0,
+    }
+
+
+@router.get("/deleted-check/{upc}")
+def check_deleted(upc: str):
+    """Quick check if a UPC is in the deleted products list."""
+    upc_clean = upc.strip()
+    if len(upc_clean) >= 10:
+        rows = query("SELECT * FROM deleted_products WHERE upc = ?", (upc_clean,))
+    else:
+        rows = query("SELECT * FROM deleted_products WHERE upc LIKE ?", (f"%{upc_clean}",))
+    return {"is_deleted": len(rows) > 0, "matches": rows}
+
+
+# --- Planogram ---
 
 @router.get("/planogram/{dbkey}")
 def get_planogram(dbkey: int):
@@ -146,13 +273,39 @@ def get_bay(dbkey: int, bay_num: int):
     }
 
 
+# --- Product Image ---
+
 @router.get("/product-image/{upc}")
 def product_image(upc: str):
-    # Serve preloaded local image if available
     local_path = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.jpg")
     if os.path.isfile(local_path):
         return {"upc": upc, "image_url": f"/static/images/products/{upc}.jpg"}
-
-    # Fall back to Kroger API (lazy fetch)
     url = get_product_image(upc)
     return {"upc": upc, "image_url": url}
+
+
+# --- PDF Serving ---
+
+@router.get("/pdf/{filename}")
+def serve_pdf(filename: str):
+    """Serve a planogram PDF file."""
+    safe_name = os.path.basename(filename)
+    pdf_path = os.path.join(PDF_DIR, safe_name)
+    if not os.path.isfile(pdf_path):
+        raise HTTPException(404, f"PDF not found: {safe_name}")
+    return FileResponse(pdf_path, media_type="application/pdf", filename=safe_name)
+
+
+@router.get("/planogram/{dbkey}/pdf-info")
+def get_pdf_info(dbkey: int):
+    """Get PDF filename and metadata for a planogram."""
+    pog = query("SELECT dbkey, name, pdf_filename, category FROM planograms WHERE dbkey = ?", (dbkey,), one=True)
+    if not pog:
+        raise HTTPException(404, f"Planogram {dbkey} not found")
+    return {
+        "dbkey": pog["dbkey"],
+        "name": pog["name"],
+        "pdf_filename": pog["pdf_filename"],
+        "category": pog["category"],
+        "pdf_url": f"/api/pdf/{pog['pdf_filename']}" if pog["pdf_filename"] else None,
+    }

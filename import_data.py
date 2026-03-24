@@ -41,7 +41,7 @@ def import_store_mappings(conn, mappings):
     return len(mappings)
 
 
-def import_planogram(conn, metadata, products):
+def import_planogram(conn, metadata, products, removed=None):
     """Insert a planogram and its products into the database."""
     cursor = conn.cursor()
 
@@ -94,6 +94,21 @@ def import_planogram(conn, metadata, products):
             ),
         )
 
+    # Insert removed/deleted products
+    if removed:
+        for r in removed:
+            cursor.execute(
+                """INSERT INTO deleted_products
+                   (planogram_dbkey, upc, description, size)
+                   VALUES (?, ?, ?, ?)""",
+                (
+                    metadata["dbkey"],
+                    r["upc"],
+                    r.get("description", ""),
+                    r.get("size", ""),
+                ),
+            )
+
     conn.commit()
     return len(products)
 
@@ -118,14 +133,22 @@ def validate(conn):
     cursor.execute("SELECT COUNT(DISTINCT upc) FROM products")
     num_unique_upcs = cursor.fetchone()[0]
 
+    cursor.execute("SELECT COUNT(*) FROM deleted_products")
+    num_deleted = cursor.fetchone()[0]
+
+    cursor.execute("SELECT COUNT(DISTINCT upc) FROM deleted_products")
+    num_deleted_upcs = cursor.fetchone()[0]
+
     print(f"\n{'=' * 50}")
     print(f"DATABASE SUMMARY")
     print(f"{'=' * 50}")
-    print(f"Planograms:       {num_planograms}")
-    print(f"Product positions: {num_products}")
-    print(f"Unique UPCs:      {num_unique_upcs}")
-    print(f"Store mappings:   {num_mappings}")
-    print(f"Unique stores:    {num_stores}")
+    print(f"Planograms:         {num_planograms}")
+    print(f"Product positions:  {num_products}")
+    print(f"Unique UPCs:        {num_unique_upcs}")
+    print(f"Store mappings:     {num_mappings}")
+    print(f"Unique stores:      {num_stores}")
+    print(f"Deleted products:   {num_deleted}")
+    print(f"Deleted unique UPCs:{num_deleted_upcs}")
 
     # Check for store mappings pointing to missing planograms
     cursor.execute(
@@ -181,10 +204,12 @@ def main():
 
     total_products = 0
     total_expected = 0
+    total_removed = 0
     mismatches = []
-    for metadata, products in results:
-        num_imported = import_planogram(conn, metadata, products)
+    for metadata, products, removed in results:
+        num_imported = import_planogram(conn, metadata, products, removed)
         total_products += num_imported
+        total_removed += len(removed)
         expected = metadata.get("num_products", 0)
         total_expected += expected
         if num_imported != expected:
@@ -194,6 +219,7 @@ def main():
 
     print(f"\n  Total products imported: {total_products}")
     print(f"  Total expected:         {total_expected}")
+    print(f"  Total removed/deleted:  {total_removed}")
     if mismatches:
         print(f"  Mismatches ({len(mismatches)}):")
         for fn, got, exp in mismatches:

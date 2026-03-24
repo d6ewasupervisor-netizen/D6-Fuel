@@ -1,13 +1,49 @@
 const API = {
+    sessionToken: null,
+
+    async login(userName, storeId) {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_name: userName, store_id: storeId }),
+        });
+        if (res.status === 404) throw new Error('Store not found');
+        if (!res.ok) throw new Error('Login failed');
+        const data = await res.json();
+        this.sessionToken = data.session_token;
+        return data;
+    },
+
+    async logActivity(action, detail = '') {
+        if (!this.sessionToken) return;
+        try {
+            await fetch('/api/activity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    session_token: this.sessionToken,
+                    action,
+                    detail,
+                }),
+            });
+        } catch { /* non-blocking */ }
+    },
+
     async getStores() {
         const res = await fetch('/api/stores');
         if (!res.ok) throw new Error('Failed to load stores');
         return (await res.json()).stores;
     },
 
+    async getPlanogramTypes(storeId) {
+        const res = await fetch(`/api/store/${encodeURIComponent(storeId)}/planogram-types`);
+        if (!res.ok) throw new Error('Failed to load planogram types');
+        return res.json();
+    },
+
     async search(store, upc) {
         const res = await fetch(`/api/search?store=${encodeURIComponent(store)}&upc=${encodeURIComponent(upc)}`);
-        if (res.status === 404) return { results: [], count: 0 };
+        if (res.status === 404) return { results: [], count: 0, has_deleted: false };
         if (!res.ok) throw new Error('Search failed');
         return res.json();
     },
@@ -32,6 +68,22 @@ const API = {
             return data.image_url || null;
         } catch {
             return null;
+        }
+    },
+
+    async getPdfInfo(dbkey) {
+        const res = await fetch(`/api/planogram/${dbkey}/pdf-info`);
+        if (!res.ok) return null;
+        return res.json();
+    },
+
+    async checkDeleted(upc) {
+        try {
+            const res = await fetch(`/api/deleted-check/${encodeURIComponent(upc)}`);
+            if (!res.ok) return { is_deleted: false };
+            return res.json();
+        } catch {
+            return { is_deleted: false };
         }
     }
 };
