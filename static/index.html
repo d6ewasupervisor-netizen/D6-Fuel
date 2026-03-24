@@ -2,119 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Planogram Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0c1929">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Supplemental Intelligence">
+    <title>Supplemental Intelligence</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="apple-touch-icon" href="/static/images/mascot.png">
 </head>
 <body>
     <!-- View 1: Store Entry -->
     <div id="view-store" class="view active">
-        <div class="container center-content">
-            <h1 class="logo">Planogram<br>Viewer</h1>
+        <div class="container center-content safe-bottom">
+            <header class="app-brand app-brand-hero" aria-label="Supplemental Intelligence">
+                <div class="brand-glow" aria-hidden="true"></div>
+                <img src="/static/images/mascot.png" alt="" class="brand-mascot" width="160" height="160" decoding="async">
+                <div class="brand-text">
+                    <h1 class="brand-name">Supplemental Intelligence</h1>
+                    <p class="brand-tagline">Store planogram lookup</p>
+                </div>
+            </header>
             <p class="subtitle">Enter your store number to begin</p>
-            <div class="input-group">
+            <div class="input-group input-group-wide">
                 <input type="text" id="store-input" inputmode="numeric" pattern="[0-9]*"
-                       placeholder="Store #" maxlength="5" autocomplete="off">
-                <button id="store-submit" class="btn btn-primary">Go</button>
+                       placeholder="Store #" maxlength="5" autocomplete="off" enterkeyhint="go">
+                <button type="button" id="store-submit" class="btn btn-primary">Go</button>
             </div>
-            <p id="store-error" class="error hidden"></p>
+            <p id="store-error" class="error hidden" role="alert"></p>
         </div>
     </div>
 
     <!-- View 2: Scanner/Search -->
     <div id="view-search" class="view">
-        <div class="container">
+        <div class="container safe-bottom">
             <div class="top-bar">
-                <button id="back-to-store" class="btn-icon">&larr;</button>
+                <button type="button" id="back-to-store" class="btn-icon" aria-label="Back">&larr;</button>
+                <div class="top-bar-brand">
+                    <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
+                    <span class="top-bar-title">Supplemental Intelligence</span>
+                </div>
                 <span id="store-label" class="store-badge">Store #00000</span>
             </div>
-            <h2>Find a Product</h2>
+            <h2 class="view-heading">Find a product</h2>
             <div id="scanner-container" class="scanner-box">
                 <div id="scanner-region"></div>
-                <button id="toggle-scanner" class="btn btn-secondary">Start Camera Scanner</button>
+                <button type="button" id="toggle-scanner" class="btn btn-secondary btn-touch">Start camera scanner</button>
             </div>
-            <div class="input-group">
+            <div class="input-group input-group-wide">
                 <input type="text" id="upc-input" inputmode="numeric"
-                       placeholder="Type last 4+ digits of UPC" autocomplete="off">
-                <button id="upc-submit" class="btn btn-primary">Search</button>
+                       placeholder="Last 4+ digits of UPC" autocomplete="off" enterkeyhint="search">
+                <button type="button" id="upc-submit" class="btn btn-primary">Search</button>
             </div>
-            <p id="search-error" class="error hidden"></p>
-            <div id="search-spinner" class="spinner hidden"></div>
+            <p id="search-error" class="error hidden" role="alert"></p>
+            <div id="search-spinner" class="spinner hidden" aria-hidden="true"></div>
         </div>
     </div>
 
     <!-- View 3: Results -->
     <div id="view-results" class="view">
-        <div class="container">
+        <div class="container safe-bottom">
             <div class="top-bar">
-                <button id="back-to-search" class="btn-icon">&larr;</button>
+                <button type="button" id="back-to-search" class="btn-icon" aria-label="Back">&larr;</button>
+                <div class="top-bar-brand">
+                    <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
+                    <span class="top-bar-title">Supplemental Intelligence</span>
+                </div>
                 <span id="results-store-label" class="store-badge">Store #00000</span>
             </div>
             <div id="no-results" class="hidden">
                 <div class="empty-state">
-                    <div class="empty-icon">&#10060;</div>
-                    <h2>Not Found</h2>
+                    <div class="empty-icon" aria-hidden="true">&#10060;</div>
+                    <h2>Not found</h2>
                     <p>This product is not on any planogram for your store.</p>
-                    <button id="search-again" class="btn btn-primary">Search Again</button>
+                    <button type="button" id="search-again" class="btn btn-primary btn-touch btn-full">Search again</button>
                 </div>
             </div>
             <div id="has-results" class="hidden">
                 <div class="result-nav">
-                    <button id="prev-result" class="btn-icon">&larr;</button>
-                    <span id="result-counter">1 of 1</span>
-                    <button id="next-result" class="btn-icon">&rarr;</button>
+                    <button type="button" id="prev-result" class="btn-icon btn-icon-lg" aria-label="Previous result">&larr;</button>
+                    <span id="result-counter" class="result-counter">1 of 1</span>
+                    <button type="button" id="next-result" class="btn-icon btn-icon-lg" aria-label="Next result">&rarr;</button>
                 </div>
-                <div id="result-card" class="product-card">
-                    <div class="product-header">
-                        <h2 id="result-name"></h2>
-                        <span id="result-badge" class="badge"></span>
+                <article id="result-card" class="product-card product-card-rich">
+                    <div class="result-card-grid">
+                        <div class="result-image-col">
+                            <div id="result-image-wrap" class="result-image-wrap" aria-busy="true">
+                                <div id="result-image-placeholder" class="result-image-placeholder" aria-hidden="true">&#x1f48a;</div>
+                                <img id="result-image" class="result-image hidden" alt="" loading="lazy" decoding="async">
+                            </div>
+                        </div>
+                        <div class="result-info-col">
+                            <div class="product-header">
+                                <h2 id="result-name" class="result-title"></h2>
+                                <span id="result-badge" class="badge"></span>
+                            </div>
+                            <div class="product-details">
+                                <div class="detail-row">
+                                    <span class="label">UPC</span>
+                                    <span id="result-upc" class="value"></span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Size</span>
+                                    <span id="result-size" class="value"></span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Planogram</span>
+                                    <span id="result-planogram" class="value"></span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Aisle</span>
+                                    <span id="result-aisle" class="value"></span>
+                                </div>
+                                <div class="detail-row location-highlight">
+                                    <span class="label">Location</span>
+                                    <span id="result-location" class="value"></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="product-details">
-                        <div class="detail-row">
-                            <span class="label">UPC</span>
-                            <span id="result-upc" class="value"></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">Size</span>
-                            <span id="result-size" class="value"></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">Planogram</span>
-                            <span id="result-planogram" class="value"></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="label">Aisle</span>
-                            <span id="result-aisle" class="value"></span>
-                        </div>
-                        <div class="detail-row location-highlight">
-                            <span class="label">Location</span>
-                            <span id="result-location" class="value"></span>
-                        </div>
-                    </div>
-                    <button id="view-on-shelf" class="btn btn-primary btn-full">View on Shelf</button>
-                </div>
-                <button id="results-search-again" class="btn btn-secondary btn-full">New Search</button>
+                    <button type="button" id="view-on-shelf" class="btn btn-primary btn-full btn-touch">View on shelf</button>
+                </article>
+                <button type="button" id="results-search-again" class="btn btn-secondary btn-full btn-touch">New search</button>
             </div>
         </div>
     </div>
 
     <!-- View 4: Planogram View -->
     <div id="view-planogram" class="view">
-        <div class="container">
-            <div class="top-bar">
-                <button id="back-to-results" class="btn-icon">&larr;</button>
+        <div class="container safe-bottom">
+            <div class="top-bar top-bar-planogram">
+                <button type="button" id="back-to-results" class="btn-icon" aria-label="Back">&larr;</button>
                 <span id="pog-name" class="pog-badge"></span>
             </div>
             <div class="bay-selector">
-                <span class="label">Bay:</span>
+                <span class="label">Bay</span>
                 <div id="bay-tabs" class="bay-tabs"></div>
             </div>
             <div id="shelf-container" class="shelf-container"></div>
         </div>
         <!-- Product detail overlay -->
         <div id="product-overlay" class="overlay hidden">
-            <div class="overlay-content">
-                <button id="close-overlay" class="btn-icon close-btn">&times;</button>
+            <div class="overlay-content safe-bottom">
+                <button type="button" id="close-overlay" class="btn-icon close-btn" aria-label="Close">&times;</button>
                 <div id="overlay-image" class="overlay-image"></div>
                 <h3 id="overlay-name"></h3>
                 <div class="overlay-details">

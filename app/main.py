@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -5,7 +9,7 @@ import os
 
 from .api import router
 
-app = FastAPI(title="Kroger Planogram Viewer")
+app = FastAPI(title="Supplemental Intelligence")
 app.include_router(router)
 
 static_dir = os.path.join(os.path.dirname(__file__), "..", "static")

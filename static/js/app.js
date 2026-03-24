@@ -107,13 +107,13 @@ const App = {
         const btn = document.getElementById('toggle-scanner');
         if (Scanner.isRunning) {
             await Scanner.stop();
-            btn.textContent = 'Start Camera Scanner';
+            btn.textContent = 'Start camera scanner';
         } else {
-            btn.textContent = 'Stop Scanner';
+            btn.textContent = 'Stop scanner';
             await Scanner.start('scanner-region', (code) => {
                 document.getElementById('upc-input').value = code;
                 Scanner.stop();
-                btn.textContent = 'Start Camera Scanner';
+                btn.textContent = 'Start camera scanner';
                 this.doSearch();
             });
             if (!Scanner.isRunning) {
@@ -142,7 +142,7 @@ const App = {
             this.searchResults = data.results || [];
             this.resultIndex = 0;
             this.showView('results');
-            this.renderResults();
+            await this.renderResults();
         } catch (e) {
             spinner.classList.add('hidden');
             error.textContent = 'Search failed. Try again.';
@@ -150,7 +150,7 @@ const App = {
         }
     },
 
-    renderResults() {
+    async renderResults() {
         const noResults = document.getElementById('no-results');
         const hasResults = document.getElementById('has-results');
 
@@ -195,11 +195,51 @@ const App = {
             this.searchResults.length > 1 ? 'visible' : 'hidden';
         document.getElementById('next-result').style.visibility =
             this.searchResults.length > 1 ? 'visible' : 'hidden';
+
+        const wrap = document.getElementById('result-image-wrap');
+        const placeholder = document.getElementById('result-image-placeholder');
+        const img = document.getElementById('result-image');
+        wrap.classList.add('loading');
+        wrap.setAttribute('aria-busy', 'true');
+        img.classList.add('hidden');
+        img.removeAttribute('src');
+        img.alt = '';
+        placeholder.classList.remove('hidden');
+
+        const showResultImage = () => {
+            wrap.classList.remove('loading');
+            wrap.setAttribute('aria-busy', 'false');
+            placeholder.classList.add('hidden');
+            img.classList.remove('hidden');
+        };
+        const fallbackResultImage = () => {
+            wrap.classList.remove('loading');
+            wrap.setAttribute('aria-busy', 'false');
+            placeholder.classList.remove('hidden');
+            img.classList.add('hidden');
+        };
+
+        try {
+            const imageUrl = await API.getProductImage(r.upc);
+            if (imageUrl) {
+                img.alt = r.description || 'Product';
+                img.onload = showResultImage;
+                img.onerror = fallbackResultImage;
+                img.src = imageUrl;
+                if (img.complete && img.naturalWidth > 0) {
+                    showResultImage();
+                }
+            } else {
+                fallbackResultImage();
+            }
+        } catch (e) {
+            fallbackResultImage();
+        }
     },
 
-    navigateResult(delta) {
+    async navigateResult(delta) {
         this.resultIndex = (this.resultIndex + delta + this.searchResults.length) % this.searchResults.length;
-        this.renderResults();
+        await this.renderResults();
     },
 
     async viewOnShelf() {
