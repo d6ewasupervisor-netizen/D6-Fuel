@@ -67,6 +67,37 @@ def _cache_image(upc, url):
         pass
 
 
+def _extract_description(product):
+    """Extract the consumer-facing description from a Kroger product object."""
+    return product.get("description", "")
+
+
+def _get_cached_description(upc):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        row = conn.execute(
+            "SELECT full_name FROM product_descriptions WHERE upc = ?", (upc,)
+        ).fetchone()
+        conn.close()
+        return row[0] if row else None
+    except Exception:
+        return None
+
+
+def _cache_description(upc, full_name):
+    try:
+        conn = sqlite3.connect(DB_PATH)
+        conn.execute(
+            "INSERT OR REPLACE INTO product_descriptions (upc, full_name, fetched_at) "
+            "VALUES (?, ?, datetime('now'))",
+            (upc, full_name),
+        )
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass
+
+
 def _extract_image_url(product):
     """Extract the best image URL from a Kroger product object."""
     images = product.get("images", [])
@@ -179,10 +210,81 @@ def get_product_image(upc):
         return None
 
 
+def get_product_description(upc):
+    """Fetch the full consumer-facing product name for a UPC."""
+    cached = _get_cached_description(upc)
+    if cached is not None:
+        return cached
+
+    token = _get_token()
+    if not token:
+        return None
+
+    try:
+        params = _build_product_params({"filter.productId": upc})
+        resp = httpx.get(
+            PRODUCT_URL,
+            params=params,
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        products = resp.json().get("data", [])
+        if products:
+            name = _extract_description(products[0])
+            _cache_description(upc, name)
+            return name
+        _cache_description(upc, "")
+        return ""
+    except Exception:
+        return None
+
+
+def get_product_descriptions_batch(upcs):
+    """Fetch full product names for up to 50 UPCs in a single API call.
+
+    Returns a dict mapping UPC -> full_name (or empty string if not found).
+    """
+    token = _get_token()
+    if not token:
+        return {}
+
+    results = {}
+    try:
+        params = _build_product_params({
+            "filter.productId": ",".join(upcs),
+            "filter.limit": 50,
+        })
+        resp = httpx.get(
+            PRODUCT_URL,
+            params=params,
+            headers={"Authorization": f"Bearer {token}"},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        for product in data.get("data", []):
+            pid = product.get("productId", "")
+            name = _extract_description(product)
+            results[pid] = name
+            _cache_description(pid, name)
+
+        for upc in upcs:
+            if upc not in results:
+                results[upc] = ""
+                _cache_description(upc, "")
+    except Exception:
+        pass
+
+    return results
+
+
 def get_product_images_batch(upcs):
     """Fetch image URLs for up to 50 UPCs in a single API call.
 
     Returns a dict mapping UPC -> image URL (or empty string if no image).
+    Also caches product descriptions as a side effect.
     """
     token = _get_token()
     if not token:
@@ -209,6 +311,9 @@ def get_product_images_batch(upcs):
             url = _extract_image_url(product)
             results[pid] = url
             _cache_image(pid, url)
+            # Also cache description as a side effect
+            name = _extract_description(product)
+            _cache_description(pid, name)
 
         # Mark UPCs not returned by API as having no image
         for upc in upcs:

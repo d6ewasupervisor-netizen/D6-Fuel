@@ -1,12 +1,30 @@
 import os
+import sqlite3
 
 from fastapi import APIRouter, Query, HTTPException
-from .database import query
-from .kroger_api import get_product_image
+from .database import query, get_connection
+from .kroger_api import get_product_image, get_product_description
 
 router = APIRouter(prefix="/api")
 
 LOCAL_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "..", "static", "images", "products")
+
+
+def _get_full_names(upcs):
+    """Batch-read cached full product names for a list of UPCs."""
+    if not upcs:
+        return {}
+    try:
+        conn = get_connection()
+        placeholders = ",".join("?" * len(upcs))
+        rows = conn.execute(
+            f"SELECT upc, full_name FROM product_descriptions WHERE upc IN ({placeholders})",
+            upcs,
+        ).fetchall()
+        conn.close()
+        return {r["upc"]: r["full_name"] for r in rows}
+    except Exception:
+        return {}
 
 
 @router.get("/stores")
@@ -61,12 +79,14 @@ def search_product(
 
     results = query(sql, params)
 
-    # Enrich with store-specific info
+    # Enrich with store-specific info and full product names
+    desc_map = _get_full_names(list(set(r["upc"] for r in results)))
     for r in results:
         info = pog_info.get(r["planogram_dbkey"], {})
         r["aisle"] = info.get("aisle", "")
         r["orientation"] = info.get("orientation", "")
         r["sequence"] = info.get("sequence", "")
+        r["full_name"] = desc_map.get(r["upc"]) or None
 
     return {"results": results, "count": len(results), "store": store_padded}
 
@@ -82,6 +102,11 @@ def get_planogram(dbkey: int):
         "ORDER BY bay, shelf, position",
         (dbkey,),
     )
+
+    # Enrich with full product names
+    desc_map = _get_full_names(list(set(p["upc"] for p in products)))
+    for p in products:
+        p["full_name"] = desc_map.get(p["upc"]) or None
 
     # Group by bay then shelf
     bays = {}
@@ -126,6 +151,11 @@ def get_bay(dbkey: int, bay_num: int):
     if not products:
         raise HTTPException(404, f"Bay {bay_num} not found in planogram {dbkey}")
 
+    # Enrich with full product names
+    desc_map = _get_full_names(list(set(p["upc"] for p in products)))
+    for p in products:
+        p["full_name"] = desc_map.get(p["upc"]) or None
+
     shelves = {}
     bay_width = None
     for p in products:
@@ -144,6 +174,13 @@ def get_bay(dbkey: int, bay_num: int):
         "width_ft": bay_width,
         "shelves": [shelves[k] for k in sorted(shelves.keys())],
     }
+
+
+@router.get("/product-description/{upc}")
+def product_description(upc: str):
+    """Lazy-fetch full product name from cache or Kroger API."""
+    full_name = get_product_description(upc)
+    return {"upc": upc, "full_name": full_name}
 
 
 @router.get("/product-image/{upc}")
