@@ -119,6 +119,18 @@ body {
 
 .subtitle { color: var(--text-dim); margin-bottom: 24px; font-size: 1rem; }
 
+.login-hint {
+    color: var(--text-dim);
+    font-size: 0.875rem;
+    margin: -8px 0 12px;
+    line-height: 1.4;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.login-hint.error { color: var(--danger); }
+
 .view-heading {
     font-size: 1.25rem;
     font-weight: 700;

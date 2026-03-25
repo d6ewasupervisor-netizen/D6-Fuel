@@ -31,10 +31,13 @@
                 </div>
                 <div class="input-group input-group-wide">
                     <input type="text" id="store-input" inputmode="numeric" pattern="[0-9]*"
-                           placeholder="Store #" maxlength="5" autocomplete="off" enterkeyhint="go">
+                           placeholder="Store #" maxlength="5" autocomplete="off" enterkeyhint="go"
+                           list="store-suggestions" aria-describedby="store-list-hint">
+                    <datalist id="store-suggestions"></datalist>
                     <button type="button" id="store-submit" class="btn btn-primary">Go</button>
                 </div>
             </div>
+            <p id="store-list-hint" class="login-hint" role="status">Loading store list…</p>
             <p id="store-error" class="error hidden" role="alert"></p>
         </div>
     </div>
