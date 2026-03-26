@@ -119,14 +119,13 @@
     <div id="product-overlay" class="overlay hidden">
         <div class="overlay-content safe-bottom">
             <button type="button" id="close-overlay" class="btn-icon close-btn" aria-label="Close">&times;</button>
-            <div class="overlay-nav-header">
-                <button type="button" id="overlay-prev" class="btn-icon btn-icon-sm" aria-label="Previous">&larr;</button>
-                <span id="overlay-position-label" class="overlay-pos-label"></span>
-                <button type="button" id="overlay-next" class="btn-icon btn-icon-sm" aria-label="Next">&rarr;</button>
+            <div class="overlay-product-header">
+                <div id="overlay-image" class="overlay-image"></div>
+                <div class="overlay-title-group">
+                    <h3 id="overlay-name"></h3>
+                    <span id="overlay-badge" class="badge" style="display:none"></span>
+                </div>
             </div>
-            <div id="overlay-image" class="overlay-image"></div>
-            <h3 id="overlay-name"></h3>
-            <span id="overlay-badge" class="badge" style="display:none"></span>
             <div class="overlay-details">
                 <div class="detail-row">
                     <span class="label">UPC</span>
@@ -152,7 +151,14 @@
             <div class="overlay-actions">
                 <button type="button" id="overlay-pdf-btn" class="btn btn-secondary btn-full">View in PDF</button>
             </div>
-            <div id="overlay-nav-hints" class="overlay-nav-hints"></div>
+            <div class="overlay-nav-footer">
+                <div class="overlay-nav-header">
+                    <button type="button" id="overlay-prev" class="btn-icon btn-icon-sm" aria-label="Previous">&larr;</button>
+                    <span id="overlay-position-label" class="overlay-pos-label"></span>
+                    <button type="button" id="overlay-next" class="btn-icon btn-icon-sm" aria-label="Next">&rarr;</button>
+                </div>
+                <div id="overlay-nav-hints" class="overlay-nav-hints"></div>
+            </div>
         </div>
     </div>
 
