@@ -140,7 +140,7 @@ const App = {
             this.showView('type-select');
         } catch (e) {
             error.textContent = e.message === 'Store not found'
-                ? `Store ${raw.padStart(5, '0')} is not in the planogram list. Use the 5-digit store # from your vitamin mapping spreadsheet (not your Kroger register/store ID).`
+                ? `Store ${raw} not found in planogram data.`
                 : 'Login failed. Try again.';
             error.classList.remove('hidden');
         }
@@ -148,28 +148,21 @@ const App = {
 
     async loadStoreList() {
         const hint = document.getElementById('store-list-hint');
-        const dl = document.getElementById('store-suggestions');
+        const dl = document.getElementById('store-list');
         if (!hint || !dl) return;
 
         try {
-            const stores = await API.getStores();
+            const res = await fetch('/api/stores');
+            if (!res.ok) throw new Error(res.statusText);
+            const data = await res.json();
+            const stores = data.stores || [];
             this.validStores = stores;
-            dl.innerHTML = '';
-            stores.forEach((id) => {
-                const opt = document.createElement('option');
-                opt.value = id;
-                dl.appendChild(opt);
-            });
-            if (stores.length === 0) {
-                hint.textContent = 'No stores in the database. On the server, run import_data.py to load the mapping.';
-                hint.classList.add('error');
-            } else {
-                hint.textContent = `${stores.length} stores in planogram data — enter or choose a 5-digit store # (from your mapping file).`;
-                hint.classList.remove('error');
-            }
-        } catch (e) {
-            hint.textContent = 'Could not load the store list. Open this app from the server (e.g. http://127.0.0.1:8000), not as a file.';
-            hint.classList.add('error');
+            dl.innerHTML = stores.map(id => `<option value="${Number(id)}">`).join('');
+            hint.textContent = stores.length
+                ? `${stores.length} stores available`
+                : 'No stores found. Run import_data.py on the server first.';
+        } catch {
+            hint.textContent = 'Could not load store list — is the server running?';
         }
     },
 
