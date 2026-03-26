@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
     <meta name="theme-color" content="#0c1929">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Supplemental Intelligence">
     <meta name="format-detection" content="telephone=no">
     <title>Supplemental Intelligence</title>
     <link rel="stylesheet" href="/static/css/styles.css">
     <link rel="apple-touch-icon" href="/static/images/mascot.png">
+    <link rel="manifest" href="/static/manifest.json">
 </head>
 <body>
     <!-- View 1: Login -->
@@ -32,6 +34,7 @@
                 <div class="input-group input-group-wide">
                     <input type="text" id="store-input" inputmode="numeric" pattern="[0-9]*"
                            placeholder="Store #" maxlength="5" autocomplete="off" enterkeyhint="go"
+                           autocorrect="off" autocapitalize="none" spellcheck="false"
                            list="store-list" aria-describedby="store-list-hint">
                     <datalist id="store-list"></datalist>
                     <button type="button" id="store-submit" class="btn btn-primary">Go</button>
@@ -106,7 +109,8 @@
             </div>
             <div class="input-group input-group-wide">
                 <input type="text" id="upc-input" inputmode="numeric"
-                       placeholder="Last 4+ digits of UPC" autocomplete="off" enterkeyhint="search">
+                       placeholder="Last 4+ digits of UPC" autocomplete="off" enterkeyhint="search"
+                       autocorrect="off" autocapitalize="none" spellcheck="false">
                 <button type="button" id="upc-submit" class="btn btn-primary">Search</button>
             </div>
             <p id="search-error" class="error hidden" role="alert"></p>
