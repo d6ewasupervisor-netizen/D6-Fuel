@@ -28,8 +28,28 @@ import os
 import sys
 import argparse
 import shutil
+import time
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from contextlib import contextmanager
+
+
+@contextmanager
+def _suppress_stderr():
+    """
+    Redirect file-descriptor 2 (C++ stderr) to devnull.
+    Silences onnxruntime's CUDA DLL-not-found noise without affecting
+    our own stdout progress output.
+    """
+    try:
+        devnull_fd = os.open(os.devnull, os.O_WRONLY)
+        old_fd = os.dup(2)
+        os.dup2(devnull_fd, 2)
+        os.close(devnull_fd)
+        yield
+    finally:
+        os.dup2(old_fd, 2)
+        os.close(old_fd)
 
 try:
     from PIL import Image, ImageChops, ImageEnhance
@@ -120,6 +140,65 @@ def flood_fill_remove_bg(img: Image.Image, threshold: int = 240) -> Image.Image:
     return rgba
 
 
+def _try_slope_split(col_sums_np, min_score: float = 0.15):
+    """
+    Detect a bottle+panel composition within a SINGLE connected region and
+    return the column index that best splits them, plus which side holds the
+    bottle ('left' or 'right').
+
+    Scans every candidate split and scores it as:
+      score = (CV_bottle_side - CV_panel_side)
+              + 0.5 * (mean_bottle_side - mean_panel_side) / peak
+
+    High score = one side has a bell-curve profile (round bottle, high CV)
+    while the other is flat/uniform (rectangular label, low CV).
+    Pure bottles score near zero at every split and are never touched.
+
+    Returns (split_col, bottle_side) or (None, None).
+    """
+    import numpy as np
+
+    n = len(col_sums_np)
+    if n < 60:
+        return None, None
+
+    peak = float(col_sums_np.max())
+    if peak == 0:
+        return None, None
+
+    min_side = max(30, n // 4)  # each sub-region must be >= 30 px or 25% of width
+
+    best_score = 0.0
+    best_split = None
+    best_side = None
+
+    for split in range(min_side, n - min_side + 1):
+        left = col_sums_np[:split]
+        right = col_sums_np[split:]
+
+        lm = float(left.mean())
+        rm = float(right.mean())
+
+        if lm < peak * 0.20 or rm < peak * 0.20:
+            continue  # one side has too little content
+
+        lcv = float(left.std() / lm)
+        rcv = float(right.std() / rm)
+
+        if lcv > rcv and lm >= rm:  # bottle left, panel right
+            score = (lcv - rcv) + 0.5 * (lm - rm) / peak
+            if score > best_score:
+                best_score, best_split, best_side = score, split, "left"
+        elif rcv > lcv and rm >= lm:  # panel left, bottle right
+            score = (rcv - lcv) + 0.5 * (rm - lm) / peak
+            if score > best_score:
+                best_score, best_split, best_side = score, split, "right"
+
+    if best_score >= min_score and best_split is not None:
+        return best_split, best_side
+    return None, None
+
+
 def _largest_connected_bbox(alpha_np) -> tuple | None:
     """
     Find the bounding box of the best foreground region in an alpha mask.
@@ -170,6 +249,18 @@ def _largest_connected_bbox(alpha_np) -> tuple | None:
 
     if len(segs) == 1:
         x1, x2 = segs[0][0], segs[0][1]
+
+        # Single connected region: try slope-split to detect a fused bottle+panel
+        # (no white gap between them, but different alpha profiles).
+        import numpy as np
+        strip = alpha_np[:, x1: x2 + 1]
+        col_sums = (strip > threshold).sum(axis=0).astype(float)
+        split_col, bottle_side = _try_slope_split(col_sums)
+        if split_col is not None:
+            if bottle_side == "left":
+                x2 = x1 + split_col - 1
+            else:
+                x1 = x1 + split_col
     else:
         total_px = sum(s[2] for s in segs)
 
@@ -229,7 +320,8 @@ def crop_rembg(img: Image.Image, padding: int) -> Image.Image:
 
     import numpy as np
 
-    rgba = remove(img.convert("RGBA"))
+    with _suppress_stderr():
+        rgba = remove(img.convert("RGBA"))
     alpha_np = np.array(rgba.split()[3])
     fg_ratio = float((alpha_np > 10).sum()) / alpha_np.size
 
@@ -277,9 +369,18 @@ def process_image(
     use_rembg: bool,
     apply: bool,
     backup: bool,
+    skip_existing: bool = True,
 ) -> dict:
     """Process one image file. Returns a result dict."""
     result = {"file": path.name, "status": "ok", "note": ""}
+
+    # Skip if the output PNG already exists (allows resuming interrupted runs)
+    png_path = out_path.with_suffix(".png")
+    if skip_existing and png_path.exists():
+        result["status"] = "skipped"
+        result["note"] = "already done"
+        return result
+
     try:
         img = Image.open(path)
         orig_size = img.size
@@ -298,7 +399,6 @@ def process_image(
         )
 
         if apply:
-            png_path = out_path.with_suffix(".png")
             if backup and png_path.parent == path.parent:
                 BACKUP_DIR.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(path, BACKUP_DIR / path.name)
@@ -376,7 +476,8 @@ def main():
         print("  NOTE: This is a dry run. Pass --apply to save files.")
     print()
 
-    ok = errors = 0
+    ok = errors = skipped = 0
+    start_time = time.time()
 
     def build_out_path(src: Path) -> Path:
         return (out_dir / src.name) if out_dir else src
@@ -391,6 +492,7 @@ def main():
             use_rembg=args.rembg,
             apply=args.apply,
             backup=not args.no_backup,
+            skip_existing=True,
         )
 
     # rembg is not thread-safe for model loading; use single thread
@@ -402,16 +504,37 @@ def main():
         for fut in as_completed(futures):
             done += 1
             res = fut.result()
-            status_icon = "OK" if res["status"] == "ok" else "!!"
-            print(f"  [{done:>4}/{total}] {status_icon} {res['file']}  {res['note']}")
-            if res["status"] == "ok":
+
+            if res["status"] == "skipped":
+                skipped += 1
+                # Only print skipped in verbose mode to keep output clean
+                continue
+            elif res["status"] == "ok":
                 ok += 1
+                status_icon = "OK"
             else:
                 errors += 1
+                status_icon = "!!"
 
+            # ETA based on processed (non-skipped) images
+            elapsed = time.time() - start_time
+            processed = ok + errors
+            if processed > 1:
+                rate = elapsed / processed
+                remaining = (total - done) * rate
+                m, s = divmod(int(remaining), 60)
+                eta_str = f"  ETA {m}m{s:02d}s" if m else f"  ETA {s}s"
+            else:
+                eta_str = ""
+
+            print(f"  [{done:>4}/{total}] {status_icon} {res['file']}  {res['note']}{eta_str}")
+
+    elapsed = time.time() - start_time
+    m, s = divmod(int(elapsed), 60)
     print()
     print("=" * 56)
-    print(f"  Done — OK: {ok}  Errors: {errors}")
+    print(f"  Done in {m}m {s:02d}s")
+    print(f"  OK: {ok}   Skipped: {skipped}   Errors: {errors}")
     if not args.apply:
         print("  No files written (dry run). Add --apply to save.")
     print("=" * 56)
