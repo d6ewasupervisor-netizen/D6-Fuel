@@ -287,24 +287,37 @@ def _largest_connected_bbox(alpha_np) -> tuple | None:
     return (x1, ys[0], x2 + 1, ys[-1] + 1)
 
 
+REMBG_UPSCALE = 600   # upscale source to this size before rembg (better edge quality)
+ALPHA_HARD_THRESH = 128  # binarise alpha: below = 0 (transparent), above = 255 (solid)
+
+
+def _harden_alpha(rgba: "Image.Image") -> "Image.Image":
+    """
+    Binarise the alpha channel at ALPHA_HARD_THRESH.
+    Eliminates semi-transparent fringe pixels that rembg produces around
+    product edges, giving hard clean cutouts and a tighter bounding box.
+    """
+    import numpy as np
+    alpha = np.array(rgba.split()[3])
+    alpha = np.where(alpha >= ALPHA_HARD_THRESH, 255, 0).astype(np.uint8)
+    result = rgba.copy()
+    result.putalpha(Image.fromarray(alpha))
+    return result
+
+
 def crop_rembg(img: Image.Image, padding: int) -> Image.Image:
     """
-    Isolate the product with a transparent background using a two-stage strategy:
+    Isolate the product with a transparent background.
 
-    Stage 1 — AI (rembg / U2-Net):
-      Runs the neural net to remove the background. Works well on coloured or
-      complex backgrounds and cleanly separates multi-region compositions
-      (bottle + side label).
-
-    Stage 2 — Flood-fill fallback (automatic):
-      If rembg keeps >80% of pixels as foreground (model failed to find the
-      background) or removes >85% (over-aggressively cut the product), we fall
-      back to flood_fill_remove_bg which traces connected near-white regions
-      from every edge pixel outward. Reliable for white/near-white studio
-      backgrounds regardless of AI model behaviour.
-
-    Both paths then apply the largest-connected-region logic to discard any
-    remaining side label panels before the final tight crop.
+    Pipeline:
+      1. Upscale to REMBG_UPSCALE px — neural net detects edges much better
+         on 600px input than on 200px; scaled back down after masking.
+      2. rembg (U2-Net AI) removes background → RGBA.
+         Fallback to flood-fill when rembg keeps >80 % or <15 % as foreground.
+      3. Harden alpha: binarise at 128 → hard clean edges, no semi-transparent
+         halo, tighter bounding box.
+      4. Largest-connected-region + slope-split logic discards side panels.
+      5. Tight crop to solid-pixel bounding box.
     """
     try:
         from rembg import remove
@@ -320,30 +333,55 @@ def crop_rembg(img: Image.Image, padding: int) -> Image.Image:
 
     import numpy as np
 
+    # --- Stage 1: upscale for better rembg edge detection ---
+    orig_w, orig_h = img.size
+    scale_size = max(orig_w, orig_h)
+    if scale_size < REMBG_UPSCALE:
+        scale = REMBG_UPSCALE / scale_size
+        up_w = int(round(orig_w * scale))
+        up_h = int(round(orig_h * scale))
+        img_up = img.resize((up_w, up_h), Image.LANCZOS)
+    else:
+        img_up = img
+        scale = 1.0
+
+    # --- Stage 2: rembg ---
     with _suppress_stderr():
-        rgba = remove(img.convert("RGBA"))
-    alpha_np = np.array(rgba.split()[3])
-    fg_ratio = float((alpha_np > 10).sum()) / alpha_np.size
+        rgba_up = remove(img_up.convert("RGBA"))
+
+    alpha_up = np.array(rgba_up.split()[3])
+    fg_ratio = float((alpha_up > 10).sum()) / alpha_up.size
 
     if fg_ratio > 0.80 or fg_ratio < 0.15:
-        # rembg failed — too much or too little foreground detected
-        rgba = flood_fill_remove_bg(img)
-        alpha_np = np.array(rgba.split()[3])
+        rgba_up = flood_fill_remove_bg(img_up)
+        alpha_up = np.array(rgba_up.split()[3])
 
-    # Largest-connected-region: discard side label panels
-    bbox = _largest_connected_bbox(alpha_np)
+    # --- Stage 3: harden alpha → tight clean edges ---
+    rgba_up = _harden_alpha(rgba_up)
+    alpha_up = np.array(rgba_up.split()[3])
+
+    # --- Stage 4: discard side panels ---
+    bbox = _largest_connected_bbox(alpha_up)
     if not bbox:
-        bbox = rgba.split()[3].getbbox()
+        bbox = rgba_up.split()[3].getbbox()
     if not bbox:
         return img.convert("RGBA")
 
     x1, y1, x2, y2 = bbox
     x1 = max(0, x1 - padding)
     y1 = max(0, y1 - padding)
-    x2 = min(rgba.width, x2 + padding)
-    y2 = min(rgba.height, y2 + padding)
+    x2 = min(rgba_up.width, x2 + padding)
+    y2 = min(rgba_up.height, y2 + padding)
 
-    return rgba.crop((x1, y1, x2, y2))
+    cropped_up = rgba_up.crop((x1, y1, x2, y2))
+
+    # Scale back to original resolution ratio (avoids enlarging small images)
+    if scale > 1.0:
+        out_w = max(1, int(round(cropped_up.width / scale)))
+        out_h = max(1, int(round(cropped_up.height / scale)))
+        return cropped_up.resize((out_w, out_h), Image.LANCZOS)
+
+    return cropped_up
 
 
 def to_square_canvas(img: Image.Image, size: int) -> Image.Image:
