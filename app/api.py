@@ -315,9 +315,11 @@ def product_description(upc: str):
 
 @router.get("/product-image/{upc}")
 def product_image(upc: str):
-    local_path = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.jpg")
-    if os.path.isfile(local_path):
-        return {"upc": upc, "image_url": f"/static/images/products/{upc}.jpg"}
+    # Prefer transparent PNG (cropped) over original JPG
+    for ext in ("png", "jpg"):
+        local_path = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.{ext}")
+        if os.path.isfile(local_path):
+            return {"upc": upc, "image_url": f"/static/images/products/{upc}.{ext}"}
     url = get_product_image(upc)
     return {"upc": upc, "image_url": url}
 
