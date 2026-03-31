@@ -1377,3 +1377,295 @@ input[type="text"]:focus {
         padding-bottom: max(6px, env(safe-area-inset-bottom));
     }
 }
+
+/* ============================================
+   MOBILE OPTIMIZATION - STEP 5
+   ============================================ */
+
+/* Prevent iOS double-tap zoom globally */
+* { touch-action: manipulation; }
+
+/* Prevent overscroll/bounce */
+html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent iOS auto-zoom on input focus (16px minimum) */
+input[type="text"],
+input[type="number"],
+input[type="search"] {
+    font-size: 16px;
+}
+
+/* Larger touch targets on small screens */
+@media (max-width: 480px) {
+    .btn {
+        min-height: 52px;
+        padding: 14px 22px;
+        font-size: 1.05rem;
+    }
+
+    .btn-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 1.35rem;
+    }
+
+    .btn-icon-sm {
+        width: 44px;
+        height: 44px;
+    }
+
+    .btn-sm {
+        min-height: 48px;
+        padding: 12px 16px;
+    }
+
+    .btn-pdf {
+        min-height: 48px;
+        padding: 12px 16px;
+        font-size: 0.8rem;
+    }
+
+    /* Login form — full width, generous spacing */
+    .login-form {
+        gap: 16px;
+    }
+
+    .login-form input[type="text"] {
+        min-height: 52px;
+        padding: 14px 18px;
+    }
+
+    .brand-mascot {
+        width: min(120px, 35vw);
+    }
+
+    .brand-name {
+        font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+    }
+
+    /* Type selection cards — stack vertical, bigger targets */
+    .type-card {
+        padding: 22px;
+        gap: 14px;
+    }
+
+    .type-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 1.5rem;
+    }
+
+    /* Bay view — optimize for portrait phone */
+    .bay-top-bar {
+        padding: 6px 8px;
+        min-height: 48px;
+        gap: 6px;
+    }
+
+    .bay-indicator {
+        font-size: 0.8rem;
+    }
+
+    .pog-badge-sm {
+        font-size: 0.68rem;
+    }
+
+    .bay-bottom-nav {
+        padding: 6px 8px;
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
+        gap: 6px;
+    }
+
+    .bay-nav-arrow {
+        width: 52px;
+        height: 48px;
+        font-size: 1.8rem;
+    }
+
+    .bay-num {
+        min-width: 40px;
+        height: 40px;
+        font-size: 0.88rem;
+    }
+
+    /* Product slots — minimum touch target */
+    .product-slot {
+        min-width: 28px;
+        min-height: 40px;
+    }
+
+    /* Overlay — full height on small screens */
+    .overlay-content {
+        max-height: 95dvh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .overlay-product-header {
+        gap: 10px;
+    }
+
+    .overlay-image img,
+    .overlay-image .placeholder-img {
+        width: 64px;
+        height: 64px;
+    }
+
+    .detail-row {
+        padding: 8px 0;
+    }
+
+    .detail-row .label {
+        font-size: 0.82rem;
+    }
+
+    .detail-row .value {
+        font-size: 0.85rem;
+    }
+
+    /* Search view */
+    .scanner-box {
+        padding: 12px;
+    }
+
+    #scanner-region {
+        max-width: 100%;
+    }
+
+    .search-result-card {
+        padding: 16px;
+        gap: 10px;
+    }
+
+    .search-result-name {
+        font-size: 0.9rem;
+    }
+
+    /* PDF viewer */
+    .pdf-top-bar {
+        padding: 6px 8px;
+        min-height: 48px;
+    }
+
+    .pdf-bottom-bar {
+        gap: 8px;
+        padding: 8px 12px;
+        padding-bottom: max(8px, env(safe-area-inset-bottom));
+    }
+
+    .pdf-bottom-bar .btn-icon-sm {
+        width: 44px;
+        height: 44px;
+    }
+
+    .pdf-search-bar input {
+        min-height: 44px;
+        font-size: 16px;
+    }
+}
+
+/* Notched phones — extra safe area handling */
+@supports (padding-top: env(safe-area-inset-top)) {
+    .bay-top-bar {
+        padding-top: max(8px, env(safe-area-inset-top));
+    }
+
+    .pdf-top-bar {
+        padding-top: max(8px, env(safe-area-inset-top));
+    }
+
+    .top-bar {
+        padding-top: max(4px, env(safe-area-inset-top));
+    }
+
+    .overlay-content {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+
+    .deleted-overlay-content {
+        padding: 24px;
+        padding-bottom: max(24px, env(safe-area-inset-bottom));
+    }
+}
+
+/* Tall phones (iPhone Pro Max etc.) — use extra vertical space */
+@media (min-height: 800px) and (max-width: 480px) {
+    .bay-shelf-container {
+        padding: 8px 10px;
+    }
+
+    .shelf-row {
+        border-bottom-width: 4px;
+    }
+}
+
+/* Low-end device perf: reduce animations */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Keyboard visible: shrink bottom-anchored elements */
+@media (max-height: 400px) and (max-width: 480px) {
+    .bay-bottom-nav {
+        padding: 4px 8px;
+    }
+
+    .bay-nav-arrow {
+        height: 38px;
+    }
+
+    .bay-num {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.78rem;
+    }
+}
+
+/* Improve scanner video feed on mobile */
+#scanner-region video {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* Deleted overlay — readable on small screens */
+@media (max-width: 480px) {
+    .deleted-title {
+        font-size: 1.5rem;
+    }
+
+    .deleted-product-name {
+        font-size: 1rem;
+    }
+
+    .deleted-instructions {
+        padding: 14px 16px;
+    }
+
+    .deleted-instructions p {
+        font-size: 0.92rem;
+    }
+
+    .deleted-icon {
+        font-size: 3rem;
+    }
+}
+
+/* Image lightbox — better mobile framing */
+@media (max-width: 480px) {
+    .image-lightbox {
+        padding: 16px;
+    }
+
+    .lightbox-close {
+        top: max(12px, env(safe-area-inset-top));
+        right: 12px;
+    }
+}

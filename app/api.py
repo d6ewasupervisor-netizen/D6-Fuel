@@ -38,12 +38,19 @@ def _local_detail_image_url(upc: str) -> str | None:
 class LoginRequest(BaseModel):
     user_name: str
     store_id: str
+    user_agent: str = ""
+    screen_width: int = 0
+    screen_height: int = 0
+    device_type: str = ""
 
 
 class ActivityRequest(BaseModel):
     session_token: str
     action: str
     detail: str = ""
+    view_name: str = ""
+    duration_ms: int = 0
+    meta: str = ""
 
 
 @router.post("/login")
@@ -59,8 +66,18 @@ def login(req: LoginRequest):
 
     token = uuid.uuid4().hex
     execute(
-        "INSERT INTO user_sessions (user_name, store_id, session_token) VALUES (?, ?, ?)",
-        (req.user_name.strip(), store_padded, token),
+        """INSERT INTO user_sessions
+           (user_name, store_id, session_token, user_agent, screen_width, screen_height, device_type)
+           VALUES (?, ?, ?, ?, ?, ?, ?)""",
+        (
+            req.user_name.strip(),
+            store_padded,
+            token,
+            req.user_agent,
+            req.screen_width,
+            req.screen_height,
+            req.device_type,
+        ),
     )
     # Log login activity
     execute(
@@ -77,8 +94,10 @@ def log_activity(req: ActivityRequest):
         (req.session_token,),
     )
     execute(
-        "INSERT INTO user_activity (session_token, action, detail) VALUES (?, ?, ?)",
-        (req.session_token, req.action, req.detail),
+        """INSERT INTO user_activity
+           (session_token, action, detail, view_name, duration_ms, meta)
+           VALUES (?, ?, ?, ?, ?, ?)""",
+        (req.session_token, req.action, req.detail, req.view_name, req.duration_ms, req.meta),
     )
     return {"ok": True}
 

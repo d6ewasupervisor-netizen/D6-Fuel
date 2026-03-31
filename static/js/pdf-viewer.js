@@ -41,6 +41,7 @@ const PDFViewer = {
             }
         }
         this._bindEvents();
+        window.addEventListener('resize', () => this._positionTextLayer());
     },
 
     _bindEvents() {
@@ -175,6 +176,16 @@ const PDFViewer = {
 
     // --- Layer 1: Render invisible text layer over the canvas ---
 
+    _positionTextLayer() {
+        const layer = document.getElementById('pdf-text-layer');
+        const canvas = document.getElementById('pdf-canvas');
+        if (!layer || !canvas) return;
+        layer.style.left = canvas.offsetLeft + 'px';
+        layer.style.top = canvas.offsetTop + 'px';
+        layer.style.width = canvas.offsetWidth + 'px';
+        layer.style.height = canvas.offsetHeight + 'px';
+    },
+
     async _renderTextLayer(page, viewport, canvas, layer) {
         layer.innerHTML = '';
         this.currentTextItems = null;
@@ -197,16 +208,20 @@ const PDFViewer = {
                     container: layer,
                     viewport,
                     textDivs,
-                    enhanceTextSelection: false
+                    enhanceTextSelection: false,
                 });
-                if (task && task.promise) {
-                    await task.promise;
-                } else if (task && typeof task.then === 'function') {
-                    await task;
-                }
+                if (task && task.promise) await task.promise;
+                else if (task && typeof task.then === 'function') await task;
             } else {
                 this._manualTextLayer(textContent, viewport, layer, textDivs);
             }
+
+            // Re-apply pixel positions after renderTextLayer may have
+            // overwritten with calc() expressions
+            layer.style.left = canvas.offsetLeft + 'px';
+            layer.style.top = canvas.offsetTop + 'px';
+            layer.style.width = canvas.offsetWidth + 'px';
+            layer.style.height = canvas.offsetHeight + 'px';
 
             this.currentTextItems = textContent.items;
             this.currentTextDivs = textDivs;
@@ -280,10 +295,26 @@ const PDFViewer = {
 
     _normalizeQuery(query) {
         let result = '';
+        let lastWasSpace = false;
         for (let i = 0; i < query.length; i++) {
             const n = this._normalizeSearchChar(query[i]);
-            if (n) result += n;
+            if (!n) continue;
+            if (n === ' ') {
+                if (!result.length || lastWasSpace) continue;
+                result += ' ';
+                lastWasSpace = true;
+            } else {
+                result += n;
+                lastWasSpace = false;
+            }
         }
+        result = result.trim();
+
+        // UPC-aware: if query is purely digits (possibly with dashes/spaces),
+        // collapse to digits-only so "0 12345 67890" matches "0123456789"
+        const digitsOnly = result.replace(/[\s\-]/g, '');
+        if (/^\d{4,}$/.test(digitsOnly)) return digitsOnly;
+
         return result;
     },
 
@@ -327,17 +358,39 @@ const PDFViewer = {
         if (!normalizedQuery) return rangesByItem;
 
         const { normalized, map } = this._buildNormalizedIndex(items);
+
+        // For UPC queries (all digits), also build a digits-only version
+        // of the normalized text to find UPCs split across items/spaces
+        const isUpcQuery = /^\d{4,}$/.test(normalizedQuery);
+        let searchText = normalized;
+        let searchMap = map;
+
+        if (isUpcQuery) {
+            // Build digits-only string with mapping back to original map
+            const digitText = [];
+            const digitMap = [];
+            for (let i = 0; i < normalized.length; i++) {
+                const ch = normalized[i];
+                if (ch >= '0' && ch <= '9') {
+                    digitText.push(ch);
+                    digitMap.push(i);
+                }
+            }
+            searchText = digitText.join('');
+            searchMap = digitMap.map(i => map[i]);
+        }
+
         let start = 0;
         let matchCount = 0;
 
-        while (start < normalized.length) {
-            const idx = normalized.indexOf(normalizedQuery, start);
+        while (start < searchText.length) {
+            const idx = searchText.indexOf(normalizedQuery, start);
             if (idx === -1) break;
             const endIdx = idx + normalizedQuery.length;
 
             if (matchIndex == null || matchCount === matchIndex) {
                 for (let i = idx; i < endIdx; i++) {
-                    const entry = map[i];
+                    const entry = isUpcQuery ? searchMap[i] : map[i];
                     if (!entry) continue;
                     const { itemIndex, charIndex } = entry;
                     const ranges = rangesByItem.get(itemIndex) || [];
@@ -378,6 +431,7 @@ const PDFViewer = {
     _highlightOnCurrentPage(query) {
         if (!this.currentTextItems || !this.currentTextDivs) return;
 
+        // Reset all divs to plain text first
         for (let i = 0; i < this.currentTextDivs.length; i++) {
             const div = this.currentTextDivs[i];
             const text = this.currentTextItems[i]?.str || '';
@@ -393,6 +447,20 @@ const PDFViewer = {
                 div.innerHTML = this._applyRangesToText(text, ranges);
             }
         }
+
+        // Scroll first hit into view
+        requestAnimationFrame(() => {
+            const hit = document.querySelector('#pdf-text-layer .search-text-hit');
+            if (hit) {
+                const container = document.getElementById('pdf-canvas-container');
+                if (container) {
+                    const containerRect = container.getBoundingClientRect();
+                    const hitRect = hit.getBoundingClientRect();
+                    const delta = hitRect.top - containerRect.top;
+                    container.scrollTop += delta - Math.max(24, Math.round(container.clientHeight * 0.25));
+                }
+            }
+        });
     },
 
     _clearHighlights() {

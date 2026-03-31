@@ -2,10 +2,19 @@ const API = {
     sessionToken: null,
 
     async login(userName, storeId) {
+        const deviceType = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile'
+            : /Tablet|iPad/i.test(navigator.userAgent) ? 'tablet' : 'desktop';
         const res = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_name: userName, store_id: storeId }),
+            body: JSON.stringify({
+                user_name: userName,
+                store_id: storeId,
+                user_agent: navigator.userAgent,
+                screen_width: window.screen.width,
+                screen_height: window.screen.height,
+                device_type: deviceType,
+            }),
         });
         if (res.status === 404) throw new Error('Store not found');
         if (!res.ok) throw new Error('Login failed');
@@ -14,7 +23,7 @@ const API = {
         return data;
     },
 
-    async logActivity(action, detail = '') {
+    async logActivity(action, detail = '', extra = {}) {
         if (!this.sessionToken) return;
         try {
             await fetch('/api/activity', {
@@ -24,6 +33,9 @@ const API = {
                     session_token: this.sessionToken,
                     action,
                     detail,
+                    view_name: extra.view_name || '',
+                    duration_ms: extra.duration_ms || 0,
+                    meta: extra.meta || '',
                 }),
             });
         } catch { /* non-blocking */ }
