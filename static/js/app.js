@@ -8,11 +8,14 @@ const App = {
     currentCategory: null,
     previousView: 'bay',
     overlayNav: null, // current navigation context for overlay
+    _viewEnterTime: 0,
+    _currentView: null,
 
     init() {
         this.bindEvents();
         PDFViewer.init();
         this.loadStoreList();
+        this.initMobileOptimizations();
 
         // Restore session
         const saved = sessionStorage.getItem('sessionToken');
@@ -88,6 +91,17 @@ const App = {
     },
 
     showView(name) {
+        // Log duration of previous view
+        if (this._currentView && this._viewEnterTime) {
+            const duration = Date.now() - this._viewEnterTime;
+            API.logActivity('view_exit', this._currentView, {
+                view_name: this._currentView,
+                duration_ms: duration,
+            });
+        }
+        this._currentView = name;
+        this._viewEnterTime = Date.now();
+
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-' + name).classList.add('active');
 
@@ -110,7 +124,7 @@ const App = {
             });
         }
 
-        API.logActivity('view', name);
+        API.logActivity('view', name, { view_name: name });
     },
 
     async submitLogin() {
@@ -164,10 +178,10 @@ const App = {
             this.validStores = stores;
             dl.innerHTML = stores.map(id => `<option value="${Number(id)}">`).join('');
             hint.textContent = stores.length
-                ? `${stores.length} stores available`
-                : 'No stores found. Run import_data.py on the server first.';
+                ? 'Select your store number to begin'
+                : 'No stores loaded yet. Contact your supervisor.';
         } catch {
-            hint.textContent = 'Could not load store list — is the server running?';
+            hint.textContent = 'Could not connect to server. Try refreshing.';
         }
     },
 
@@ -218,7 +232,10 @@ const App = {
         this.currentPlanogramDbkey = type.planogram_dbkey;
         this.currentCategory = type.category;
 
-        API.logActivity('select_type', `${type.category} - ${type.label}`);
+        API.logActivity('select_type', `${type.category} - ${type.label}`, {
+            view_name: 'type-select',
+            meta: JSON.stringify({ dbkey: type.planogram_dbkey, bays: type.num_bays }),
+        });
 
         // Load the planogram
         try {
@@ -241,16 +258,23 @@ const App = {
         const btn = document.getElementById('toggle-scanner');
         if (Scanner.isRunning) {
             await Scanner.stop();
+            this.releaseWakeLock();
             btn.textContent = 'Start camera scanner';
         } else {
             btn.textContent = 'Stop scanner';
+            API.logActivity('scanner_start', '', { view_name: 'search' });
+            await this.requestWakeLock();
             await Scanner.start('scanner-region', (code) => {
                 document.getElementById('upc-input').value = code;
                 Scanner.stop();
+                this.releaseWakeLock();
                 btn.textContent = 'Start camera scanner';
                 this.doSearch();
             });
-            if (!Scanner.isRunning) btn.textContent = 'Camera unavailable';
+            if (!Scanner.isRunning) {
+                this.releaseWakeLock();
+                btn.textContent = 'Camera unavailable';
+            }
         }
     },
 
@@ -270,7 +294,7 @@ const App = {
         spinner.classList.remove('hidden');
         resultsList.classList.add('hidden');
 
-        API.logActivity('search', upc);
+        API.logActivity('search', upc, { view_name: 'search', meta: JSON.stringify({ digits: upc.length }) });
 
         try {
             const data = await API.search(this.storeId, upc);
@@ -441,7 +465,10 @@ const App = {
         imgContainer.appendChild(img);
         overlay.classList.remove('hidden');
 
-        API.logActivity('view_product', `${product.upc} - ${product.description}`);
+        API.logActivity('view_product', `${product.upc} - ${product.description}`, {
+            view_name: 'bay',
+            meta: JSON.stringify({ bay: product.bay, shelf: product.shelf, pos: product.position }),
+        });
     },
 
     closeOverlay() {
@@ -470,7 +497,7 @@ const App = {
                     title: info.name || 'Planogram PDF',
                     returnView: 'bay',
                 });
-                API.logActivity('open_pdf', info.name);
+                API.logActivity('open_pdf', info.name, { view_name: 'bay', meta: JSON.stringify({ dbkey: this.currentPlanogramDbkey }) });
             }
         } catch (e) {
             console.error('Failed to open PDF:', e);
@@ -498,6 +525,42 @@ const App = {
             }
         } catch (e) {
             console.error('Failed to open PDF:', e);
+        }
+    },
+
+    // --- Mobile Optimizations ---
+    initMobileOptimizations() {
+        // Lock to portrait if available (PWA mode)
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('portrait-primary').catch(() => {});
+        }
+
+        // Prevent pull-to-refresh on mobile
+        document.body.addEventListener('touchmove', (e) => {
+            if (document.scrollingElement.scrollTop === 0 && e.touches[0].clientY > 0) {
+                // Only prevent if at top of page and pulling down
+                const target = e.target.closest('.bay-shelf-container, .overlay-content, .pdf-canvas-container');
+                if (!target) e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Keep screen awake during scanner use
+        this._wakeLock = null;
+    },
+
+    async requestWakeLock() {
+        if ('wakeLock' in navigator && !this._wakeLock) {
+            try {
+                this._wakeLock = await navigator.wakeLock.request('screen');
+                this._wakeLock.addEventListener('release', () => { this._wakeLock = null; });
+            } catch { /* not critical */ }
+        }
+    },
+
+    releaseWakeLock() {
+        if (this._wakeLock) {
+            this._wakeLock.release().catch(() => {});
+            this._wakeLock = null;
         }
     },
 

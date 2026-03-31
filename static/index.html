@@ -13,6 +13,12 @@
     <link rel="stylesheet" href="/static/css/styles.css">
     <link rel="apple-touch-icon" href="/static/images/mascot.png">
     <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/png" href="/static/images/mascot.png">
+    <style>
+        /* Critical inline: prevent FOUC on mobile */
+        body { touch-action: pan-x pan-y; overscroll-behavior: none; }
+        input, button { font-size: 16px; } /* prevent iOS zoom on focus */
+    </style>
 </head>
 <body>
     <!-- View 1: Login -->

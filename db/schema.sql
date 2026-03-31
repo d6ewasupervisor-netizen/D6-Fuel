@@ -95,3 +95,14 @@ CREATE INDEX IF NOT EXISTS idx_user_sessions_store ON user_sessions(store_id);
 CREATE INDEX IF NOT EXISTS idx_user_sessions_token ON user_sessions(session_token);
 CREATE INDEX IF NOT EXISTS idx_user_activity_session ON user_activity(session_token);
 CREATE INDEX IF NOT EXISTS idx_deleted_products_upc ON deleted_products(upc);
+
+-- Enhanced activity tracking (Step 3)
+ALTER TABLE user_activity ADD COLUMN view_name TEXT;
+ALTER TABLE user_activity ADD COLUMN duration_ms INTEGER;
+ALTER TABLE user_activity ADD COLUMN meta TEXT;
+
+-- Device/session metadata
+ALTER TABLE user_sessions ADD COLUMN user_agent TEXT;
+ALTER TABLE user_sessions ADD COLUMN screen_width INTEGER;
+ALTER TABLE user_sessions ADD COLUMN screen_height INTEGER;
+ALTER TABLE user_sessions ADD COLUMN device_type TEXT;
