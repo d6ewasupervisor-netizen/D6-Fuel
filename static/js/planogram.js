@@ -72,26 +72,35 @@ const Planogram = {
         const unit = document.createElement('div');
         unit.className = 'shelf-unit';
 
-        // Shelves sorted ascending (rendered bottom-to-top via column-reverse)
         const shelves = [...bayData.shelves].sort((a, b) => a.shelf - b.shelf);
-        const totalShelves = shelves.length;
 
-        // Calculate scale factor so all shelves fit in viewport
-        // Reserve ~120px for top bar and dots
         const availableHeight = window.innerHeight - 120;
         const totalShelfHeight = shelves.reduce((sum, s) => {
             const maxH = Math.max(...s.products.map(p => p.height_inches || 5), 5);
             return sum + maxH;
         }, 0);
-        // Scale factor: map inches to pixels, aim to fit all shelves
         const pixelsPerInch = Math.min(8, availableHeight / totalShelfHeight);
+
+        // Collect UPCs that need image URLs resolved
+        const uncachedUpcs = [];
+        const allProducts = [];
+        shelves.forEach(shelf => {
+            shelf.products.forEach(product => {
+                allProducts.push(product);
+                if (!this.imageCache[product.upc]) {
+                    uncachedUpcs.push(product.upc);
+                }
+            });
+        });
+
+        // Track img elements keyed by UPC for batch update after fetch
+        const pendingImgs = {};
 
         shelves.forEach((shelf, shelfIdx) => {
             const row = document.createElement('div');
             row.className = 'shelf-row';
             row.dataset.shelf = shelf.shelf;
 
-            // Calculate shelf height based on tallest product, scaled to fit
             const maxH = Math.max(...shelf.products.map(p => p.height_inches || 5), 5);
             const rowHeight = Math.max(48, maxH * pixelsPerInch);
             row.style.height = rowHeight + 'px';
@@ -110,49 +119,41 @@ const Planogram = {
                     const slot = document.createElement('div');
                     slot.className = 'product-slot';
 
-                    // Proportional width based on bay width
                     const widthPct = ((product.width_inches || 2.5) / bayWidthInches) * 100;
                     slot.style.width = widthPct + '%';
                     slot.style.flexShrink = '0';
 
-                    // Color coding by first letter
                     const desc = (product.description || '').toUpperCase();
                     const colorIdx = desc.charCodeAt(0) % 8;
                     slot.setAttribute('data-color', colorIdx);
 
-                    // Thumbnail image
                     const img = document.createElement('img');
                     img.className = 'slot-thumb';
                     img.alt = '';
-                    img.loading = 'lazy';
-                    img.decoding = 'async';
                     const upc = product.upc;
 
-                    // Use cached URL or fetch
                     if (this.imageCache[upc]) {
                         img.src = this.imageCache[upc];
                     } else {
-                        img.src = ''; // placeholder
-                        this._loadImage(upc, img);
+                        // Will be populated by batch preload
+                        if (!pendingImgs[upc]) pendingImgs[upc] = [];
+                        pendingImgs[upc].push(img);
                     }
 
                     img.onerror = () => {
                         img.style.display = 'none';
-                        // Show text fallback
                         const fb = slot.querySelector('.slot-text');
                         if (fb) fb.style.display = '';
                     };
 
                     slot.appendChild(img);
 
-                    // Text fallback (hidden when image loads)
                     const text = document.createElement('span');
                     text.className = 'slot-text';
                     text.textContent = (product.full_name || product.description || 'UNK').substring(0, 12);
                     text.style.display = 'none';
                     slot.appendChild(text);
 
-                    // NEW/CHANGED indicator
                     if (product.is_new) {
                         const badge = document.createElement('span');
                         badge.className = 'slot-badge slot-badge-new';
@@ -165,7 +166,6 @@ const Planogram = {
                         slot.appendChild(badge);
                     }
 
-                    // Highlight check
                     if (this.highlightUpc &&
                         product.upc === this.highlightUpc &&
                         product.bay === this.highlightBay &&
@@ -177,20 +177,11 @@ const Planogram = {
                         }, 100);
                     }
 
-                    // Click: show product detail
-                    if (f === 0) { // Only first facing triggers detail
-                        slot.onclick = () => {
-                            if (this.onProductClick) {
-                                this.onProductClick(product, shelfIdx, prodIdx, shelf, bayData);
-                            }
-                        };
-                    } else {
-                        slot.onclick = () => {
-                            if (this.onProductClick) {
-                                this.onProductClick(product, shelfIdx, prodIdx, shelf, bayData);
-                            }
-                        };
-                    }
+                    slot.onclick = () => {
+                        if (this.onProductClick) {
+                            this.onProductClick(product, shelfIdx, prodIdx, shelf, bayData);
+                        }
+                    };
 
                     productsWrap.appendChild(slot);
                 }
@@ -201,28 +192,79 @@ const Planogram = {
         });
 
         container.appendChild(unit);
+
+        // Batch-preload uncached images in a single request
+        if (uncachedUpcs.length > 0) {
+            this._batchLoadImages([...new Set(uncachedUpcs)], pendingImgs);
+        }
     },
 
-    async _loadImage(upc, imgEl) {
+    async _batchLoadImages(upcs, pendingImgs) {
+        try {
+            const imageMap = await API.getBatchProductImages(upcs);
+            for (const [upc, url] of Object.entries(imageMap)) {
+                if (url) {
+                    this.imageCache[upc] = url;
+                    const imgs = pendingImgs[upc];
+                    if (imgs) {
+                        imgs.forEach(img => {
+                            img.src = url;
+                            img.onload = () => {
+                                img.style.display = '';
+                                const fb = img.parentElement?.querySelector('.slot-text');
+                                if (fb) fb.style.display = 'none';
+                            };
+                        });
+                    }
+                } else {
+                    const imgs = pendingImgs[upc];
+                    if (imgs) {
+                        imgs.forEach(img => {
+                            img.style.display = 'none';
+                            const fb = img.parentElement?.querySelector('.slot-text');
+                            if (fb) fb.style.display = '';
+                        });
+                    }
+                }
+            }
+        } catch {
+            // Fallback: load individually
+            for (const upc of upcs) {
+                const imgs = pendingImgs[upc];
+                if (imgs && imgs.length > 0) {
+                    this._loadImage(upc, imgs);
+                }
+            }
+        }
+    },
+
+    async _loadImage(upc, imgEls) {
+        const targets = Array.isArray(imgEls) ? imgEls : [imgEls];
         try {
             const url = await API.getProductImage(upc);
             if (url) {
                 this.imageCache[upc] = url;
-                imgEl.src = url;
-                imgEl.onload = () => {
-                    imgEl.style.display = '';
-                    const fb = imgEl.parentElement?.querySelector('.slot-text');
-                    if (fb) fb.style.display = 'none';
-                };
+                targets.forEach(imgEl => {
+                    imgEl.src = url;
+                    imgEl.onload = () => {
+                        imgEl.style.display = '';
+                        const fb = imgEl.parentElement?.querySelector('.slot-text');
+                        if (fb) fb.style.display = 'none';
+                    };
+                });
             } else {
+                targets.forEach(imgEl => {
+                    imgEl.style.display = 'none';
+                    const fb = imgEl.parentElement?.querySelector('.slot-text');
+                    if (fb) fb.style.display = '';
+                });
+            }
+        } catch {
+            targets.forEach(imgEl => {
                 imgEl.style.display = 'none';
                 const fb = imgEl.parentElement?.querySelector('.slot-text');
                 if (fb) fb.style.display = '';
-            }
-        } catch {
-            imgEl.style.display = 'none';
-            const fb = imgEl.parentElement?.querySelector('.slot-text');
-            if (fb) fb.style.display = '';
+            });
         }
     },
 

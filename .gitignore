@@ -7,3 +7,4 @@ dist/
 build/
 .venv/
 static/images/products/
+certs/

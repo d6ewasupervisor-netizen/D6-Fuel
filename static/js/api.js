@@ -71,6 +71,21 @@ const API = {
         }
     },
 
+    async getBatchProductImages(upcs) {
+        try {
+            const res = await fetch('/api/product-images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ upcs }),
+            });
+            if (!res.ok) return {};
+            const data = await res.json();
+            return data.images || {};
+        } catch {
+            return {};
+        }
+    },
+
     async getPdfInfo(dbkey) {
         const res = await fetch(`/api/planogram/${dbkey}/pdf-info`);
         if (!res.ok) return null;

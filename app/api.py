@@ -324,6 +324,26 @@ def product_image(upc: str):
     return {"upc": upc, "image_url": url}
 
 
+class BatchImageRequest(BaseModel):
+    upcs: list[str]
+
+
+@router.post("/product-images")
+def batch_product_images(req: BatchImageRequest):
+    """Resolve image URLs for multiple UPCs in one request."""
+    results = {}
+    for upc in req.upcs:
+        for ext in ("png", "jpg"):
+            local_path = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.{ext}")
+            if os.path.isfile(local_path):
+                results[upc] = f"/static/images/products/{upc}.{ext}"
+                break
+        else:
+            url = get_product_image(upc)
+            results[upc] = url
+    return {"images": results}
+
+
 # --- PDF Serving ---
 
 @router.get("/pdf/{filename}")
