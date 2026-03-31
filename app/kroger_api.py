@@ -72,23 +72,24 @@ def _extract_image_url(product):
     images = product.get("images", [])
     if not images:
         return ""
+
+    size_preference = ["xlarge", "large", "medium"]
+
+    def _best_url(sizes):
+        by_name = {s.get("size"): s.get("url", "") for s in sizes}
+        for pref in size_preference:
+            if pref in by_name and by_name[pref]:
+                return by_name[pref]
+        return sizes[0].get("url", "") if sizes else ""
+
     # Prefer "front" perspective
     for img in images:
         if img.get("perspective") == "front":
-            sizes = img.get("sizes", [])
-            for s in sizes:
-                if s.get("size") == "medium":
-                    return s.get("url", "")
-            if sizes:
-                return sizes[0].get("url", "")
+            url = _best_url(img.get("sizes", []))
+            if url:
+                return url
     # Fall back to first image
-    sizes = images[0].get("sizes", [])
-    for s in sizes:
-        if s.get("size") == "medium":
-            return s.get("url", "")
-    if sizes:
-        return sizes[0].get("url", "")
-    return ""
+    return _best_url(images[0].get("sizes", []))
 
 
 def _get_location_id():
