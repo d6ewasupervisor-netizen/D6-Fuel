@@ -8,3 +8,5 @@ build/
 .venv/
 static/images/products/
 certs/
+*.db-wal
+*.db-shm
