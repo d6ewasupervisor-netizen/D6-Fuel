@@ -12,8 +12,7 @@ const Planogram = {
     highlightBay: null,
     highlightShelf: null,
     highlightPosition: null,
-    imageCache: {},           // upc -> url cache
-    onProductClick: null,     // Callback for product detail
+    onProductClick: null,
     onBayChange: null,        // Callback for bay change
 
     setHighlight(upc, bay, shelf, position) {
@@ -81,20 +80,12 @@ const Planogram = {
         }, 0);
         const pixelsPerInch = Math.min(12, availableHeight / totalShelfHeight);
 
-        // Collect UPCs that need image URLs resolved
-        const uncachedUpcs = [];
         const allProducts = [];
         shelves.forEach(shelf => {
             shelf.products.forEach(product => {
                 allProducts.push(product);
-                if (!this.imageCache[product.upc]) {
-                    uncachedUpcs.push(product.upc);
-                }
             });
         });
-
-        // Track img elements keyed by UPC for batch update after fetch
-        const pendingImgs = {};
 
         shelves.forEach((shelf, shelfIdx) => {
             const row = document.createElement('div');
@@ -130,15 +121,7 @@ const Planogram = {
                     const img = document.createElement('img');
                     img.className = 'slot-thumb';
                     img.alt = '';
-                    const upc = product.upc;
-
-                    if (this.imageCache[upc]) {
-                        img.src = this.imageCache[upc];
-                    } else {
-                        // Will be populated by batch preload
-                        if (!pendingImgs[upc]) pendingImgs[upc] = [];
-                        pendingImgs[upc].push(img);
-                    }
+                    img.src = `/static/images/products/${product.upc}.jpg`;
 
                     img.onerror = () => {
                         img.style.display = 'none';
@@ -192,80 +175,6 @@ const Planogram = {
         });
 
         container.appendChild(unit);
-
-        // Batch-preload uncached images in a single request
-        if (uncachedUpcs.length > 0) {
-            this._batchLoadImages([...new Set(uncachedUpcs)], pendingImgs);
-        }
-    },
-
-    async _batchLoadImages(upcs, pendingImgs) {
-        try {
-            const imageMap = await API.getBatchProductImages(upcs);
-            for (const [upc, url] of Object.entries(imageMap)) {
-                if (url) {
-                    this.imageCache[upc] = url;
-                    const imgs = pendingImgs[upc];
-                    if (imgs) {
-                        imgs.forEach(img => {
-                            img.src = url;
-                            img.onload = () => {
-                                img.style.display = '';
-                                const fb = img.parentElement?.querySelector('.slot-text');
-                                if (fb) fb.style.display = 'none';
-                            };
-                        });
-                    }
-                } else {
-                    const imgs = pendingImgs[upc];
-                    if (imgs) {
-                        imgs.forEach(img => {
-                            img.style.display = 'none';
-                            const fb = img.parentElement?.querySelector('.slot-text');
-                            if (fb) fb.style.display = '';
-                        });
-                    }
-                }
-            }
-        } catch {
-            // Fallback: load individually
-            for (const upc of upcs) {
-                const imgs = pendingImgs[upc];
-                if (imgs && imgs.length > 0) {
-                    this._loadImage(upc, imgs);
-                }
-            }
-        }
-    },
-
-    async _loadImage(upc, imgEls) {
-        const targets = Array.isArray(imgEls) ? imgEls : [imgEls];
-        try {
-            const url = await API.getProductImage(upc, 'shelf');
-            if (url) {
-                this.imageCache[upc] = url;
-                targets.forEach(imgEl => {
-                    imgEl.src = url;
-                    imgEl.onload = () => {
-                        imgEl.style.display = '';
-                        const fb = imgEl.parentElement?.querySelector('.slot-text');
-                        if (fb) fb.style.display = 'none';
-                    };
-                });
-            } else {
-                targets.forEach(imgEl => {
-                    imgEl.style.display = 'none';
-                    const fb = imgEl.parentElement?.querySelector('.slot-text');
-                    if (fb) fb.style.display = '';
-                });
-            }
-        } catch {
-            targets.forEach(imgEl => {
-                imgEl.style.display = 'none';
-                const fb = imgEl.parentElement?.querySelector('.slot-text');
-                if (fb) fb.style.display = '';
-            });
-        }
     },
 
     // Bay navigation

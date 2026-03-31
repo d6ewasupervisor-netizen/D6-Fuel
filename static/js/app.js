@@ -76,6 +76,11 @@ const App = {
             document.getElementById('deleted-overlay').classList.add('hidden');
         };
 
+        // Image lightbox
+        const lightbox = document.getElementById('image-lightbox');
+        document.getElementById('lightbox-close').onclick = () => lightbox.classList.add('hidden');
+        lightbox.onclick = (e) => { if (e.target === lightbox) lightbox.classList.add('hidden'); };
+
         // Planogram callbacks
         Planogram.onProductClick = (product, shelfIdx, prodIdx, shelf, bayData) => {
             this.showProductOverlay(product, shelfIdx, prodIdx, shelf, bayData);
@@ -414,11 +419,18 @@ const App = {
 
         // Image — load directly from static JPGs, no API call
         const imgContainer = document.getElementById('overlay-image');
+        const imgSrc = `/static/images/products/${product.upc}.jpg`;
         const img = document.createElement('img');
-        img.src = `/static/images/products/${product.upc}.jpg`;
+        img.src = imgSrc;
         img.alt = product.description || '';
         img.onerror = () => {
             imgContainer.innerHTML = '<div class="placeholder-img">&#x1f48a;</div>';
+        };
+        img.onclick = () => {
+            const lb = document.getElementById('image-lightbox');
+            document.getElementById('lightbox-img').src = imgSrc;
+            document.getElementById('lightbox-img').alt = product.description || '';
+            lb.classList.remove('hidden');
         };
         imgContainer.innerHTML = '';
         imgContainer.appendChild(img);
