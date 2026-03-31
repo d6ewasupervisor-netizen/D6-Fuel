@@ -412,22 +412,17 @@ const App = {
             hints.appendChild(btn);
         }
 
-        // Image
+        // Image — load directly from static JPGs, no API call
         const imgContainer = document.getElementById('overlay-image');
-        imgContainer.innerHTML = '<div class="placeholder-img">&#x1f48a;</div>';
+        const img = document.createElement('img');
+        img.src = `/static/images/products/${product.upc}.jpg`;
+        img.alt = product.description || '';
+        img.onerror = () => {
+            imgContainer.innerHTML = '<div class="placeholder-img">&#x1f48a;</div>';
+        };
+        imgContainer.innerHTML = '';
+        imgContainer.appendChild(img);
         overlay.classList.remove('hidden');
-
-        const imageUrl = await API.getProductImage(product.upc);
-        if (imageUrl) {
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = product.description || '';
-            img.onerror = () => {
-                imgContainer.innerHTML = '<div class="placeholder-img">&#x1f48a;</div>';
-            };
-            imgContainer.innerHTML = '';
-            imgContainer.appendChild(img);
-        }
 
         API.logActivity('view_product', `${product.upc} - ${product.description}`);
     },
