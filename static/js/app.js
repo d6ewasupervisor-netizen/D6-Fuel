@@ -178,7 +178,7 @@ const App = {
             this.validStores = stores;
             dl.innerHTML = stores.map(id => `<option value="${Number(id)}">`).join('');
             hint.textContent = stores.length
-                ? 'Enter your store number to begin'
+                ? 'Select your store number to begin'
                 : 'No stores loaded yet. Contact your supervisor.';
         } catch {
             hint.textContent = 'Could not connect to server. Try refreshing.';
