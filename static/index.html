@@ -2,18 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
     <meta name="theme-color" content="#0c1929">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Supplemental Intelligence">
+    <meta name="format-detection" content="telephone=no">
     <title>Supplemental Intelligence</title>
     <link rel="stylesheet" href="/static/css/styles.css">
     <link rel="apple-touch-icon" href="/static/images/mascot.png">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="icon" type="image/png" href="/static/images/mascot.png">
+    <style>
+        /* Critical inline: prevent FOUC on mobile */
+        body { touch-action: pan-x pan-y; overscroll-behavior: none; }
+        input, button { font-size: 16px; } /* prevent iOS zoom on focus */
+    </style>
 </head>
 <body>
-    <!-- View 1: Store Entry -->
-    <div id="view-store" class="view active">
+    <!-- View 1: Login -->
+    <div id="view-login" class="view active">
         <div class="container center-content safe-bottom">
             <header class="app-brand app-brand-hero" aria-label="Supplemental Intelligence">
                 <div class="brand-glow" aria-hidden="true"></div>
@@ -23,21 +32,76 @@
                     <p class="brand-tagline">Store planogram lookup</p>
                 </div>
             </header>
-            <p class="subtitle">Enter your store number to begin</p>
-            <div class="input-group input-group-wide">
-                <input type="text" id="store-input" inputmode="numeric" pattern="[0-9]*"
-                       placeholder="Store #" maxlength="5" autocomplete="off" enterkeyhint="go">
-                <button type="button" id="store-submit" class="btn btn-primary">Go</button>
+            <p class="subtitle">Sign in to get started</p>
+            <div class="login-form">
+                <div class="input-group input-group-wide">
+                    <input type="text" id="name-input" placeholder="Your name" autocomplete="name" enterkeyhint="next">
+                </div>
+                <div class="input-group input-group-wide">
+                    <input type="text" id="store-input" inputmode="numeric" pattern="[0-9]*"
+                           placeholder="Store #" maxlength="5" autocomplete="off" enterkeyhint="go"
+                           autocorrect="off" autocapitalize="none" spellcheck="false"
+                           list="store-list" aria-describedby="store-list-hint">
+                    <datalist id="store-list"></datalist>
+                    <button type="button" id="store-submit" class="btn btn-primary">Go</button>
+                </div>
             </div>
+            <p id="store-list-hint" class="login-hint" role="status">Loading store list…</p>
             <p id="store-error" class="error hidden" role="alert"></p>
         </div>
     </div>
 
-    <!-- View 2: Scanner/Search -->
+    <!-- View 2: Vitamin Type Selection -->
+    <div id="view-type-select" class="view">
+        <div class="container safe-bottom">
+            <div class="top-bar">
+                <button type="button" id="back-to-login" class="btn-icon" aria-label="Back">&larr;</button>
+                <div class="top-bar-brand">
+                    <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
+                    <span class="top-bar-title">Supplemental Intelligence</span>
+                </div>
+                <span id="type-store-label" class="store-badge">Store #00000</span>
+            </div>
+            <div class="type-select-content">
+                <h2 class="view-heading type-heading">Select Vitamin Type</h2>
+                <p class="type-subtitle">Choose which planogram section to view</p>
+                <div id="type-cards" class="type-cards"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View 3: Planogram Bay View (main view) -->
+    <div id="view-bay" class="view">
+        <div class="bay-view-container">
+            <div class="bay-top-bar">
+                <button type="button" id="back-to-type" class="btn-icon" aria-label="Back">&larr;</button>
+                <div class="bay-top-info">
+                    <span id="bay-pog-name" class="pog-badge-sm"></span>
+                    <span id="bay-indicator" class="bay-indicator">Bay 1 of 1</span>
+                </div>
+                <div class="bay-top-actions">
+                    <button type="button" id="bay-search-btn" class="btn-icon" aria-label="Search" title="Search">&#128269;</button>
+                    <button type="button" id="bay-pdf-btn" class="btn-sm btn-pdf" aria-label="View PDF">PDF</button>
+                </div>
+            </div>
+
+            <!-- Shelf container - the main bay view -->
+            <div id="bay-shelf-container" class="bay-shelf-container"></div>
+
+            <!-- Bottom navigation: arrows + bay numbers -->
+            <div class="bay-bottom-nav">
+                <button type="button" id="bay-prev-arrow" class="bay-nav-arrow" aria-label="Previous bay">&lsaquo;</button>
+                <div id="bay-dots" class="bay-numbers"></div>
+                <button type="button" id="bay-next-arrow" class="bay-nav-arrow" aria-label="Next bay">&rsaquo;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View 4: Scanner/Search -->
     <div id="view-search" class="view">
         <div class="container safe-bottom">
             <div class="top-bar">
-                <button type="button" id="back-to-store" class="btn-icon" aria-label="Back">&larr;</button>
+                <button type="button" id="back-from-search" class="btn-icon" aria-label="Back">&larr;</button>
                 <div class="top-bar-brand">
                     <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
                     <span class="top-bar-title">Supplemental Intelligence</span>
@@ -51,124 +115,114 @@
             </div>
             <div class="input-group input-group-wide">
                 <input type="text" id="upc-input" inputmode="numeric"
-                       placeholder="Last 4+ digits of UPC" autocomplete="off" enterkeyhint="search">
+                       placeholder="Last 4+ digits of UPC" autocomplete="off" enterkeyhint="search"
+                       autocorrect="off" autocapitalize="none" spellcheck="false">
                 <button type="button" id="upc-submit" class="btn btn-primary">Search</button>
             </div>
             <p id="search-error" class="error hidden" role="alert"></p>
             <div id="search-spinner" class="spinner hidden" aria-hidden="true"></div>
+            <div id="search-results-list" class="search-results-list hidden"></div>
         </div>
     </div>
 
-    <!-- View 3: Results -->
-    <div id="view-results" class="view">
-        <div class="container safe-bottom">
-            <div class="top-bar">
-                <button type="button" id="back-to-search" class="btn-icon" aria-label="Back">&larr;</button>
-                <div class="top-bar-brand">
-                    <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
-                    <span class="top-bar-title">Supplemental Intelligence</span>
-                </div>
-                <span id="results-store-label" class="store-badge">Store #00000</span>
-            </div>
-            <div id="no-results" class="hidden">
-                <div class="empty-state">
-                    <div class="empty-icon" aria-hidden="true">&#10060;</div>
-                    <h2>Not found</h2>
-                    <p>This product is not on any planogram for your store.</p>
-                    <button type="button" id="search-again" class="btn btn-primary btn-touch btn-full">Search again</button>
-                </div>
-            </div>
-            <div id="has-results" class="hidden">
-                <div class="result-nav">
-                    <button type="button" id="prev-result" class="btn-icon btn-icon-lg" aria-label="Previous result">&larr;</button>
-                    <span id="result-counter" class="result-counter">1 of 1</span>
-                    <button type="button" id="next-result" class="btn-icon btn-icon-lg" aria-label="Next result">&rarr;</button>
-                </div>
-                <article id="result-card" class="product-card product-card-rich">
-                    <div class="result-card-grid">
-                        <div class="result-image-col">
-                            <div id="result-image-wrap" class="result-image-wrap" aria-busy="true">
-                                <div id="result-image-placeholder" class="result-image-placeholder" aria-hidden="true">&#x1f48a;</div>
-                                <img id="result-image" class="result-image hidden" alt="" loading="lazy" decoding="async">
-                            </div>
-                        </div>
-                        <div class="result-info-col">
-                            <div class="product-header">
-                                <h2 id="result-name" class="result-title"></h2>
-                                <span id="result-badge" class="badge"></span>
-                            </div>
-                            <div class="product-details">
-                                <div class="detail-row">
-                                    <span class="label">UPC</span>
-                                    <span id="result-upc" class="value"></span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Size</span>
-                                    <span id="result-size" class="value"></span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Planogram</span>
-                                    <span id="result-planogram" class="value"></span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Aisle</span>
-                                    <span id="result-aisle" class="value"></span>
-                                </div>
-                                <div class="detail-row location-highlight">
-                                    <span class="label">Location</span>
-                                    <span id="result-location" class="value"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" id="view-on-shelf" class="btn btn-primary btn-full btn-touch">View on shelf</button>
-                </article>
-                <button type="button" id="results-search-again" class="btn btn-secondary btn-full btn-touch">New search</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- View 4: Planogram View -->
-    <div id="view-planogram" class="view">
-        <div class="container safe-bottom">
-            <div class="top-bar top-bar-planogram">
-                <button type="button" id="back-to-results" class="btn-icon" aria-label="Back">&larr;</button>
-                <span id="pog-name" class="pog-badge"></span>
-            </div>
-            <div class="bay-selector">
-                <span class="label">Bay</span>
-                <div id="bay-tabs" class="bay-tabs"></div>
-            </div>
-            <div id="shelf-container" class="shelf-container"></div>
-        </div>
-        <!-- Product detail overlay -->
-        <div id="product-overlay" class="overlay hidden">
-            <div class="overlay-content safe-bottom">
-                <button type="button" id="close-overlay" class="btn-icon close-btn" aria-label="Close">&times;</button>
+    <!-- Product Detail Overlay -->
+    <div id="product-overlay" class="overlay hidden">
+        <div class="overlay-content safe-bottom">
+            <button type="button" id="close-overlay" class="btn-icon close-btn" aria-label="Close">&times;</button>
+            <div class="overlay-product-header">
                 <div id="overlay-image" class="overlay-image"></div>
-                <h3 id="overlay-name"></h3>
-                <div class="overlay-details">
-                    <div class="detail-row">
-                        <span class="label">UPC</span>
-                        <span id="overlay-upc" class="value"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Size</span>
-                        <span id="overlay-size" class="value"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Position</span>
-                        <span id="overlay-position" class="value"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Facings</span>
-                        <span id="overlay-facings" class="value"></span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Dimensions</span>
-                        <span id="overlay-dims" class="value"></span>
-                    </div>
+                <div class="overlay-title-group">
+                    <h3 id="overlay-name"></h3>
+                    <span id="overlay-badge" class="badge" style="display:none"></span>
                 </div>
+            </div>
+            <div class="overlay-details">
+                <div class="detail-row">
+                    <span class="label">UPC</span>
+                    <span id="overlay-upc" class="value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Size</span>
+                    <span id="overlay-size" class="value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Position</span>
+                    <span id="overlay-pos-detail" class="value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Facings</span>
+                    <span id="overlay-facings" class="value"></span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Dimensions</span>
+                    <span id="overlay-dims" class="value"></span>
+                </div>
+            </div>
+            <div class="overlay-actions">
+                <button type="button" id="overlay-pdf-btn" class="btn btn-secondary btn-full">View in PDF</button>
+            </div>
+            <div class="overlay-nav-footer">
+                <div class="overlay-nav-header">
+                    <button type="button" id="overlay-prev" class="btn-icon btn-icon-sm" aria-label="Previous">&larr;</button>
+                    <span id="overlay-position-label" class="overlay-pos-label"></span>
+                    <button type="button" id="overlay-next" class="btn-icon btn-icon-sm" aria-label="Next">&rarr;</button>
+                </div>
+                <div id="overlay-nav-hints" class="overlay-nav-hints"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full-screen image lightbox -->
+    <div id="image-lightbox" class="image-lightbox hidden" role="dialog" aria-label="Product image">
+        <button type="button" id="lightbox-close" class="lightbox-close" aria-label="Close">&times;</button>
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <!-- Deleted Item Red Flag Overlay -->
+    <div id="deleted-overlay" class="deleted-overlay hidden">
+        <div class="deleted-overlay-content">
+            <div class="deleted-banner">
+                <span class="deleted-banner-icon">&#9940;</span>
+                <h2 class="deleted-title">REMOVED FROM POG</h2>
+                <span class="deleted-banner-icon">&#9940;</span>
+            </div>
+            <p id="deleted-product-name" class="deleted-product-name"></p>
+            <p id="deleted-product-upc" class="deleted-product-upc"></p>
+            <div class="deleted-instructions">
+                <p><strong>This item has been discontinued.</strong></p>
+                <p>Pull it from the shelf and place it with the other <strong>discontinued products</strong> in the designated area.</p>
+            </div>
+            <button type="button" id="deleted-dismiss" class="btn btn-primary btn-full">Understood</button>
+        </div>
+    </div>
+
+    <!-- PDF Viewer -->
+    <div id="view-pdf" class="view">
+        <div class="pdf-viewer-container">
+            <div class="pdf-top-bar">
+                <button type="button" id="pdf-close" class="btn-icon" aria-label="Close">&times;</button>
+                <div class="pdf-title-area">
+                    <span id="pdf-title" class="pdf-title">Planogram PDF</span>
+                </div>
+                <button type="button" id="pdf-search-toggle" class="btn-icon" aria-label="Search">&#128269;</button>
+            </div>
+            <div id="pdf-search-bar" class="pdf-search-bar hidden">
+                <input type="text" id="pdf-search-input" placeholder="Search in PDF..." enterkeyhint="search">
+                <span id="pdf-search-count" class="pdf-search-count"></span>
+                <button type="button" id="pdf-search-prev" class="btn-icon btn-icon-xs">&uarr;</button>
+                <button type="button" id="pdf-search-next" class="btn-icon btn-icon-xs">&darr;</button>
+                <button type="button" id="pdf-search-close" class="btn-icon btn-icon-xs">&times;</button>
+            </div>
+            <div id="pdf-canvas-container" class="pdf-canvas-container">
+                <canvas id="pdf-canvas"></canvas>
+                <div id="pdf-text-layer" class="pdf-text-layer"></div>
+            </div>
+            <div class="pdf-bottom-bar">
+                <button type="button" id="pdf-zoom-out" class="btn-icon btn-icon-sm">&#8722;</button>
+                <button type="button" id="pdf-prev-page" class="btn-icon btn-icon-sm">&larr;</button>
+                <span id="pdf-page-info" class="pdf-page-info">1 / 1</span>
+                <button type="button" id="pdf-next-page" class="btn-icon btn-icon-sm">&rarr;</button>
+                <button type="button" id="pdf-zoom-in" class="btn-icon btn-icon-sm">&#43;</button>
             </div>
         </div>
     </div>
@@ -176,6 +230,8 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="/static/js/api.js"></script>
     <script src="/static/js/scanner.js"></script>
+    <script src="/static/js/gestures.js"></script>
+    <script src="/static/js/pdf-viewer.js"></script>
     <script src="/static/js/planogram.js"></script>
     <script src="/static/js/app.js"></script>
 </body>

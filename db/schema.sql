@@ -52,6 +52,36 @@ CREATE TABLE IF NOT EXISTS product_images (
     fetched_at TEXT
 );
 
+-- User session tracking
+CREATE TABLE IF NOT EXISTS user_sessions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_name TEXT NOT NULL,
+    store_id TEXT NOT NULL,
+    session_token TEXT UNIQUE NOT NULL,
+    login_at TEXT NOT NULL DEFAULT (datetime('now')),
+    last_active_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+-- Detailed activity log
+CREATE TABLE IF NOT EXISTS user_activity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_token TEXT NOT NULL,
+    action TEXT NOT NULL,
+    detail TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    FOREIGN KEY (session_token) REFERENCES user_sessions(session_token)
+);
+
+-- Deleted/discontinued products parsed from PDFs
+CREATE TABLE IF NOT EXISTS deleted_products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    planogram_dbkey INTEGER NOT NULL,
+    upc TEXT NOT NULL,
+    description TEXT,
+    size TEXT,
+    FOREIGN KEY (planogram_dbkey) REFERENCES planograms(dbkey)
+);
+
 CREATE TABLE IF NOT EXISTS product_descriptions (
     upc TEXT PRIMARY KEY,
     full_name TEXT,
@@ -61,3 +91,18 @@ CREATE TABLE IF NOT EXISTS product_descriptions (
 CREATE INDEX IF NOT EXISTS idx_products_upc ON products(upc);
 CREATE INDEX IF NOT EXISTS idx_store_planograms_store ON store_planograms(store_id);
 CREATE INDEX IF NOT EXISTS idx_products_planogram ON products(planogram_dbkey, bay, shelf, position);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_store ON user_sessions(store_id);
+CREATE INDEX IF NOT EXISTS idx_user_sessions_token ON user_sessions(session_token);
+CREATE INDEX IF NOT EXISTS idx_user_activity_session ON user_activity(session_token);
+CREATE INDEX IF NOT EXISTS idx_deleted_products_upc ON deleted_products(upc);
+
+-- Enhanced activity tracking (Step 3)
+ALTER TABLE user_activity ADD COLUMN view_name TEXT;
+ALTER TABLE user_activity ADD COLUMN duration_ms INTEGER;
+ALTER TABLE user_activity ADD COLUMN meta TEXT;
+
+-- Device/session metadata
+ALTER TABLE user_sessions ADD COLUMN user_agent TEXT;
+ALTER TABLE user_sessions ADD COLUMN screen_width INTEGER;
+ALTER TABLE user_sessions ADD COLUMN screen_height INTEGER;
+ALTER TABLE user_sessions ADD COLUMN device_type TEXT;
