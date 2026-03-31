@@ -824,6 +824,51 @@ input[type="text"]:focus {
     font-weight: 600;
 }
 
+.search-result-pog {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.pog-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.pog-tag-regular {
+    background: rgba(37, 99, 235, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.pog-tag-natural {
+    background: rgba(5, 150, 105, 0.15);
+    color: var(--natural-green-light);
+    border: 1px solid rgba(5, 150, 105, 0.3);
+}
+
+.pog-tag-other {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--gold-light);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+}
+
+.search-result-other-pog {
+    border-color: rgba(251, 191, 36, 0.3);
+}
+
 .search-result-arrow {
     font-size: 1.5rem;
     color: var(--text-dim);

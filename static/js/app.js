@@ -307,14 +307,19 @@ const App = {
 
         results.forEach(r => {
             const card = document.createElement('button');
-            card.className = 'search-result-card';
+            const isOtherPlanogram = this.currentPlanogramDbkey && r.planogram_dbkey !== this.currentPlanogramDbkey;
+            card.className = 'search-result-card' + (isOtherPlanogram ? ' search-result-other-pog' : '');
             const badgeHtml = r.is_new ? '<span class="badge badge-new">NEW</span>'
                 : r.is_changed ? '<span class="badge badge-changed">CHANGED</span>' : '';
+            const pogLabel = r.category === 'C678' ? 'Natural Vitamins' : 'Regular Vitamins';
+            const pogClass = r.category === 'C678' ? 'pog-tag-natural' : 'pog-tag-regular';
+            const otherHint = isOtherPlanogram ? ' <span class="pog-tag-other">OTHER POG</span>' : '';
             card.innerHTML = `
                 <div class="search-result-info">
                     <h3 class="search-result-name">${r.full_name || r.description || 'Unknown'} ${badgeHtml}</h3>
                     <p class="search-result-detail">UPC: ${r.upc} | ${r.size || '-'}</p>
                     <p class="search-result-location">Aisle ${r.aisle || '?'} &bull; Bay ${r.bay} / Shelf ${r.shelf} / Pos ${r.position}</p>
+                    <p class="search-result-pog"><span class="pog-tag ${pogClass}">${pogLabel}</span>${otherHint}</p>
                 </div>
                 <span class="search-result-arrow">&rsaquo;</span>
             `;
