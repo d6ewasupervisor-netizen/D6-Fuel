@@ -697,15 +697,44 @@ input[type="text"]:focus {
     color: #fff;
 }
 
-/* Product highlight */
+/* Product highlight — neon green flash, 4 blinks in ~1s */
 .product-slot.highlight {
-    animation: pulse-highlight 1.5s ease-in-out 4;
+    animation: neon-flash 0.25s ease-in-out 4;
     z-index: 20;
+    border: 3px solid #39ff14;
+    box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57, 255, 20, 0.4);
 }
 
-@keyframes pulse-highlight {
-    0%, 100% { box-shadow: 0 0 4px var(--highlight); border-color: var(--highlight); }
-    50% { box-shadow: 0 0 20px var(--highlight), 0 0 40px rgba(251, 191, 36, 0.25); border-color: var(--highlight); }
+@keyframes neon-flash {
+    0%, 100% {
+        border-color: #39ff14;
+        box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57, 255, 20, 0.4);
+    }
+    50% {
+        border-color: transparent;
+        box-shadow: none;
+    }
+}
+
+/* When a multi-facing group contains the highlighted product */
+.multi-facing-group.highlight-group {
+    border-color: #39ff14;
+    box-shadow:
+        inset 1px 1px 2px rgba(255, 255, 255, 0.18),
+        inset -1px -1px 2px rgba(0, 0, 0, 0.25),
+        0 0 14px #39ff14, 0 0 28px rgba(57, 255, 20, 0.3);
+    animation: neon-group-flash 0.25s ease-in-out 4;
+}
+
+@keyframes neon-group-flash {
+    0%, 100% {
+        border-color: #39ff14;
+        box-shadow: 0 0 14px #39ff14, 0 0 28px rgba(57, 255, 20, 0.3);
+    }
+    50% {
+        border-color: rgba(251, 191, 36, 0.55);
+        box-shadow: none;
+    }
 }
 
 /* Multi-facing group: 3D embossed container */
@@ -1139,41 +1168,65 @@ input[type="text"]:focus {
 .deleted-overlay.hidden { display: none; }
 
 .deleted-overlay.flash {
-    animation: flash-red 0.4s ease-in-out 3;
+    animation: flash-red 0.25s ease-in-out 4;
 }
 
 @keyframes flash-red {
-    0%, 100% { background: rgba(180, 20, 20, 0.92); }
-    50% { background: rgba(255, 0, 0, 0.98); }
+    0%, 100% { background: rgba(180, 20, 20, 0.95); }
+    50% { background: rgba(255, 0, 0, 1); }
 }
 
 .deleted-overlay-content {
     text-align: center;
-    max-width: 380px;
+    max-width: 420px;
 }
 
-.deleted-icon {
-    font-size: 4rem;
-    margin-bottom: 16px;
-    animation: pulse-warn 1s ease-in-out infinite;
+/* Big flashing banner across overlay */
+.deleted-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 3px solid #ff4444;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    animation: banner-flash 0.5s ease-in-out infinite;
+}
+
+@keyframes banner-flash {
+    0%, 100% {
+        border-color: #ff4444;
+        box-shadow: 0 0 15px rgba(255, 68, 68, 0.5), inset 0 0 15px rgba(255, 68, 68, 0.1);
+    }
+    50% {
+        border-color: #fff;
+        box-shadow: 0 0 25px rgba(255, 255, 255, 0.4), inset 0 0 20px rgba(255, 68, 68, 0.2);
+    }
+}
+
+.deleted-banner-icon {
+    font-size: 2.4rem;
+    animation: pulse-warn 0.8s ease-in-out infinite;
 }
 
 @keyframes pulse-warn {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.15); }
+    50% { transform: scale(1.2); }
 }
 
 .deleted-title {
-    font-size: 1.8rem;
+    font-size: 1.9rem;
     font-weight: 900;
-    letter-spacing: 0.05em;
-    margin-bottom: 12px;
+    letter-spacing: 0.08em;
     color: #fff;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin: 0;
 }
 
 .deleted-product-name {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #fff;
     margin-bottom: 4px;
@@ -1186,16 +1239,22 @@ input[type="text"]:focus {
 }
 
 .deleted-instructions {
-    background: rgba(0,0,0,0.3);
+    background: rgba(0,0,0,0.4);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius);
-    padding: 16px 20px;
+    padding: 18px 22px;
     margin-bottom: 24px;
 }
 
 .deleted-instructions p {
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.7;
     color: #fff;
+    margin: 0 0 6px 0;
+}
+
+.deleted-instructions p:last-child {
+    margin-bottom: 0;
 }
 
 /* ============================================

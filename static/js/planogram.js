@@ -181,8 +181,12 @@ const Planogram = {
                         product.shelf === this.highlightShelf &&
                         product.position === this.highlightPosition) {
                         slot.classList.add('highlight');
+                        if (groupWrap) {
+                            groupWrap.classList.add('highlight-group');
+                        }
                         setTimeout(() => {
-                            slot.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            const scrollTarget = groupWrap || slot;
+                            scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }, 100);
                     }
 
