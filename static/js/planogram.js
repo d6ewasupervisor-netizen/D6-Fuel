@@ -106,12 +106,35 @@ const Planogram = {
 
             shelf.products.forEach((product, prodIdx) => {
                 const totalFacings = product.facings || 1;
+                const isMultiFacing = totalFacings > 1;
+
+                // Wrap multi-facing products in a group container
+                let groupWrap = null;
+                if (isMultiFacing) {
+                    groupWrap = document.createElement('div');
+                    groupWrap.className = 'multi-facing-group';
+                    const groupWidthPct = ((product.width_inches || 2.5) * totalFacings / bayWidthInches) * 100;
+                    groupWrap.style.width = groupWidthPct + '%';
+                    groupWrap.style.flexShrink = '0';
+
+                    // Facing count badge
+                    const countBadge = document.createElement('span');
+                    countBadge.className = 'facing-count-badge';
+                    countBadge.textContent = '\u00d7' + totalFacings;
+                    groupWrap.appendChild(countBadge);
+                }
+
                 for (let f = 0; f < totalFacings; f++) {
                     const slot = document.createElement('div');
                     slot.className = 'product-slot';
+                    if (isMultiFacing) slot.classList.add('multi-facing-slot');
 
-                    const widthPct = ((product.width_inches || 2.5) / bayWidthInches) * 100;
-                    slot.style.width = widthPct + '%';
+                    if (isMultiFacing) {
+                        slot.style.width = (100 / totalFacings) + '%';
+                    } else {
+                        const widthPct = ((product.width_inches || 2.5) / bayWidthInches) * 100;
+                        slot.style.width = widthPct + '%';
+                    }
                     slot.style.flexShrink = '0';
 
                     const desc = (product.description || '').toUpperCase();
@@ -169,7 +192,15 @@ const Planogram = {
                         }
                     };
 
-                    productsWrap.appendChild(slot);
+                    if (groupWrap) {
+                        groupWrap.appendChild(slot);
+                    } else {
+                        productsWrap.appendChild(slot);
+                    }
+                }
+
+                if (groupWrap) {
+                    productsWrap.appendChild(groupWrap);
                 }
             });
 
