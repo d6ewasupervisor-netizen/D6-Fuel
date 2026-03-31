@@ -121,7 +121,10 @@ const Planogram = {
                     const img = document.createElement('img');
                     img.className = 'slot-thumb';
                     img.alt = '';
-                    img.src = `/static/images/products/${product.upc}.jpg`;
+                    img.loading = 'lazy';
+                    img.decoding = 'async';
+                    // Defer actual src until visible
+                    img.dataset.src = `/static/images/products/${product.upc}.jpg`;
 
                     img.onerror = () => {
                         img.style.display = 'none';
@@ -175,6 +178,26 @@ const Planogram = {
         });
 
         container.appendChild(unit);
+
+        // Lazy-load product images as they scroll into view
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            delete img.dataset.src;
+                        }
+                        observer.unobserve(img);
+                    }
+                });
+            }, { root: container, rootMargin: '100px' });
+
+            container.querySelectorAll('img.slot-thumb[data-src]').forEach(img => {
+                observer.observe(img);
+            });
+        }
     },
 
     // Bay navigation
