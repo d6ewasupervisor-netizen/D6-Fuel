@@ -2,16 +2,35 @@ import os
 import uuid
 import sqlite3
 
-from fastapi import APIRouter, Query, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from .database import query, execute, get_connection
-from .kroger_api import get_product_image, get_product_description
+from .kroger_api import get_product_description
 
 router = APIRouter(prefix="/api")
 
 LOCAL_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "..", "static", "images", "products")
+LOCAL_ORIGINAL_IMAGE_DIR = os.path.join(
+    os.path.dirname(__file__), "..", "static", "images", "products_original"
+)
 PDF_DIR = os.path.join(os.path.dirname(__file__), "..", "P3W3 C180 C678 Vitamins")
+
+
+def _local_shelf_image_url(upc: str) -> str | None:
+    """Bay thumbnails only: cropped PNG in products_original/."""
+    orig_png = os.path.join(LOCAL_ORIGINAL_IMAGE_DIR, f"{upc}.png")
+    if os.path.isfile(orig_png):
+        return f"/static/images/products_original/{upc}.png"
+    return None
+
+
+def _local_detail_image_url(upc: str) -> str | None:
+    """Product card / overlay only: JPG in products/."""
+    jpg = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.jpg")
+    if os.path.isfile(jpg):
+        return f"/static/images/products/{upc}.jpg"
+    return None
 
 
 # --- Login & Activity Tracking ---
@@ -314,13 +333,17 @@ def product_description(upc: str):
 # --- Product Image ---
 
 @router.get("/product-image/{upc}")
-def product_image(upc: str):
-    # Prefer transparent PNG (cropped) over original JPG
-    for ext in ("png", "jpg"):
-        local_path = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.{ext}")
-        if os.path.isfile(local_path):
-            return {"upc": upc, "image_url": f"/static/images/products/{upc}.{ext}"}
-    url = get_product_image(upc)
+def product_image(upc: str, context: str = Query("detail")):
+    """
+    context=detail: card / overlay — only products/{upc}.jpg.
+    context=shelf: bay slots — only products_original/{upc}.png.
+    No other folders or remote URLs.
+    """
+    ctx = context if context in ("detail", "shelf") else "detail"
+    if ctx == "shelf":
+        url = _local_shelf_image_url(upc)
+    else:
+        url = _local_detail_image_url(upc)
     return {"upc": upc, "image_url": url}
 
 
@@ -330,17 +353,8 @@ class BatchImageRequest(BaseModel):
 
 @router.post("/product-images")
 def batch_product_images(req: BatchImageRequest):
-    """Resolve image URLs for multiple UPCs in one request."""
-    results = {}
-    for upc in req.upcs:
-        for ext in ("png", "jpg"):
-            local_path = os.path.join(LOCAL_IMAGE_DIR, f"{upc}.{ext}")
-            if os.path.isfile(local_path):
-                results[upc] = f"/static/images/products/{upc}.{ext}"
-                break
-        else:
-            url = get_product_image(upc)
-            results[upc] = url
+    """Bay thumbnails only: products_original/{upc}.png when present."""
+    results = {upc: _local_shelf_image_url(upc) for upc in req.upcs}
     return {"images": results}
 
 

@@ -454,6 +454,8 @@ def main():
     parser = argparse.ArgumentParser(description="Crop product images to remove whitespace")
     parser.add_argument("--apply", action="store_true",
                         help="Write cropped files (default: dry run, no writes)")
+    parser.add_argument("--src-dir", type=str, default="",
+                        help="Source folder containing JPG images (default: static/images/products)")
     parser.add_argument("--out-dir", type=str, default="",
                         help="Save cropped images here instead of overwriting originals")
     parser.add_argument("--size", type=int, default=DEFAULT_SIZE,
@@ -476,21 +478,22 @@ def main():
                         help="Process only the first N images (for testing)")
     args = parser.parse_args()
 
-    if not IMAGE_DIR.exists():
-        print(f"ERROR: Image directory not found: {IMAGE_DIR}")
+    src_dir = Path(args.src_dir) if args.src_dir else IMAGE_DIR
+    if not src_dir.exists():
+        print(f"ERROR: Source directory not found: {src_dir}")
         sys.exit(1)
 
     out_dir = Path(args.out_dir) if args.out_dir else None
 
     # Collect files to process
     if args.upc:
-        files = [IMAGE_DIR / f"{args.upc}.jpg"]
+        files = [src_dir / f"{args.upc}.jpg"]
         files = [f for f in files if f.exists()]
         if not files:
-            print(f"No image found for UPC {args.upc} in {IMAGE_DIR}")
+            print(f"No image found for UPC {args.upc} in {src_dir}")
             sys.exit(1)
     else:
-        files = sorted(IMAGE_DIR.glob("*.jpg"))
+        files = sorted(src_dir.glob("*.jpg"))
         if args.limit > 0:
             files = files[: args.limit]
 
@@ -498,6 +501,7 @@ def main():
     mode = "APPLY" if args.apply else "DRY RUN"
     dest = str(out_dir) if out_dir else "in place"
     backup_note = "" if args.no_backup or out_dir else f" (originals -> {BACKUP_DIR.name}/)"
+    print(f"  Source     : {src_dir}")
 
     print("=" * 56)
     print(f"  PRODUCT IMAGE CROP  [{mode}]")

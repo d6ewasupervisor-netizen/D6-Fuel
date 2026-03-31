@@ -241,7 +241,7 @@ const Planogram = {
     async _loadImage(upc, imgEls) {
         const targets = Array.isArray(imgEls) ? imgEls : [imgEls];
         try {
-            const url = await API.getProductImage(upc);
+            const url = await API.getProductImage(upc, 'shelf');
             if (url) {
                 this.imageCache[upc] = url;
                 targets.forEach(imgEl => {

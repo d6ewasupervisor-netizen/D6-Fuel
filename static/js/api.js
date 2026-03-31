@@ -60,9 +60,14 @@ const API = {
         return res.json();
     },
 
-    async getProductImage(upc) {
+    /**
+     * @param {string} upc
+     * @param {'detail'|'shelf'} [context='detail'] detail = only products/{upc}.jpg; shelf = only products_original/{upc}.png
+     */
+    async getProductImage(upc, context = 'detail') {
         try {
-            const res = await fetch(`/api/product-image/${encodeURIComponent(upc)}`);
+            const q = context === 'shelf' ? '?context=shelf' : '';
+            const res = await fetch(`/api/product-image/${encodeURIComponent(upc)}${q}`);
             if (!res.ok) return null;
             const data = await res.json();
             return data.image_url || null;
