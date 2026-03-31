@@ -536,32 +536,43 @@ input[type="text"]:focus {
     align-items: center;
 }
 
-/* Bay navigation arrows */
-.bay-nav-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 80px;
-    background: rgba(21, 34, 56, 0.85);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    color: var(--text);
-    font-size: 1.8rem;
-    cursor: pointer;
-    z-index: 20;
+/* Bay bottom navigation bar */
+.bay-bottom-nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    backdrop-filter: blur(4px);
-    touch-action: manipulation;
+    gap: 8px;
+    padding: 8px 12px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
+    background: var(--bg);
+    flex-shrink: 0;
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
 }
 
-.bay-nav-left { left: 4px; border-radius: 0 8px 8px 0; }
-.bay-nav-right { right: 4px; border-radius: 8px 0 0 8px; }
+.bay-nav-arrow {
+    width: 48px;
+    height: 44px;
+    background: var(--surface2);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: var(--text);
+    font-size: 1.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    flex-shrink: 0;
+    touch-action: manipulation;
+    transition: background 0.15s, opacity 0.15s;
+}
 
 .bay-nav-arrow:active {
     background: rgba(37, 99, 235, 0.4);
+}
+
+.bay-nav-arrow[style*="hidden"] {
+    opacity: 0.3;
+    pointer-events: none;
 }
 
 /* Bay shelf container */
@@ -708,32 +719,44 @@ input[type="text"]:focus {
 .product-slot[data-color="6"] { background: #702459; }
 .product-slot[data-color="7"] { background: #1a365d; }
 
-/* Bay dots */
-.bay-dots {
+/* Bay numbers */
+.bay-numbers {
     display: flex;
-    justify-content: center;
-    gap: 0;
-    padding: 4px 0;
-    flex-shrink: 0;
-    background: var(--bg);
+    align-items: center;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-width: calc(100vw - 140px);
+    padding: 2px 0;
 }
 
-.bay-dot {
-    box-sizing: content-box;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+.bay-numbers::-webkit-scrollbar { display: none; }
+
+.bay-num {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 8px;
     background: var(--surface2);
-    background-clip: content-box;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
     touch-action: manipulation;
+    padding: 0 6px;
 }
 
-.bay-dot.active {
-    background: var(--gold-light);
-    background-clip: content-box;
+.bay-num.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
 }
 
 /* ============================================
@@ -1122,9 +1145,33 @@ input[type="text"]:focus {
 
 .pdf-text-layer {
     position: absolute;
-    top: 0;
-    left: 0;
     pointer-events: none;
+    color: transparent;
+    overflow: hidden;
+    line-height: 1;
+}
+
+.pdf-text-layer > span {
+    position: absolute;
+    white-space: pre;
+    transform-origin: 0% 0%;
+    color: transparent;
+}
+
+.search-text-hit {
+    position: static;
+    display: inline;
+    white-space: inherit;
+    transform: none;
+    background: rgba(250, 204, 21, 0.35);
+    box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.7);
+    border-radius: 2px;
+    color: transparent;
+}
+
+.search-text-hit-active {
+    background: rgba(250, 150, 21, 0.55);
+    box-shadow: 0 0 0 2px rgba(250, 150, 21, 0.9);
 }
 
 .pdf-bottom-bar {
@@ -1217,10 +1264,6 @@ input[type="text"]:focus {
     .bay-top-bar {
         padding: 4px 12px;
         min-height: 44px;
-    }
-
-    .bay-nav-arrow {
-        height: 56px;
     }
 
     .pdf-top-bar {

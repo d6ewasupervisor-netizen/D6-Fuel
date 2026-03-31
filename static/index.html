@@ -66,7 +66,7 @@
 
     <!-- View 3: Planogram Bay View (main view) -->
     <div id="view-bay" class="view">
-        <div class="bay-view-container safe-bottom">
+        <div class="bay-view-container">
             <div class="bay-top-bar">
                 <button type="button" id="back-to-type" class="btn-icon" aria-label="Back">&larr;</button>
                 <div class="bay-top-info">
@@ -79,15 +79,15 @@
                 </div>
             </div>
 
-            <!-- Bay navigation arrows -->
-            <button type="button" id="bay-prev-arrow" class="bay-nav-arrow bay-nav-left" aria-label="Previous bay">&lsaquo;</button>
-            <button type="button" id="bay-next-arrow" class="bay-nav-arrow bay-nav-right" aria-label="Next bay">&rsaquo;</button>
-
             <!-- Shelf container - the main bay view -->
             <div id="bay-shelf-container" class="bay-shelf-container"></div>
 
-            <!-- Swipe hint -->
-            <div id="bay-dots" class="bay-dots"></div>
+            <!-- Bottom navigation: arrows + bay numbers -->
+            <div class="bay-bottom-nav">
+                <button type="button" id="bay-prev-arrow" class="bay-nav-arrow" aria-label="Previous bay">&lsaquo;</button>
+                <div id="bay-dots" class="bay-numbers"></div>
+                <button type="button" id="bay-next-arrow" class="bay-nav-arrow" aria-label="Next bay">&rsaquo;</button>
+            </div>
         </div>
     </div>
 

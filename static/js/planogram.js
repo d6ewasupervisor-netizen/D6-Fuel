@@ -74,12 +74,12 @@ const Planogram = {
 
         const shelves = [...bayData.shelves].sort((a, b) => a.shelf - b.shelf);
 
-        const availableHeight = window.innerHeight - 120;
+        const availableHeight = window.innerHeight - 140;
         const totalShelfHeight = shelves.reduce((sum, s) => {
             const maxH = Math.max(...s.products.map(p => p.height_inches || 5), 5);
             return sum + maxH;
         }, 0);
-        const pixelsPerInch = Math.min(8, availableHeight / totalShelfHeight);
+        const pixelsPerInch = Math.min(12, availableHeight / totalShelfHeight);
 
         // Collect UPCs that need image URLs resolved
         const uncachedUpcs = [];
@@ -102,7 +102,7 @@ const Planogram = {
             row.dataset.shelf = shelf.shelf;
 
             const maxH = Math.max(...shelf.products.map(p => p.height_inches || 5), 5);
-            const rowHeight = Math.max(48, maxH * pixelsPerInch);
+            const rowHeight = Math.max(60, maxH * pixelsPerInch);
             row.style.height = rowHeight + 'px';
 
             const label = document.createElement('span');
@@ -320,16 +320,22 @@ const Planogram = {
 
     updateBayDots() {
         if (!this.currentData) return;
-        const dotsContainer = document.getElementById('bay-dots');
-        dotsContainer.innerHTML = '';
+        const container = document.getElementById('bay-dots');
+        container.innerHTML = '';
         const total = this.currentData.bays.length;
         if (total <= 1) return;
 
         for (let i = 0; i < total; i++) {
-            const dot = document.createElement('span');
-            dot.className = 'bay-dot' + (i === this.currentBayIndex ? ' active' : '');
-            dot.onclick = () => this.goToBay(i);
-            dotsContainer.appendChild(dot);
+            const btn = document.createElement('button');
+            btn.className = 'bay-num' + (i === this.currentBayIndex ? ' active' : '');
+            btn.textContent = this.currentData.bays[i].bay;
+            btn.onclick = () => this.goToBay(i);
+            container.appendChild(btn);
+        }
+
+        const activeBtn = container.querySelector('.bay-num.active');
+        if (activeBtn) {
+            activeBtn.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
         }
     },
 
