@@ -104,17 +104,25 @@ const Planogram = {
             const productsWrap = document.createElement('div');
             productsWrap.className = 'shelf-products';
 
+            // Calculate total raw width of all products on this shelf
+            // then scale proportionally so every shelf fills 100%
+            const totalRawWidth = shelf.products.reduce((sum, p) => {
+                return sum + (p.width_inches || 2.5) * (p.facings || 1);
+            }, 0);
+            const widthScale = totalRawWidth > 0 ? bayWidthInches / totalRawWidth : 1;
+
             shelf.products.forEach((product, prodIdx) => {
                 const totalFacings = product.facings || 1;
                 const isMultiFacing = totalFacings > 1;
+                const rawProductWidth = (product.width_inches || 2.5) * totalFacings;
+                const scaledWidthPct = (rawProductWidth * widthScale / bayWidthInches) * 100;
 
                 // Wrap multi-facing products in a group container
                 let groupWrap = null;
                 if (isMultiFacing) {
                     groupWrap = document.createElement('div');
                     groupWrap.className = 'multi-facing-group';
-                    const groupWidthPct = ((product.width_inches || 2.5) * totalFacings / bayWidthInches) * 100;
-                    groupWrap.style.width = groupWidthPct + '%';
+                    groupWrap.style.width = scaledWidthPct + '%';
                     groupWrap.style.flexShrink = '0';
 
                     // Facing count badge
@@ -132,8 +140,7 @@ const Planogram = {
                     if (isMultiFacing) {
                         slot.style.width = (100 / totalFacings) + '%';
                     } else {
-                        const widthPct = ((product.width_inches || 2.5) / bayWidthInches) * 100;
-                        slot.style.width = widthPct + '%';
+                        slot.style.width = scaledWidthPct + '%';
                     }
                     slot.style.flexShrink = '0';
 
