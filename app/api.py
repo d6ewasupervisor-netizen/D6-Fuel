@@ -35,9 +35,13 @@ def _local_detail_image_url(upc: str) -> str | None:
 
 # --- Login & Activity Tracking ---
 
+DEFAULT_PASSWORD = "V!tamins"
+
+
 class LoginRequest(BaseModel):
     user_name: str
     store_id: str
+    password: str
     user_agent: str = ""
     screen_width: int = 0
     screen_height: int = 0
@@ -55,6 +59,8 @@ class ActivityRequest(BaseModel):
 
 @router.post("/login")
 def login(req: LoginRequest):
+    if req.password != DEFAULT_PASSWORD:
+        raise HTTPException(401, "Invalid password")
     store_padded = req.store_id.strip().zfill(5)
     # Validate store exists
     stores = query(

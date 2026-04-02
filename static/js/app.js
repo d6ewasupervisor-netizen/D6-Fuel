@@ -34,6 +34,9 @@ const App = {
         // Login
         document.getElementById('store-submit').onclick = () => this.submitLogin();
         document.getElementById('name-input').onkeydown = (e) => {
+            if (e.key === 'Enter') document.getElementById('password-input').focus();
+        };
+        document.getElementById('password-input').onkeydown = (e) => {
             if (e.key === 'Enter') document.getElementById('store-input').focus();
         };
         document.getElementById('store-input').onkeydown = (e) => {
@@ -129,14 +132,21 @@ const App = {
 
     async submitLogin() {
         const nameInput = document.getElementById('name-input');
+        const passwordInput = document.getElementById('password-input');
         const storeInput = document.getElementById('store-input');
         const error = document.getElementById('store-error');
 
         const name = nameInput.value.trim();
+        const password = passwordInput.value;
         const raw = storeInput.value.trim();
 
         if (!name) {
             error.textContent = 'Please enter your name';
+            error.classList.remove('hidden');
+            return;
+        }
+        if (!password) {
+            error.textContent = 'Please enter a password';
             error.classList.remove('hidden');
             return;
         }
@@ -149,7 +159,7 @@ const App = {
         error.classList.add('hidden');
 
         try {
-            const data = await API.login(name, raw);
+            const data = await API.login(name, raw, password);
             this.storeId = data.store_id;
             this.userName = data.user_name;
             this.sessionToken = data.session_token;
@@ -160,6 +170,8 @@ const App = {
         } catch (e) {
             error.textContent = e.message === 'Store not found'
                 ? `Store ${raw} not found in planogram data.`
+                : e.message === 'Invalid password'
+                ? 'Invalid password.'
                 : 'Login failed. Try again.';
             error.classList.remove('hidden');
         }
