@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666196",
+  "original_desc": "FRCFCTR AMZ ASHW COMP",
+  "expanded_desc": "Force Factor Amazing Ashwagandha Complex",
+  "queries_used": [
+    "0081012666196 supplement",
+    "Force Factor Amazing Ashwagandha Complex supplement product",
+    "Force Factor Amazing Ashwagandha Complex vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666196 supplement",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666196 supplement",
+      "url": "https://safeinet.org/resources/pdf-previews/geico-supplement-request-template.webp",
+      "filename": "bing_q1_2.webp"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666196 supplement",
+      "url": "https://routines.club/wp-content/uploads/2025/02/Dr-Mary-Claire-Haver-Supplement-List.webp",
+      "filename": "bing_q1_3.webp"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Amazing Ashwagandha Complex supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/02_f6e2bdc2-5d86-4b98-a314-1d6bd23f3182_550x550.jpg?v=1701101434",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Amazing Ashwagandha Complex supplement product",
+      "url": "https://cdn.shopify.com/s/files/1/0278/7776/9321/files/0_d2db90d0-8f70-4db1-9954-f53b2991adb6.jpg?v=1701101435",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Amazing Ashwagandha Complex supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/03_08c3024a-36c2-469c-9d8c-0b03d037ba2d_550x550.jpg?v=1701101434",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

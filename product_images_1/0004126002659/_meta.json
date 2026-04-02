@@ -1,0 +1,48 @@
+{
+  "upc": "0004126002659",
+  "original_desc": "KRO BRAIN SUPPORT GUMMY",
+  "expanded_desc": "Kroger BRAIN SupplementORT GUMMY",
+  "queries_used": [
+    "0004126002659 supplement",
+    "Kroger BRAIN SupplementORT GUMMY supplement product",
+    "Kroger BRAIN SupplementORT GUMMY vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0004126002659 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0004126002659 supplement",
+      "url": "https://wallpapers.com/images/hd/iron-supplement-png-egc-zglrgfweheyy9ean.png",
+      "filename": "bing_q1_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "0004126002659 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/500x500_blank/FB9316A2-3334-4BC9-A9F4-3932BF78AD0C_dc0849a9-aad2-44e3-b9bb-55f727fa852f.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Kroger BRAIN SupplementORT GUMMY supplement product",
+      "url": "http://octaviuspharma.com/wp-content/uploads/2024/03/BRAIN-BOOSTER-GUMMY-03.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Kroger BRAIN SupplementORT GUMMY supplement product",
+      "url": "https://octaviuspharma.com/wp-content/uploads/2024/03/BRAIN-BOOSTER-GUMMY-02.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Kroger BRAIN SupplementORT GUMMY supplement product",
+      "url": "https://www.kroger.com/product/images/large/back/0081003206380",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

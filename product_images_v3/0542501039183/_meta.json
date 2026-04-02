@@ -1,0 +1,78 @@
+{
+  "upc": "0542501039183",
+  "original_desc": "NATF BIOSIL SKIN/HAIR/NLS",
+  "search_name": "Natural Factors BioSil Skin Hair Nails",
+  "queries_used": [
+    "\"0542501039183\" product",
+    "\"542501039183\" supplement",
+    "Natural Factors BioSil Skin Hair Nails product photo",
+    "Natural Factors BioSil Skin Hair Nails bottle",
+    "Natural Factors BioSil Skin Hair Nails supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://site-1306369054.file.myqcloud.com/upload/images/5483571648158684/2a545994fd643a0e12570e0086e99e81/6f2f5f816741f746338aea554109112c.jpg?imageMogr2/thumbnail/500x260/pad/1/color/I0Y2RjZGNg==/quality/85/sharpen/100",
+      "query_index": 0,
+      "width": 500,
+      "height": 260,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/505/520/451/2663/front_ro.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1205
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/200/504/101/1495/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 689
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/590/324/656/2965/ingredients_de.3.full.jpg",
+      "query_index": 0,
+      "width": 720,
+      "height": 1280,
+      "size_kb": 62
+    },
+    {
+      "filename": "q2_5.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "query_index": 1,
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    },
+    {
+      "filename": "q2_6.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/501/233/585/0606/front_en.3.full.jpg",
+      "query_index": 1,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1797
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/357/466/163/8706/front_fr.3.400.jpg",
+      "query_index": 1,
+      "width": 367,
+      "height": 400,
+      "size_kb": 20
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/611/124/620/7109/ingredients_ar.3.full.jpg",
+      "query_index": 1,
+      "width": 4160,
+      "height": 3120,
+      "size_kb": 808
+    }
+  ]
+}

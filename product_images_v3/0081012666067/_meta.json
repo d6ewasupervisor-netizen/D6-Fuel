@@ -1,0 +1,78 @@
+{
+  "upc": "0081012666067",
+  "original_desc": "FRCFCTR ULT BRBRN CAP",
+  "search_name": "Force Factor Ultra Blueberry Brain Capsules",
+  "queries_used": [
+    "\"0081012666067\" product",
+    "\"81012666067\" supplement",
+    "Force Factor Ultra Blueberry Brain Capsules product photo",
+    "Force Factor Ultra Blueberry Brain Capsules bottle",
+    "Force Factor Ultra Blueberry Brain Capsules supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://site-1306369054.file.myqcloud.com/upload/images/5483571648158684/2a545994fd643a0e12570e0086e99e81/6f2f5f816741f746338aea554109112c.jpg?imageMogr2/thumbnail/500x260/pad/1/color/I0Y2RjZGNg==/quality/85/sharpen/100",
+      "query_index": 0,
+      "width": 500,
+      "height": 260,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/505/520/451/2663/front_ro.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1205
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/501/233/585/0606/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1797
+    },
+    {
+      "filename": "q2_4.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "query_index": 1,
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    },
+    {
+      "filename": "q2_5.jpg",
+      "url": "https://influencermarketinghub.com/wp-content/uploads/2022/03/image1-29-2-1024x551.jpg",
+      "query_index": 1,
+      "width": 1024,
+      "height": 551,
+      "size_kb": 89
+    },
+    {
+      "filename": "q2_6.webp",
+      "url": "https://blog.longevity-supplement.com/logo.webp",
+      "query_index": 1,
+      "width": 1200,
+      "height": 1198,
+      "size_kb": 171
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://img.tpl.one/w/products/IMV/500x500_blank/FB9316A2-3334-4BC9-A9F4-3932BF78AD0C_dc0849a9-aad2-44e3-b9bb-55f727fa852f.jpg",
+      "query_index": 1,
+      "width": 500,
+      "height": 500,
+      "size_kb": 33
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "query_index": 1,
+      "width": 1000,
+      "height": 1000,
+      "size_kb": 71
+    }
+  ]
+}

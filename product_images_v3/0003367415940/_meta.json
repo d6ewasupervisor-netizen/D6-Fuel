@@ -1,0 +1,78 @@
+{
+  "upc": "0003367415940",
+  "original_desc": "NTWY OMEGA 3 GMM CHEW",
+  "search_name": "Nateway Omega 3 Gummy Chews supplement",
+  "queries_used": [
+    "\"0003367415940\" product",
+    "\"3367415940\" supplement",
+    "Nateway Omega 3 Gummy Chews supplement product photo",
+    "Nateway Omega 3 Gummy Chews supplement bottle",
+    "Nateway Omega 3 Gummy Chews supplement supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://img.alicdn.com/imgextra/i1/509786769/O1CN018BhUsU1zsFYi1BCpU_!!509786769-0-pixelsss.jpg",
+      "query_index": 0,
+      "width": 800,
+      "height": 800,
+      "size_kb": 85
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/357/466/163/8706/front_fr.3.400.jpg",
+      "query_index": 0,
+      "width": 367,
+      "height": 400,
+      "size_kb": 20
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://enosta.com/wp-content/uploads/2023/10/product-validation-11-1024x709.jpg",
+      "query_index": 0,
+      "width": 1024,
+      "height": 709,
+      "size_kb": 80
+    },
+    {
+      "filename": "q1_4.png",
+      "url": "https://cdn.testbook.com/images/seo/The-Scalar-Product-Product-of-Two-Vectors.png",
+      "query_index": 0,
+      "width": 750,
+      "height": 350,
+      "size_kb": 20
+    },
+    {
+      "filename": "q1_5.png",
+      "url": "https://cdn2.slidemodel.com/wp-content/uploads/04_features-external-product-roadmap.png",
+      "query_index": 0,
+      "width": 1200,
+      "height": 743,
+      "size_kb": 33
+    },
+    {
+      "filename": "q2_6.jpg",
+      "url": "https://i.ibb.co/njnNJqF/345336702-976327240486504-6833440312027245760-n.jpg",
+      "query_index": 1,
+      "width": 2048,
+      "height": 2048,
+      "size_kb": 248
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://bluebonnetnutrition.com/cdn/shop/files/743715020443D_supp-side.jpg?v=1714686908&width=700",
+      "query_index": 1,
+      "width": 700,
+      "height": 735,
+      "size_kb": 36
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://i.ebayimg.com/images/g/zEUAAOSw3hFc-Qv5/s-l640.jpg",
+      "query_index": 1,
+      "width": 640,
+      "height": 480,
+      "size_kb": 35
+    }
+  ]
+}

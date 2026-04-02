@@ -1,0 +1,48 @@
+{
+  "upc": "0002188830231",
+  "original_desc": "RNBW KIDS ONE MLTVTMN TBL",
+  "expanded_desc": "Rainbow Light KIDS ONE Multivitamin Tablets",
+  "queries_used": [
+    "0002188830231 supplement",
+    "Rainbow Light KIDS ONE Multivitamin Tablets supplement product",
+    "Rainbow Light KIDS ONE Multivitamin Tablets vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0002188830231 supplement",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0002188830231 supplement",
+      "url": "https://jcopackagingmalaysia.com/assets/images/d225a22365e07ec0d2e3346717f6267a-800x800-800x800.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0002188830231 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Rainbow Light KIDS ONE Multivitamin Tablets supplement product",
+      "url": "https://www.byclue.com/wp-content/uploads/2019/06/5-543.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Rainbow Light KIDS ONE Multivitamin Tablets supplement product",
+      "url": "https://crownofficesupplies.com/wp-content/uploads/2021/01/GUEST_cc62c687-ae88-4c8f-83eb-6db80cd0df06.jpeg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Rainbow Light KIDS ONE Multivitamin Tablets supplement product",
+      "url": "https://cdn.wadaaa.com/wp-content/uploads/2023/02/20162818/1-30-823x800.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

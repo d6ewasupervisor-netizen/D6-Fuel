@@ -1,0 +1,78 @@
+{
+  "upc": "0081012666272",
+  "original_desc": "FRC FCTR HAIR GRWTH CHWS",
+  "search_name": "Force Factor Hair Growth Chews",
+  "queries_used": [
+    "\"0081012666272\" product",
+    "\"81012666272\" supplement",
+    "Force Factor Hair Growth Chews product photo",
+    "Force Factor Hair Growth Chews bottle",
+    "Force Factor Hair Growth Chews supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://site-1306369054.file.myqcloud.com/upload/images/5483571648158684/2a545994fd643a0e12570e0086e99e81/6f2f5f816741f746338aea554109112c.jpg?imageMogr2/thumbnail/500x260/pad/1/color/I0Y2RjZGNg==/quality/85/sharpen/100",
+      "query_index": 0,
+      "width": 500,
+      "height": 260,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/590/324/656/2965/ingredients_de.3.full.jpg",
+      "query_index": 0,
+      "width": 720,
+      "height": 1280,
+      "size_kb": 62
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/490/280/640/7211/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 4000,
+      "height": 2118,
+      "size_kb": 510
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/841/132/224/0227/front_fr.3.400.jpg",
+      "query_index": 0,
+      "width": 300,
+      "height": 400,
+      "size_kb": 16
+    },
+    {
+      "filename": "q1_5.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/541/007/665/2686/front_fr.3.full.jpg",
+      "query_index": 0,
+      "width": 3056,
+      "height": 3056,
+      "size_kb": 906
+    },
+    {
+      "filename": "q1_6.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/490/250/535/5776/front_en.8.full.jpg",
+      "query_index": 0,
+      "width": 640,
+      "height": 1851,
+      "size_kb": 101
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://img.tpl.one/w/products/IMV/500x500_blank/FB9316A2-3334-4BC9-A9F4-3932BF78AD0C_dc0849a9-aad2-44e3-b9bb-55f727fa852f.jpg",
+      "query_index": 1,
+      "width": 500,
+      "height": 500,
+      "size_kb": 33
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "query_index": 1,
+      "width": 1000,
+      "height": 1000,
+      "size_kb": 71
+    }
+  ]
+}

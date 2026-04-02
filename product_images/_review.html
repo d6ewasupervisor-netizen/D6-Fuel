@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Image Review</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #0c1929; color: #f1f5f9; padding: 24px; padding-bottom: 120px; }
+    h1 { text-align: center; margin-bottom: 8px; color: #fbbf24; }
+    .stats { text-align: center; color: #94a3b8; margin-bottom: 20px; font-size: 0.9rem; }
+    .instructions { text-align: center; color: #cbd5e1; margin-bottom: 24px; font-size: 0.92rem; line-height: 1.6; }
+    .instructions strong { color: #34d399; }
+
+    .product { background: #152238; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(148,163,184,0.15); transition: border-color 0.2s; }
+    .product.has-selection { border-color: rgba(52,211,153,0.4); }
+    .product-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; flex-wrap: wrap; gap: 8px; }
+    .upc { font-size: 1.1rem; font-weight: 700; color: #fbbf24; font-family: monospace; }
+    .desc { color: #94a3b8; font-size: 0.9rem; }
+    .expanded { color: #34d399; font-size: 0.85rem; font-style: italic; margin-bottom: 12px; display: block; }
+    .selected-label { font-size: 0.78rem; color: #34d399; font-weight: 700; display: none; }
+    .product.has-selection .selected-label { display: inline; }
+
+    .images { display: flex; flex-wrap: wrap; gap: 12px; }
+    .img-card {
+        text-align: center; background: #1e3a5f; border-radius: 8px; padding: 8px;
+        width: 180px; cursor: pointer; transition: all 0.2s; position: relative;
+        border: 3px solid transparent;
+    }
+    .img-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    .img-card.selected { border-color: #34d399; background: #1a3a2f; }
+    .img-card.selected::after {
+        content: '✓'; position: absolute; top: 4px; right: 8px;
+        background: #34d399; color: #0c1929; width: 24px; height: 24px;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-weight: 900; font-size: 0.8rem;
+    }
+    .img-card.dimmed { opacity: 0.35; }
+    .img-card.dimmed:hover { opacity: 0.7; }
+    .img-card img {
+        width: 160px; height: 160px; object-fit: contain; border-radius: 6px;
+        background: #fff; pointer-events: none;
+    }
+    .img-label { font-size: 0.72rem; color: #94a3b8; margin-top: 6px; }
+    .source-tag {
+        display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 2px 6px;
+        border-radius: 4px; margin-bottom: 4px;
+    }
+    .source-tag.google { background: #4285f4; color: #fff; }
+    .source-tag.bing { background: #f25022; color: #fff; }
+    .no-images { color: #f87171; font-style: italic; padding: 12px; }
+
+    /* Sticky bottom bar */
+    .save-bar {
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: rgba(12,25,41,0.97); backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(251,191,36,0.25);
+        padding: 14px 24px; display: flex; align-items: center;
+        justify-content: space-between; gap: 16px; z-index: 100;
+    }
+    .save-bar .count {
+        font-size: 0.95rem; color: #94a3b8; font-weight: 600;
+    }
+    .save-bar .count strong { color: #fbbf24; }
+    .save-bar .actions { display: flex; gap: 10px; }
+    .btn {
+        padding: 10px 20px; border: none; border-radius: 10px;
+        font-size: 0.9rem; font-weight: 700; cursor: pointer;
+        transition: all 0.15s; font-family: inherit;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+        background: linear-gradient(180deg, #2563eb, #1d4ed8); color: #fff;
+        box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; filter: none; }
+    .btn-secondary {
+        background: #1e3a5f; color: #94a3b8; border: 1px solid rgba(148,163,184,0.2);
+    }
+    .btn-secondary:hover { color: #f1f5f9; background: #243b5e; }
+    .btn-danger {
+        background: rgba(239,68,68,0.15); color: #f87171;
+        border: 1px solid rgba(239,68,68,0.3);
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.25); }
+
+    .progress-overlay {
+        display: none; position: fixed; inset: 0; z-index: 200;
+        background: rgba(12,25,41,0.92); backdrop-filter: blur(8px);
+        align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+    }
+    .progress-overlay.show { display: flex; }
+    .progress-text { font-size: 1.1rem; color: #fbbf24; font-weight: 600; }
+    .progress-sub { font-size: 0.85rem; color: #94a3b8; }
+    .progress-bar-track { width: 300px; height: 6px; background: rgba(148,163,184,0.2); border-radius: 6px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #2563eb, #34d399); border-radius: 6px; transition: width 0.2s; width: 0%; }
+</style>
+</head>
+<body>
+<h1>Product Image Review</h1>
+
+<div class="stats">33 products · 207 images · 33 with results</div>
+<div class="instructions">
+    <strong>Click an image</strong> to select it for each product. One selection per product.<br>
+    Click again to deselect. When done, hit <strong>Save Selected Images</strong> to download a ZIP of <code>{upc}.jpg</code> files.
+</div>
+<div class="product" data-upc="0002188830231">
+<div class="product-header">
+  <span class="upc">0002188830231</span>
+  <span class="desc">RNBW KIDS ONE MLTVTMN TBL</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Rainbow Light KIDS ONE Multivitamin Tablets</span>
+<div class="images">
+  <div class="img-card" data-upc="0002188830231" data-path="0002188830231/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0002188830231/bing_q1_1.png" alt="0002188830231" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0002188830231" data-path="0002188830231/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0002188830231/bing_q1_2.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0002188830231" data-path="0002188830231/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0002188830231/bing_q1_3.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0002188830231" data-path="0002188830231/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0002188830231/bing_q2_1.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0002188830231" data-path="0002188830231/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0002188830231/bing_q2_2.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0002188830231" data-path="0002188830231/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0002188830231/bing_q2_3.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0003367415940">
+<div class="product-header">
+  <span class="upc">0003367415940</span>
+  <span class="desc">NTWY OMEGA 3 GMM CHEW</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Natrol Nateway OmegaA 3 Gummy Chews</span>
+<div class="images">
+  <div class="img-card" data-upc="0003367415940" data-path="0003367415940/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0003367415940/bing_q1_1.png" alt="0003367415940" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0003367415940" data-path="0003367415940/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0003367415940/bing_q1_2.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0003367415940" data-path="0003367415940/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0003367415940/bing_q1_3.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0003367415940" data-path="0003367415940/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0003367415940/bing_q2_1.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0003367415940" data-path="0003367415940/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0003367415940/bing_q2_2.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0003367415940" data-path="0003367415940/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0003367415940/bing_q2_3.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0004126002608">
+<div class="product-header">
+  <span class="upc">0004126002608</span>
+  <span class="desc">ST SAM-E 400MG</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Nature Made SAM-e SAM-E 400MG</span>
+<div class="images">
+  <div class="img-card" data-upc="0004126002608" data-path="0004126002608/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002608/bing_q1_1.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002608" data-path="0004126002608/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002608/bing_q1_2.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002608" data-path="0004126002608/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002608/bing_q1_3.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002608" data-path="0004126002608/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002608/bing_q2_1.png" alt="0004126002608" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0004126002608" data-path="0004126002608/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002608/bing_q2_2.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002608" data-path="0004126002608/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002608/bing_q2_3.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0004126002659">
+<div class="product-header">
+  <span class="upc">0004126002659</span>
+  <span class="desc">KRO BRAIN SUPPORT GUMMY</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Kroger BRAIN SupplementORT GUMMY</span>
+<div class="images">
+  <div class="img-card" data-upc="0004126002659" data-path="0004126002659/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002659/bing_q1_1.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002659" data-path="0004126002659/bing_q1_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002659/bing_q1_2.png" alt="0004126002659" loading="lazy">
+    <div class="img-label">bing_q1_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0004126002659" data-path="0004126002659/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002659/bing_q1_3.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002659" data-path="0004126002659/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002659/bing_q2_1.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002659" data-path="0004126002659/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002659/bing_q2_2.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004126002659" data-path="0004126002659/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004126002659/bing_q2_3.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0004746908541">
+<div class="product-header">
+  <span class="upc">0004746908541</span>
+  <span class="desc">NTRL ULTRA SLEEP F/D TAB</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Natrol UltraRA SLEEP Fast Dissolve Tablets</span>
+<div class="images">
+  <div class="img-card" data-upc="0004746908541" data-path="0004746908541/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004746908541/bing_q1_1.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004746908541" data-path="0004746908541/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004746908541/bing_q1_2.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004746908541" data-path="0004746908541/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004746908541/bing_q1_3.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004746908541" data-path="0004746908541/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004746908541/bing_q2_1.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004746908541" data-path="0004746908541/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004746908541/bing_q2_2.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0004746908541" data-path="0004746908541/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0004746908541/bing_q2_3.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0009070003379">
+<div class="product-header">
+  <span class="upc">0009070003379</span>
+  <span class="desc">HPHA LIONS MANE W/ REISHI</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Host Defense Fungi Perfecti LIONS MANE with REISHI</span>
+<div class="images">
+  <div class="img-card" data-upc="0009070003379" data-path="0009070003379/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0009070003379/bing_q1_1.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0009070003379" data-path="0009070003379/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0009070003379/bing_q1_2.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0009070003379" data-path="0009070003379/bing_q1_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0009070003379/bing_q1_3.png" alt="0009070003379" loading="lazy">
+    <div class="img-label">bing_q1_3.png</div>
+  </div>
+  <div class="img-card" data-upc="0009070003379" data-path="0009070003379/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0009070003379/bing_q2_1.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0009070003379" data-path="0009070003379/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0009070003379/bing_q2_2.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0009070003379" data-path="0009070003379/bing_q3_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0009070003379/bing_q3_1.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">bing_q3_1.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0070587580218">
+<div class="product-header">
+  <span class="upc">0070587580218</span>
+  <span class="desc">BRLN VGN OMEG FLX ALG OIL</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Barlean's Vegan Omega Flax Algae Oil</span>
+<div class="images">
+  <div class="img-card" data-upc="0070587580218" data-path="0070587580218/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070587580218/bing_q1_1.png" alt="0070587580218" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0070587580218" data-path="0070587580218/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070587580218/bing_q1_2.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070587580218" data-path="0070587580218/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070587580218/bing_q1_3.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070587580218" data-path="0070587580218/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070587580218/bing_q2_1.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070587580218" data-path="0070587580218/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070587580218/bing_q2_2.png" alt="0070587580218" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0070587580218" data-path="0070587580218/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070587580218/bing_q2_3.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0070619510606">
+<div class="product-header">
+  <span class="upc">0070619510606</span>
+  <span class="desc">OWHV ASTRAGALUS ORGANIC</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Oregon's Wild Harvest ASTRAGALUS OrganicANIC</span>
+<div class="images">
+  <div class="img-card" data-upc="0070619510606" data-path="0070619510606/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510606/bing_q1_1.png" alt="0070619510606" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0070619510606" data-path="0070619510606/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510606/bing_q1_2.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510606" data-path="0070619510606/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510606/bing_q1_3.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510606" data-path="0070619510606/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510606/bing_q2_1.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510606" data-path="0070619510606/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510606/bing_q2_2.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510606" data-path="0070619510606/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510606/bing_q2_3.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0070619510607">
+<div class="product-header">
+  <span class="upc">0070619510607</span>
+  <span class="desc">OWH WLD HRVST ASHWGNDHA</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha</span>
+<div class="images">
+  <div class="img-card" data-upc="0070619510607" data-path="0070619510607/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510607/bing_q1_1.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0070619510607" data-path="0070619510607/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510607/bing_q1_2.jpg" alt="0070619510607" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510607" data-path="0070619510607/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510607/bing_q1_3.jpg" alt="0070619510607" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510607" data-path="0070619510607/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510607/bing_q2_1.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0070619510607" data-path="0070619510607/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510607/bing_q2_2.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0070619510607" data-path="0070619510607/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510607/bing_q2_3.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0070619510610">
+<div class="product-header">
+  <span class="upc">0070619510610</span>
+  <span class="desc">OWH WLD HRVST MLK THSTL</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle</span>
+<div class="images">
+  <div class="img-card" data-upc="0070619510610" data-path="0070619510610/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510610/bing_q1_1.png" alt="0070619510610" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0070619510610" data-path="0070619510610/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510610/bing_q1_2.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510610" data-path="0070619510610/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510610/bing_q1_3.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510610" data-path="0070619510610/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510610/bing_q2_1.png" alt="0070619510610" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0070619510610" data-path="0070619510610/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510610/bing_q2_2.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619510610" data-path="0070619510610/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619510610/bing_q2_3.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0070619517049">
+<div class="product-header">
+  <span class="upc">0070619517049</span>
+  <span class="desc">OWHV ASHWAGANDHA BDYNMC</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic</span>
+<div class="images">
+  <div class="img-card" data-upc="0070619517049" data-path="0070619517049/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619517049/bing_q1_1.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619517049" data-path="0070619517049/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619517049/bing_q1_2.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619517049" data-path="0070619517049/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619517049/bing_q1_3.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619517049" data-path="0070619517049/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619517049/bing_q2_1.png" alt="0070619517049" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0070619517049" data-path="0070619517049/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619517049/bing_q2_2.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0070619517049" data-path="0070619517049/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0070619517049/bing_q2_3.png" alt="0070619517049" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0073373901283">
+<div class="product-header">
+  <span class="upc">0073373901283</span>
+  <span class="desc">NOW MAGNSMCPS 400 MG 180</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">NOW Foods Magnesium Capsules 400 MG 180</span>
+<div class="images">
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q1_1.jpg" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q1_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q1_2.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q1_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q1_3.webp" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q1_3.webp" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q1_3.webp</div>
+  </div>
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q2_2.jpg" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q2_3.jpg" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q3_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q3_1.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q3_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q3_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q3_2.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q3_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0073373901283" data-path="0073373901283/bing_q3_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0073373901283/bing_q3_3.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">bing_q3_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666067">
+<div class="product-header">
+  <span class="upc">0081012666067</span>
+  <span class="desc">FRCFCTR ULT BRBRN CAP</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor Ultra Blueberry Brain Capsules</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666067" data-path="0081012666067/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666067/bing_q1_1.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666067" data-path="0081012666067/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666067/bing_q1_2.jpg" alt="0081012666067" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666067" data-path="0081012666067/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666067/bing_q1_3.jpg" alt="0081012666067" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666067" data-path="0081012666067/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666067/bing_q2_1.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666067" data-path="0081012666067/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666067/bing_q2_2.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666067" data-path="0081012666067/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666067/bing_q2_3.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666129">
+<div class="product-header">
+  <span class="upc">0081012666129</span>
+  <span class="desc">FRC FCTR MAG GLYC PWDR</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor Magnesium Glycinate Powder</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q1_2.jpg" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q1_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q1_3.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q1_3.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q2_1.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q2_2.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q2_3.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q3_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q3_1.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q3_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q3_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q3_2.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q3_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666129" data-path="0081012666129/bing_q3_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666129/bing_q3_3.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">bing_q3_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666196">
+<div class="product-header">
+  <span class="upc">0081012666196</span>
+  <span class="desc">FRCFCTR AMZ ASHW COMP</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor Amazing Ashwagandha Complex</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666196" data-path="0081012666196/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666196/bing_q1_1.png" alt="0081012666196" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666196" data-path="0081012666196/bing_q1_2.webp" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666196/bing_q1_2.webp" alt="0081012666196" loading="lazy">
+    <div class="img-label">bing_q1_2.webp</div>
+  </div>
+  <div class="img-card" data-upc="0081012666196" data-path="0081012666196/bing_q1_3.webp" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666196/bing_q1_3.webp" alt="0081012666196" loading="lazy">
+    <div class="img-label">bing_q1_3.webp</div>
+  </div>
+  <div class="img-card" data-upc="0081012666196" data-path="0081012666196/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666196/bing_q2_1.jpg" alt="0081012666196" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666196" data-path="0081012666196/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666196/bing_q2_2.jpg" alt="0081012666196" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666196" data-path="0081012666196/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666196/bing_q2_3.jpg" alt="0081012666196" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666199">
+<div class="product-header">
+  <span class="upc">0081012666199</span>
+  <span class="desc">FRC FCTR TOTAL BEETS CHWS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor TOTAL BEETS Chews</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666199" data-path="0081012666199/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666199/bing_q1_1.png" alt="0081012666199" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666199" data-path="0081012666199/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666199/bing_q1_2.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666199" data-path="0081012666199/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666199/bing_q1_3.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666199" data-path="0081012666199/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666199/bing_q2_1.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666199" data-path="0081012666199/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666199/bing_q2_2.png" alt="0081012666199" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666199" data-path="0081012666199/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666199/bing_q2_3.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666245">
+<div class="product-header">
+  <span class="upc">0081012666245</span>
+  <span class="desc">FRCFCTR LIPSOMAL GUMMIES</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor Liposomal GUMMIES</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666245" data-path="0081012666245/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666245/bing_q1_1.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666245" data-path="0081012666245/bing_q1_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666245/bing_q1_2.png" alt="0081012666245" loading="lazy">
+    <div class="img-label">bing_q1_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666245" data-path="0081012666245/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666245/bing_q1_3.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666245" data-path="0081012666245/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666245/bing_q2_1.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666245" data-path="0081012666245/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666245/bing_q2_2.png" alt="0081012666245" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666245" data-path="0081012666245/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666245/bing_q2_3.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666272">
+<div class="product-header">
+  <span class="upc">0081012666272</span>
+  <span class="desc">FRC FCTR HAIR GRWTH CHWS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor HAIR Growth Chews</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666272" data-path="0081012666272/bing_q1_1.webp" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666272/bing_q1_1.webp" alt="0081012666272" loading="lazy">
+    <div class="img-label">bing_q1_1.webp</div>
+  </div>
+  <div class="img-card" data-upc="0081012666272" data-path="0081012666272/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666272/bing_q1_2.jpg" alt="0081012666272" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666272" data-path="0081012666272/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666272/bing_q1_3.jpg" alt="0081012666272" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666272" data-path="0081012666272/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666272/bing_q2_1.png" alt="0081012666272" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666272" data-path="0081012666272/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666272/bing_q2_2.png" alt="0081012666272" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666272" data-path="0081012666272/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666272/bing_q2_3.png" alt="0081012666272" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666296">
+<div class="product-header">
+  <span class="upc">0081012666296</span>
+  <span class="desc">FRC FCTR HAIR GRWTH CAPS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor HAIR Growth Capsules</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666296" data-path="0081012666296/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666296/bing_q1_1.jpg" alt="0081012666296" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666296" data-path="0081012666296/bing_q1_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666296/bing_q1_2.png" alt="0081012666296" loading="lazy">
+    <div class="img-label">bing_q1_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666296" data-path="0081012666296/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666296/bing_q1_3.jpg" alt="0081012666296" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666296" data-path="0081012666296/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666296/bing_q2_1.jpg" alt="0081012666296" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666296" data-path="0081012666296/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666296/bing_q2_2.png" alt="0081012666296" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666296" data-path="0081012666296/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666296/bing_q2_3.png" alt="0081012666296" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666308">
+<div class="product-header">
+  <span class="upc">0081012666308</span>
+  <span class="desc">FRCFCTR MORINGA POWDER</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor MORINGA POWDER</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666308" data-path="0081012666308/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666308/bing_q1_1.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666308" data-path="0081012666308/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666308/bing_q1_2.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666308" data-path="0081012666308/bing_q1_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666308/bing_q1_3.png" alt="0081012666308" loading="lazy">
+    <div class="img-label">bing_q1_3.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666308" data-path="0081012666308/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666308/bing_q2_1.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666308" data-path="0081012666308/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666308/bing_q2_2.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666308" data-path="0081012666308/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666308/bing_q2_3.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666310">
+<div class="product-header">
+  <span class="upc">0081012666310</span>
+  <span class="desc">FRC FCTR MTCHA SFT CHEWS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor Matcha Soft ChewsS</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666310" data-path="0081012666310/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666310/bing_q1_1.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666310" data-path="0081012666310/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666310/bing_q1_2.jpg" alt="0081012666310" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666310" data-path="0081012666310/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666310/bing_q1_3.jpg" alt="0081012666310" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666310" data-path="0081012666310/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666310/bing_q2_1.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666310" data-path="0081012666310/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666310/bing_q2_2.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666310" data-path="0081012666310/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666310/bing_q2_3.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081012666315">
+<div class="product-header">
+  <span class="upc">0081012666315</span>
+  <span class="desc">FRC FCTR MGHTY MTCHA</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor Mighty Matcha</span>
+<div class="images">
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q1_1.jpg" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q1_2.jpg" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q1_3.jpg" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q2_2.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q2_3.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q3_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q3_1.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q3_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q3_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q3_2.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q3_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0081012666315" data-path="0081012666315/bing_q3_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081012666315/bing_q3_3.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">bing_q3_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0081859401546">
+<div class="product-header">
+  <span class="upc">0081859401546</span>
+  <span class="desc">FRCFCTR TOTAL BEETS POWDR</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Force Factor TOTAL BEETS POWDrink</span>
+<div class="images">
+  <div class="img-card" data-upc="0081859401546" data-path="0081859401546/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081859401546/bing_q1_1.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081859401546" data-path="0081859401546/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081859401546/bing_q1_2.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081859401546" data-path="0081859401546/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081859401546/bing_q1_3.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081859401546" data-path="0081859401546/bing_q2_1.webp" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081859401546/bing_q2_1.webp" alt="0081859401546" loading="lazy">
+    <div class="img-label">bing_q2_1.webp</div>
+  </div>
+  <div class="img-card" data-upc="0081859401546" data-path="0081859401546/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081859401546/bing_q2_2.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0081859401546" data-path="0081859401546/bing_q2_3.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0081859401546/bing_q2_3.png" alt="0081859401546" loading="lazy">
+    <div class="img-label">bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0084009312863">
+<div class="product-header">
+  <span class="upc">0084009312863</span>
+  <span class="desc">NTRS TRTH BEET ROOT CHWS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Nature's Truth BEET ROOT Chews</span>
+<div class="images">
+  <div class="img-card" data-upc="0084009312863" data-path="0084009312863/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312863/bing_q1_1.png" alt="0084009312863" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0084009312863" data-path="0084009312863/bing_q1_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312863/bing_q1_2.png" alt="0084009312863" loading="lazy">
+    <div class="img-label">bing_q1_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0084009312863" data-path="0084009312863/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312863/bing_q1_3.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312863" data-path="0084009312863/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312863/bing_q2_1.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312863" data-path="0084009312863/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312863/bing_q2_2.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312863" data-path="0084009312863/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312863/bing_q2_3.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0084009312867">
+<div class="product-header">
+  <span class="upc">0084009312867</span>
+  <span class="desc">NTRS TRTH MLTN MAGN CHWS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Nature's Truth Melatonin Magnesium Chews</span>
+<div class="images">
+  <div class="img-card" data-upc="0084009312867" data-path="0084009312867/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312867/bing_q1_1.png" alt="0084009312867" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0084009312867" data-path="0084009312867/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312867/bing_q1_2.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312867" data-path="0084009312867/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312867/bing_q1_3.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312867" data-path="0084009312867/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312867/bing_q2_1.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312867" data-path="0084009312867/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312867/bing_q2_2.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312867" data-path="0084009312867/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312867/bing_q2_3.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0084009312920">
+<div class="product-header">
+  <span class="upc">0084009312920</span>
+  <span class="desc">NTRS TRTH MAGNSM CHEWS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Nature's Truth Magnesium ChewsS</span>
+<div class="images">
+  <div class="img-card" data-upc="0084009312920" data-path="0084009312920/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312920/bing_q1_1.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312920" data-path="0084009312920/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312920/bing_q1_2.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312920" data-path="0084009312920/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312920/bing_q1_3.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312920" data-path="0084009312920/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312920/bing_q2_1.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312920" data-path="0084009312920/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312920/bing_q2_2.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0084009312920" data-path="0084009312920/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0084009312920/bing_q2_3.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0085005976768">
+<div class="product-header">
+  <span class="upc">0085005976768</span>
+  <span class="desc">NELLO SPR BAL CRN APL DR</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Nello Super Balance Cranberry Apple Drink</span>
+<div class="images">
+  <div class="img-card" data-upc="0085005976768" data-path="0085005976768/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085005976768/bing_q1_1.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085005976768" data-path="0085005976768/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085005976768/bing_q1_2.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085005976768" data-path="0085005976768/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085005976768/bing_q1_3.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085005976768" data-path="0085005976768/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085005976768/bing_q2_1.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085005976768" data-path="0085005976768/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085005976768/bing_q2_2.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085005976768" data-path="0085005976768/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085005976768/bing_q2_3.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0085006858575">
+<div class="product-header">
+  <span class="upc">0085006858575</span>
+  <span class="desc">NCLL MLTI CLL RSE VIAL</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Nucell Multi Cell Rose VIAL</span>
+<div class="images">
+  <div class="img-card" data-upc="0085006858575" data-path="0085006858575/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085006858575/bing_q1_1.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085006858575" data-path="0085006858575/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085006858575/bing_q1_2.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085006858575" data-path="0085006858575/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085006858575/bing_q1_3.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085006858575" data-path="0085006858575/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085006858575/bing_q2_1.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085006858575" data-path="0085006858575/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085006858575/bing_q2_2.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085006858575" data-path="0085006858575/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085006858575/bing_q2_3.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0085007479028">
+<div class="product-header">
+  <span class="upc">0085007479028</span>
+  <span class="desc">NAT VTY MGNSM THRNATE</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Nature's Vitality Magnesium Threonate</span>
+<div class="images">
+  <div class="img-card" data-upc="0085007479028" data-path="0085007479028/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085007479028/bing_q1_1.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085007479028" data-path="0085007479028/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085007479028/bing_q1_2.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085007479028" data-path="0085007479028/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085007479028/bing_q1_3.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085007479028" data-path="0085007479028/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085007479028/bing_q2_1.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085007479028" data-path="0085007479028/bing_q2_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085007479028/bing_q2_2.png" alt="0085007479028" loading="lazy">
+    <div class="img-label">bing_q2_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0085007479028" data-path="0085007479028/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085007479028/bing_q2_3.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0085664500847">
+<div class="product-header">
+  <span class="upc">0085664500847</span>
+  <span class="desc">MRYRTHS ORG ADRN FCS LQ</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Mary Ruth's Organic Adrenal Focus Liquid</span>
+<div class="images">
+  <div class="img-card" data-upc="0085664500847" data-path="0085664500847/bing_q1_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085664500847/bing_q1_1.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085664500847" data-path="0085664500847/bing_q2_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085664500847/bing_q2_1.png" alt="0085664500847" loading="lazy">
+    <div class="img-label">bing_q2_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0085664500847" data-path="0085664500847/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085664500847/bing_q2_2.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085664500847" data-path="0085664500847/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085664500847/bing_q2_3.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085664500847" data-path="0085664500847/bing_q3_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085664500847/bing_q3_1.png" alt="0085664500847" loading="lazy">
+    <div class="img-label">bing_q3_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0085664500847" data-path="0085664500847/bing_q3_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085664500847/bing_q3_2.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">bing_q3_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0085664500847" data-path="0085664500847/bing_q3_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0085664500847/bing_q3_3.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">bing_q3_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0086000455530">
+<div class="product-header">
+  <span class="upc">0086000455530</span>
+  <span class="desc">PYM ORIGINAL MD CHEW SUPP</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">PYM ORIGINAL Mood Chews Supplement</span>
+<div class="images">
+  <div class="img-card" data-upc="0086000455530" data-path="0086000455530/bing_q1_1.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455530/bing_q1_1.png" alt="0086000455530" loading="lazy">
+    <div class="img-label">bing_q1_1.png</div>
+  </div>
+  <div class="img-card" data-upc="0086000455530" data-path="0086000455530/bing_q1_2.png" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455530/bing_q1_2.png" alt="0086000455530" loading="lazy">
+    <div class="img-label">bing_q1_2.png</div>
+  </div>
+  <div class="img-card" data-upc="0086000455530" data-path="0086000455530/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455530/bing_q1_3.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0086000455530" data-path="0086000455530/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455530/bing_q2_1.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0086000455530" data-path="0086000455530/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455530/bing_q2_2.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0086000455530" data-path="0086000455530/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455530/bing_q2_3.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0086000455532">
+<div class="product-header">
+  <span class="upc">0086000455532</span>
+  <span class="desc">PYM ORGNL MOOD CHEWS SUPP</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">PYM Original MOOD ChewsS Supplement</span>
+<div class="images">
+  <div class="img-card" data-upc="0086000455532" data-path="0086000455532/bing_q1_1.webp" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455532/bing_q1_1.webp" alt="0086000455532" loading="lazy">
+    <div class="img-label">bing_q1_1.webp</div>
+  </div>
+  <div class="img-card" data-upc="0086000455532" data-path="0086000455532/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455532/bing_q1_2.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0086000455532" data-path="0086000455532/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455532/bing_q1_3.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0086000455532" data-path="0086000455532/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455532/bing_q2_1.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0086000455532" data-path="0086000455532/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455532/bing_q2_2.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0086000455532" data-path="0086000455532/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0086000455532/bing_q2_3.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product" data-upc="0542501039183">
+<div class="product-header">
+  <span class="upc">0542501039183</span>
+  <span class="desc">NATF BIOSIL SKIN/HAIR/NLS</span>
+  <span class="selected-label">✓ Selected</span>
+</div>
+<span class="expanded">Natural Factors BIOSIL SKIN/HAIR/Nails</span>
+<div class="images">
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q1_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q1_2.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q1_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q1_3.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q2_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q2_1.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q2_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q2_2.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q2_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q2_3.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q3_1.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q3_1.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q3_1.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q3_2.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q3_2.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q3_2.jpg</div>
+  </div>
+  <div class="img-card" data-upc="0542501039183" data-path="0542501039183/bing_q3_3.jpg" onclick="selectImage(this)">
+    <span class="source-tag bing">BING</span>
+    <img src="0542501039183/bing_q3_3.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">bing_q3_3.jpg</div>
+  </div>
+</div></div>
+
+<div class="save-bar">
+    <div class="count"><strong id="selectedCount">0</strong> of 33 products selected</div>
+    <div class="actions">
+        <button class="btn btn-danger" onclick="clearAll()">Clear All</button>
+        <button class="btn btn-secondary" onclick="selectBest()">Auto-Select Largest</button>
+        <button class="btn btn-primary" id="saveBtn" onclick="saveSelected()" disabled>Save Selected Images</button>
+    </div>
+</div>
+
+<div class="progress-overlay" id="progressOverlay">
+    <div class="progress-text" id="progressText">Preparing images...</div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="progressBar"></div></div>
+    <div class="progress-sub" id="progressSub">0 / 0</div>
+</div>
+
+<script>
+const selections = {};  // upc -> { path, card }
+
+function updateCount() {
+    const n = Object.keys(selections).length;
+    document.getElementById('selectedCount').textContent = n;
+    document.getElementById('saveBtn').disabled = n === 0;
+
+    // Update product card borders
+    document.querySelectorAll('.product').forEach(p => {
+        p.classList.toggle('has-selection', !!selections[p.dataset.upc]);
+    });
+}
+
+function selectImage(card) {
+    const upc = card.dataset.upc;
+    const path = card.dataset.path;
+    const product = card.closest('.product');
+    const siblings = product.querySelectorAll('.img-card');
+
+    // If this card is already selected, deselect it
+    if (card.classList.contains('selected')) {
+        card.classList.remove('selected');
+        siblings.forEach(s => s.classList.remove('dimmed'));
+        delete selections[upc];
+        updateCount();
+        return;
+    }
+
+    // Deselect any previous selection for this product
+    siblings.forEach(s => {
+        s.classList.remove('selected', 'dimmed');
+    });
+
+    // Select this one, dim the rest
+    card.classList.add('selected');
+    siblings.forEach(s => {
+        if (s !== card) s.classList.add('dimmed');
+    });
+
+    selections[upc] = { path };
+    updateCount();
+}
+
+function clearAll() {
+    document.querySelectorAll('.img-card').forEach(c => {
+        c.classList.remove('selected', 'dimmed');
+    });
+    for (const key in selections) delete selections[key];
+    updateCount();
+}
+
+function selectBest() {
+    // For each product, pick the image with the largest natural dimensions
+    document.querySelectorAll('.product').forEach(product => {
+        const cards = product.querySelectorAll('.img-card');
+        if (!cards.length) return;
+
+        let best = null;
+        let bestSize = 0;
+
+        cards.forEach(card => {
+            const img = card.querySelector('img');
+            const size = (img.naturalWidth || 0) * (img.naturalHeight || 0);
+            if (size > bestSize) {
+                bestSize = size;
+                best = card;
+            }
+        });
+
+        if (best) {
+            // Clear previous
+            cards.forEach(c => c.classList.remove('selected', 'dimmed'));
+            // Select best
+            best.classList.add('selected');
+            cards.forEach(c => { if (c !== best) c.classList.add('dimmed'); });
+            selections[best.dataset.upc] = { path: best.dataset.path };
+        }
+    });
+    updateCount();
+}
+
+async function imgToJpgBlob(imgEl, quality) {
+    return new Promise((resolve, reject) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Use a fresh Image to avoid tainted canvas issues
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            // White background (for PNGs with transparency)
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob(blob => {
+                if (blob) resolve(blob);
+                else reject(new Error('Canvas toBlob failed'));
+            }, 'image/jpeg', quality || 0.92);
+        };
+        img.onerror = () => reject(new Error('Image load failed'));
+        img.src = imgEl.src;
+    });
+}
+
+async function fetchAsBlob(path) {
+    const resp = await fetch(path);
+    if (!resp.ok) throw new Error('Fetch failed: ' + path);
+    return await resp.blob();
+}
+
+async function saveSelected() {
+    const entries = Object.entries(selections);
+    if (!entries.length) return;
+
+    const overlay = document.getElementById('progressOverlay');
+    const bar = document.getElementById('progressBar');
+    const text = document.getElementById('progressText');
+    const sub = document.getElementById('progressSub');
+
+    overlay.classList.add('show');
+    text.textContent = 'Converting images to JPG...';
+    bar.style.width = '0%';
+
+    const zip = new JSZip();
+    let done = 0;
+
+    for (const [upc, data] of entries) {
+        sub.textContent = `${done + 1} / ${entries.length} — ${upc}`;
+        bar.style.width = `${Math.round((done / entries.length) * 100)}%`;
+
+        try {
+            // Try canvas conversion to JPG first
+            const card = document.querySelector(`.img-card[data-upc="${upc}"].selected`);
+            const imgEl = card ? card.querySelector('img') : null;
+
+            let blob;
+            if (imgEl && imgEl.naturalWidth > 0) {
+                try {
+                    blob = await imgToJpgBlob(imgEl, 0.92);
+                } catch {
+                    // Fallback: fetch raw file
+                    blob = await fetchAsBlob(data.path);
+                }
+            } else {
+                blob = await fetchAsBlob(data.path);
+            }
+
+            zip.file(`${upc}.jpg`, blob);
+        } catch (e) {
+            console.error(`Failed to process ${upc}:`, e);
+        }
+
+        done++;
+    }
+
+    text.textContent = 'Building ZIP...';
+    bar.style.width = '95%';
+    sub.textContent = 'Compressing...';
+
+    try {
+        const blob = await zip.generateAsync({ type: 'blob' }, (meta) => {
+            bar.style.width = `${95 + Math.round(meta.percent * 0.05)}%`;
+        });
+
+        bar.style.width = '100%';
+        text.textContent = 'Done!';
+        sub.textContent = `${entries.length} images ready`;
+
+        saveAs(blob, 'product_images.zip');
+
+        setTimeout(() => overlay.classList.remove('show'), 1500);
+    } catch (e) {
+        text.textContent = 'Error creating ZIP';
+        sub.textContent = e.message;
+        setTimeout(() => overlay.classList.remove('show'), 3000);
+    }
+}
+
+// Keyboard: Escape to clear
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') clearAll();
+});
+</script>
+
+</body></html>

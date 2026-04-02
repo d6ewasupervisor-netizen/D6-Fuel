@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666272",
+  "original_desc": "FRC FCTR HAIR GRWTH CHWS",
+  "search_name": "Force Factor Hair Growth Chews",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa66081/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 17
+    },
+    {
+      "filename": "04_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/al-na-9d5791cf-3faf/8ba4256f-14c9-4d27-9250-b2f71a35d19c._SL5000_CR0%2C0%2C5000%2C2563_SX840_.png",
+      "source": "amazon",
+      "width": 840,
+      "height": 431,
+      "size_kb": 48
+    },
+    {
+      "filename": "05_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/al-na-9d5791cf-3faf/6cbad270-a1ad-419f-aa5d-698123cfa827._SL5000_CR0%2C0%2C5000%2C1000_SX9000_.png",
+      "source": "amazon",
+      "width": 5000,
+      "height": 1000,
+      "size_kb": 275
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71YYzwnsELL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1500,
+      "height": 1441,
+      "size_kb": 175
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Total-Beets-Ultimate-Heart-Health-Soft-Chews-Blood-Pressure-Support-Beetroot-Gummies-Alternative-Berry-60-Soft-Chews-by-Force-Factor_2ac45070-e4a6-4fb2-9647-c8d61d452f1f.fb9f14f30a9e51f6a14ff58290584361.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 28
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/asr/960e2763-f911-4572-a4d8-fb69a1566208.05b38215aa9db1f0d57c41d3c05fc81e.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 33
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/FORCE-FACTOR-HAIR-GROWTH-CAPSLES-90-CT_e7dce5d5-0223-4a77-87a2-ce9ee6bf77fa.bfa95e4777d9b5055990066519613530.jpeg?odnHeight=288&odnWidth=288&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 288,
+      "height": 288,
+      "size_kb": 12
+    },
+    {
+      "filename": "16_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    },
+    {
+      "filename": "17_upc.jpg",
+      "url": "https://images-pw.pixieset.com/elementfield/078739271/Beauty_vitamin_supplement_photography_-_Nancy_Anne_Photography_-_Commercial_still_life_food_photographer_1-20f32bf5.jpg",
+      "source": "upc",
+      "width": 1000,
+      "height": 1500,
+      "size_kb": 363
+    },
+    {
+      "filename": "18_upc.jpg",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/10304000006.jpg",
+      "source": "upc",
+      "width": 1000,
+      "height": 1000,
+      "size_kb": 37
+    }
+  ]
+}

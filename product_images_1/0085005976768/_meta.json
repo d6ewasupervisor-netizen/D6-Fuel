@@ -1,0 +1,48 @@
+{
+  "upc": "0085005976768",
+  "original_desc": "NELLO SPR BAL CRN APL DR",
+  "expanded_desc": "Nello Super Balance Cranberry Apple Drink",
+  "queries_used": [
+    "0085005976768 supplement",
+    "Nello Super Balance Cranberry Apple Drink supplement product",
+    "Nello Super Balance Cranberry Apple Drink vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0085005976768 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0085005976768 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0085005976768 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nello Super Balance Cranberry Apple Drink supplement product",
+      "url": "https://images-na.ssl-images-amazon.com/images/I/81Kv4decxhL._UL500_.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nello Super Balance Cranberry Apple Drink supplement product",
+      "url": "https://drinknello.com/cdn/shop/files/Hero_Pouch_MP_1x1_ba5642cc-ba9a-470f-b495-aaed30488fe9.jpg?v=1705813911&width=1000",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nello Super Balance Cranberry Apple Drink supplement product",
+      "url": "https://m.media-amazon.com/images/I/81nrNGEd4NL._AC_SL1500_.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

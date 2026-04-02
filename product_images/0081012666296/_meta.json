@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666296",
+  "original_desc": "FRC FCTR HAIR GRWTH CAPS",
+  "expanded_desc": "Force Factor HAIR Growth Capsules",
+  "queries_used": [
+    "0081012666296 supplement",
+    "Force Factor HAIR Growth Capsules supplement product",
+    "Force Factor HAIR Growth Capsules vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666296 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666296 supplement",
+      "url": "https://cdn11.bigcommerce.com/s-1o6e0ubibu/images/stencil/960w/products/325/2022/Major_Certavite_Senior_For_Adults_60_Tablets_Multivitamin_Multimineral_Supplement_Facts__20982.1670020786.png?c=2",
+      "filename": "bing_q1_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666296 supplement",
+      "url": "https://m.media-amazon.com/images/I/81M7aCkXzTL._AC_SL1500_.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor HAIR Growth Capsules supplement product",
+      "url": "https://cdn.shopify.com/s/files/1/0278/7776/9321/files/Hair_Growth_Accelerator_90ct_Capsules_SFP_700x.jpg?v=1745955504",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor HAIR Growth Capsules supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/07_d80fb6f5-71c5-481d-81e5-6ac0f916c334_550x550.png?v=1735318560",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor HAIR Growth Capsules supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/01_66ee19d4-9bc6-4688-8bb0-cc4d88c41183_550x550.png?v=1726773652",
+      "filename": "bing_q2_3.png"
+    }
+  ]
+}

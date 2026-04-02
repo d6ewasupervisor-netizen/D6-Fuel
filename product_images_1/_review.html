@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Image Review</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, sans-serif; background: #0c1929; color: #f1f5f9; padding: 24px; }
+    h1 { text-align: center; margin-bottom: 24px; color: #fbbf24; }
+    .product { background: #152238; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(148,163,184,0.15); }
+    .product-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .upc { font-size: 1.1rem; font-weight: 700; color: #fbbf24; font-family: monospace; }
+    .desc { color: #94a3b8; font-size: 0.9rem; }
+    .expanded { color: #34d399; font-size: 0.85rem; font-style: italic; }
+    .images { display: flex; flex-wrap: wrap; gap: 12px; }
+    .img-card { text-align: center; background: #1e3a5f; border-radius: 8px; padding: 8px; width: 180px; }
+    .img-card img { width: 160px; height: 160px; object-fit: contain; border-radius: 6px; background: #fff; cursor: pointer; }
+    .img-card img:hover { transform: scale(1.5); position: relative; z-index: 10; box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+    .img-label { font-size: 0.72rem; color: #94a3b8; margin-top: 6px; word-break: break-all; }
+    .source-google { border: 2px solid #4285f4; }
+    .source-bing { border: 2px solid #f25022; }
+    .no-images { color: #f87171; font-style: italic; padding: 12px; }
+    .stats { text-align: center; color: #94a3b8; margin-bottom: 20px; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<h1>Product Image Review</h1>
+
+<div class="product">
+<div class="stats">33 products · 210 images downloaded</div>
+<div class="product-header">
+  <span class="upc">0002188830231</span>
+  <span class="desc">RNBW KIDS ONE MLTVTMN TBL</span>
+  <span class="expanded">Rainbow Light KIDS ONE Multivitamin Tablets</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q1_1.png" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q1_2.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q1_3.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q2_2.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q2_3.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q3_1.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q3_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q3_2.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q3_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0002188830231/bing_q3_3.jpg" alt="0002188830231" loading="lazy">
+    <div class="img-label">BING — bing_q3_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0003367415940</span>
+  <span class="desc">NTWY OMEGA 3 GMM CHEW</span>
+  <span class="expanded">Natrol Nateway OmegaA 3 Gummy Chews</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0003367415940/bing_q1_1.png" alt="0003367415940" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0003367415940/bing_q1_2.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0003367415940/bing_q1_3.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0003367415940/bing_q2_1.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0003367415940/bing_q2_2.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0003367415940/bing_q2_3.jpg" alt="0003367415940" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0004126002608</span>
+  <span class="desc">ST SAM-E 400MG</span>
+  <span class="expanded">Nature Made SAM-e SAM-E 400MG</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0004126002608/bing_q1_1.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002608/bing_q1_2.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002608/bing_q1_3.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002608/bing_q2_1.png" alt="0004126002608" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002608/bing_q2_2.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002608/bing_q2_3.jpg" alt="0004126002608" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0004126002659</span>
+  <span class="desc">KRO BRAIN SUPPORT GUMMY</span>
+  <span class="expanded">Kroger BRAIN SupplementORT GUMMY</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0004126002659/bing_q1_1.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002659/bing_q1_2.png" alt="0004126002659" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002659/bing_q1_3.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002659/bing_q2_1.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002659/bing_q2_2.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004126002659/bing_q2_3.jpg" alt="0004126002659" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0004746908541</span>
+  <span class="desc">NTRL ULTRA SLEEP F/D TAB</span>
+  <span class="expanded">Natrol UltraRA SLEEP Fast Dissolve Tablets</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0004746908541/bing_q1_1.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004746908541/bing_q1_2.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004746908541/bing_q1_3.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004746908541/bing_q2_1.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004746908541/bing_q2_3.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004746908541/bing_q3_2.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">BING — bing_q3_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0004746908541/bing_q3_3.jpg" alt="0004746908541" loading="lazy">
+    <div class="img-label">BING — bing_q3_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0009070003379</span>
+  <span class="desc">HPHA LIONS MANE W/ REISHI</span>
+  <span class="expanded">Host Defense Fungi Perfecti LIONS MANE with REISHI</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0009070003379/bing_q1_1.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0009070003379/bing_q1_2.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0009070003379/bing_q1_3.png" alt="0009070003379" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0009070003379/bing_q2_1.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0009070003379/bing_q2_2.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0009070003379/bing_q3_1.jpg" alt="0009070003379" loading="lazy">
+    <div class="img-label">BING — bing_q3_1.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0070587580218</span>
+  <span class="desc">BRLN VGN OMEG FLX ALG OIL</span>
+  <span class="expanded">Barlean's Vegan Omega Flax Algae Oil</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0070587580218/bing_q1_1.png" alt="0070587580218" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070587580218/bing_q1_2.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070587580218/bing_q1_3.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070587580218/bing_q2_1.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070587580218/bing_q2_2.png" alt="0070587580218" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070587580218/bing_q2_3.jpg" alt="0070587580218" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0070619510606</span>
+  <span class="desc">OWHV ASTRAGALUS ORGANIC</span>
+  <span class="expanded">Oregon's Wild Harvest ASTRAGALUS OrganicANIC</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0070619510606/bing_q1_1.png" alt="0070619510606" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510606/bing_q1_2.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510606/bing_q1_3.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510606/bing_q2_1.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510606/bing_q2_2.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510606/bing_q2_3.jpg" alt="0070619510606" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0070619510607</span>
+  <span class="desc">OWH WLD HRVST ASHWGNDHA</span>
+  <span class="expanded">Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0070619510607/bing_q1_1.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510607/bing_q1_2.jpg" alt="0070619510607" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510607/bing_q1_3.jpg" alt="0070619510607" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510607/bing_q2_1.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510607/bing_q2_2.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510607/bing_q2_3.png" alt="0070619510607" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0070619510610</span>
+  <span class="desc">OWH WLD HRVST MLK THSTL</span>
+  <span class="expanded">Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0070619510610/bing_q1_1.png" alt="0070619510610" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510610/bing_q1_2.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510610/bing_q1_3.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510610/bing_q2_1.png" alt="0070619510610" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510610/bing_q2_2.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619510610/bing_q2_3.jpg" alt="0070619510610" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0070619517049</span>
+  <span class="desc">OWHV ASHWAGANDHA BDYNMC</span>
+  <span class="expanded">Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0070619517049/bing_q1_1.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619517049/bing_q1_2.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619517049/bing_q1_3.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619517049/bing_q2_1.png" alt="0070619517049" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619517049/bing_q2_2.jpg" alt="0070619517049" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0070619517049/bing_q2_3.png" alt="0070619517049" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0073373901283</span>
+  <span class="desc">NOW MAGNSMCPS 400 MG 180</span>
+  <span class="expanded">NOW Foods Magnesium Capsules 400 MG 180</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q1_1.jpg" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q1_2.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q1_3.webp" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.webp</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q2_2.jpg" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q2_3.jpg" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q3_1.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q3_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q3_2.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q3_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0073373901283/bing_q3_3.png" alt="0073373901283" loading="lazy">
+    <div class="img-label">BING — bing_q3_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666067</span>
+  <span class="desc">FRCFCTR ULT BRBRN CAP</span>
+  <span class="expanded">Force Factor Ultra Blueberry Brain Capsules</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666067/bing_q1_1.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666067/bing_q1_2.jpg" alt="0081012666067" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666067/bing_q1_3.jpg" alt="0081012666067" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666067/bing_q2_1.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666067/bing_q2_2.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666067/bing_q2_3.png" alt="0081012666067" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666129</span>
+  <span class="desc">FRC FCTR MAG GLYC PWDR</span>
+  <span class="expanded">Force Factor Magnesium Glycinate Powder</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q1_2.jpg" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q1_3.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q2_1.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q2_2.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q2_3.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q3_1.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q3_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q3_2.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q3_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666129/bing_q3_3.png" alt="0081012666129" loading="lazy">
+    <div class="img-label">BING — bing_q3_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666196</span>
+  <span class="desc">FRCFCTR AMZ ASHW COMP</span>
+  <span class="expanded">Force Factor Amazing Ashwagandha Complex</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666196/bing_q1_1.png" alt="0081012666196" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666196/bing_q1_2.webp" alt="0081012666196" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.webp</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666196/bing_q1_3.webp" alt="0081012666196" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.webp</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666196/bing_q2_1.jpg" alt="0081012666196" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666196/bing_q2_2.jpg" alt="0081012666196" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666196/bing_q2_3.jpg" alt="0081012666196" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666199</span>
+  <span class="desc">FRC FCTR TOTAL BEETS CHWS</span>
+  <span class="expanded">Force Factor TOTAL BEETS Chews</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666199/bing_q1_1.png" alt="0081012666199" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666199/bing_q1_2.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666199/bing_q1_3.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666199/bing_q2_1.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666199/bing_q2_2.png" alt="0081012666199" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666199/bing_q2_3.jpg" alt="0081012666199" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666245</span>
+  <span class="desc">FRCFCTR LIPSOMAL GUMMIES</span>
+  <span class="expanded">Force Factor Liposomal GUMMIES</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666245/bing_q1_1.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666245/bing_q1_2.png" alt="0081012666245" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666245/bing_q1_3.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666245/bing_q2_1.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666245/bing_q2_2.png" alt="0081012666245" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666245/bing_q2_3.jpg" alt="0081012666245" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666272</span>
+  <span class="desc">FRC FCTR HAIR GRWTH CHWS</span>
+  <span class="expanded">Force Factor HAIR Growth Chews</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666272/bing_q1_1.webp" alt="0081012666272" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.webp</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666272/bing_q1_2.jpg" alt="0081012666272" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666272/bing_q1_3.jpg" alt="0081012666272" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666272/bing_q2_1.png" alt="0081012666272" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666272/bing_q2_2.png" alt="0081012666272" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666272/bing_q2_3.png" alt="0081012666272" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666296</span>
+  <span class="desc">FRC FCTR HAIR GRWTH CAPS</span>
+  <span class="expanded">Force Factor HAIR Growth Capsules</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666296/bing_q1_1.jpg" alt="0081012666296" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666296/bing_q1_2.png" alt="0081012666296" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666296/bing_q1_3.jpg" alt="0081012666296" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666296/bing_q2_1.jpg" alt="0081012666296" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666296/bing_q2_2.png" alt="0081012666296" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666296/bing_q2_3.png" alt="0081012666296" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666308</span>
+  <span class="desc">FRCFCTR MORINGA POWDER</span>
+  <span class="expanded">Force Factor MORINGA POWDER</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666308/bing_q1_1.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666308/bing_q1_2.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666308/bing_q1_3.png" alt="0081012666308" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666308/bing_q2_1.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666308/bing_q2_2.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666308/bing_q2_3.jpg" alt="0081012666308" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666310</span>
+  <span class="desc">FRC FCTR MTCHA SFT CHEWS</span>
+  <span class="expanded">Force Factor Matcha Soft ChewsS</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666310/bing_q1_1.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666310/bing_q1_2.jpg" alt="0081012666310" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666310/bing_q1_3.jpg" alt="0081012666310" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666310/bing_q2_1.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666310/bing_q2_2.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666310/bing_q2_3.png" alt="0081012666310" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081012666315</span>
+  <span class="desc">FRC FCTR MGHTY MTCHA</span>
+  <span class="expanded">Force Factor Mighty Matcha</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q1_1.jpg" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q1_2.jpg" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q1_3.jpg" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q2_2.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q2_3.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q3_1.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q3_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q3_2.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q3_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081012666315/bing_q3_3.png" alt="0081012666315" loading="lazy">
+    <div class="img-label">BING — bing_q3_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0081859401546</span>
+  <span class="desc">FRCFCTR TOTAL BEETS POWDR</span>
+  <span class="expanded">Force Factor TOTAL BEETS POWDrink</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0081859401546/bing_q1_1.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081859401546/bing_q1_2.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081859401546/bing_q1_3.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081859401546/bing_q2_1.webp" alt="0081859401546" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.webp</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081859401546/bing_q2_2.jpg" alt="0081859401546" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0081859401546/bing_q2_3.png" alt="0081859401546" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.png</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0084009312863</span>
+  <span class="desc">NTRS TRTH BEET ROOT CHWS</span>
+  <span class="expanded">Nature's Truth BEET ROOT Chews</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0084009312863/bing_q1_1.png" alt="0084009312863" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312863/bing_q1_2.png" alt="0084009312863" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312863/bing_q1_3.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312863/bing_q2_1.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312863/bing_q2_2.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312863/bing_q2_3.jpg" alt="0084009312863" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0084009312867</span>
+  <span class="desc">NTRS TRTH MLTN MAGN CHWS</span>
+  <span class="expanded">Nature's Truth Melatonin Magnesium Chews</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0084009312867/bing_q1_1.png" alt="0084009312867" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312867/bing_q1_2.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312867/bing_q1_3.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312867/bing_q2_1.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312867/bing_q2_2.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312867/bing_q2_3.jpg" alt="0084009312867" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0084009312920</span>
+  <span class="desc">NTRS TRTH MAGNSM CHEWS</span>
+  <span class="expanded">Nature's Truth Magnesium ChewsS</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0084009312920/bing_q1_1.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312920/bing_q1_2.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312920/bing_q1_3.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312920/bing_q2_1.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312920/bing_q2_2.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0084009312920/bing_q2_3.jpg" alt="0084009312920" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0085005976768</span>
+  <span class="desc">NELLO SPR BAL CRN APL DR</span>
+  <span class="expanded">Nello Super Balance Cranberry Apple Drink</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0085005976768/bing_q1_1.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085005976768/bing_q1_2.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085005976768/bing_q1_3.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085005976768/bing_q2_1.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085005976768/bing_q2_2.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085005976768/bing_q2_3.jpg" alt="0085005976768" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0085006858575</span>
+  <span class="desc">NCLL MLTI CLL RSE VIAL</span>
+  <span class="expanded">Nucell Multi Cell Rose VIAL</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0085006858575/bing_q1_1.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085006858575/bing_q1_2.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085006858575/bing_q1_3.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085006858575/bing_q2_1.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085006858575/bing_q2_2.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085006858575/bing_q2_3.jpg" alt="0085006858575" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0085007479028</span>
+  <span class="desc">NAT VTY MGNSM THRNATE</span>
+  <span class="expanded">Nature's Vitality Magnesium Threonate</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0085007479028/bing_q1_1.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085007479028/bing_q1_2.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085007479028/bing_q1_3.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085007479028/bing_q2_1.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085007479028/bing_q2_2.png" alt="0085007479028" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085007479028/bing_q2_3.jpg" alt="0085007479028" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0085664500847</span>
+  <span class="desc">MRYRTHS ORG ADRN FCS LQ</span>
+  <span class="expanded">Mary Ruth's Organic Adrenal Focus Liquid</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0085664500847/bing_q1_1.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085664500847/bing_q2_1.png" alt="0085664500847" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085664500847/bing_q2_2.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085664500847/bing_q2_3.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085664500847/bing_q3_1.png" alt="0085664500847" loading="lazy">
+    <div class="img-label">BING — bing_q3_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085664500847/bing_q3_2.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">BING — bing_q3_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0085664500847/bing_q3_3.jpg" alt="0085664500847" loading="lazy">
+    <div class="img-label">BING — bing_q3_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0086000455530</span>
+  <span class="desc">PYM ORIGINAL MD CHEW SUPP</span>
+  <span class="expanded">PYM ORIGINAL Mood Chews Supplement</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0086000455530/bing_q1_1.png" alt="0086000455530" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455530/bing_q1_2.png" alt="0086000455530" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.png</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455530/bing_q1_3.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455530/bing_q2_1.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455530/bing_q2_2.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455530/bing_q2_3.jpg" alt="0086000455530" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0086000455532</span>
+  <span class="desc">PYM ORGNL MOOD CHEWS SUPP</span>
+  <span class="expanded">PYM Original MOOD ChewsS Supplement</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0086000455532/bing_q1_1.webp" alt="0086000455532" loading="lazy">
+    <div class="img-label">BING — bing_q1_1.webp</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455532/bing_q1_2.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455532/bing_q1_3.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455532/bing_q2_1.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455532/bing_q2_2.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0086000455532/bing_q2_3.jpg" alt="0086000455532" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+</div></div>
+<div class="product">
+<div class="product-header">
+  <span class="upc">0542501039183</span>
+  <span class="desc">NATF BIOSIL SKIN/HAIR/NLS</span>
+  <span class="expanded">Natural Factors BIOSIL SKIN/HAIR/Nails</span>
+</div>
+<div class="images">
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q1_2.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q1_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q1_3.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q1_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q2_1.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q2_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q2_2.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q2_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q2_3.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q2_3.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q3_1.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q3_1.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q3_2.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q3_2.jpg</div>
+  </div>
+  <div class="img-card source-bing">
+    <img src="0542501039183/bing_q3_3.jpg" alt="0542501039183" loading="lazy">
+    <div class="img-label">BING — bing_q3_3.jpg</div>
+  </div>
+</div></div>
+</body></html>

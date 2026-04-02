@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666199",
+  "original_desc": "FRC FCTR TOTAL BEETS CHWS",
+  "expanded_desc": "Force Factor TOTAL BEETS Chews",
+  "queries_used": [
+    "0081012666199 supplement",
+    "Force Factor TOTAL BEETS Chews supplement product",
+    "Force Factor TOTAL BEETS Chews vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666199 supplement",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666199 supplement",
+      "url": "https://www.creativefabrica.com/wp-content/uploads/2022/09/04/Supplement-Vitamin-Label-Template-Graphics-37772327-1.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666199 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor TOTAL BEETS Chews supplement product",
+      "url": "https://www.cvs.com/bizcontent/merchandising/productimages/high_res/81859401545.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor TOTAL BEETS Chews supplement product",
+      "url": "https://forcefactor.com/cdn/shop/products/05_550x550.png?v=1708971473",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor TOTAL BEETS Chews supplement product",
+      "url": "https://images.heb.com/is/image/HEBGrocery/009117523-1",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

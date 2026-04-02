@@ -1,0 +1,78 @@
+{
+  "upc": "0004126002608",
+  "original_desc": "ST SAM-E 400MG",
+  "search_name": "Simple Truth SAM-e 400mg supplement",
+  "queries_used": [
+    "\"0004126002608\" product",
+    "\"4126002608\" supplement",
+    "Simple Truth SAM-e 400mg supplement product photo",
+    "Simple Truth SAM-e 400mg supplement bottle",
+    "Simple Truth SAM-e 400mg supplement supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://img.alicdn.com/imgextra/i1/509786769/O1CN018BhUsU1zsFYi1BCpU_!!509786769-0-pixelsss.jpg",
+      "query_index": 0,
+      "width": 800,
+      "height": 800,
+      "size_kb": 85
+    },
+    {
+      "filename": "q1_2.png",
+      "url": "https://cdn.sketchbubble.com/pub/media/catalog/product/optimized1/b/f/bf36dd84631497d58afc7ea256b28ad2e0e198191b3bca34a0cdecf36fd27d31/product-challenges-mc-slide1.png",
+      "query_index": 0,
+      "width": 720,
+      "height": 540,
+      "size_kb": 17
+    },
+    {
+      "filename": "q1_3.png",
+      "url": "https://www.someka.net/wp-content/uploads/2023/04/Product-Pricing-Calculator-Someka-Excel-Template-SS2.png",
+      "query_index": 0,
+      "width": 1365,
+      "height": 700,
+      "size_kb": 27
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://www.meppon.cc/wp-content/uploads/2020/05/612600900072-LINER-KITS-5.jpg?v=1589788208",
+      "query_index": 0,
+      "width": 888,
+      "height": 666,
+      "size_kb": 75
+    },
+    {
+      "filename": "q1_5.png",
+      "url": "https://gembah.com/wp-content/uploads/2023/01/image1-1024x516.png",
+      "query_index": 0,
+      "width": 1024,
+      "height": 516,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_6.jpg",
+      "url": "http://www.theatregarage.ca/wp-content/uploads/2016/05/416-e1463090828415-300x300.jpg",
+      "query_index": 0,
+      "width": 300,
+      "height": 300,
+      "size_kb": 8
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://www.gasspringexpert.com/wp-content/uploads/2024/09/GAC60189.jpg",
+      "query_index": 1,
+      "width": 450,
+      "height": 450,
+      "size_kb": 7
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://www.enerairspring.com/d/files/iveco/41225418-275.jpg",
+      "query_index": 1,
+      "width": 275,
+      "height": 255,
+      "size_kb": 40
+    }
+  ]
+}

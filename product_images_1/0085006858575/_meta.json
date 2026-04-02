@@ -1,0 +1,48 @@
+{
+  "upc": "0085006858575",
+  "original_desc": "NCLL MLTI CLL RSE VIAL",
+  "expanded_desc": "Nucell Multi Cell Rose VIAL",
+  "queries_used": [
+    "0085006858575 supplement",
+    "Nucell Multi Cell Rose VIAL supplement product",
+    "Nucell Multi Cell Rose VIAL vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0085006858575 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0085006858575 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0085006858575 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nucell Multi Cell Rose VIAL supplement product",
+      "url": "https://www.ttdistributors.com/wp-content/uploads/2017/02/image_wb8sag_200x5000.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nucell Multi Cell Rose VIAL supplement product",
+      "url": "http://nutracellsupplements.com/cdn/shop/files/NucellGallon.jpg?v=1696605518",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nucell Multi Cell Rose VIAL supplement product",
+      "url": "http://nutracellsupplements.com/cdn/shop/files/Nucell-Group_e291e381-13cb-4cc1-9cb6-6ef89fd2fbfc.jpg?v=1767370525",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

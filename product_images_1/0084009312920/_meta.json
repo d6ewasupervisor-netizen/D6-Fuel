@@ -1,0 +1,48 @@
+{
+  "upc": "0084009312920",
+  "original_desc": "NTRS TRTH MAGNSM CHEWS",
+  "expanded_desc": "Nature's Truth Magnesium ChewsS",
+  "queries_used": [
+    "0084009312920 supplement",
+    "Nature's Truth Magnesium ChewsS supplement product",
+    "Nature's Truth Magnesium ChewsS vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0084009312920 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0084009312920 supplement",
+      "url": "https://www.yumpu.com/xx/image/facebook/60001301/25.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0084009312920 supplement",
+      "url": "https://www.yumpu.com/xx/image/facebook/60001301/4.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth Magnesium ChewsS supplement product",
+      "url": "https://www.valpacks.com/wp-content/uploads/2022/03/840093105790.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth Magnesium ChewsS supplement product",
+      "url": "https://images.heb.com/is/image/HEBGrocery/011493514-1?jpegSize=150&hei=1400&fit=constrain&qlt=75",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth Magnesium ChewsS supplement product",
+      "url": "https://images.heb.com/is/image/HEBGrocery/011493514-2?jpegSize=150&hei=1400&fit=constrain&qlt=75&v=1",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

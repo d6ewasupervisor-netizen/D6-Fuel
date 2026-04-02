@@ -1,0 +1,78 @@
+{
+  "upc": "0085005976768",
+  "original_desc": "NELLO SPR BAL CRN APL DR",
+  "search_name": "Nello Super Balance Cranberry Apple Drink",
+  "queries_used": [
+    "\"0085005976768\" product",
+    "\"85005976768\" supplement",
+    "Nello Super Balance Cranberry Apple Drink product photo",
+    "Nello Super Balance Cranberry Apple Drink bottle",
+    "Nello Super Balance Cranberry Apple Drink supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://site-1306369054.file.myqcloud.com/upload/images/5483571648158684/2a545994fd643a0e12570e0086e99e81/6f2f5f816741f746338aea554109112c.jpg?imageMogr2/thumbnail/500x260/pad/1/color/I0Y2RjZGNg==/quality/85/sharpen/100",
+      "query_index": 0,
+      "width": 500,
+      "height": 260,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/789/152/702/5941/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 911,
+      "height": 872,
+      "size_kb": 164
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/590/324/656/2965/ingredients_de.3.full.jpg",
+      "query_index": 0,
+      "width": 720,
+      "height": 1280,
+      "size_kb": 62
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/541/007/665/2686/front_fr.3.full.jpg",
+      "query_index": 0,
+      "width": 3056,
+      "height": 3056,
+      "size_kb": 906
+    },
+    {
+      "filename": "q1_5.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/490/250/535/5776/front_en.8.full.jpg",
+      "query_index": 0,
+      "width": 640,
+      "height": 1851,
+      "size_kb": 101
+    },
+    {
+      "filename": "q1_6.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/890/172/511/5876/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 2448,
+      "height": 3264,
+      "size_kb": 1102
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "query_index": 1,
+      "width": 357,
+      "height": 500,
+      "size_kb": 24
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "query_index": 1,
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "upc": "0085007479028",
+  "original_desc": "NAT VTY MGNSM THRNATE",
+  "search_name": "Natural Vitality Magnesium Threonate",
+  "brand": "Natural Vitality",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/mtg/mtg94872/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 8
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/ptg/ptg04353/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 6
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nnt/nnt04308/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 4
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/619uqcTp8RL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1485,
+      "height": 1500,
+      "size_kb": 93
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/61fmgFB1-KL._AC_.jpg",
+      "source": "amazon",
+      "width": 907,
+      "height": 1493,
+      "size_kb": 115
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/150acee2-b152-4da6-9c97-577e757f3e5b.__CR0,0,1464,600_PT0_SX1464_V1___.jpg",
+      "source": "amazon",
+      "width": 1464,
+      "height": 600,
+      "size_kb": 419
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/asr/256b1373-d789-410a-9bce-cc873f5702e4.5ba71f230118b45aabe120ea582a8f4e.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 20
+    },
+    {
+      "filename": "08_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Natural-Vitality-Calm-Magnesium-Citrate-Gummies-Raspberry-Lemon-60-Gummies_0da8ce4c-776a-469e-9f70-948c37be88da.990b0e081c84418ef8ef7b5fd9242228.png?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 192
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Natural-Vitality-FOCUS-Memory-and-Cognition-Magnesium-L-Threonate-and-Phosphatidylserine-Supplement-60-Capsules-1-Bottle_43522f8a-8def-496f-aefc-78fcf832f4f7.7b4b30b45ef3c15402a95b1cd693ee60.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 23
+    },
+    {
+      "filename": "16_upc.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "source": "upc",
+      "width": 357,
+      "height": 500,
+      "size_kb": 24
+    }
+  ]
+}

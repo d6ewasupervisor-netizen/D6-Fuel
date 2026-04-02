@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666296",
+  "original_desc": "FRC FCTR HAIR GRWTH CAPS",
+  "search_name": "Force Factor Hair Growth Capsules",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa66095/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 7
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81VXrZr-wJL._AC_UL960_QL65_.jpg",
+      "source": "amazon",
+      "width": 749,
+      "height": 960,
+      "size_kb": 86
+    },
+    {
+      "filename": "05_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/al-na-9d5791cf-3faf/8ba4256f-14c9-4d27-9250-b2f71a35d19c._SL5000_CR0%2C0%2C5000%2C2563_SX840_.png",
+      "source": "amazon",
+      "width": 840,
+      "height": 431,
+      "size_kb": 48
+    },
+    {
+      "filename": "06_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/al-na-9d5791cf-3faf/6cbad270-a1ad-419f-aa5d-698123cfa827._SL5000_CR0%2C0%2C5000%2C1000_SX9000_.png",
+      "source": "amazon",
+      "width": 5000,
+      "height": 1000,
+      "size_kb": 275
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Vegan-Collagen-Boosting-Superfoods-with-Biotin-Hair-Skin-and-Nails-Supplement-Tropical-Fruit-Flavor-60-Chews-by-Force-Factor_58b6c001-083b-418b-a630-fd8c6b0daa4c.9734e80b2f254f33fb3a5b66415cd2b0.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 46
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Hair-Skin-and-Nail-Vitamins-for-Women-and-Men-Hyaluronic-Acid-Biotin-Noophoric-90-Capsules_0f303506-9cdc-462a-97be-676cd26a5263.100eeba246124a6882ae9f6c58c0ef33.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 22
+    },
+    {
+      "filename": "09_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Longjack-Tongkat-Ali-500mg-Vitality-Supplement-for-Men-30-Capsules_f1c3c266-851a-4304-a23f-dc05cd3abfbd.020bb031272323083e0c3fcfeb643a1c.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 146
+    },
+    {
+      "filename": "14_upc.jpg",
+      "url": "https://imgcdn.stablediffusionweb.com/2025/3/14/008b670f-623c-4de7-9715-a6325104203f.jpg",
+      "source": "upc",
+      "width": 1024,
+      "height": 1024,
+      "size_kb": 28
+    },
+    {
+      "filename": "15_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    },
+    {
+      "filename": "17_upc.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "source": "upc",
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666308",
+  "original_desc": "FRCFCTR MORINGA POWDER",
+  "search_name": "Force Factor Moringa Powder",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://s3.images-iherb.com/blog/uploads/megan-roosevelt-rd-1678311408015.jpeg",
+      "source": "iherb",
+      "width": 400,
+      "height": 400,
+      "size_kb": 152
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa01952/u/12.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 9
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa01897/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 10
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71XwjyNyK4L._CR0,0,1179,1179_._FMjpg_.jpg",
+      "source": "amazon",
+      "width": 1179,
+      "height": 1179,
+      "size_kb": 70
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/717o9GbF4xL._CR0%2C0%2C1141%2C1141_._US500_SCLZZZZZZZ_.jpg",
+      "source": "amazon",
+      "width": 500,
+      "height": 500,
+      "size_kb": 30
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71G0o0MypsL.jpg",
+      "source": "amazon",
+      "width": 640,
+      "height": 1137,
+      "size_kb": 139
+    },
+    {
+      "filename": "07_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Modern-Mushrooms-Powder-Mushroom-Supplement-Complex-with-Lion-s-Mane-30-Servings-by-Force-Factor_21adcca9-8062-48e2-9835-77e1dfdc8246.9a656d3f2b046c273741826366f1aa2e.png",
+      "source": "walmart",
+      "width": 2560,
+      "height": 2560,
+      "size_kb": 129
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Total-Beets-Organic-Beetroot-Powder-15-9-oz-450-g_06837fbe-94ad-4ca6-bf86-d0c50411fd9f.a58c93bdcfdf3968d492f077de819008.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 26
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Liquid-Labs-Energy-Electrolytes-Powder-Hydration-Packets-Fruit-Punch-20-Stick-Packs_045490a5-c1b6-4c93-9e22-17dde64b2f81.06c8a634bf817bc3548a92d61aafe3eb.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 43
+    },
+    {
+      "filename": "14_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    }
+  ]
+}

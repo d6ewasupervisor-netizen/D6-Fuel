@@ -1,0 +1,48 @@
+{
+  "upc": "0086000455530",
+  "original_desc": "PYM ORIGINAL MD CHEW SUPP",
+  "expanded_desc": "PYM ORIGINAL Mood Chews Supplement",
+  "queries_used": [
+    "0086000455530 supplement",
+    "PYM ORIGINAL Mood Chews Supplement supplement product",
+    "PYM ORIGINAL Mood Chews Supplement vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0086000455530 supplement",
+      "url": "https://flabfix.com/wp-content/uploads/2022/09/Everything-You-Need-to-Know-About-Carditone-Supplement.png",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0086000455530 supplement",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "filename": "bing_q1_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "0086000455530 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "PYM ORIGINAL Mood Chews Supplement supplement product",
+      "url": "https://images.urbndata.com/is/image/UrbanOutfitters/86886819_072_b?$xlarge$&fit=constrain&qlt=80&wid=640",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "PYM ORIGINAL Mood Chews Supplement supplement product",
+      "url": "https://img.shopstyle-cdn.com/sim/5d/14/5d14394610bf6b09544ad7e3dd6bff93_best/pym-original-mood-chews-supplement.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "PYM ORIGINAL Mood Chews Supplement supplement product",
+      "url": "https://images.heb.com/is/image/HEBGrocery/009780013-1",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

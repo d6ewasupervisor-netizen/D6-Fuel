@@ -1,0 +1,60 @@
+{
+  "upc": "0073373901283",
+  "original_desc": "NOW MAGNSMCPS 400 MG 180",
+  "expanded_desc": "NOW Foods Magnesium Capsules 400 MG 180",
+  "queries_used": [
+    "0073373901283 supplement",
+    "NOW Foods Magnesium Capsules 400 MG 180 supplement product",
+    "NOW Foods Magnesium Capsules 400 MG 180 vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0073373901283 supplement",
+      "url": "https://www.kroger.com/product/images/large/back/0073373901283",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0073373901283 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhf4%2Fh97%2F9125704957982%2FEIA.w560.h560.308473ID_1.png&w=768&q=75",
+      "filename": "bing_q1_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "0073373901283 supplement",
+      "url": "https://blog.longevity-supplement.com/logo.webp",
+      "filename": "bing_q1_3.webp"
+    },
+    {
+      "source": "bing",
+      "query": "NOW Foods Magnesium Capsules 400 MG 180 supplement product",
+      "url": "https://cdn.shopify.com/s/files/1/0001/9555/9490/products/NOW_Magnesium_Citrate_400mg_Full_720x720@3x.jpg?v=1619251048",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "NOW Foods Magnesium Capsules 400 MG 180 supplement product",
+      "url": "https://a.nooncdn.com/cms/pages/20211022/46a676097ce1d8ff844bfc578910d5a2/N32775791A-3.jpg",
+      "filename": "bing_q2_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "NOW Foods Magnesium Capsules 400 MG 180 vitamin bottle",
+      "url": "https://www.nowfoods.com/sites/default/files/styles/cloudzoom_image/public/2022-10/1283_nowproductlabels2.png?itok=HOxwaCJq",
+      "filename": "bing_q3_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "NOW Foods Magnesium Capsules 400 MG 180 vitamin bottle",
+      "url": "https://www.nowfoods.com/sites/default/files/styles/cloudzoom_image/public/2022-10/1283_nowproductlabels.png?itok=EWMDQNMC",
+      "filename": "bing_q3_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "NOW Foods Magnesium Capsules 400 MG 180 vitamin bottle",
+      "url": "https://www.nowfoods.com/sites/default/files/2022-10/1228_mainimage.png",
+      "filename": "bing_q3_3.png"
+    }
+  ]
+}

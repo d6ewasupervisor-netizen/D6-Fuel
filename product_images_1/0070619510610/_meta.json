@@ -1,0 +1,48 @@
+{
+  "upc": "0070619510610",
+  "original_desc": "OWH WLD HRVST MLK THSTL",
+  "expanded_desc": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle",
+  "queries_used": [
+    "0070619510610 supplement",
+    "Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle supplement product",
+    "Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0070619510610 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fh0f%2Fh6a%2F9206477357086%2FEIA.w560.h560.313490ID_i-Candy3.png&w=768&q=75",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0070619510610 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/500x500_blank/FB9316A2-3334-4BC9-A9F4-3932BF78AD0C_dc0849a9-aad2-44e3-b9bb-55f727fa852f.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0070619510610 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle supplement product",
+      "url": "http://oregonswildharvest.com/cdn/shop/files/Milk-Thistle-organic-90ct-capsules-bottle-front.png?v=1724382129",
+      "filename": "bing_q2_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle supplement product",
+      "url": "https://s3-us-west-1.amazonaws.com/1source-upstream/product_photo/242507_front_1537623393.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Milk Thistle supplement product",
+      "url": "https://www.kroger.com/product/images/large/front/0073262369696",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

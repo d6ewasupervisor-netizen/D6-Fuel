@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666196",
+  "original_desc": "FRCFCTR AMZ ASHW COMP",
+  "search_name": "Force Factor Amazing Ashwagandha Complex",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa66094/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 7
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa01952/u/12.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 9
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71z1JakRivL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1363,
+      "height": 1500,
+      "size_kb": 133
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81jm+6AWulL._AC_SX679_.jpg",
+      "source": "amazon",
+      "width": 679,
+      "height": 708,
+      "size_kb": 60
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81xt0n76QLL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1318,
+      "height": 1500,
+      "size_kb": 155
+    },
+    {
+      "filename": "07_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Amazing-Ashwa-Ashwagandha-Capsules-Alternative-KSM-66-Supplement-for-Stress-Relief-120-Tablets-by-Force-Factor_183fa713-c054-4ac0-8e9f-533ecb415ede.efd543aaf063cad12bf1d672b3bae53d.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 24
+    },
+    {
+      "filename": "08_walmart.png",
+      "url": "https://i5.walmartimages.com/asr/5693bc26-fb72-4502-b97a-13e382d3c7c0.981b4663195ad08c2e01d4dd978a0fc6.png?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 25
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Smarter-Greens-Tablets-Greens-Superfood-Supplement-90-Tablets_c8f794fe-6947-40be-8b56-3d498bae303c.f8d591f20c399a962ebba85d6e300cf0.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 41
+    },
+    {
+      "filename": "16_upc.jpg",
+      "url": "https://oem-fgc.com/wp-content/uploads/2022/08/Collagen-product-lines-scaled.jpg",
+      "source": "upc",
+      "width": 2560,
+      "height": 2048,
+      "size_kb": 228
+    },
+    {
+      "filename": "17_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    }
+  ]
+}

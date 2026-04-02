@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666310",
+  "original_desc": "FRC FCTR MTCHA SFT CHEWS",
+  "expanded_desc": "Force Factor Matcha Soft ChewsS",
+  "queries_used": [
+    "0081012666310 supplement",
+    "Force Factor Matcha Soft ChewsS supplement product",
+    "Force Factor Matcha Soft ChewsS vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666310 supplement",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666310 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/12/LX/JS/BL/8329439/food-supplement-premix01-page-0001-1000x1000.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666310 supplement",
+      "url": "https://thehill.com/wp-content/uploads/sites/2/2022/09/CA_supplements_09022022istock.jpg?w=1280&h=720&crop=1",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Matcha Soft ChewsS supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/MLP_93ddbe94-6483-45f3-8731-9021a8639170_550x550.png?v=1727192230",
+      "filename": "bing_q2_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Matcha Soft ChewsS supplement product",
+      "url": "https://cdn.shopify.com/s/files/1/0278/7776/9321/files/MLP_c479837f-a43e-43c3-b927-5584f985c1d2.png?v=1746818657",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Matcha Soft ChewsS supplement product",
+      "url": "https://www.priceplow.com/static/images/products/force-factor-matcha-green-tea-powder-organic.png",
+      "filename": "bing_q2_3.png"
+    }
+  ]
+}

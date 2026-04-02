@@ -1,0 +1,78 @@
+{
+  "upc": "0070619510606",
+  "original_desc": "OWHV ASTRAGALUS ORGANIC",
+  "search_name": "Oregon's Wild Harvest Astragalus Organic capsules",
+  "queries_used": [
+    "\"0070619510606\" product",
+    "\"70619510606\" supplement",
+    "Oregon's Wild Harvest Astragalus Organic capsules product photo",
+    "Oregon's Wild Harvest Astragalus Organic capsules bottle",
+    "Oregon's Wild Harvest Astragalus Organic capsules supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://site-1306369054.file.myqcloud.com/upload/images/5483571648158684/2a545994fd643a0e12570e0086e99e81/6f2f5f816741f746338aea554109112c.jpg?imageMogr2/thumbnail/500x260/pad/1/color/I0Y2RjZGNg==/quality/85/sharpen/100",
+      "query_index": 0,
+      "width": 500,
+      "height": 260,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/505/520/451/2663/front_ro.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1205
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/501/233/585/0606/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1797
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/200/504/101/1495/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 689
+    },
+    {
+      "filename": "q1_5.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/590/324/656/2965/ingredients_de.3.full.jpg",
+      "query_index": 0,
+      "width": 720,
+      "height": 1280,
+      "size_kb": 62
+    },
+    {
+      "filename": "q1_6.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/357/466/163/8706/front_fr.3.400.jpg",
+      "query_index": 0,
+      "width": 367,
+      "height": 400,
+      "size_kb": 20
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fh0f%2Fh6a%2F9206477357086%2FEIA.w560.h560.313490ID_i-Candy3.png&w=768&q=75",
+      "query_index": 1,
+      "width": 560,
+      "height": 560,
+      "size_kb": 10
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://au.lorealpartnershop.com/dw/image/v2/BJVX_PRD/on/demandware.static/-/Sites-master-PPD-AU/default/dwb4ca4530/products/3474637155032_EN_9.jpg?sw=496&sh=378&sm=fit",
+      "query_index": 1,
+      "width": 378,
+      "height": 378,
+      "size_kb": 14
+    }
+  ]
+}

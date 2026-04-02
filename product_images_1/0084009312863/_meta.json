@@ -1,0 +1,48 @@
+{
+  "upc": "0084009312863",
+  "original_desc": "NTRS TRTH BEET ROOT CHWS",
+  "expanded_desc": "Nature's Truth BEET ROOT Chews",
+  "queries_used": [
+    "0084009312863 supplement",
+    "Nature's Truth BEET ROOT Chews supplement product",
+    "Nature's Truth BEET ROOT Chews vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0084009312863 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhf4%2Fh97%2F9125704957982%2FEIA.w560.h560.308473ID_1.png&w=768&q=75",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0084009312863 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhcb%2Fh5b%2F9185615249438%2FEIA.w560.h560.202167ID_1.png&w=992&q=75",
+      "filename": "bing_q1_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "0084009312863 supplement",
+      "url": "https://m.media-amazon.com/images/I/71t-n-QBjgL.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth BEET ROOT Chews supplement product",
+      "url": "https://contenthandler-raleys.fieldera.com/prod/9970/1/0/0/11880738-Planogram-Right.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth BEET ROOT Chews supplement product",
+      "url": "https://contenthandler-raleys.fieldera.com/prod/9968/1/0/0/11880738-Main.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth BEET ROOT Chews supplement product",
+      "url": "https://contenthandler-raleys.fieldera.com/prod/9966/1/0/0/11880738-Planogram-Back.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

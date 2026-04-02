@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666272",
+  "original_desc": "FRC FCTR HAIR GRWTH CHWS",
+  "expanded_desc": "Force Factor HAIR Growth Chews",
+  "queries_used": [
+    "0081012666272 supplement",
+    "Force Factor HAIR Growth Chews supplement product",
+    "Force Factor HAIR Growth Chews vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666272 supplement",
+      "url": "https://routines.club/wp-content/uploads/2025/03/PD-Mangan-Supplement-List.webp",
+      "filename": "bing_q1_1.webp"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666272 supplement",
+      "url": "https://nutritionfacts.org/app/uploads/2022/07/59-01-supplement-regulation-and-side-effects-efforts-to-suppress-the-truth.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666272 supplement",
+      "url": "https://i5.walmartimages.com/asr/f6593441-14ab-4a8d-8fab-42d728b90ed8.f7739c41b3df06270b4b5ce12c207835.jpeg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor HAIR Growth Chews supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/What_to_Expect_92864e4f-0056-4760-9ccb-dc1fd71683fe_550x550.png?v=1735318655",
+      "filename": "bing_q2_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor HAIR Growth Chews supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/04_b71077e2-329e-41f5-a80f-8bc9731837e3_550x550.png?v=1735318655",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor HAIR Growth Chews supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/03_1c295a92-5f60-44c5-bcd8-980761eb0fa0_550x550.png?v=1735318655",
+      "filename": "bing_q2_3.png"
+    }
+  ]
+}

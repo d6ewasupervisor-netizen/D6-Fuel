@@ -1,0 +1,88 @@
+{
+  "upc": "0084009312867",
+  "original_desc": "NTRS TRTH MLTN MAGN CHWS",
+  "search_name": "Nature's Truth Melatonin Magnesium Chews",
+  "brand": "Nature's Truth",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nth/nth11543/u/20.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 8
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nth/nth12356/u/24.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 7
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/712v+omYWjL._AC_SY879_.jpg",
+      "source": "amazon",
+      "width": 516,
+      "height": 879,
+      "size_kb": 58
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/fc9986d6-202c-4d5f-b4bc-d47bc0df5727.__CR0,3,5000,2049_PT0_SX1464_V1___.jpg",
+      "source": "amazon",
+      "width": 1464,
+      "height": 600,
+      "size_kb": 88
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81Rh8G08QdL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1063,
+      "height": 1500,
+      "size_kb": 129
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Nature-s-Truth-Low-Dose-Sleep-Delicious-Cherry-Pomegranate-Flavor-Melatonin-60-Gummies_944344c9-5be0-411a-8fc1-5bf626fc6088.03843118ca6ccc0044dfda871c829934.jpeg",
+      "source": "walmart",
+      "width": 1774,
+      "height": 3000,
+      "size_kb": 185
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Dulcolax-Saline-Laxative-Soft-Chews-Fast-Acting-Laxative-Gentle-Constipation-Relief-Mixed-Berry-Flavor-Magnesium-Hydroxide-1200-mg-30-Count-Occasiona_5db4a0db-322b-45c8-97e7-a255926f0e44.a6dd20fb1693e23d3447a607fbebeb42.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 28
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/MiraFAST-Soft-Chews-Gentle-Constipation-Relief-Fast-Acting-Laxative-Mixed-Berry-Flavor-30-Ct_1d779530-98d2-4c50-ab90-379257f1c39c.5f84e1db68f7f7f1dd1b37a93c2c33b1.jpeg",
+      "source": "walmart",
+      "width": 3000,
+      "height": 3000,
+      "size_kb": 195
+    },
+    {
+      "filename": "16_upc.jpg",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhf4%2Fh97%2F9125704957982%2FEIA.w560.h560.308473ID_1.png&w=992&q=75",
+      "source": "upc",
+      "width": 560,
+      "height": 560,
+      "size_kb": 15
+    },
+    {
+      "filename": "17_upc.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/590/324/656/2965/ingredients_de.3.full.jpg",
+      "source": "upc",
+      "width": 720,
+      "height": 1280,
+      "size_kb": 62
+    }
+  ]
+}

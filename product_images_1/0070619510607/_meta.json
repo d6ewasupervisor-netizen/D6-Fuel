@@ -1,0 +1,48 @@
+{
+  "upc": "0070619510607",
+  "original_desc": "OWH WLD HRVST ASHWGNDHA",
+  "expanded_desc": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha",
+  "queries_used": [
+    "0070619510607 supplement",
+    "Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha supplement product",
+    "Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0070619510607 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fh0f%2Fh6a%2F9206477357086%2FEIA.w560.h560.313490ID_i-Candy3.png&w=768&q=75",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0070619510607 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/500x500_blank/FB9316A2-3334-4BC9-A9F4-3932BF78AD0C_dc0849a9-aad2-44e3-b9bb-55f727fa852f.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0070619510607 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha supplement product",
+      "url": "https://hsu.com/wp-content/uploads/2024/12/wp-image39918973583585.png",
+      "filename": "bing_q2_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha supplement product",
+      "url": "http://oregonswildharvest.com/cdn/shop/files/Ashwagandha-organic-90ct-capsules-bottle-front.png?v=1723142364",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest WLD HRVNature Made SAM-e Ashwagandha supplement product",
+      "url": "https://oregonswildharvest.com/cdn/shop/files/Ashwagandha-organic-90ct-capsules-bottle-right_1800x1800.png?v=1723142402",
+      "filename": "bing_q2_3.png"
+    }
+  ]
+}

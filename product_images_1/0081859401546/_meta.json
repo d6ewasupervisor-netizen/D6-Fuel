@@ -1,0 +1,48 @@
+{
+  "upc": "0081859401546",
+  "original_desc": "FRCFCTR TOTAL BEETS POWDR",
+  "expanded_desc": "Force Factor TOTAL BEETS POWDrink",
+  "queries_used": [
+    "0081859401546 supplement",
+    "Force Factor TOTAL BEETS POWDrink supplement product",
+    "Force Factor TOTAL BEETS POWDrink vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081859401546 supplement",
+      "url": "https://www.kroger.com/product/images/large/back/0081859401546",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081859401546 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081859401546 supplement",
+      "url": "https://www.yumpu.com/xx/image/facebook/60001301/25.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor TOTAL BEETS POWDrink supplement product",
+      "url": "https://www.nbs-supplements.com/wp-content/uploads/2024/10/05_4a8198ef-8044-4d1d-b37c-f6883c1b7806_700x.webp",
+      "filename": "bing_q2_1.webp"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor TOTAL BEETS POWDrink supplement product",
+      "url": "https://hsegy.com/wp-content/uploads/2021/10/Force-Factor-Total-Beets-Original-Drink-Powder-Pomegranate-Berry-600x600.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor TOTAL BEETS POWDrink supplement product",
+      "url": "https://i5.walmartimages.com/asr/174f658b-81cd-480b-93d2-a251c6c49ecd.a7346f9f8e3f5b8ae06f6e653ce00664.png",
+      "filename": "bing_q2_3.png"
+    }
+  ]
+}

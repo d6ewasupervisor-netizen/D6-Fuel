@@ -1,0 +1,88 @@
+{
+  "upc": "0004126002659",
+  "original_desc": "KRO BRAIN SUPPORT GUMMY",
+  "search_name": "Kroger Brain Support Gummy",
+  "brand": "Kroger",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/oad/oad58658/u/22.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 12
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://s3.images-iherb.com/blog/uploads/brain-boosting-nutrients-small.jpg",
+      "source": "iherb",
+      "width": 350,
+      "height": 205,
+      "size_kb": 16
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/thr/thr01215/u/16.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 5
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71TNyMeM8iL._AC_SX679_.jpg",
+      "source": "amazon",
+      "width": 679,
+      "height": 1180,
+      "size_kb": 62
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81PL+RH5R1L._AC_SX569_.jpg",
+      "source": "amazon",
+      "width": 569,
+      "height": 735,
+      "size_kb": 56
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71xYnZt4QqL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1105,
+      "height": 1500,
+      "size_kb": 133
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Metamucil-Plant-Based-Fiber-Gummies-Fiber-Supplement-for-Digestive-Health-No-Sugar-Added-72-Count_0f60d4e3-d776-447a-a0b8-62f6c3071300.f0b22659c5684b46e1af427f90f23bc6.jpeg",
+      "source": "walmart",
+      "width": 3000,
+      "height": 3000,
+      "size_kb": 226
+    },
+    {
+      "filename": "08_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Alpha-BRAIN-Cognitive-Gummy-42-ct_91713277-2883-4d39-8298-4aeb7edfb797.b0201366f0e72ff8a2719c8e8673ba80.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 21
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Wild-Organic-Ginkgo-Biloba-Gummies-Brain-Energy-Support-Gummy-60-Chews_1efd9711-2380-4752-ab4a-72b619e70f97.30efeb97cf2d6e8ff72a2c46fd3dcae0.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 45
+    },
+    {
+      "filename": "14_upc.jpg",
+      "url": "https://www.cvs.com/bizcontent/merchandising/productimages/high_res/3160403127.jpg",
+      "source": "upc",
+      "width": 1500,
+      "height": 1500,
+      "size_kb": 239
+    }
+  ]
+}

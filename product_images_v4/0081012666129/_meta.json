@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666129",
+  "original_desc": "FRC FCTR MAG GLYC PWDR",
+  "search_name": "Force Factor Magnesium Glycinate Powder",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa66129/l/8.jpg",
+      "source": "iherb",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 209
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71DQnZPuhzL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 920,
+      "height": 1500,
+      "size_kb": 117
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71dyIHBFu3L._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1069,
+      "height": 1500,
+      "size_kb": 90
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71SK3IyCA-L.__AC_SX300_SY300_QL70_ML2_.jpg",
+      "source": "amazon",
+      "width": 215,
+      "height": 300,
+      "size_kb": 10
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Magnesium-Glycinate-Powder-Unflavored-4-94-oz-140-g_5e5298c6-e49c-4b6f-b391-247744b23159.d726a96b1e7f05cc6b526a0313879328.jpeg",
+      "source": "walmart",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 245
+    },
+    {
+      "filename": "08_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Modern-Mushrooms-Powder-Mushroom-Supplement-Complex-with-Lion-s-Mane-30-Servings-by-Force-Factor_21adcca9-8062-48e2-9835-77e1dfdc8246.9a656d3f2b046c273741826366f1aa2e.png",
+      "source": "walmart",
+      "width": 2560,
+      "height": 2560,
+      "size_kb": 129
+    },
+    {
+      "filename": "09_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/FORCE-FACTOR-ULTIMATE-MAGNESIUM-THREON-60-CHEWS_6ed937fa-7cc1-4289-9617-acb60db1fcf4.59aa280ba61102a26879ad7236d10173.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 35
+    },
+    {
+      "filename": "16_upc.jpg",
+      "url": "https://pebblely.com/ideas/health-supplement-product/pebblely-screenshot.jpg",
+      "source": "upc",
+      "width": 1479,
+      "height": 764,
+      "size_kb": 84
+    },
+    {
+      "filename": "17_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    },
+    {
+      "filename": "18_upc.jpg",
+      "url": "https://static.vecteezy.com/system/resources/previews/034/936/661/original/vitamin-label-sticker-design-and-food-supplement-banner-packaging-health-product-vector.jpg",
+      "source": "upc",
+      "width": 1920,
+      "height": 1652,
+      "size_kb": 550
+    }
+  ]
+}

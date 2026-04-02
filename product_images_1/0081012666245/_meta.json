@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666245",
+  "original_desc": "FRCFCTR LIPSOMAL GUMMIES",
+  "expanded_desc": "Force Factor Liposomal GUMMIES",
+  "queries_used": [
+    "0081012666245 supplement",
+    "Force Factor Liposomal GUMMIES supplement product",
+    "Force Factor Liposomal GUMMIES vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666245 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666245 supplement",
+      "url": "https://medicarenationwide.com/wp-content/uploads/2024/11/Medicare-Supplement-Chart-2025.png",
+      "filename": "bing_q1_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666245 supplement",
+      "url": "https://m.media-amazon.com/images/I/81KuQPcZDdL._AC_.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Liposomal GUMMIES supplement product",
+      "url": "https://palletfly-public.s3.amazonaws.com/product_images/28239-primary.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Liposomal GUMMIES supplement product",
+      "url": "https://cdn.shopify.com/s/files/1/0278/7776/9321/files/MLP_4daaa7cf-1fb0-495e-8f0b-8e2da081f973.png?v=1755276613",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Liposomal GUMMIES supplement product",
+      "url": "https://supplementhunt.com/cdn/shop/files/ForceFactorSmarterGreensChlorophyllGummies60ctFreshBerry_1200x1200.jpg?v=1708803455",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

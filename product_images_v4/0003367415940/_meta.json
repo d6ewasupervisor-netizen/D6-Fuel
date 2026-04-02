@@ -1,0 +1,88 @@
+{
+  "upc": "0003367415940",
+  "original_desc": "NTWY OMEGA 3 GMM CHEW",
+  "search_name": "Nateway Omega 3 Gummy Chews",
+  "brand": "Nateway",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/lex/lex25083/u/9.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 14
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://s3.images-iherb.com/cms/banners/Nordic_Naturals_brand_image_120522.jpg",
+      "source": "iherb",
+      "width": 800,
+      "height": 1000,
+      "size_kb": 67
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nor/nor30150/u/34.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 17
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/61JTCkU9NyL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1035,
+      "height": 1500,
+      "size_kb": 106
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81uRv1753zL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1500,
+      "height": 1289,
+      "size_kb": 224
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/608ceae9-e49a-46e9-9aa4-0e316e0ddff5.__CR0,0,1600,1200_PT0_SX800_V1___.jpg",
+      "source": "amazon",
+      "width": 800,
+      "height": 600,
+      "size_kb": 50
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/3-Pack-Lipo-Chewies-Keto-ACV-Gummies-Official-Lipo-Chews-Keto-Plus-ACV-Gummy-S-Keto-ACV-Supplement-Premium-Apple-Cider-Vinegar-Natural-Wellness-Lipo_8540719d-5bad-4a93-9bc1-4e3606b5b99c.b4804ac4e87be4a50381be193c4ab604.jpeg",
+      "source": "walmart",
+      "width": 1486,
+      "height": 1600,
+      "size_kb": 245
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/asr/66d16aba-bcc9-4b38-ae90-6c3d89b90bf6.35a9e5d4f059a55b9cd489f40ac051f1.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 18
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Mamba-Fruit-Chews-Chewy-Candy-7-05-oz_e5c3e298-3786-41d8-a7ae-45b112da7032.5467f19896082cc73a34633251eaa6ca.jpeg",
+      "source": "walmart",
+      "width": 2000,
+      "height": 2000,
+      "size_kb": 334
+    },
+    {
+      "filename": "15_upc.jpg",
+      "url": "https://assets.hyugalife.com/catalog/product/h/s/hsgd87d2-1.jpg",
+      "source": "upc",
+      "width": 1200,
+      "height": 1200,
+      "size_kb": 74
+    }
+  ]
+}

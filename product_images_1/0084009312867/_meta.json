@@ -1,0 +1,48 @@
+{
+  "upc": "0084009312867",
+  "original_desc": "NTRS TRTH MLTN MAGN CHWS",
+  "expanded_desc": "Nature's Truth Melatonin Magnesium Chews",
+  "queries_used": [
+    "0084009312867 supplement",
+    "Nature's Truth Melatonin Magnesium Chews supplement product",
+    "Nature's Truth Melatonin Magnesium Chews vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0084009312867 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhf4%2Fh97%2F9125704957982%2FEIA.w560.h560.308473ID_1.png&w=768&q=75",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0084009312867 supplement",
+      "url": "https://m.media-amazon.com/images/I/81vUHTeZnCL._AC_SL1500_.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0084009312867 supplement",
+      "url": "https://i5.walmartimages.com/seo/Advanced-Urolithin-A-Supplement-15-Servings-Resveratrol-PQQ-Vitamin-E-Bioperine-Healthy-Aging-Supports-Mitochondrial-Health-Energy-Levels-Cellular-De_b3f34382-aed7-4562-be6e-8f17dc8e0e43.8cb40f56a6eee55f4ee22372199b9a19.jpeg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth Melatonin Magnesium Chews supplement product",
+      "url": "https://m.media-amazon.com/images/I/71uwSDO0kBL._AC_SL1500_.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth Melatonin Magnesium Chews supplement product",
+      "url": "https://zonenutrition.me/wp-content/uploads/2024/11/natures-truth-melatonin.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Truth Melatonin Magnesium Chews supplement product",
+      "url": "https://m.media-amazon.com/images/I/41ZfC+fIjzL._AC_.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

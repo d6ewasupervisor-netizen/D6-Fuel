@@ -1,0 +1,88 @@
+{
+  "upc": "0073373901283",
+  "original_desc": "NOW MAGNSMCPS 400 MG 180",
+  "search_name": "NOW Foods Magnesium Caps 400mg 180",
+  "brand": "NOW Foods",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now01289/u/41.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 7
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://s3.images-iherb.com/now/now01289/l/24.jpg",
+      "source": "iherb",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 1387
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now02394/l/8.jpg",
+      "source": "iherb",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 110
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71aBilr68IL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 787,
+      "height": 1500,
+      "size_kb": 109
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71GgMkBAEtL._AC_SX569_.jpg",
+      "source": "amazon",
+      "width": 569,
+      "height": 551,
+      "size_kb": 39
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71-iY8bEohL._AC_SX679_.jpg",
+      "source": "amazon",
+      "width": 679,
+      "height": 1142,
+      "size_kb": 92
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Tongkat-Ali-Extract-100-1-Natural-Testosterone-Booster-400mg-Support-Overall-Well-Being-180-veg-caps-3-Bottles_0dba3480-0ec2-4ab1-a4fd-c0c8b3be121c_1.872ad296cc04fa4d2cd73905a3084b27.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 36
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/MegaFood-Magnesium-300-mg-Highly-absorbable-blend-Magnesium-Glycinate-Magnesium-Citrate-Magnesium-Malate-Help-Support-Heart-Nerve-Health-Relaxation-6_a4a3e0a6-5fc9-4450-9d29-83b388bfcd4d.ddde5d863e3cfac2eb55133bae6dd1e8.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 37
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Life-Extension-Magnesium-Caps-500-mg-Essential-Mineral-Blend-Cardiovascular-Whole-Body-Health-Gluten-Free-Non-GMO-Vegetarian-100-Vegetarian-Capsules_87267510-ae70-44f8-8996-a33c83eea061.49390dc5e972414ed9a23b4fe2223627.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 23
+    },
+    {
+      "filename": "17_upc.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "source": "upc",
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    }
+  ]
+}

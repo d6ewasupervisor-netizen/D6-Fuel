@@ -1,0 +1,88 @@
+{
+  "upc": "0070619510607",
+  "original_desc": "OWH WLD HRVST ASHWGNDHA",
+  "search_name": "Oregon's Wild Harvest Ashwagandha",
+  "brand": "Oregon's Wild Harvest",
+  "images": [
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://images-na.ssl-images-amazon.com/images/I/61qeAvVkfDL._AC_UL116_SR116,116_.jpg",
+      "source": "amazon",
+      "width": 116,
+      "height": 116,
+      "size_kb": 3
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71OzF5-NwLL._AC_.jpg",
+      "source": "amazon",
+      "width": 1293,
+      "height": 2354,
+      "size_kb": 212
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71bxI8MSNWL._AC_SS450_.jpg",
+      "source": "amazon",
+      "width": 450,
+      "height": 450,
+      "size_kb": 25
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Spring-Valley-Extra-Strength-Ashwagandha-Dietary-Supplement-1300-mg-60-Vegetarian-Capsules_94d6ed60-edb4-413c-971f-8f971aa14aee.24cd0ecdb2db2acedf924eb07fd636e5.jpeg",
+      "source": "walmart",
+      "width": 3000,
+      "height": 3000,
+      "size_kb": 608
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Ashwagandha-Capsules-3000mg-Extra-Strength-90-Count-Non-GMO-Gluten-Free-Ashwagandha-Root-Supplement-by-Natures-Truth_a71c448f-eb20-470d-8ab3-732605bdae96.c054539ed334286b98b244130cf5786d.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 21
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Wild-Harvest-Advanced-Nutrition-Diet-Guinea-Pig-Food-Fruits-Vegetable-Seeds-Grain-4-lbs_d02132c0-c0f5-46b6-9246-4d67da073303_1.6da3bcbe4ab7ed24b28d52c9a41d1421.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 60
+    },
+    {
+      "filename": "15_upc.jpg",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fh0f%2Fh6a%2F9206477357086%2FEIA.w560.h560.313490ID_i-Candy3.png&w=768&q=75",
+      "source": "upc",
+      "width": 560,
+      "height": 560,
+      "size_kb": 10
+    },
+    {
+      "filename": "16_upc.jpg",
+      "url": "https://media.nedigital.sg/fairprice/fpol/media/images/product/XL/90171357_XL1_20230509.jpg",
+      "source": "upc",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 121
+    },
+    {
+      "filename": "17_upc.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/501/233/585/0606/front_en.3.full.jpg",
+      "source": "upc",
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1797
+    },
+    {
+      "filename": "18_upc.jpg",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhcb%2Fh5b%2F9185615249438%2FEIA.w560.h560.202167ID_1.png&w=992&q=75",
+      "source": "upc",
+      "width": 560,
+      "height": 560,
+      "size_kb": 25
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "upc": "0081012666315",
+  "original_desc": "FRC FCTR MGHTY MTCHA",
+  "search_name": "Force Factor Mighty Matcha supplement",
+  "queries_used": [
+    "\"0081012666315\" product",
+    "\"81012666315\" supplement",
+    "Force Factor Mighty Matcha supplement product photo",
+    "Force Factor Mighty Matcha supplement bottle",
+    "Force Factor Mighty Matcha supplement supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://site-1306369054.file.myqcloud.com/upload/images/5483571648158684/2a545994fd643a0e12570e0086e99e81/6f2f5f816741f746338aea554109112c.jpg?imageMogr2/thumbnail/500x260/pad/1/color/I0Y2RjZGNg==/quality/85/sharpen/100",
+      "query_index": 0,
+      "width": 500,
+      "height": 260,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/505/520/451/2663/front_ro.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 1205
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/590/324/656/2965/ingredients_de.3.full.jpg",
+      "query_index": 0,
+      "width": 720,
+      "height": 1280,
+      "size_kb": 62
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/357/466/163/8706/front_fr.3.400.jpg",
+      "query_index": 0,
+      "width": 367,
+      "height": 400,
+      "size_kb": 20
+    },
+    {
+      "filename": "q1_5.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/931/001/200/6190/nutrition_en.3.full.jpg",
+      "query_index": 0,
+      "width": 2688,
+      "height": 1512,
+      "size_kb": 362
+    },
+    {
+      "filename": "q1_6.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/885/193/231/4206/front_en.3.400.jpg",
+      "query_index": 0,
+      "width": 300,
+      "height": 400,
+      "size_kb": 13
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "query_index": 1,
+      "width": 480,
+      "height": 500,
+      "size_kb": 8
+    },
+    {
+      "filename": "q2_8.png",
+      "url": "https://cdn.shopify.com/s/files/1/0010/0250/4310/files/How-to-Read-a-Supplement-Label_Infographic.png",
+      "query_index": 1,
+      "width": 640,
+      "height": 1600,
+      "size_kb": 139
+    }
+  ]
+}

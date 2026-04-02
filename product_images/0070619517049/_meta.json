@@ -1,0 +1,48 @@
+{
+  "upc": "0070619517049",
+  "original_desc": "OWHV ASHWAGANDHA BDYNMC",
+  "expanded_desc": "Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic",
+  "queries_used": [
+    "0070619517049 supplement",
+    "Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic supplement product",
+    "Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0070619517049 supplement",
+      "url": "http://www.overshopping.pk/images/uploads/vivioptal-kids-liquid-multivitamin-multiminerals-supplement-aeuvqIJLACSL.jpg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0070619517049 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/500x500_blank/FB9316A2-3334-4BC9-A9F4-3932BF78AD0C_dc0849a9-aad2-44e3-b9bb-55f727fa852f.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0070619517049 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic supplement product",
+      "url": "http://oregonswildharvest.com/cdn/shop/products/Ashwagandha-organic-2oz-Biodynamic-Herbal-Tonic-bottle-front.png?v=1722987994",
+      "filename": "bing_q2_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic supplement product",
+      "url": "https://oregonswildharvest.com/cdn/shop/files/Ashwagandha-Biodynamic_1200.jpg?v=1678390444",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Oregon's Wild Harvest AshwagandhaAGANDHA Biodynamic supplement product",
+      "url": "https://hsu.com/wp-content/uploads/2024/12/wp-image39977445032161.png",
+      "filename": "bing_q2_3.png"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "upc": "0084009312920",
+  "original_desc": "NTRS TRTH MAGNSM CHEWS",
+  "search_name": "Nature's Truth Magnesium Chews",
+  "brand": "Nature's Truth",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nth/nth11136/u/56.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 6
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nth/nth12348/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 6
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81jBxAfm06L._AC_.jpg",
+      "source": "amazon",
+      "width": 2463,
+      "height": 2400,
+      "size_kb": 417
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81HhrDqIdtL._AC_SX300_SY300_QL70_ML2_.jpg",
+      "source": "amazon",
+      "width": 300,
+      "height": 255,
+      "size_kb": 17
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71It9UaY7jL._AC_SY679_.jpg",
+      "source": "amazon",
+      "width": 397,
+      "height": 679,
+      "size_kb": 45
+    },
+    {
+      "filename": "07_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Magnesium-Citrate-400-mg-120-tablets-Elemental-Magnesium-Supports-Function-of-muscles-bones-heart-Non-GMO-per-serving_2eeab5df-0e8e-4e86-87d3-35df2b4b3935.f090de21e3a5b65dde9fdc2600085e38.png?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 34
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Magnesium-Citrate-Supplement-1000-mg-Best-Absorption-Supports-Bone-Heart-Health-Nerves-Muscles-Metabolism-Calm-Nature-s-Pure-Magnesio-Vitamin-Pills-B_c65aa267-2675-4fd4-8da5-8e257f12d318.69ff5e5459827f1c0157e82fa3340004.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 37
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Magnesium-Supplement-250-mg-250-Caplets-Vegetarian-Non-GMO-Gluten-Free-Magnesium-Oxide-By-Nature-s-Truth_4ead246c-9cb6-45f8-a86b-29534f2d0baa.e48d645b87922f9d2241b7c6fbe1cd5d.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 20
+    },
+    {
+      "filename": "14_upc.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "source": "upc",
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    },
+    {
+      "filename": "15_upc.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/761/303/414/8261/front_ar.3.full.jpg",
+      "source": "upc",
+      "width": 3072,
+      "height": 4080,
+      "size_kb": 997
+    }
+  ]
+}

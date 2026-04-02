@@ -1,0 +1,60 @@
+{
+  "upc": "0081012666315",
+  "original_desc": "FRC FCTR MGHTY MTCHA",
+  "expanded_desc": "Force Factor Mighty Matcha",
+  "queries_used": [
+    "0081012666315 supplement",
+    "Force Factor Mighty Matcha supplement product",
+    "Force Factor Mighty Matcha vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666315 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666315 supplement",
+      "url": "https://www.gosupps.com/media/catalog/product/cache/25/image/1500x/040ec09b1e35df139433887a97daa66f/7/1/71nb0QCz3gL._AC_SL1500_.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666315 supplement",
+      "url": "https://www.gosupps.com/media/catalog/product/cache/25/image/1500x/040ec09b1e35df139433887a97daa66f/7/1/71N-8vyu_L._AC_SL1500_.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Mighty Matcha supplement product",
+      "url": "https://www.thebrothersapothecary.com/wp-content/uploads/2018/11/Matcha-smallback.png",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Mighty Matcha supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/MLP_93ddbe94-6483-45f3-8731-9021a8639170_550x550.png?v=1727192230",
+      "filename": "bing_q2_3.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Mighty Matcha vitamin bottle",
+      "url": "https://cdn11.bigcommerce.com/s-c4pezrhljg/images/stencil/1280x1280/products/507/889/MIGHTYBOOCH_MightyMatchaTeaLogo45__79774.1684861562.png?c=1",
+      "filename": "bing_q3_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Mighty Matcha vitamin bottle",
+      "url": "https://cdn11.bigcommerce.com/s-c4pezrhljg/images/stencil/1280x1280/products/507/776/5_gallon_keg__67823.1669654083.png?c=1",
+      "filename": "bing_q3_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Mighty Matcha vitamin bottle",
+      "url": "https://forcefactor.com/cdn/shop/files/MLP_93ddbe94-6483-45f3-8731-9021a8639170_550x550.png?v=1727192230",
+      "filename": "bing_q3_3.png"
+    }
+  ]
+}

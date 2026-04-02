@@ -1,0 +1,48 @@
+{
+  "upc": "0003367415940",
+  "original_desc": "NTWY OMEGA 3 GMM CHEW",
+  "expanded_desc": "Natrol Nateway OmegaA 3 Gummy Chews",
+  "queries_used": [
+    "0003367415940 supplement",
+    "Natrol Nateway OmegaA 3 Gummy Chews supplement product",
+    "Natrol Nateway OmegaA 3 Gummy Chews vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0003367415940 supplement",
+      "url": "https://flabfix.com/wp-content/uploads/2022/09/Everything-You-Need-to-Know-About-Carditone-Supplement.png",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0003367415940 supplement",
+      "url": "https://cdnimg.carepac.com/wp-content/uploads/2022/08/Vegamour-Supplement-Packaging.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0003367415940 supplement",
+      "url": "https://influencermarketinghub.com/wp-content/uploads/2022/03/image3-24.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natrol Nateway OmegaA 3 Gummy Chews supplement product",
+      "url": "https://www.vitalsn.com/wp-content/uploads/2023/11/RUS-01803_Ultimate_Omega_Gummies_54ct_S1.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natrol Nateway OmegaA 3 Gummy Chews supplement product",
+      "url": "https://nowfoods.ca/wp-content/uploads/2024/02/81647_HERO-L-800x800.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natrol Nateway OmegaA 3 Gummy Chews supplement product",
+      "url": "https://nowfoods.ca/wp-content/uploads/2024/02/81647_MAIN-1024x1024.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

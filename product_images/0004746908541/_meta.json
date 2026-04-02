@@ -1,0 +1,48 @@
+{
+  "upc": "0004746908541",
+  "original_desc": "NTRL ULTRA SLEEP F/D TAB",
+  "expanded_desc": "Natrol UltraRA SLEEP Fast Dissolve Tablets",
+  "queries_used": [
+    "0004746908541 supplement",
+    "Natrol UltraRA SLEEP Fast Dissolve Tablets supplement product",
+    "Natrol UltraRA SLEEP Fast Dissolve Tablets vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0004746908541 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0004746908541 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/500x500_blank/FB9316A2-3334-4BC9-A9F4-3932BF78AD0C_dc0849a9-aad2-44e3-b9bb-55f727fa852f.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0004746908541 supplement",
+      "url": "https://img.tpl.one/w/products/IMV/1000x1000_blank/BC6D1220-4626-4AD1-8944-5E9A4983847E_76bb752a-f4e1-495f-b5b9-ae59f411d003.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natrol UltraRA SLEEP Fast Dissolve Tablets supplement product",
+      "url": "https://images.heb.com/is/image/HEBGrocery/010057512-2?jpegSize=150&hei=1400&fit=constrain&qlt=75",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natrol UltraRA SLEEP Fast Dissolve Tablets supplement product",
+      "url": "https://www.byclue.com/wp-content/uploads/2019/06/6-78.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natrol UltraRA SLEEP Fast Dissolve Tablets supplement product",
+      "url": "https://m.media-amazon.com/images/I/71Yd9Ss0zNL.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

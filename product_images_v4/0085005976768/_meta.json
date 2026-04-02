@@ -1,0 +1,88 @@
+{
+  "upc": "0085005976768",
+  "original_desc": "NELLO SPR BAL CRN APL DR",
+  "search_name": "Nello Super Balance Cranberry Apple Drink",
+  "brand": "Nello",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nfs/nfs04512/r/38.jpg",
+      "source": "iherb",
+      "width": 240,
+      "height": 240,
+      "size_kb": 7
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nfs/nfs04513/u/22.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 15
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nfs/nfs04513/u/38.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 11
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/817I8tmxV1L._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1500,
+      "height": 1368,
+      "size_kb": 172
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/514ace1f-c55d-4b55-ae4e-9fe52947f9d0.__CR0,0,4042,2500_PT0_SX970_V1___.jpg",
+      "source": "amazon",
+      "width": 970,
+      "height": 600,
+      "size_kb": 63
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81PODCncdpL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1500,
+      "height": 1335,
+      "size_kb": 178
+    },
+    {
+      "filename": "07_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Nello-Supercalm-Drink-Mix-Ashwagandha-KSM-66-Magnesium-Glycinate-L-Theanine-Supplement-Ashwagandha-Root-Extract-Focus-Relaxation-Support-20-Travel-Pa_87f63828-8560-4430-a824-9225cece33ad.83808fe0edb62d5b7eb9f3c18f7a43e8.png?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 31
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Vaginal-Probiotics-Women-pH-Balance-Prebiotics-Cranberry-D-Mannose-Supports-Digestive-Urinary-Tract-Health-Bladder-Wellness-Probiotics-Women-Vaginal_b633ea5f-a50e-4c52-b84a-656c3d94d792.867f202807b20f00496930207af1a3e5.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 23
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Jarritos-Variety-Pack-Soda-12-5-fl-oz-370-ml-Glass-Bottle-12-Pack_b0887bcb-a019-45a6-8a98-05222ceb9af9.c8e512046111055658b301a360af3aeb.jpeg",
+      "source": "walmart",
+      "width": 3072,
+      "height": 1056,
+      "size_kb": 340
+    },
+    {
+      "filename": "15_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    }
+  ]
+}

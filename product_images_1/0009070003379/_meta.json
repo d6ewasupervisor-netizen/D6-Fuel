@@ -1,0 +1,48 @@
+{
+  "upc": "0009070003379",
+  "original_desc": "HPHA LIONS MANE W/ REISHI",
+  "expanded_desc": "Host Defense Fungi Perfecti LIONS MANE with REISHI",
+  "queries_used": [
+    "0009070003379 supplement",
+    "Host Defense Fungi Perfecti LIONS MANE with REISHI supplement product",
+    "Host Defense Fungi Perfecti LIONS MANE with REISHI vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0009070003379 supplement",
+      "url": "https://www.creativefabrica.com/wp-content/uploads/2022/09/04/Supplement-Vitamin-Label-Template-Graphics-37772327-1.jpg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0009070003379 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0009070003379 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhf4%2Fh97%2F9125704957982%2FEIA.w560.h560.308473ID_1.png&w=768&q=75",
+      "filename": "bing_q1_3.png"
+    },
+    {
+      "source": "bing",
+      "query": "Host Defense Fungi Perfecti LIONS MANE with REISHI supplement product",
+      "url": "https://supplementfirst.com/cdn/shop/files/Host_Defense_Lions_Mane_Capsules_Full.jpg?v=1705731636&width=2500",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Host Defense Fungi Perfecti LIONS MANE with REISHI supplement product",
+      "url": "https://m.media-amazon.com/images/I/718nVO1nTeL.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Host Defense Fungi Perfecti LIONS MANE with REISHI vitamin bottle",
+      "url": "https://fungi.com/cdn/shop/products/HostDefense-NCHE60-Lion_sManeCapsules-60ct-ServingSize-00_994x994.jpg?v=1663210522",
+      "filename": "bing_q3_1.jpg"
+    }
+  ]
+}

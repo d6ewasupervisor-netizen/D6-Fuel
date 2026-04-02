@@ -1,0 +1,48 @@
+{
+  "upc": "0004126002608",
+  "original_desc": "ST SAM-E 400MG",
+  "expanded_desc": "Nature Made SAM-e SAM-E 400MG",
+  "queries_used": [
+    "0004126002608 supplement",
+    "Nature Made SAM-e SAM-E 400MG supplement product",
+    "Nature Made SAM-e SAM-E 400MG vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0004126002608 supplement",
+      "url": "https://support.everence.com/hc/article_attachments/14145573091095",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0004126002608 supplement",
+      "url": "https://dygtyjqp7pi0m.cloudfront.net/i/59953/48713148_1.jpg?v=8DB4AC0A04D8BB0",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0004126002608 supplement",
+      "url": "https://m.media-amazon.com/images/I/61wql+pdyaL._AC_SL1500_.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature Made SAM-e SAM-E 400MG supplement product",
+      "url": "https://meowsold.com/image/cache/catalog/2023/06/031604010911-1024x1024.png",
+      "filename": "bing_q2_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Nature Made SAM-e SAM-E 400MG supplement product",
+      "url": "https://meowsold.com/image/cache/catalog/11111/06.15/photo_2023-06-07_23-52-35-500x500.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature Made SAM-e SAM-E 400MG supplement product",
+      "url": "https://www.champion-nutrition.com/wp-content/uploads/2023/08/nature-made-sam-e-complete-400-mg-supplement-review.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

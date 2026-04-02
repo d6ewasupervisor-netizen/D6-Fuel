@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666067",
+  "original_desc": "FRCFCTR ULT BRBRN CAP",
+  "expanded_desc": "Force Factor Ultra Blueberry Brain Capsules",
+  "queries_used": [
+    "0081012666067 supplement",
+    "Force Factor Ultra Blueberry Brain Capsules supplement product",
+    "Force Factor Ultra Blueberry Brain Capsules vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666067 supplement",
+      "url": "https://vitakem.com/wp-content/uploads/2025/06/supplement_Infographic-scaled.png",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666067 supplement",
+      "url": "https://www.kroger.com/product/images/large/front/0081012666067?banner=harristeeter",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666067 supplement",
+      "url": "https://www.kroger.com/product/images/large/back/0081012666067",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Ultra Blueberry Brain Capsules supplement product",
+      "url": "https://cdn.shopify.com/s/files/1/0278/7776/9321/files/MLP_8c5a1022-40e0-4716-b7d7-16b2f16668fd.png?v=1709918950",
+      "filename": "bing_q2_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Ultra Blueberry Brain Capsules supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/01_3c9889d3-a8a8-437f-9b83-3c6f34ad53f8_550x550.png?v=1709918950",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor Ultra Blueberry Brain Capsules supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/05_2c67339e-b2f3-4c31-b906-245c4cac1e57_550x550.png?v=1709918950",
+      "filename": "bing_q2_3.png"
+    }
+  ]
+}

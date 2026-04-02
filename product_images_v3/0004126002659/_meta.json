@@ -1,0 +1,78 @@
+{
+  "upc": "0004126002659",
+  "original_desc": "KRO BRAIN SUPPORT GUMMY",
+  "search_name": "Kroger Brain Support Gummy vitamins",
+  "queries_used": [
+    "\"0004126002659\" product",
+    "\"4126002659\" supplement",
+    "Kroger Brain Support Gummy vitamins product photo",
+    "Kroger Brain Support Gummy vitamins bottle",
+    "Kroger Brain Support Gummy vitamins supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://img.alicdn.com/imgextra/i1/509786769/O1CN018BhUsU1zsFYi1BCpU_!!509786769-0-pixelsss.jpg",
+      "query_index": 0,
+      "width": 800,
+      "height": 800,
+      "size_kb": 85
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://img.alicdn.com/imgextra/i4/3409455405/TB1OiBBcvBNTKJjy0FdXXcPpVXa_!!0-item_pic.jpg",
+      "query_index": 0,
+      "width": 790,
+      "height": 790,
+      "size_kb": 138
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/200/504/101/1495/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 3024,
+      "height": 4032,
+      "size_kb": 689
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/490/250/535/5776/front_en.8.full.jpg",
+      "query_index": 0,
+      "width": 640,
+      "height": 1851,
+      "size_kb": 101
+    },
+    {
+      "filename": "q1_5.jpg",
+      "url": "https://imgv3.fotor.com/images/side/remove-background-from-the-earphone-picture_2022-08-31-094752_zpoh.jpg",
+      "query_index": 0,
+      "width": 1200,
+      "height": 800,
+      "size_kb": 28
+    },
+    {
+      "filename": "q2_6.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "query_index": 1,
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    },
+    {
+      "filename": "q2_7.png",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2024/8/441593124/OQ/EW/LQ/3509719/amino-acid-supplement-1000x1000.png",
+      "query_index": 1,
+      "width": 803,
+      "height": 1000,
+      "size_kb": 16
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://www.thesupplementreviews.org/wp-content/uploads/2024/02/essential_supplements_for_good_health.jpg",
+      "query_index": 1,
+      "width": 1006,
+      "height": 575,
+      "size_kb": 84
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "upc": "0004126002608",
+  "original_desc": "ST SAM-E 400MG",
+  "search_name": "Simple Truth SAM-e 400mg",
+  "brand": "Simple Truth",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://s3.images-iherb.com/now/now00141/l/13.jpg",
+      "source": "iherb",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 1246
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/mav/mav06531/l/44.jpg",
+      "source": "iherb",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 126
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nth/nth10469/l/8.jpg",
+      "source": "iherb",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 92
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/S/pv-target-images/c1737fc38e8bc049706b284b64f7152292cb14f30b7441cf66aeb2be6353d218._SX300_.jpg",
+      "source": "amazon",
+      "width": 300,
+      "height": 375,
+      "size_kb": 17
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/8ed0495c-614a-485e-9dcb-406aaff4edad.__CR0,0,1464,600_PT0_SX1464_V1___.jpg",
+      "source": "amazon",
+      "width": 1464,
+      "height": 600,
+      "size_kb": 437
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/61sObRF+qUL._AC_SY300_SX300_.jpg",
+      "source": "amazon",
+      "width": 212,
+      "height": 300,
+      "size_kb": 11
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Magnesium-Oxide-400mg-150-Softgels-For-Men-and-Women-by-Nature-s-Truth_aa6df3d9-051c-4f20-9785-83fbb5cf3571.86154009f5bdeb3d7cc6cefc99d9589b.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 19
+    },
+    {
+      "filename": "08_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/SAM-e-400mg-60-Enteric-Coated-Caplets-Non-GMO-Project-Verified-Cold-Form-Blister-Packed-Vegan-Kosher-Gluten-Free-Soy-Natures-Trove_9a3ddd30-29c3-4aee-9a28-3955eee6e5bb.dd3c76459958c7fe82817aea2a6a3f0b.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 31
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Amazing-Formulas-Citicoline-1000-Mg-Per-Serving-60-Capsules-Supplement-Non-GMO-Gluten-Free-Made-in-USA_fb06c521-cdb7-463a-aa2a-f2d5714b0214.d9b7585058374e8528943a1a8b4a32ce.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 30
+    },
+    {
+      "filename": "15_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    }
+  ]
+}

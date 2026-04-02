@@ -1,0 +1,60 @@
+{
+  "upc": "0542501039183",
+  "original_desc": "NATF BIOSIL SKIN/HAIR/NLS",
+  "expanded_desc": "Natural Factors BIOSIL SKIN/HAIR/Nails",
+  "queries_used": [
+    "0542501039183 supplement",
+    "Natural Factors BIOSIL SKIN/HAIR/Nails supplement product",
+    "Natural Factors BIOSIL SKIN/HAIR/Nails vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0542501039183 supplement",
+      "url": "https://www.kroger.com/product/images/large/front/0542501039183",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0542501039183 supplement",
+      "url": "https://www.kroger.com/product/images/large/back/0542501039183",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natural Factors BIOSIL SKIN/HAIR/Nails supplement product",
+      "url": "https://images.heb.com/is/image/HEBGrocery/001481943?fit=constrain,1&wid=800&hei=800&fmt=jpg&qlt=85,0&resMode=sharp2&op_usm=1.75,0.3,2,0",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natural Factors BIOSIL SKIN/HAIR/Nails supplement product",
+      "url": "http://ecx.images-amazon.com/images/I/31QTV-W0o5L.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natural Factors BIOSIL SKIN/HAIR/Nails supplement product",
+      "url": "https://www.cvs.com/bizcontent/merchandising/productimages/high_res/542501039053.jpg",
+      "filename": "bing_q2_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natural Factors BIOSIL SKIN/HAIR/Nails vitamin bottle",
+      "url": "https://www.cvs.com/bizcontent/merchandising/productimages/high_res/542501039053.jpg",
+      "filename": "bing_q3_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natural Factors BIOSIL SKIN/HAIR/Nails vitamin bottle",
+      "url": "https://www.priceplow.com/static/images/products/natural-factors-biosil-collagen-generator-large.jpg",
+      "filename": "bing_q3_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Natural Factors BIOSIL SKIN/HAIR/Nails vitamin bottle",
+      "url": "https://images.heb.com/is/image/HEBGrocery/001481943?fit=constrain,1&wid=800&hei=800&fmt=jpg&qlt=85,0&resMode=sharp2&op_usm=1.75,0.3,2,0",
+      "filename": "bing_q3_3.jpg"
+    }
+  ]
+}

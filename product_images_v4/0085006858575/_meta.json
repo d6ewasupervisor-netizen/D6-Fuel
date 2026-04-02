@@ -1,0 +1,88 @@
+{
+  "upc": "0085006858575",
+  "original_desc": "NCLL MLTI CLL RSE VIAL",
+  "search_name": "Nucell Multi Cell Rose Vial",
+  "brand": "Nucell",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/ske/ske99181/u/10.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 4
+    },
+    {
+      "filename": "02_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71L72FzNsjL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1036,
+      "height": 1433,
+      "size_kb": 191
+    },
+    {
+      "filename": "03_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71ET3RZhe1L._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1475,
+      "height": 835,
+      "size_kb": 124
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71qce5BkC6L._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1474,
+      "height": 1310,
+      "size_kb": 140
+    },
+    {
+      "filename": "06_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/WeatherTech-CupFone-Cup-Holder-Car-Phone-Mount-Automobile-Cradle-Compatible-iPhone-Cell-Phones-Solid-Billet-Aluminum-Knobs-Rose-Gold_d8ee994b-e9b7-4a52-97af-54c40a691a7d.1e61179d7d928b108b21802ac5dc92cc.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 7
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/asr/b2ecbe0f-04f8-4251-be8e-6184cb20d7d7.ca2e3db5fce9e193c7b3c2d110b27c0b.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 21
+    },
+    {
+      "filename": "08_upc.jpg",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "source": "upc",
+      "width": 480,
+      "height": 500,
+      "size_kb": 8
+    },
+    {
+      "filename": "09_upc.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "source": "upc",
+      "width": 357,
+      "height": 500,
+      "size_kb": 24
+    },
+    {
+      "filename": "10_upc.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "source": "upc",
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    },
+    {
+      "filename": "11_upc.png",
+      "url": "https://vitakem.com/wp-content/uploads/2025/06/supplement_Infographic-scaled.png",
+      "source": "upc",
+      "width": 2560,
+      "height": 1281,
+      "size_kb": 715
+    }
+  ]
+}

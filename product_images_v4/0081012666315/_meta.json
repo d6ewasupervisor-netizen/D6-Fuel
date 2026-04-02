@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666315",
+  "original_desc": "FRC FCTR MGHTY MTCHA",
+  "search_name": "Force Factor Mighty Matcha",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://s3.images-iherb.com/blog/uploads/megan-roosevelt-rd-1678311408015.jpeg",
+      "source": "iherb",
+      "width": 400,
+      "height": 400,
+      "size_kb": 27
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa01952/u/12.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 9
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/713nkwjcq4L._SX500_SCLZZZZZZZ_.jpg",
+      "source": "amazon",
+      "width": 500,
+      "height": 888,
+      "size_kb": 50
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71zhXnpRDLL._SX500_SCLZZZZZZZ_.jpg",
+      "source": "amazon",
+      "width": 500,
+      "height": 888,
+      "size_kb": 57
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/61TAhLknnnL._SX500_SCLZZZZZZZ_.jpg",
+      "source": "amazon",
+      "width": 500,
+      "height": 888,
+      "size_kb": 41
+    },
+    {
+      "filename": "07_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Total-Beets-Beetroot-Capsules-Alternative-Blood-Pressure-Supplement-Pills-120-Tablets-by-Force-Factor_59f536ba-3eaa-430e-ab00-2d6b3de6213b.62a0e89619e9ea932dcaf8a650a05cb5.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 34
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Total-Beets-Beet-Root-Superfood-Soft-Chews-Acai-Berry-90-ct_a52ec43d-7fa5-4c47-ad80-819f789d0977.67a6f84ec801adf8ff266ff7f8b0567e.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 23
+    },
+    {
+      "filename": "09_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Total-Beets-Beet-Root-Soft-Chew-Supplement-Beetroot-Gummies-Alternative-60-Chews-by-Force-Factor_7fdfd696-0347-432f-a87d-bffc410c1d45.d90eb0f331fc5d32183fd325a187d496.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 181
+    },
+    {
+      "filename": "14_upc.jpg",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "source": "upc",
+      "width": 480,
+      "height": 500,
+      "size_kb": 8
+    },
+    {
+      "filename": "15_upc.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "source": "upc",
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    }
+  ]
+}

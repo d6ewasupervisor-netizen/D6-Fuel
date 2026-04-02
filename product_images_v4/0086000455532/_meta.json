@@ -1,0 +1,88 @@
+{
+  "upc": "0086000455532",
+  "original_desc": "PYM ORGNL MOOD CHEWS SUPP",
+  "search_name": "PYM Original Mood Chews",
+  "brand": "PYM",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/prd/prd60477/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 6
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/msc/msc61070/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 10
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/tnh/tnh00324/u/10.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 20
+    },
+    {
+      "filename": "04_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/al-na-9d5791cf-3faf/b3e5188d-bba4-4914-b634-d11c52ae6849.png",
+      "source": "amazon",
+      "width": 3000,
+      "height": 600,
+      "size_kb": 793
+    },
+    {
+      "filename": "05_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/a2ddf22f-7d5e-42ee-9cd4-ff9a4f9a0172.__CR0,0,362,453_PT0_SX362_V1___.png",
+      "source": "amazon",
+      "width": 362,
+      "height": 453,
+      "size_kb": 167
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71l9Y5fycNL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1322,
+      "height": 1500,
+      "size_kb": 120
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Mamba-Fruit-Chews-Chewy-Candy-7-05-oz_e5c3e298-3786-41d8-a7ae-45b112da7032.5467f19896082cc73a34633251eaa6ca.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 53
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Starburst-Orange-Chewy-Candy-1-LB-Single-Flavor-Soft-Starburst-Original-Fruit-Chews-Candy-Individually-Wrapped-Bulk-Candies-16-Oz_a15bb8f0-ed4e-4f1c-a440-8f844bd2402f.6137640b1a3094292d09842a6f30db9c.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 131
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/The-Original-Banana-Split-Candy-Chews-140-Count-Box_e9db2ae6-477d-400a-8b16-7e2348d21922.2886930eddc06e1f202f6c21ccc87027.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 45
+    },
+    {
+      "filename": "14_upc.jpg",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "source": "upc",
+      "width": 480,
+      "height": 500,
+      "size_kb": 8
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666067",
+  "original_desc": "FRCFCTR ULT BRBRN CAP",
+  "search_name": "Force Factor Ultra Blueberry Brain Capsules",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nbg/nbg10246/v/8.jpg",
+      "source": "iherb",
+      "width": 600,
+      "height": 600,
+      "size_kb": 17
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/dvh/dvh57201/v/8.jpg",
+      "source": "iherb",
+      "width": 600,
+      "height": 600,
+      "size_kb": 22
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://s3.images-iherb.com/foa/foa01578/l/20.jpg",
+      "source": "iherb",
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 1540
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/812DWOIACCL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1412,
+      "height": 1500,
+      "size_kb": 170
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81N09vIeHwL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1500,
+      "height": 1498,
+      "size_kb": 181
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/816nQ5ZBqRL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1500,
+      "height": 1494,
+      "size_kb": 184
+    },
+    {
+      "filename": "07_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Amazing-Ashwa-Ashwagandha-Capsules-Alternative-KSM-66-Supplement-for-Stress-Relief-120-Tablets-by-Force-Factor_183fa713-c054-4ac0-8e9f-533ecb415ede.efd543aaf063cad12bf1d672b3bae53d.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 24
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/asr/2c855fe2-a21d-4f19-a666-6f8f3792dcf2.2c79e5ab1840606d92c108c23285d949.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 18
+    },
+    {
+      "filename": "09_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Forebrain-Focus-Nootropic-Brain-Health-Supplement-for-Focus-60-Capsules_351c412b-ec12-42b3-926a-db2504ef045c.a484a470530bc273437dc5e29f4e3e65.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 108
+    },
+    {
+      "filename": "16_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "upc": "0081012666129",
+  "original_desc": "FRC FCTR MAG GLYC PWDR",
+  "search_name": "Force Factor Magnesium Glycinate Powder",
+  "queries_used": [
+    "\"0081012666129\" product",
+    "\"81012666129\" supplement",
+    "Force Factor Magnesium Glycinate Powder product photo",
+    "Force Factor Magnesium Glycinate Powder bottle",
+    "Force Factor Magnesium Glycinate Powder supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/490/100/551/2696/front_en.3.400.jpg",
+      "query_index": 0,
+      "width": 214,
+      "height": 400,
+      "size_kb": 24
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/890/103/074/3139/front_en.3.full.jpg",
+      "query_index": 0,
+      "width": 1726,
+      "height": 3264,
+      "size_kb": 452
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/726/034/589/6093/front_es.6.full.jpg",
+      "query_index": 0,
+      "width": 800,
+      "height": 995,
+      "size_kb": 48
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://www.cosmetic-pack.com/wp-content/uploads/106-7-e1585310131986.jpg",
+      "query_index": 0,
+      "width": 1080,
+      "height": 1080,
+      "size_kb": 43
+    },
+    {
+      "filename": "q2_5.jpg",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/4/297666564/WS/VA/YE/31985725/product-jpeg-500x500.jpg",
+      "query_index": 1,
+      "width": 500,
+      "height": 485,
+      "size_kb": 17
+    },
+    {
+      "filename": "q2_6.webp",
+      "url": "https://blog.longevity-supplement.com/logo.webp",
+      "query_index": 1,
+      "width": 1200,
+      "height": 1198,
+      "size_kb": 171
+    },
+    {
+      "filename": "q2_7.jpg",
+      "url": "https://m.media-amazon.com/images/I/7138lkHFARL._AC_.jpg",
+      "query_index": 1,
+      "width": 1599,
+      "height": 1564,
+      "size_kb": 222
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://kaizen-shop.gr/wp-content/uploads/2023/05/3474637155209_p_04.jpg",
+      "query_index": 1,
+      "width": 900,
+      "height": 900,
+      "size_kb": 58
+    }
+  ]
+}

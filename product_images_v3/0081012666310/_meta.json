@@ -1,0 +1,78 @@
+{
+  "upc": "0081012666310",
+  "original_desc": "FRC FCTR MTCHA SFT CHEWS",
+  "search_name": "Force Factor Matcha Soft Chews",
+  "queries_used": [
+    "\"0081012666310\" product",
+    "\"81012666310\" supplement",
+    "Force Factor Matcha Soft Chews product photo",
+    "Force Factor Matcha Soft Chews bottle",
+    "Force Factor Matcha Soft Chews supplement image"
+  ],
+  "images": [
+    {
+      "filename": "q1_1.jpg",
+      "url": "https://site-1306369054.file.myqcloud.com/upload/images/5483571648158684/2a545994fd643a0e12570e0086e99e81/6f2f5f816741f746338aea554109112c.jpg?imageMogr2/thumbnail/500x260/pad/1/color/I0Y2RjZGNg==/quality/85/sharpen/100",
+      "query_index": 0,
+      "width": 500,
+      "height": 260,
+      "size_kb": 12
+    },
+    {
+      "filename": "q1_2.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/357/466/163/8706/front_fr.3.400.jpg",
+      "query_index": 0,
+      "width": 367,
+      "height": 400,
+      "size_kb": 20
+    },
+    {
+      "filename": "q1_3.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/931/001/200/6190/nutrition_en.3.full.jpg",
+      "query_index": 0,
+      "width": 2688,
+      "height": 1512,
+      "size_kb": 362
+    },
+    {
+      "filename": "q1_4.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/893/533/020/0108/front_he.3.full.jpg",
+      "query_index": 0,
+      "width": 1908,
+      "height": 4032,
+      "size_kb": 630
+    },
+    {
+      "filename": "q1_5.jpg",
+      "url": "https://images.openfoodfacts.org/images/products/490/250/535/5776/front_en.8.400.jpg",
+      "query_index": 0,
+      "width": 138,
+      "height": 400,
+      "size_kb": 5
+    },
+    {
+      "filename": "q2_6.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "query_index": 1,
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    },
+    {
+      "filename": "q2_7.webp",
+      "url": "https://blog.longevity-supplement.com/logo.webp",
+      "query_index": 1,
+      "width": 1200,
+      "height": 1198,
+      "size_kb": 171
+    },
+    {
+      "filename": "q2_8.jpg",
+      "url": "https://media.nedigital.sg/fairprice/fpol/media/images/product/XL/90161563_XL1_20230208.jpg",
+      "query_index": 1,
+      "width": 1600,
+      "height": 1600,
+      "size_kb": 185
+    }
+  ]
+}

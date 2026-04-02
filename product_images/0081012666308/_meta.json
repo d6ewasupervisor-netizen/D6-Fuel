@@ -1,0 +1,48 @@
+{
+  "upc": "0081012666308",
+  "original_desc": "FRCFCTR MORINGA POWDER",
+  "expanded_desc": "Force Factor MORINGA POWDER",
+  "queries_used": [
+    "0081012666308 supplement",
+    "Force Factor MORINGA POWDER supplement product",
+    "Force Factor MORINGA POWDER vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0081012666308 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666308 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0081012666308 supplement",
+      "url": "https://www.si.com/.image/t_share/MTkzNzg2MzU3MzQ3MjYzOTM5/solgar.png",
+      "filename": "bing_q1_3.png"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor MORINGA POWDER supplement product",
+      "url": "https://img77.uenicdn.com/image/upload/v1717015680/business/02c5ff7020f04274bc9f166f2fbaa45d.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor MORINGA POWDER supplement product",
+      "url": "https://www.nutraog.com/wp-content/uploads/2024/10/4177w4CDKYL._AC_.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Force Factor MORINGA POWDER supplement product",
+      "url": "https://forcefactor.com/cdn/shop/files/01_d5aa8336-2ee9-4bfe-8941-557165335195_550x550.jpg?v=1701101434",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

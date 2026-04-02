@@ -1,0 +1,88 @@
+{
+  "upc": "0070619510606",
+  "original_desc": "OWHV ASTRAGALUS ORGANIC",
+  "search_name": "Oregon's Wild Harvest Astragalus Organic",
+  "brand": "Oregon's Wild Harvest",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/str/str09019/u/6.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 16
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/owh/owh10606/u/24.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 10
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/owh/owh00420/u/25.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 10
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/S/stores-image-uploads-na-prod/2/AmazonStores/ATVPDKIKX0DER/db296bbdcf1ffd05c7de0525d1353eb5.w3000.h600._CR0%2C0%2C3000%2C600_SX3000_.jpg",
+      "source": "amazon",
+      "width": 3000,
+      "height": 600,
+      "size_kb": 888
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/61S6USCqfnL._AC_CR0%2C0%2C0%2C0_SX410_SY308_.jpg",
+      "source": "amazon",
+      "width": 170,
+      "height": 308,
+      "size_kb": 12
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71z1gf1sXVL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 817,
+      "height": 1500,
+      "size_kb": 143
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Astralagus-Root-Organic_02bd9c0c-5226-4eab-bd13-3e24780a4df6.28d2e5334fbef292d31b5bf2de1c07e3.jpeg?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 29
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/asr/3bdc95bf-9f92-489f-9047-e24b5e867e5b.b24d48f1140e6d57463cb14b1ef2ef46.jpeg?odnHeight=180&odnWidth=180&odnBg=ffffff",
+      "source": "walmart",
+      "width": 180,
+      "height": 180,
+      "size_kb": 4
+    },
+    {
+      "filename": "09_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Mira-s-Harvest-Soursop-Bitters-16oz-For-Vitality-Boost_ab9a3855-939c-45db-9406-725609207501.a9bdb29a886d5c2e772f16853238f7fc.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 27
+    },
+    {
+      "filename": "16_upc.jpg",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fh0f%2Fh6a%2F9206477357086%2FEIA.w560.h560.313490ID_i-Candy3.png&w=768&q=75",
+      "source": "upc",
+      "width": 560,
+      "height": 560,
+      "size_kb": 10
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "upc": "0085007479028",
+  "original_desc": "NAT VTY MGNSM THRNATE",
+  "expanded_desc": "Nature's Vitality Magnesium Threonate",
+  "queries_used": [
+    "0085007479028 supplement",
+    "Nature's Vitality Magnesium Threonate supplement product",
+    "Nature's Vitality Magnesium Threonate vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0085007479028 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0085007479028 supplement",
+      "url": "https://m.media-amazon.com/images/I/716T4HWrTJL.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0085007479028 supplement",
+      "url": "https://www.yumpu.com/xx/image/facebook/60001301/25.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Vitality Magnesium Threonate supplement product",
+      "url": "https://vitality-pro.com/wp-content/uploads/2024/05/Magnesium-Threonate-Main-1024x1024.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Vitality Magnesium Threonate supplement product",
+      "url": "https://myphoenixvitality.com/wp-content/uploads/2024/11/1_33cd99bf-b2ad-405a-8d32-150fe1c1b4b4-2.png",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Nature's Vitality Magnesium Threonate supplement product",
+      "url": "https://waterbug.ca/wp-content/uploads/2023/09/NF-RegenerLife-Mag-L-Threonate-90cap.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "upc": "0084009312863",
+  "original_desc": "NTRS TRTH BEET ROOT CHWS",
+  "search_name": "Nature's Truth Beet Root Chews",
+  "brand": "Nature's Truth",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nth/nth10905/u/32.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 9
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/nth/nth12356/u/24.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 7
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81uhf3Eiz-L._AC_.jpg",
+      "source": "amazon",
+      "width": 2418,
+      "height": 2438,
+      "size_kb": 454
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/714e1FzdOHL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1164,
+      "height": 1500,
+      "size_kb": 132
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/61dsHTwG5gL._AC_SL1200_.jpg",
+      "source": "amazon",
+      "width": 560,
+      "height": 1129,
+      "size_kb": 69
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Fresh-Nutrition-Organic-Beet-Root-Capsules-Strongest-DNA-Verified-2400mg-per-Serving_d5207d0c-c3e9-4b36-a99c-2ff901f463eb.95c2cdacab7ced2e2e4561cc004de26e.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 15
+    },
+    {
+      "filename": "08_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Beet-Root-Capsules-1000mg-90-Pills-Herbal-Extract-Gluten-Free-Non-GMO-Supplement-by-Nature-s-Truth_dbdc8dac-a8b9-4a84-9f40-1adb1192dcae.9ba460748133b30bd1a8a6d62b7c45a3.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 19
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Organic-Beet-Root-Powder-6-1-oz-Vegetarian-Non-GMO-Gluten-Free-Supplement-by-Nature-s-Truth_2b3ccb9a-54fa-472c-b112-2cc5c4599072.bc0d91a8c3842b561b421bf113c7e88c.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 43
+    },
+    {
+      "filename": "15_upc.jpg",
+      "url": "https://assets.hyugalife.com/catalog/product/h/s/hsgd87d2-1.jpg",
+      "source": "upc",
+      "width": 1200,
+      "height": 1200,
+      "size_kb": 74
+    },
+    {
+      "filename": "17_upc.jpg",
+      "url": "https://jororwxhkliplp5p.ldycdn.com/cloud/llBpoKoolpSRqjjlirjoiq/biodegradable-supplement-packaging.jpg",
+      "source": "upc",
+      "width": 2000,
+      "height": 2000,
+      "size_kb": 58
+    }
+  ]
+}

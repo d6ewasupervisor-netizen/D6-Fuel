@@ -1,0 +1,48 @@
+{
+  "upc": "0070587580218",
+  "original_desc": "BRLN VGN OMEG FLX ALG OIL",
+  "expanded_desc": "Barlean's Vegan Omega Flax Algae Oil",
+  "queries_used": [
+    "0070587580218 supplement",
+    "Barlean's Vegan Omega Flax Algae Oil supplement product",
+    "Barlean's Vegan Omega Flax Algae Oil vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0070587580218 supplement",
+      "url": "https://www.amway.in/_next/image?url=https:%2F%2Fmedia.amway.in%2Fsys-master%2Fimages%2Fhcb%2Fh5b%2F9185615249438%2FEIA.w560.h560.202167ID_1.png&w=992&q=75",
+      "filename": "bing_q1_1.png"
+    },
+    {
+      "source": "bing",
+      "query": "0070587580218 supplement",
+      "url": "https://5.imimg.com/data5/SELLER/Default/2022/7/XU/GC/MR/1706329/multivitamin-biotin-capsule-third-party-manufacturing-service-500x500.jpeg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0070587580218 supplement",
+      "url": "https://5.imimg.com/data5/ANDROID/Default/2023/9/341869841/EF/NF/IC/42099545/product-jpeg-500x500.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Barlean's Vegan Omega Flax Algae Oil supplement product",
+      "url": "https://images-bucket.bonanzastatic.com/afu/images/a11c/849e/675b_14785826860/__12.jpg",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "Barlean's Vegan Omega Flax Algae Oil supplement product",
+      "url": "http://curatedwellness.com/cdn/shop/files/36690b31-0146-4b41-9696-77b0f0019f2a-2000-2000.png?v=1755501700",
+      "filename": "bing_q2_2.png"
+    },
+    {
+      "source": "bing",
+      "query": "Barlean's Vegan Omega Flax Algae Oil supplement product",
+      "url": "https://www.netnutri.com/media/catalog/product/cache/17/image/650x/d9c70597da8a9cb2926ef4bca3f81833/p/r/product-160396-1607978256-705875000390.jpg",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}

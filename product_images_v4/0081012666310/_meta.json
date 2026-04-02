@@ -1,0 +1,88 @@
+{
+  "upc": "0081012666310",
+  "original_desc": "FRC FCTR MTCHA SFT CHEWS",
+  "search_name": "Force Factor Matcha Soft Chews",
+  "brand": "Force Factor",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa01971/u/2.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 13
+    },
+    {
+      "filename": "02_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa01945/u/2.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 14
+    },
+    {
+      "filename": "03_iherb.jpg",
+      "url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/foa/foa66081/u/8.jpg",
+      "source": "iherb",
+      "width": 320,
+      "height": 320,
+      "size_kb": 17
+    },
+    {
+      "filename": "04_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/818P5cMMA-L._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1092,
+      "height": 1500,
+      "size_kb": 138
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/71YJs0N+A3L.jpg",
+      "source": "amazon",
+      "width": 2560,
+      "height": 2560,
+      "size_kb": 195
+    },
+    {
+      "filename": "06_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/81wU9F7rKpL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1318,
+      "height": 1500,
+      "size_kb": 154
+    },
+    {
+      "filename": "07_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Force-Factor-Total-Beets-Beet-Root-Superfood-Soft-Chews-Acai-Berry-90-ct_a52ec43d-7fa5-4c47-ad80-819f789d0977.67a6f84ec801adf8ff266ff7f8b0567e.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 23
+    },
+    {
+      "filename": "08_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Ultimate-Magnesium-Supplement-Orange-Creamsicle-60-Chews-Magnesium-Gummies-Alternative-by-Force-Factor_018f1d75-34cc-4487-ad8d-ce4f4a08ae8d.0f0924201ffe4647ff8a2eb1c94a0fb8.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 93
+    },
+    {
+      "filename": "09_walmart.png",
+      "url": "https://i5.walmartimages.com/asr/4d1b745a-e604-4a48-84e9-c4f66e280b7c.640755382f494e85d4030315f8ea59e9.png?odnHeight=576&odnWidth=576&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 576,
+      "height": 576,
+      "size_kb": 27
+    },
+    {
+      "filename": "16_upc.png",
+      "url": "http://theessential.com/cdn/shop/collections/2_aefc3836-a0a8-40a3-88ac-1ffc67babaa3.png?v=1721860050",
+      "source": "upc",
+      "width": 2391,
+      "height": 766,
+      "size_kb": 37
+    }
+  ]
+}

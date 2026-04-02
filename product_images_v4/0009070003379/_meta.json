@@ -1,0 +1,88 @@
+{
+  "upc": "0009070003379",
+  "original_desc": "HPHA LIONS MANE W/ REISHI",
+  "search_name": "Herb Pharm Lion's Mane with Reishi",
+  "brand": "Herb Pharm",
+  "images": [
+    {
+      "filename": "01_iherb.jpg",
+      "url": "https://s3.images-iherb.com/cms/01_Social Media Images/2024/WK05_01.29.24/IG_Lions-Mane_1080x1080.jpg",
+      "source": "iherb",
+      "width": 1080,
+      "height": 1080,
+      "size_kb": 93
+    },
+    {
+      "filename": "04_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/57cfb413-1c32-4290-b5d1-9291bc9da305.__CR0,0,2695,1667_PT0_SX970_V1___.png",
+      "source": "amazon",
+      "width": 970,
+      "height": 600,
+      "size_kb": 77
+    },
+    {
+      "filename": "05_amazon.jpg",
+      "url": "https://m.media-amazon.com/images/I/91LSLmWc4GL._AC_SL1500_.jpg",
+      "source": "amazon",
+      "width": 1500,
+      "height": 1490,
+      "size_kb": 267
+    },
+    {
+      "filename": "06_amazon.png",
+      "url": "https://m.media-amazon.com/images/S/aplus-media-library-service-media/d6c1d74e-15b2-487b-8296-7a586cbe59fe.__CR0,0,1464,600_PT0_SX1464_V1___.png",
+      "source": "amazon",
+      "width": 1464,
+      "height": 600,
+      "size_kb": 1470
+    },
+    {
+      "filename": "07_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Mushroom-Complex-Gummies-Lion-s-Mane-Nootropic-Brain-Supplements-Memory-Focus-Lions-Mane-Cordyceps-Shiitake-Turkey-Tail-Reishi-Chaga-Enoki-Oyster-Mus_bcf83155-7185-4bb1-a1e2-9b677fc85b1b.5be81b91cf9b15f15be1587b75181a0e.png",
+      "source": "walmart",
+      "width": 1000,
+      "height": 1000,
+      "size_kb": 565
+    },
+    {
+      "filename": "08_walmart.png",
+      "url": "https://i5.walmartimages.com/seo/Mushroom-Brain-Supplement-Nootropic-with-Lions-Mane-Reishi-Cordyceps-for-Energy-Focus-Genius-Mushrooms-by-The-Genius-Brand_c5fec8ae-2935-4474-8ea6-ae4a6415030d.10fe364e9b7b8f8bbca2656f67ce7155.png?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 41
+    },
+    {
+      "filename": "09_walmart.jpg",
+      "url": "https://i5.walmartimages.com/seo/Oimmal-Wild-Mushroom-Powder-Dogs-Cats-Immune-Support-Brain-Health-11-Mushrooms-Fruiting-Bodies-Turkey-Tail-Reishi-Lion-s-Mane-Cordyceps-100-Natural-4_2b157794-d8d8-4ce2-9acf-e7bed2ad8d42.b76ee2dea5eb43af5c99c6a4b0e5fff5.jpeg?odnHeight=580&odnWidth=580&odnBg=FFFFFF",
+      "source": "walmart",
+      "width": 580,
+      "height": 580,
+      "size_kb": 68
+    },
+    {
+      "filename": "16_upc.jpg",
+      "url": "https://oem-fgc.com/wp-content/uploads/2022/08/Collagen-product-lines-scaled.jpg",
+      "source": "upc",
+      "width": 2560,
+      "height": 2048,
+      "size_kb": 228
+    },
+    {
+      "filename": "17_upc.jpg",
+      "url": "https://cherrydeck-blog.b-cdn.net/blog/wp-content/uploads/2022/03/Maximilian-von-Reumont-1024x606.jpeg",
+      "source": "upc",
+      "width": 1024,
+      "height": 606,
+      "size_kb": 25
+    },
+    {
+      "filename": "18_upc.jpg",
+      "url": "https://cherrydeck-blog.b-cdn.net/blog/wp-content/uploads/2022/03/Lubomir-Rechtorik-1-819x1024.jpeg",
+      "source": "upc",
+      "width": 819,
+      "height": 1024,
+      "size_kb": 25
+    }
+  ]
+}

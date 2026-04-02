@@ -1,0 +1,48 @@
+{
+  "upc": "0086000455532",
+  "original_desc": "PYM ORGNL MOOD CHEWS SUPP",
+  "expanded_desc": "PYM Original MOOD ChewsS Supplement",
+  "queries_used": [
+    "0086000455532 supplement",
+    "PYM Original MOOD ChewsS Supplement supplement product",
+    "PYM Original MOOD ChewsS Supplement vitamin bottle"
+  ],
+  "images": [
+    {
+      "source": "bing",
+      "query": "0086000455532 supplement",
+      "url": "https://blog.longevity-supplement.com/logo.webp",
+      "filename": "bing_q1_1.webp"
+    },
+    {
+      "source": "bing",
+      "query": "0086000455532 supplement",
+      "url": "https://www.yumpu.com/xx/image/facebook/60001301/25.jpg",
+      "filename": "bing_q1_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "0086000455532 supplement",
+      "url": "http://ecx.images-amazon.com/images/I/319YbmPKMrL.jpg",
+      "filename": "bing_q1_3.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "PYM Original MOOD ChewsS Supplement supplement product",
+      "url": "https://images.urbndata.com/is/image/UrbanOutfitters/86886819_072_b?$xlarge$&fit=constrain&qlt=80&wid=640",
+      "filename": "bing_q2_1.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "PYM Original MOOD ChewsS Supplement supplement product",
+      "url": "https://img.shopstyle-cdn.com/sim/5d/14/5d14394610bf6b09544ad7e3dd6bff93_best/pym-original-mood-chews-supplement.jpg",
+      "filename": "bing_q2_2.jpg"
+    },
+    {
+      "source": "bing",
+      "query": "PYM Original MOOD ChewsS Supplement supplement product",
+      "url": "https://images.heb.com/is/image/HEBGrocery/009780013-1",
+      "filename": "bing_q2_3.jpg"
+    }
+  ]
+}
