@@ -609,11 +609,17 @@ input[type="text"]:focus {
     position: absolute;
     left: 4px;
     top: 2px;
-    font-size: 0.55rem;
-    color: var(--text-dim);
-    opacity: 0.6;
+    font-size: 0.7rem;
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    padding: 1px 7px 1px 5px;
+    border-radius: 0 8px 8px 0;
     z-index: 2;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    opacity: 1;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .shelf-products {
@@ -695,6 +701,27 @@ input[type="text"]:focus {
 .slot-badge-changed {
     background: var(--accent-red);
     color: #fff;
+}
+
+/* Position number in bottom-left of each product slot */
+.slot-position {
+    position: absolute;
+    bottom: 1px;
+    left: 1px;
+    min-width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    font-size: 0.5rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    background: #facc15;
+    color: #1a1a2e;
+    line-height: 1;
+    padding: 0 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 /* Product highlight — neon green flash, 4 blinks in ~1s */
@@ -1318,6 +1345,20 @@ input[type="text"]:focus {
 
 .pdf-search-bar input:focus {
     border-color: var(--primary);
+}
+
+/* Search go button in PDF viewer */
+.pdf-search-go-btn {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    flex-shrink: 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+.pdf-search-go-btn:active {
+    opacity: 0.8;
 }
 
 .pdf-search-count {

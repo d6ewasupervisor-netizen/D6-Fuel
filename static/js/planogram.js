@@ -163,6 +163,14 @@ const Planogram = {
                     text.style.display = 'none';
                     slot.appendChild(text);
 
+                    // Position number badge (only on first facing)
+                    if (f === 0) {
+                        const posNum = document.createElement('span');
+                        posNum.className = 'slot-position';
+                        posNum.textContent = product.position;
+                        slot.appendChild(posNum);
+                    }
+
                     if (product.is_new) {
                         const badge = document.createElement('span');
                         badge.className = 'slot-badge slot-badge-new';

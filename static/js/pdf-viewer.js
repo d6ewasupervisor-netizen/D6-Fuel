@@ -55,6 +55,7 @@ const PDFViewer = {
         document.getElementById('pdf-search-input').onkeydown = (e) => {
             if (e.key === 'Enter') this.doSearch();
         };
+        document.getElementById('pdf-search-go').onclick = () => this.doSearch();
         document.getElementById('pdf-search-next').onclick = () => this.nextSearchResult();
         document.getElementById('pdf-search-prev').onclick = () => this.prevSearchResult();
 
