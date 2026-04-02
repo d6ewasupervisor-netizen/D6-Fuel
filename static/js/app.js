@@ -326,6 +326,12 @@ const App = {
                 return;
             }
 
+            if (activeResults.length === 1) {
+                // Single result: skip search results, navigate directly
+                this.navigateToProduct(activeResults[0]);
+                return;
+            }
+
             if (activeResults.length > 0) {
                 this.renderSearchResults(activeResults);
             }
@@ -382,6 +388,44 @@ const App = {
         Planogram.setHighlight(result.upc, result.bay, result.shelf, result.position);
         Planogram.loadPlanogram(this.currentPlanogram, result.bay);
         this.showView('bay');
+        this.showLocationOverlay(result.bay, result.shelf, result.position);
+    },
+
+    showLocationOverlay(bay, shelf, position) {
+        // Remove any existing overlay
+        const existing = document.getElementById('location-flash-overlay');
+        if (existing) existing.remove();
+
+        const overlay = document.createElement('div');
+        overlay.id = 'location-flash-overlay';
+        overlay.className = 'location-flash-overlay';
+        overlay.innerHTML = `
+            <div class="location-flash-content">
+                <span class="location-flash-label">Bay</span>
+                <span class="location-flash-value">${bay}</span>
+                <span class="location-flash-divider">/</span>
+                <span class="location-flash-label">Shelf</span>
+                <span class="location-flash-value">${shelf}</span>
+                <span class="location-flash-divider">/</span>
+                <span class="location-flash-label">Pos</span>
+                <span class="location-flash-value">${position}</span>
+            </div>
+        `;
+
+        const bayContainer = document.querySelector('.bay-view-container');
+        bayContainer.appendChild(overlay);
+
+        // Trigger entrance animation
+        requestAnimationFrame(() => overlay.classList.add('visible'));
+
+        // Auto-dismiss after 3 seconds
+        setTimeout(() => {
+            overlay.classList.remove('visible');
+            overlay.classList.add('fade-out');
+            overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
+            // Fallback removal
+            setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 500);
+        }, 3000);
     },
 
     // --- Product Overlay ---
