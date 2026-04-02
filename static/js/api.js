@@ -1,7 +1,7 @@
 const API = {
     sessionToken: null,
 
-    async login(userName, storeId) {
+    async login(userName, storeId, password) {
         const deviceType = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile'
             : /Tablet|iPad/i.test(navigator.userAgent) ? 'tablet' : 'desktop';
         const res = await fetch('/api/login', {
@@ -10,6 +10,7 @@ const API = {
             body: JSON.stringify({
                 user_name: userName,
                 store_id: storeId,
+                password: password,
                 user_agent: navigator.userAgent,
                 screen_width: window.screen.width,
                 screen_height: window.screen.height,
@@ -17,6 +18,7 @@ const API = {
             }),
         });
         if (res.status === 404) throw new Error('Store not found');
+        if (res.status === 401) throw new Error('Invalid password');
         if (!res.ok) throw new Error('Login failed');
         const data = await res.json();
         this.sessionToken = data.session_token;
