@@ -234,7 +234,8 @@ body {
     max-width: 100%;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
     flex: 1;
     min-width: 0;
     min-height: var(--touch-min);
@@ -248,7 +249,8 @@ input[type="text"] {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="password"]:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
 }
@@ -1533,6 +1535,7 @@ html, body {
 
 /* Prevent iOS auto-zoom on input focus (16px minimum) */
 input[type="text"],
+input[type="password"],
 input[type="number"],
 input[type="search"] {
     font-size: 16px;
@@ -1573,7 +1576,8 @@ input[type="search"] {
         gap: 16px;
     }
 
-    .login-form input[type="text"] {
+    .login-form input[type="text"],
+    .login-form input[type="password"] {
         min-height: 52px;
         padding: 14px 18px;
     }
