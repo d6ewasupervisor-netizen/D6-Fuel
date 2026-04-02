@@ -17,6 +17,11 @@ const App = {
         this.loadStoreList();
         this.initMobileOptimizations();
 
+        // Prune expired cached thumbnails
+        if (typeof ImageCache !== 'undefined') {
+            ImageCache.prune();
+        }
+
         // Restore session
         const saved = sessionStorage.getItem('sessionToken');
         const savedStore = sessionStorage.getItem('storeId');
@@ -39,6 +44,27 @@ const App = {
         document.getElementById('password-input').onkeydown = (e) => {
             if (e.key === 'Enter') document.getElementById('store-input').focus();
         };
+
+        // Password peek toggle
+        const peekBtn = document.getElementById('password-peek');
+        if (peekBtn) {
+            peekBtn.addEventListener('click', () => {
+                const pwInput = document.getElementById('password-input');
+                const showIcon = peekBtn.querySelector('.peek-icon-show');
+                const hideIcon = peekBtn.querySelector('.peek-icon-hide');
+                if (pwInput.type === 'password') {
+                    pwInput.type = 'text';
+                    showIcon.style.display = 'none';
+                    hideIcon.style.display = '';
+                    peekBtn.setAttribute('aria-label', 'Hide password');
+                } else {
+                    pwInput.type = 'password';
+                    showIcon.style.display = '';
+                    hideIcon.style.display = 'none';
+                    peekBtn.setAttribute('aria-label', 'Show password');
+                }
+            });
+        }
         document.getElementById('store-input').onkeydown = (e) => {
             if (e.key === 'Enter') this.submitLogin();
         };
@@ -599,6 +625,18 @@ const App = {
                 if (!target) e.preventDefault();
             }
         }, { passive: false });
+
+        // Dynamic viewport height (fixes mobile keyboard shrinking issues)
+        const setVh = () => {
+            document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px');
+        };
+        setVh();
+        window.addEventListener('resize', setVh);
+
+        // Register service worker for offline caching
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/static/sw.js').catch(() => {});
+        }
 
         // Keep screen awake during scanner use
         this._wakeLock = null;

@@ -35,7 +35,7 @@ def _local_detail_image_url(upc: str) -> str | None:
 
 # --- Login & Activity Tracking ---
 
-DEFAULT_PASSWORD = "V!tamins"
+DEFAULT_PASSWORD = "Vitamins"
 
 
 class LoginRequest(BaseModel):

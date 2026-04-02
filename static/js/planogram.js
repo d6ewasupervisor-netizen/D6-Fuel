@@ -229,15 +229,21 @@ const Planogram = {
 
         container.appendChild(unit);
 
-        // Lazy-load product images as they scroll into view
+        // Lazy-load product images as they scroll into view, with IndexedDB caching
         if ('IntersectionObserver' in window) {
+            const useCache = typeof ImageCache !== 'undefined' && 'indexedDB' in window;
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const img = entry.target;
                         if (img.dataset.src) {
-                            img.src = img.dataset.src;
+                            const url = img.dataset.src;
                             delete img.dataset.src;
+                            if (useCache) {
+                                ImageCache.loadImage(img, url);
+                            } else {
+                                img.src = url;
+                            }
                         }
                         observer.unobserve(img);
                     }

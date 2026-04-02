@@ -221,6 +221,44 @@ body {
     white-space: nowrap;
 }
 
+/* Password peek toggle */
+.input-group-password {
+    position: relative;
+}
+
+.input-group-password input {
+    padding-right: 52px;
+}
+
+.btn-peek {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.btn-peek:active,
+.btn-peek:hover {
+    color: var(--text);
+}
+
+.peek-icon {
+    display: block;
+    pointer-events: none;
+}
+
 /* Inputs & Buttons */
 .input-group {
     display: flex;
@@ -1588,7 +1626,7 @@ input[type="password"]:focus {
 }
 
 /* ============================================
-   MOBILE OPTIMIZATION - STEP 5
+   MOBILE OPTIMIZATION
    ============================================ */
 
 /* Prevent iOS double-tap zoom globally */
@@ -1606,6 +1644,34 @@ input[type="password"],
 input[type="number"],
 input[type="search"] {
     font-size: 16px;
+}
+
+/* Dynamic viewport height — handles mobile keyboard */
+.center-content {
+    min-height: calc(var(--vh, 1vh) * 100);
+}
+
+/* Active/tap feedback for interactive elements */
+.btn:active,
+.type-card:active,
+.search-result-card:active,
+.product-slot:active {
+    opacity: 0.85;
+}
+
+/* Smooth momentum scrolling for all scrollable containers */
+.bay-shelf-container,
+.overlay-content,
+.search-results-list,
+.type-cards {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* GPU-accelerated transforms for smoother animations */
+.product-slot,
+.overlay,
+.deleted-overlay {
+    will-change: transform, opacity;
 }
 
 /* Larger touch targets on small screens */
