@@ -93,6 +93,8 @@ const App = {
         document.getElementById('upc-submit').onclick = () => this.doSearch();
         document.getElementById('upc-input').onkeydown = (e) => { if (e.key === 'Enter') this.doSearch(); };
         document.getElementById('toggle-scanner').onclick = () => this.toggleScanner();
+        document.getElementById('image-scan-btn').onclick = () => document.getElementById('image-scan-input').click();
+        document.getElementById('image-scan-input').onchange = (e) => this.scanFromImage(e);
 
         // Product overlay
         document.getElementById('close-overlay').onclick = () => this.closeOverlay();
@@ -314,6 +316,26 @@ const App = {
                 btn.textContent = 'Camera unavailable';
             }
         }
+    },
+
+    async scanFromImage(e) {
+        const file = e.target.files && e.target.files[0];
+        const imgError = document.getElementById('image-scan-error');
+        imgError.classList.add('hidden');
+        if (!file) return;
+
+        // Reset input so the same file can be re-selected
+        e.target.value = '';
+
+        await Scanner.scanImage(file, (code) => {
+            if (code) {
+                document.getElementById('upc-input').value = code;
+                this.doSearch();
+            } else {
+                imgError.textContent = 'No barcode found in image';
+                imgError.classList.remove('hidden');
+            }
+        });
     },
 
     async doSearch() {
