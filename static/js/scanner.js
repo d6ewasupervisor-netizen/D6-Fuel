@@ -124,6 +124,48 @@ const Scanner = {
         }
     },
 
+    async scanImage(file, callback) {
+        const img = new Image();
+        const url = URL.createObjectURL(file);
+        try {
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = url;
+            });
+
+            // Try native BarcodeDetector first
+            if ('BarcodeDetector' in window) {
+                try {
+                    const formats = await BarcodeDetector.getSupportedFormats();
+                    const wanted = ['upc_a', 'upc_e', 'ean_13', 'ean_8', 'code_128', 'code_39'];
+                    const supported = wanted.filter(f => formats.includes(f));
+                    if (supported.length > 0) {
+                        const detector = new BarcodeDetector({ formats: supported });
+                        const barcodes = await detector.detect(img);
+                        for (const bc of barcodes) {
+                            const code = (bc.rawValue || '').trim();
+                            if (code) { callback(code); return; }
+                        }
+                    }
+                } catch { /* fall through to legacy */ }
+            }
+
+            // Fallback: html5-qrcode scanFile
+            if (typeof Html5Qrcode !== 'undefined') {
+                try {
+                    const code = await Html5Qrcode.scanFile(file, /* showImage */ false);
+                    const trimmed = (code || '').trim();
+                    if (trimmed) { callback(trimmed); return; }
+                } catch { /* no barcode found */ }
+            }
+
+            callback(null);
+        } finally {
+            URL.revokeObjectURL(url);
+        }
+    },
+
     async stop() {
         if (this._rafId) {
             cancelAnimationFrame(this._rafId);

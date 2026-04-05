@@ -125,6 +125,9 @@
             <div id="scanner-container" class="scanner-box">
                 <div id="scanner-region"></div>
                 <button type="button" id="toggle-scanner" class="btn btn-secondary btn-touch">Start camera scanner</button>
+                <input type="file" id="image-scan-input" accept="image/*" hidden>
+                <button type="button" id="image-scan-btn" class="btn btn-secondary btn-touch">Scan from image</button>
+                <p id="image-scan-error" class="error hidden" role="alert"></p>
             </div>
             <div class="input-group input-group-wide">
                 <input type="text" id="upc-input" inputmode="numeric"

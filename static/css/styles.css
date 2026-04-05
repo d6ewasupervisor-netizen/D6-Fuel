@@ -410,6 +410,19 @@ input[type="password"]:focus {
     overflow: hidden;
 }
 
+.scanner-box .btn-touch {
+    width: 100%;
+    margin-top: 6px;
+}
+
+.scanner-box .btn-touch:first-of-type {
+    margin-top: 0;
+}
+
+#image-scan-error {
+    margin: 8px 0 0;
+}
+
 /* ============================================
    TYPE SELECTION VIEW
    ============================================ */
