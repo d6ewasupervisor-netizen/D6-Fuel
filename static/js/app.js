@@ -75,8 +75,12 @@ const App = {
             this.showView('login');
         };
         document.getElementById('back-to-type').onclick = () => this.showView('type-select');
-        document.getElementById('back-from-search').onclick = () => {
-            Scanner.stop();
+        document.getElementById('back-from-search').onclick = async () => {
+            await Scanner.stop();
+            document.getElementById('toggle-scanner').textContent = 'Start camera scanner';
+            document.getElementById('toggle-torch').classList.add('hidden');
+            document.getElementById('scanner-hint').classList.add('hidden');
+            this.releaseWakeLock();
             this.showView(this.previousView);
         };
 
@@ -103,6 +107,7 @@ const App = {
 
         // Search
         document.getElementById('toggle-scanner').onclick = () => this.toggleScanner();
+        document.getElementById('toggle-torch').onclick = () => this.toggleTorch();
 
         // Product overlay
         document.getElementById('close-overlay').onclick = () => this.closeOverlay();
@@ -411,10 +416,16 @@ const App = {
     // --- Search ---
     async toggleScanner() {
         const btn = document.getElementById('toggle-scanner');
+        const torchBtn = document.getElementById('toggle-torch');
+        const hint = document.getElementById('scanner-hint');
+
         if (Scanner.isRunning) {
             await Scanner.stop();
             this.releaseWakeLock();
             btn.textContent = 'Start camera scanner';
+            torchBtn.classList.add('hidden');
+            torchBtn.classList.remove('torch-on');
+            hint.classList.add('hidden');
         } else {
             btn.textContent = 'Stop scanner';
             API.logActivity('scanner_start', '', { view_name: 'search' });
@@ -423,13 +434,28 @@ const App = {
                 await Scanner.stop();
                 this.releaseWakeLock();
                 btn.textContent = 'Start camera scanner';
+                torchBtn.classList.add('hidden');
+                torchBtn.classList.remove('torch-on');
+                hint.classList.add('hidden');
                 this.doSearch(code);
             });
             if (!Scanner.isRunning) {
                 this.releaseWakeLock();
                 btn.textContent = 'Camera unavailable';
+            } else {
+                hint.classList.remove('hidden');
+                // Show torch button after a short delay so camera capabilities are ready
+                setTimeout(() => {
+                    if (Scanner.torchAvailable) torchBtn.classList.remove('hidden');
+                }, 500);
             }
         }
+    },
+
+    async toggleTorch() {
+        const torchBtn = document.getElementById('toggle-torch');
+        const isOn = await Scanner.toggleTorch();
+        torchBtn.classList.toggle('torch-on', isOn);
     },
 
     async doSearch(upcCode) {

@@ -136,7 +136,15 @@
             <h2 class="view-heading">Find a product</h2>
             <div id="scanner-container" class="scanner-box">
                 <div id="scanner-region"></div>
-                <button type="button" id="toggle-scanner" class="btn btn-secondary btn-touch">Start camera scanner</button>
+                <div class="scanner-controls">
+                    <button type="button" id="toggle-scanner" class="btn btn-secondary btn-touch">Start camera scanner</button>
+                    <button type="button" id="toggle-torch" class="btn-icon btn-torch hidden" aria-label="Toggle flashlight" title="Toggle flashlight">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                    </button>
+                </div>
+                <p id="scanner-hint" class="scanner-hint hidden">Point camera at any barcode &mdash; works at angles &amp; upside-down</p>
             </div>
             <p id="search-error" class="error hidden" role="alert"></p>
             <div id="search-spinner" class="spinner hidden" aria-hidden="true"></div>
