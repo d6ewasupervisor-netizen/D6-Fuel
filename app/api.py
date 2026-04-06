@@ -189,6 +189,14 @@ def search_product(
     placeholders = ",".join("?" * len(dbkeys))
     upc_clean = upc.strip()
 
+    # Normalize scanned UPC to match database storage format.
+    # DB stores UPCs as 13-digit strings WITHOUT the check digit, left-padded
+    # with zeros.  Barcode scanners return the full UPC-A (12 digits) or EAN-13
+    # (13 digits) which include the check digit as the last character.
+    # Strip the check digit and zero-pad to 13 so the lookup succeeds.
+    if upc_clean.isdigit() and len(upc_clean) in (12, 13):
+        upc_clean = upc_clean[:-1].zfill(13)
+
     if len(upc_clean) >= 10:
         sql = (
             f"SELECT p.*, pg.name as planogram_name, pg.category "
@@ -254,6 +262,8 @@ def search_product(
 def check_deleted(upc: str):
     """Quick check if a UPC is in the deleted products list."""
     upc_clean = upc.strip()
+    if upc_clean.isdigit() and len(upc_clean) in (12, 13):
+        upc_clean = upc_clean[:-1].zfill(13)
     if len(upc_clean) >= 10:
         rows = query("SELECT * FROM deleted_products WHERE upc = ?", (upc_clean,))
     else:
