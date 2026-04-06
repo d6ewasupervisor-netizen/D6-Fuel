@@ -223,6 +223,43 @@
         </div>
     </div>
 
+    <!-- Moving Item Overlay -->
+    <div id="moving-overlay" class="moving-overlay hidden">
+        <div class="moving-overlay-content">
+            <div class="moving-banner">
+                <span class="moving-banner-icon">&#x1F4E6;</span>
+                <h2 class="moving-title">MOVING TO NEW SECTION</h2>
+                <span class="moving-banner-icon">&#x1F4E6;</span>
+            </div>
+            <p id="moving-product-name" class="moving-product-name"></p>
+            <p id="moving-product-upc" class="moving-product-upc"></p>
+            <div class="moving-instructions">
+                <p><strong>This item is NOT discontinued.</strong></p>
+                <p>It is moving from <strong id="moving-from"></strong> to <strong id="moving-to"></strong>.</p>
+                <p>Please move it to its new location:</p>
+            </div>
+            <div id="moving-location" class="moving-location">
+                <div class="moving-location-row">
+                    <span class="moving-location-label">Aisle</span>
+                    <span id="moving-loc-aisle" class="moving-location-value"></span>
+                </div>
+                <div class="moving-location-row">
+                    <span class="moving-location-label">Bay</span>
+                    <span id="moving-loc-bay" class="moving-location-value"></span>
+                </div>
+                <div class="moving-location-row">
+                    <span class="moving-location-label">Shelf</span>
+                    <span id="moving-loc-shelf" class="moving-location-value"></span>
+                </div>
+                <div class="moving-location-row">
+                    <span class="moving-location-label">Position</span>
+                    <span id="moving-loc-position" class="moving-location-value"></span>
+                </div>
+            </div>
+            <button type="button" id="moving-dismiss" class="btn btn-primary btn-full">Got It</button>
+        </div>
+    </div>
+
     <!-- PDF Viewer -->
     <div id="view-pdf" class="view">
         <div class="pdf-viewer-container">

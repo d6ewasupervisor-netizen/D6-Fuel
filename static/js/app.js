@@ -121,6 +121,11 @@ const App = {
             document.getElementById('deleted-overlay').classList.add('hidden');
         };
 
+        // Moving overlay
+        document.getElementById('moving-dismiss').onclick = () => {
+            document.getElementById('moving-overlay').classList.add('hidden');
+        };
+
         // Image lightbox
         const lightbox = document.getElementById('image-lightbox');
         document.getElementById('lightbox-close').onclick = () => lightbox.classList.add('hidden');
@@ -368,14 +373,17 @@ const App = {
         try {
             const data = await API.search(this.storeId, upc);
 
+            const movingResults = (data.results || []).filter(r => r.is_moving);
             const deletedResults = (data.results || []).filter(r => r.is_deleted);
-            const activeResults = (data.results || []).filter(r => !r.is_deleted);
+            const activeResults = (data.results || []).filter(r => !r.is_deleted && !r.is_moving);
 
-            if (deletedResults.length > 0) {
+            if (movingResults.length > 0) {
+                this.showMovingOverlay(movingResults[0]);
+            } else if (deletedResults.length > 0) {
                 this.showDeletedOverlay(deletedResults[0]);
             }
 
-            if (activeResults.length === 0 && deletedResults.length === 0) {
+            if (activeResults.length === 0 && deletedResults.length === 0 && movingResults.length === 0) {
                 input.classList.add('bay-search-error');
                 input.value = '';
                 input.placeholder = 'Not found';
@@ -474,15 +482,18 @@ const App = {
             const data = await API.search(this.storeId, upc);
             spinner.classList.add('hidden');
 
-            // Check for deleted items
+            // Check for moving / deleted items
+            const movingResults = (data.results || []).filter(r => r.is_moving);
             const deletedResults = (data.results || []).filter(r => r.is_deleted);
-            const activeResults = (data.results || []).filter(r => !r.is_deleted);
+            const activeResults = (data.results || []).filter(r => !r.is_deleted && !r.is_moving);
 
-            if (deletedResults.length > 0) {
+            if (movingResults.length > 0) {
+                this.showMovingOverlay(movingResults[0]);
+            } else if (deletedResults.length > 0) {
                 this.showDeletedOverlay(deletedResults[0]);
             }
 
-            if (activeResults.length === 0 && deletedResults.length === 0) {
+            if (activeResults.length === 0 && deletedResults.length === 0 && movingResults.length === 0) {
                 error.textContent = 'Product not found on any planogram for your store.';
                 error.classList.remove('hidden');
                 return;
@@ -820,10 +831,31 @@ const App = {
         document.getElementById('deleted-product-name').textContent = item.description || 'Unknown Product';
         document.getElementById('deleted-product-upc').textContent = `UPC: ${item.upc}`;
         overlay.classList.remove('hidden');
-        // Trigger flash animation
         overlay.classList.remove('flash');
-        void overlay.offsetWidth; // force reflow
+        void overlay.offsetWidth;
         overlay.classList.add('flash');
+    },
+
+    // --- Moving Items ---
+    showMovingOverlay(item) {
+        const overlay = document.getElementById('moving-overlay');
+        document.getElementById('moving-product-name').textContent = item.description || 'Unknown Product';
+        document.getElementById('moving-product-upc').textContent = `UPC: ${item.upc}`;
+        document.getElementById('moving-from').textContent = item.moving_from || 'Unknown';
+        document.getElementById('moving-to').textContent = item.moving_to || 'Unknown';
+
+        const locBlock = document.getElementById('moving-location');
+        if (item.new_aisle) {
+            document.getElementById('moving-loc-aisle').textContent = item.new_aisle;
+            document.getElementById('moving-loc-bay').textContent = item.new_bay;
+            document.getElementById('moving-loc-shelf').textContent = item.new_shelf;
+            document.getElementById('moving-loc-position').textContent = item.new_position;
+            locBlock.classList.remove('hidden');
+        } else {
+            locBlock.classList.add('hidden');
+        }
+
+        overlay.classList.remove('hidden');
     }
 };
 

@@ -10,6 +10,16 @@ from .kroger_api import get_product_description
 
 router = APIRouter(prefix="/api")
 
+# Products moving between planogram categories (not truly discontinued)
+MOVING_PRODUCTS = {
+    "0007631430213": {
+        "from_category": "C180",
+        "from_label": "Regular Vitamins",
+        "to_category": "C678",
+        "to_label": "NF Vitamins",
+    },
+}
+
 LOCAL_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "..", "static", "images", "products")
 LOCAL_ORIGINAL_IMAGE_DIR = os.path.join(
     os.path.dirname(__file__), "..", "static", "images", "products_original"
@@ -264,18 +274,58 @@ def search_product(
         del_params = dbkeys + [f"%{upc_clean}"]
 
     deleted_results = query(del_sql, del_params)
+    moving_seen_upcs = set()
     for dr in deleted_results:
-        dr["is_deleted"] = True
+        moving = MOVING_PRODUCTS.get(dr["upc"])
+        if moving:
+            dr["is_deleted"] = False
+            dr["is_moving"] = True
+            dr["moving_from"] = moving["from_label"]
+            dr["moving_to"] = moving["to_label"]
+            dr["moving_to_category"] = moving["to_category"]
+            moving_seen_upcs.add(dr["upc"])
+        else:
+            dr["is_deleted"] = True
+            dr["is_moving"] = False
         dr["bay"] = 0
         dr["shelf"] = 0
         dr["position"] = 0
+
+    # For moving products, look up their new location in the destination planogram
+    moving_location = {}
+    for upc_val in moving_seen_upcs:
+        to_cat = MOVING_PRODUCTS[upc_val]["to_category"]
+        loc_rows = query(
+            "SELECT p.bay, p.shelf, p.position, sp.aisle, sp.orientation, sp.sequence, pg.dbkey as planogram_dbkey "
+            "FROM products p "
+            "JOIN planograms pg ON p.planogram_dbkey = pg.dbkey "
+            "JOIN store_planograms sp ON sp.planogram_dbkey = pg.dbkey "
+            "WHERE p.upc = ? AND pg.category = ? AND sp.store_id = ? "
+            "LIMIT 1",
+            (upc_val, to_cat, store_padded),
+        )
+        if loc_rows:
+            loc = loc_rows[0]
+            moving_location[upc_val] = {
+                "new_aisle": loc["aisle"],
+                "new_bay": loc["bay"],
+                "new_shelf": loc["shelf"],
+                "new_position": loc["position"],
+                "new_orientation": loc["orientation"],
+                "new_planogram_dbkey": loc["planogram_dbkey"],
+            }
+
+    for dr in deleted_results:
+        if dr.get("is_moving") and dr["upc"] in moving_location:
+            dr.update(moving_location[dr["upc"]])
 
     all_results = results + deleted_results
     return {
         "results": all_results,
         "count": len(all_results),
         "store": store_padded,
-        "has_deleted": len(deleted_results) > 0,
+        "has_deleted": any(r.get("is_deleted") for r in deleted_results),
+        "has_moving": any(r.get("is_moving") for r in deleted_results),
     }
 
 
@@ -291,7 +341,15 @@ def check_deleted(upc: str):
         rows = query(f"SELECT * FROM deleted_products WHERE upc IN ({placeholders})", candidates)
     else:
         rows = query("SELECT * FROM deleted_products WHERE upc LIKE ?", (f"%{upc_clean}",))
-    return {"is_deleted": len(rows) > 0, "matches": rows}
+    for row in rows:
+        moving = MOVING_PRODUCTS.get(row["upc"])
+        if moving:
+            row["is_moving"] = True
+            row["moving_from"] = moving["from_label"]
+            row["moving_to"] = moving["to_label"]
+            row["moving_to_category"] = moving["to_category"]
+    is_moving = any(r.get("is_moving") for r in rows)
+    return {"is_deleted": len(rows) > 0 and not is_moving, "is_moving": is_moving, "matches": rows}
 
 
 # --- Planogram ---
