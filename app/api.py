@@ -20,6 +20,12 @@ MOVING_PRODUCTS = {
     },
 }
 
+NOTES_FILES = {
+    "C180": "C180 Vitamin Notes.pdf",
+    "C678": "C678 Natural Vitamin Notes.pdf",
+}
+NOTES_DIR = os.path.join(os.path.dirname(__file__), "..")
+
 LOCAL_IMAGE_DIR = os.path.join(os.path.dirname(__file__), "..", "static", "images", "products")
 LOCAL_ORIGINAL_IMAGE_DIR = os.path.join(
     os.path.dirname(__file__), "..", "static", "images", "products_original"
@@ -498,4 +504,36 @@ def get_pdf_info(dbkey: int):
         "pdf_filename": pog["pdf_filename"],
         "category": pog["category"],
         "pdf_url": f"/api/pdf/{pog['pdf_filename']}" if pog["pdf_filename"] else None,
+    }
+
+
+# --- Notes PDFs ---
+
+@router.get("/notes/{category}")
+def serve_notes(category: str):
+    """Serve section-update notes PDF for a planogram category (C180 or C678)."""
+    cat = category.upper()
+    filename = NOTES_FILES.get(cat)
+    if not filename:
+        raise HTTPException(404, f"No notes available for category {cat}")
+    notes_path = os.path.join(NOTES_DIR, filename)
+    if not os.path.isfile(notes_path):
+        raise HTTPException(404, f"Notes file not found: {filename}")
+    return FileResponse(notes_path, media_type="application/pdf", filename=filename)
+
+
+@router.get("/notes-info/{category}")
+def get_notes_info(category: str):
+    """Return notes PDF metadata for a planogram category."""
+    cat = category.upper()
+    filename = NOTES_FILES.get(cat)
+    if not filename:
+        return {"available": False, "category": cat}
+    notes_path = os.path.join(NOTES_DIR, filename)
+    label = "C180 Vitamin Notes" if cat == "C180" else "C678 Natural Vitamin Notes"
+    return {
+        "available": os.path.isfile(notes_path),
+        "category": cat,
+        "label": label,
+        "notes_url": f"/api/notes/{cat}" if os.path.isfile(notes_path) else None,
     }

@@ -119,5 +119,15 @@ const API = {
         } catch {
             return { is_deleted: false };
         }
+    },
+
+    async getNotesInfo(category) {
+        try {
+            const res = await fetch(`/api/notes-info/${encodeURIComponent(category)}`);
+            if (!res.ok) return null;
+            return res.json();
+        } catch {
+            return null;
+        }
     }
 };

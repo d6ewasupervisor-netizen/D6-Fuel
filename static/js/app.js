@@ -90,6 +90,7 @@ const App = {
 
         // Bay view actions
         document.getElementById('bay-camera-btn').onclick = () => this.openCameraScan('bay');
+        document.getElementById('bay-notes-btn').onclick = () => this.openNotesForCurrentPlanogram();
         document.getElementById('bay-pdf-btn').onclick = () => this.openPdfForCurrentPlanogram();
         document.getElementById('bay-prev-arrow').onclick = () => Planogram.prevBay();
         document.getElementById('bay-next-arrow').onclick = () => Planogram.nextBay();
@@ -774,6 +775,26 @@ const App = {
             }
         } catch (e) {
             console.error('Failed to open PDF:', e);
+        }
+    },
+
+    // --- Notes ---
+    async openNotesForCurrentPlanogram() {
+        if (!this.currentCategory) return;
+        try {
+            const info = await API.getNotesInfo(this.currentCategory);
+            if (info && info.available && info.notes_url) {
+                PDFViewer.open(info.notes_url, {
+                    title: info.label || 'Section Notes',
+                    returnView: 'bay',
+                });
+                API.logActivity('open_notes', info.label, {
+                    view_name: 'bay',
+                    meta: JSON.stringify({ category: this.currentCategory }),
+                });
+            }
+        } catch (e) {
+            console.error('Failed to open notes:', e);
         }
     },
 

@@ -343,6 +343,20 @@ input[type="password"]:focus {
     border-radius: var(--radius-sm);
 }
 
+.btn-notes {
+    background: var(--gold);
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 10px 14px;
+    min-height: 44px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    touch-action: manipulation;
+}
+
 .btn-pdf {
     background: var(--accent-red);
     color: #fff;
@@ -2038,6 +2052,7 @@ input[type="search"] {
         padding: 12px 16px;
     }
 
+    .btn-notes,
     .btn-pdf {
         min-height: 48px;
         padding: 12px 16px;
