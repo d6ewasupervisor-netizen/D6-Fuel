@@ -73,11 +73,11 @@
                     <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
                     <span class="top-bar-title">Supplemental Intelligence</span>
                 </div>
-                <span id="type-store-label" class="store-badge">Store #00000</span>
+                <span id="type-store-label" class="store-badge store-badge-clickable" role="button" tabindex="0">Store #00000</span>
             </div>
             <div class="type-select-content">
-                <h2 class="view-heading type-heading">Select Vitamin Type</h2>
-                <p class="type-subtitle">Choose which planogram section to view</p>
+                <h2 class="view-heading type-heading">Choose an Option</h2>
+                <p class="type-subtitle">Browse planograms or search for a product</p>
                 <div id="type-cards" class="type-cards"></div>
             </div>
         </div>
@@ -89,11 +89,17 @@
             <div class="bay-top-bar">
                 <button type="button" id="back-to-type" class="btn-icon" aria-label="Back">&larr;</button>
                 <div class="bay-top-info">
+                    <span id="bay-store-label" class="store-badge store-badge-clickable" role="button" tabindex="0">Store #00000</span>
                     <span id="bay-pog-name" class="pog-badge-sm"></span>
                     <span id="bay-indicator" class="bay-indicator">Bay 1 of 1</span>
                 </div>
                 <div class="bay-top-actions">
-                    <button type="button" id="bay-search-btn" class="btn-icon" aria-label="Search" title="Search">&#128269;</button>
+                    <button type="button" id="bay-camera-btn" class="btn-icon btn-toolbar-scan" aria-label="Scan barcode" title="Scan barcode">
+                        <img src="/static/images/search-upc-camera.png" alt="" class="toolbar-scan-icon">
+                    </button>
+                    <button type="button" id="bay-text-search-btn" class="btn-icon btn-toolbar-scan" aria-label="Search by UPC" title="Search by UPC">
+                        <img src="/static/images/search-upc-text.png" alt="" class="toolbar-scan-icon">
+                    </button>
                     <button type="button" id="bay-pdf-btn" class="btn-sm btn-pdf" aria-label="View PDF">PDF</button>
                 </div>
             </div>
@@ -119,7 +125,7 @@
                     <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
                     <span class="top-bar-title">Supplemental Intelligence</span>
                 </div>
-                <span id="store-label" class="store-badge">Store #00000</span>
+                <span id="store-label" class="store-badge store-badge-clickable" role="button" tabindex="0">Store #00000</span>
             </div>
             <h2 class="view-heading">Find a product</h2>
             <div id="scanner-container" class="scanner-box">

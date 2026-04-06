@@ -201,6 +201,20 @@ body {
     white-space: nowrap;
 }
 
+.store-badge-clickable {
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.1s;
+}
+
+.store-badge-clickable:hover {
+    background: rgba(251, 191, 36, 0.15);
+    border-color: var(--gold-light);
+}
+
+.store-badge-clickable:active {
+    transform: scale(0.96);
+}
+
 .pog-badge {
     font-size: 0.78rem;
     color: var(--text-dim);
@@ -544,6 +558,36 @@ input[type="password"]:focus {
     padding: 40px 0;
 }
 
+/* Scan option cards on type-select screen */
+.scan-card {
+    border-color: rgba(251, 191, 36, 0.25);
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(30, 58, 95, 0.6) 100%);
+}
+
+.scan-card:hover, .scan-card:focus {
+    border-color: var(--gold);
+    box-shadow: 0 4px 20px rgba(212, 160, 18, 0.2);
+}
+
+.scan-card-image {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(251, 191, 36, 0.15);
+}
+
+.scan-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* ============================================
    BAY VIEW
    ============================================ */
@@ -586,8 +630,22 @@ input[type="password"]:focus {
 
 .bay-top-actions {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
+}
+
+/* Mini scan/search icons in bay toolbar */
+.btn-toolbar-scan {
+    padding: 0;
+    overflow: hidden;
+}
+
+.toolbar-scan-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 50%;
+    pointer-events: none;
 }
 
 /* Bay bottom navigation bar */
@@ -778,9 +836,14 @@ input[type="password"]:focus {
     box-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
-/* Product highlight — neon green flash, 4 blinks in ~1s */
+/* Highlight target marker — no visual effect, just marks the element */
+.product-slot.highlight-target {
+    z-index: 20;
+}
+
+/* Product highlight — neon green flash, 3 blinks of 0.5s then solid */
 .product-slot.highlight {
-    animation: neon-flash 0.25s ease-in-out 4;
+    animation: neon-flash 0.5s ease-in-out 3;
     z-index: 20;
     border: 3px solid #39ff14;
     box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57, 255, 20, 0.4);
@@ -804,7 +867,7 @@ input[type="password"]:focus {
         inset 1px 1px 2px rgba(255, 255, 255, 0.18),
         inset -1px -1px 2px rgba(0, 0, 0, 0.25),
         0 0 14px #39ff14, 0 0 28px rgba(57, 255, 20, 0.3);
-    animation: neon-group-flash 0.25s ease-in-out 4;
+    animation: neon-group-flash 0.5s ease-in-out 3;
 }
 
 @keyframes neon-group-flash {
@@ -872,67 +935,97 @@ input[type="password"]:focus {
 /* Location flash overlay — shown above bay when navigating to a product */
 .location-flash-overlay {
     position: absolute;
-    top: 48px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%) translateY(-20px);
+    transform: translate(-50%, -50%) translateY(-20px);
     z-index: 100;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .location-flash-overlay.visible {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translate(-50%, -50%) translateY(0);
 }
 
 .location-flash-overlay.fade-out {
     opacity: 0;
-    transform: translateX(-50%) translateY(-10px);
+    transform: translate(-50%, -50%) translateY(-20px);
 }
 
 .location-flash-content {
+    background: rgba(8, 15, 30, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 2px solid rgba(57, 255, 20, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 24px rgba(57, 255, 20, 0.2);
+}
+
+.location-flash-stacked {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 6px;
-    background: rgba(15, 23, 42, 0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(57, 255, 20, 0.4);
-    border-radius: 12px;
-    padding: 10px 20px;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(57, 255, 20, 0.15);
-    animation: location-pulse 0.5s ease-in-out 3;
+    gap: 4px;
+    padding: 24px 48px;
+    min-width: 220px;
+}
+
+.location-flash-row {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    justify-content: center;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.location-flash-hidden {
+    opacity: 0;
+    transform: scale(0.4);
+}
+
+.location-flash-pop {
+    animation: flash-pop-in 0.5s ease-out forwards;
+}
+
+@keyframes flash-pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.4);
+    }
+    25% {
+        opacity: 1;
+        transform: scale(1.35);
+        filter: brightness(2);
+    }
+    50% {
+        transform: scale(0.95);
+        filter: brightness(1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: brightness(1);
+    }
 }
 
 .location-flash-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.65);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    min-width: 90px;
+    text-align: right;
 }
 
 .location-flash-value {
-    font-size: 1.3rem;
-    font-weight: 800;
+    font-size: 2.6rem;
+    font-weight: 900;
     color: #39ff14;
-    text-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
-}
-
-.location-flash-divider {
-    color: rgba(255, 255, 255, 0.25);
-    font-size: 1.1rem;
-    font-weight: 300;
-}
-
-@keyframes location-pulse {
-    0%, 100% {
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 16px rgba(57, 255, 20, 0.15);
-    }
-    50% {
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5), 0 0 30px rgba(57, 255, 20, 0.35);
-    }
+    text-shadow: 0 0 14px rgba(57, 255, 20, 0.7), 0 0 40px rgba(57, 255, 20, 0.3);
+    line-height: 1.1;
 }
 
 /* Bay numbers */
@@ -1561,6 +1654,8 @@ input[type="password"]:focus {
 @media (prefers-reduced-motion: reduce) {
     .spinner { animation: none; }
     .product-slot.highlight { animation: none; }
+    .multi-facing-group.highlight-group { animation: none; }
+    .location-flash-pop { animation: none; opacity: 1; transform: scale(1); }
     .deleted-icon { animation: none; }
     .deleted-overlay.flash { animation: none; }
 }
@@ -1573,11 +1668,20 @@ input[type="password"]:focus {
 
     .type-cards {
         flex-direction: row;
+        flex-wrap: wrap;
     }
 
     .type-card {
         flex-direction: column;
         text-align: center;
+        flex: 1 1 calc(50% - 8px);
+        min-width: 180px;
+    }
+
+    .scan-card-image {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
     }
 }
 
@@ -1606,6 +1710,7 @@ input[type="password"]:focus {
 
     .type-cards {
         flex-direction: row;
+        flex-wrap: wrap;
         max-width: 100%;
         gap: 12px;
     }
@@ -1614,12 +1719,19 @@ input[type="password"]:focus {
         flex-direction: column;
         text-align: center;
         padding: 14px;
+        flex: 1 1 calc(25% - 12px);
+        min-width: 120px;
     }
 
     .type-icon {
         width: 44px;
         height: 44px;
         font-size: 1.4rem;
+    }
+
+    .scan-card-image {
+        width: 56px;
+        height: 56px;
     }
 
     .bay-top-bar {
@@ -1746,6 +1858,32 @@ input[type="search"] {
         width: 52px;
         height: 52px;
         font-size: 1.5rem;
+    }
+
+    .scan-card-image {
+        width: 72px;
+        height: 72px;
+    }
+
+    /* Location overlay — fit smaller screens */
+    .location-flash-stacked {
+        padding: 18px 28px;
+        min-width: 180px;
+    }
+
+    .location-flash-label {
+        font-size: 0.9rem;
+        min-width: 72px;
+    }
+
+    .location-flash-value {
+        font-size: 2.2rem;
+    }
+
+    /* Toolbar scan icons */
+    .toolbar-scan-icon {
+        width: 28px;
+        height: 28px;
     }
 
     /* Bay view — optimize for portrait phone */

@@ -80,11 +80,17 @@ const App = {
             this.showView(this.previousView);
         };
 
-        // Bay view actions
-        document.getElementById('bay-search-btn').onclick = () => {
-            this.previousView = 'bay';
-            this.showView('search');
+        // Store badge clicks — navigate back to store selection
+        document.getElementById('type-store-label').onclick = () => {
+            sessionStorage.clear();
+            this.showView('login');
         };
+        document.getElementById('store-label').onclick = () => this.showView('type-select');
+        document.getElementById('bay-store-label').onclick = () => this.showView('type-select');
+
+        // Bay view actions
+        document.getElementById('bay-camera-btn').onclick = () => this.openCameraScan('bay');
+        document.getElementById('bay-text-search-btn').onclick = () => this.openTextSearch('bay');
         document.getElementById('bay-pdf-btn').onclick = () => this.openPdfForCurrentPlanogram();
         document.getElementById('bay-prev-arrow').onclick = () => Planogram.prevBay();
         document.getElementById('bay-next-arrow').onclick = () => Planogram.nextBay();
@@ -139,7 +145,11 @@ const App = {
         if (name === 'type-select') {
             document.getElementById('type-store-label').textContent = `Store #${this.storeId}`;
             this.loadPlanogramTypes();
-        } else if (name === 'search') {
+        } else if (name === 'bay') {
+            document.getElementById('bay-store-label').textContent = `Store #${this.storeId}`;
+        }
+
+        if (name === 'search') {
             document.getElementById('store-label').textContent = `Store #${this.storeId}`;
             document.getElementById('upc-input').value = '';
             document.getElementById('search-error').classList.add('hidden');
@@ -233,17 +243,7 @@ const App = {
             const data = await API.getPlanogramTypes(this.storeId);
             container.innerHTML = '';
 
-            if (data.types.length === 0) {
-                container.innerHTML = '<p class="type-empty">No planograms available for this store.</p>';
-                return;
-            }
-
-            // If only one type, auto-select
-            if (data.types.length === 1) {
-                this.selectPlanogramType(data.types[0]);
-                return;
-            }
-
+            // Planogram type cards
             data.types.forEach(type => {
                 const card = document.createElement('button');
                 card.className = 'type-card';
@@ -263,6 +263,43 @@ const App = {
                 card.onclick = () => this.selectPlanogramType(type);
                 container.appendChild(card);
             });
+
+            // Scan UPC barcode card (camera)
+            const cameraCard = document.createElement('button');
+            cameraCard.className = 'type-card scan-card';
+            cameraCard.setAttribute('data-category', 'scan-camera');
+            cameraCard.innerHTML = `
+                <div class="scan-card-image">
+                    <img src="/static/images/search-upc-camera.png" alt="Scan UPC barcode" draggable="false">
+                </div>
+                <div class="type-card-text">
+                    <h3 class="type-label">Scan UPC Barcode</h3>
+                    <p class="type-desc">Use your camera to scan a product barcode</p>
+                </div>
+            `;
+            cameraCard.onclick = () => this.openCameraScan('type-select');
+            container.appendChild(cameraCard);
+
+            // Enter last 4 of UPC card (text search)
+            const textCard = document.createElement('button');
+            textCard.className = 'type-card scan-card';
+            textCard.setAttribute('data-category', 'scan-text');
+            textCard.innerHTML = `
+                <div class="scan-card-image">
+                    <img src="/static/images/search-upc-text.png" alt="Enter last four of UPC" draggable="false">
+                </div>
+                <div class="type-card-text">
+                    <h3 class="type-label">Enter Last 4 of UPC</h3>
+                    <p class="type-desc">Type in the last digits of the UPC to search</p>
+                </div>
+            `;
+            textCard.onclick = () => this.openTextSearch('type-select');
+            container.appendChild(textCard);
+
+            if (data.types.length === 0) {
+                container.insertAdjacentHTML('afterbegin',
+                    '<p class="type-empty">No planograms available — use search options below.</p>');
+            }
         } catch (e) {
             container.innerHTML = '<p class="error">Failed to load planogram types.</p>';
         }
@@ -291,6 +328,19 @@ const App = {
         } catch (e) {
             console.error('Failed to load planogram:', e);
         }
+    },
+
+    // --- Scan entry points ---
+    openCameraScan(fromView) {
+        this.previousView = fromView || 'type-select';
+        this.showView('search');
+        setTimeout(() => this.toggleScanner(), 300);
+    },
+
+    openTextSearch(fromView) {
+        this.previousView = fromView || 'type-select';
+        this.showView('search');
+        setTimeout(() => document.getElementById('upc-input').focus(), 300);
     },
 
     // --- Search ---
@@ -440,7 +490,6 @@ const App = {
     },
 
     showLocationOverlay(bay, shelf, position) {
-        // Remove any existing overlay
         const existing = document.getElementById('location-flash-overlay');
         if (existing) existing.remove();
 
@@ -448,32 +497,53 @@ const App = {
         overlay.id = 'location-flash-overlay';
         overlay.className = 'location-flash-overlay';
         overlay.innerHTML = `
-            <div class="location-flash-content">
-                <span class="location-flash-label">Bay</span>
-                <span class="location-flash-value">${bay}</span>
-                <span class="location-flash-divider">/</span>
-                <span class="location-flash-label">Shelf</span>
-                <span class="location-flash-value">${shelf}</span>
-                <span class="location-flash-divider">/</span>
-                <span class="location-flash-label">Pos</span>
-                <span class="location-flash-value">${position}</span>
+            <div class="location-flash-content location-flash-stacked">
+                <div class="location-flash-row location-flash-hidden" data-flash="bay">
+                    <span class="location-flash-label">BAY</span>
+                    <span class="location-flash-value">${bay}</span>
+                </div>
+                <div class="location-flash-row location-flash-hidden" data-flash="shelf">
+                    <span class="location-flash-label">SHELF</span>
+                    <span class="location-flash-value">${shelf}</span>
+                </div>
+                <div class="location-flash-row location-flash-hidden" data-flash="position">
+                    <span class="location-flash-label">POSITION</span>
+                    <span class="location-flash-value">${position}</span>
+                </div>
             </div>
         `;
 
         const bayContainer = document.querySelector('.bay-view-container');
         bayContainer.appendChild(overlay);
-
-        // Trigger entrance animation
         requestAnimationFrame(() => overlay.classList.add('visible'));
 
-        // Auto-dismiss after 3 seconds
+        const FLASH_MS = 500;
+        const HOLD_MS = 3000;
+        const OVERLAY_TOTAL_MS = (FLASH_MS * 3) + HOLD_MS; // 4.5s
+        const BORDER_TOTAL_MS = OVERLAY_TOTAL_MS * 2;       // 9s
+
+        // Sequential flash: Bay → Shelf → Position
+        const rows = overlay.querySelectorAll('.location-flash-row');
+        rows.forEach((row, i) => {
+            setTimeout(() => {
+                row.classList.remove('location-flash-hidden');
+                row.classList.add('location-flash-pop');
+            }, FLASH_MS * i);
+        });
+
+        // After all 3 flashes, activate the item border highlight
+        setTimeout(() => Planogram.activateHighlight(), FLASH_MS * 3);
+
+        // Dismiss overlay after total time
         setTimeout(() => {
             overlay.classList.remove('visible');
             overlay.classList.add('fade-out');
             overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
-            // Fallback removal
-            setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 500);
-        }, 3000);
+            setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 600);
+        }, OVERLAY_TOTAL_MS);
+
+        // Remove highlight border after 2x overlay duration
+        setTimeout(() => Planogram.deactivateHighlight(), FLASH_MS * 3 + BORDER_TOTAL_MS);
     },
 
     // --- Product Overlay ---

@@ -12,6 +12,8 @@ const Planogram = {
     highlightBay: null,
     highlightShelf: null,
     highlightPosition: null,
+    highlightElement: null,   // DOM element to flash border on
+    highlightGroup: null,     // Multi-facing group wrapper
     onProductClick: null,
     onBayChange: null,        // Callback for bay change
 
@@ -27,6 +29,29 @@ const Planogram = {
         this.highlightBay = null;
         this.highlightShelf = null;
         this.highlightPosition = null;
+        this.highlightElement = null;
+        this.highlightGroup = null;
+    },
+
+    activateHighlight() {
+        if (this.highlightElement) {
+            this.highlightElement.classList.add('highlight');
+            if (this.highlightGroup) {
+                this.highlightGroup.classList.add('highlight-group');
+            }
+        }
+    },
+
+    deactivateHighlight() {
+        if (this.highlightElement) {
+            this.highlightElement.classList.remove('highlight');
+            this.highlightElement.classList.remove('highlight-target');
+        }
+        if (this.highlightGroup) {
+            this.highlightGroup.classList.remove('highlight-group');
+        }
+        this.highlightElement = null;
+        this.highlightGroup = null;
     },
 
     /**
@@ -195,10 +220,9 @@ const Planogram = {
                         product.bay === this.highlightBay &&
                         product.shelf === this.highlightShelf &&
                         product.position === this.highlightPosition) {
-                        slot.classList.add('highlight');
-                        if (groupWrap) {
-                            groupWrap.classList.add('highlight-group');
-                        }
+                        this.highlightElement = slot;
+                        this.highlightGroup = groupWrap || null;
+                        slot.classList.add('highlight-target');
                         setTimeout(() => {
                             const scrollTarget = groupWrap || slot;
                             scrollTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
