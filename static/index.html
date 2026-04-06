@@ -87,20 +87,25 @@
     <div id="view-bay" class="view">
         <div class="bay-view-container">
             <div class="bay-top-bar">
-                <button type="button" id="back-to-type" class="btn-icon" aria-label="Back">&larr;</button>
-                <div class="bay-top-info">
-                    <span id="bay-store-label" class="store-badge store-badge-clickable" role="button" tabindex="0">Store #00000</span>
-                    <span id="bay-pog-name" class="pog-badge-sm"></span>
-                    <span id="bay-indicator" class="bay-indicator">Bay 1 of 1</span>
+                <div class="bay-top-bar-main">
+                    <button type="button" id="back-to-type" class="btn-icon" aria-label="Back">&larr;</button>
+                    <div class="bay-top-info">
+                        <span id="bay-store-label" class="store-badge store-badge-clickable" role="button" tabindex="0">Store #00000</span>
+                        <span id="bay-pog-name" class="pog-badge-sm"></span>
+                        <span id="bay-indicator" class="bay-indicator">Bay 1 of 1</span>
+                    </div>
+                    <div class="bay-top-actions">
+                        <button type="button" id="bay-camera-btn" class="btn-icon btn-toolbar-scan" aria-label="Scan barcode" title="Scan barcode">
+                            <img src="/static/images/search-upc-camera.png" alt="" class="toolbar-scan-icon">
+                        </button>
+                        <button type="button" id="bay-pdf-btn" class="btn-sm btn-pdf" aria-label="View PDF">PDF</button>
+                    </div>
                 </div>
-                <div class="bay-top-actions">
-                    <button type="button" id="bay-camera-btn" class="btn-icon btn-toolbar-scan" aria-label="Scan barcode" title="Scan barcode">
-                        <img src="/static/images/search-upc-camera.png" alt="" class="toolbar-scan-icon">
-                    </button>
-                    <button type="button" id="bay-text-search-btn" class="btn-icon btn-toolbar-scan" aria-label="Search by UPC" title="Search by UPC">
-                        <img src="/static/images/search-upc-text.png" alt="" class="toolbar-scan-icon">
-                    </button>
-                    <button type="button" id="bay-pdf-btn" class="btn-sm btn-pdf" aria-label="View PDF">PDF</button>
+                <div class="bay-top-search">
+                    <input type="text" id="bay-upc-input" inputmode="numeric" placeholder="Last 4 of UPC"
+                           maxlength="13" autocomplete="off" enterkeyhint="search"
+                           autocorrect="off" autocapitalize="none" spellcheck="false">
+                    <button type="button" id="bay-upc-search" class="btn btn-primary bay-search-go">Search</button>
                 </div>
             </div>
 

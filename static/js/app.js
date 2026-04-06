@@ -90,10 +90,15 @@ const App = {
 
         // Bay view actions
         document.getElementById('bay-camera-btn').onclick = () => this.openCameraScan('bay');
-        document.getElementById('bay-text-search-btn').onclick = () => this.openTextSearch('bay');
         document.getElementById('bay-pdf-btn').onclick = () => this.openPdfForCurrentPlanogram();
         document.getElementById('bay-prev-arrow').onclick = () => Planogram.prevBay();
         document.getElementById('bay-next-arrow').onclick = () => Planogram.nextBay();
+
+        // Bay inline UPC search
+        document.getElementById('bay-upc-search').onclick = () => this.doBaySearch();
+        document.getElementById('bay-upc-input').onkeydown = (e) => {
+            if (e.key === 'Enter') this.doBaySearch();
+        };
 
         // Search
         document.getElementById('upc-submit').onclick = () => this.doSearch();
@@ -147,6 +152,7 @@ const App = {
             this.loadPlanogramTypes();
         } else if (name === 'bay') {
             document.getElementById('bay-store-label').textContent = `Store #${this.storeId}`;
+            document.getElementById('bay-upc-input').value = '';
         }
 
         if (name === 'search') {
@@ -341,6 +347,64 @@ const App = {
         this.previousView = fromView || 'type-select';
         this.showView('search');
         setTimeout(() => document.getElementById('upc-input').focus(), 300);
+    },
+
+    async doBaySearch() {
+        const input = document.getElementById('bay-upc-input');
+        const btn = document.getElementById('bay-upc-search');
+        const upc = input.value.trim();
+
+        if (!upc || upc.length < 4) {
+            input.classList.add('bay-search-error');
+            setTimeout(() => input.classList.remove('bay-search-error'), 800);
+            return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '...';
+
+        API.logActivity('search', upc, { view_name: 'bay', meta: JSON.stringify({ digits: upc.length, source: 'bay_bar' }) });
+
+        try {
+            const data = await API.search(this.storeId, upc);
+
+            const deletedResults = (data.results || []).filter(r => r.is_deleted);
+            const activeResults = (data.results || []).filter(r => !r.is_deleted);
+
+            if (deletedResults.length > 0) {
+                this.showDeletedOverlay(deletedResults[0]);
+            }
+
+            if (activeResults.length === 0 && deletedResults.length === 0) {
+                input.classList.add('bay-search-error');
+                input.value = '';
+                input.placeholder = 'Not found';
+                setTimeout(() => {
+                    input.classList.remove('bay-search-error');
+                    input.placeholder = 'Last 4 of UPC';
+                }, 1500);
+                return;
+            }
+
+            input.value = '';
+
+            if (activeResults.length === 1) {
+                this.navigateToProduct(activeResults[0]);
+                return;
+            }
+
+            if (activeResults.length > 0) {
+                this.previousView = 'bay';
+                this.showView('search');
+                this.renderSearchResults(activeResults);
+            }
+        } catch {
+            input.classList.add('bay-search-error');
+            setTimeout(() => input.classList.remove('bay-search-error'), 800);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Search';
+        }
     },
 
     // --- Search ---

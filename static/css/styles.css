@@ -605,13 +605,19 @@ input[type="password"]:focus {
 
 .bay-top-bar {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 6px;
     padding: 8px 12px;
-    min-height: 50px;
     flex-shrink: 0;
     background: var(--bg);
     z-index: 10;
+}
+
+.bay-top-bar-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
 }
 
 .bay-top-info {
@@ -646,6 +652,59 @@ input[type="password"]:focus {
     object-fit: cover;
     border-radius: 50%;
     pointer-events: none;
+}
+
+/* Inline UPC search in bay top bar */
+.bay-top-search {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.bay-top-search input {
+    flex: 1;
+    min-width: 0;
+    min-height: 36px;
+    padding: 6px 12px;
+    border: 2px solid var(--surface2);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bay-top-search input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+}
+
+.bay-top-search input.bay-search-error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.3);
+    animation: bay-search-shake 0.4s ease-in-out;
+}
+
+@keyframes bay-search-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+
+.bay-search-go {
+    min-height: 36px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.bay-search-go:disabled {
+    opacity: 0.6;
+    cursor: default;
 }
 
 /* Bay bottom navigation bar */
@@ -1736,7 +1795,21 @@ input[type="password"]:focus {
 
     .bay-top-bar {
         padding: 4px 12px;
-        min-height: 44px;
+        gap: 4px;
+    }
+
+    .bay-top-bar-main {
+        min-height: 38px;
+    }
+
+    .bay-top-search input {
+        min-height: 32px;
+        padding: 4px 10px;
+    }
+
+    .bay-search-go {
+        min-height: 32px;
+        padding: 4px 12px;
     }
 
     .pdf-top-bar {
@@ -1889,7 +1962,10 @@ input[type="search"] {
     /* Bay view — optimize for portrait phone */
     .bay-top-bar {
         padding: 6px 8px;
-        min-height: 48px;
+        gap: 4px;
+    }
+
+    .bay-top-bar-main {
         gap: 6px;
     }
 
