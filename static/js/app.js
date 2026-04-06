@@ -419,8 +419,8 @@ const App = {
             btn.textContent = 'Stop scanner';
             API.logActivity('scanner_start', '', { view_name: 'search' });
             await this.requestWakeLock();
-            await Scanner.start('scanner-region', (code) => {
-                Scanner.stop();
+            await Scanner.start('scanner-region', async (code) => {
+                await Scanner.stop();
                 this.releaseWakeLock();
                 btn.textContent = 'Start camera scanner';
                 this.doSearch(code);

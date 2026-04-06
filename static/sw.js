@@ -1,4 +1,4 @@
-const CACHE_NAME = 'suppl-intel-v1';
+const CACHE_NAME = 'suppl-intel-v2';
 const STATIC_ASSETS = [
     '/',
     '/static/css/styles.css',

@@ -25,6 +25,9 @@ const Scanner = {
         this._containerId = elementId;
         await this.stop();
 
+        const container = document.getElementById(elementId);
+        if (container) container.innerHTML = '';
+
         // Try native BarcodeDetector first (handles all angles/orientations)
         if ('BarcodeDetector' in window) {
             try {
@@ -35,7 +38,20 @@ const Scanner = {
                     await this._startNative(elementId, supported);
                     return;
                 }
-            } catch { /* fall through */ }
+            } catch (e) {
+                console.warn('Native BarcodeDetector failed, falling back:', e);
+                // Clean up partially-acquired resources before legacy fallback
+                if (this._stream) {
+                    this._stream.getTracks().forEach(t => t.stop());
+                    this._stream = null;
+                }
+                if (this._video) {
+                    this._video.remove();
+                    this._video = null;
+                }
+                this._detector = null;
+                if (container) container.innerHTML = '';
+            }
         }
 
         // Fallback: html5-qrcode with optimized settings
@@ -89,24 +105,25 @@ const Scanner = {
 
     // --- Legacy html5-qrcode (fallback) ---
     async _startLegacy(elementId) {
-        this._legacyInstance = new Html5Qrcode(elementId);
+        this._legacyInstance = new Html5Qrcode(elementId, {
+            formatsToSupport: [
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E,
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+            ],
+            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+        });
         try {
             await this._legacyInstance.start(
                 { facingMode: 'environment' },
                 {
                     fps: 15,
-                    qrbox: undefined,               // full-frame scan
+                    qrbox: undefined,
                     aspectRatio: 16 / 9,
-                    disableFlip: false,              // handle mirrored/upside-down
-                    experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-                    formatsToSupport: [
-                        Html5QrcodeSupportedFormats.UPC_A,
-                        Html5QrcodeSupportedFormats.UPC_E,
-                        Html5QrcodeSupportedFormats.EAN_13,
-                        Html5QrcodeSupportedFormats.EAN_8,
-                        Html5QrcodeSupportedFormats.CODE_128,
-                        Html5QrcodeSupportedFormats.CODE_39,
-                    ],
+                    disableFlip: false,
                 },
                 (decodedText) => {
                     const code = (decodedText || '').trim();
@@ -167,6 +184,8 @@ const Scanner = {
     },
 
     async stop() {
+        this.isRunning = false;
+
         if (this._rafId) {
             cancelAnimationFrame(this._rafId);
             this._rafId = null;
@@ -186,13 +205,15 @@ const Scanner = {
 
         this._detector = null;
 
-        if (this._legacyInstance && this._mode === 'legacy') {
-            try { await this._legacyInstance.stop(); } catch { /* ok */ }
+        if (this._legacyInstance) {
+            try {
+                if (this._mode === 'legacy') await this._legacyInstance.stop();
+                this._legacyInstance.clear();
+            } catch { /* ok */ }
         }
         this._legacyInstance = null;
 
         this._mode = null;
-        this.isRunning = false;
         this._lastCode = '';
         this._lastCodeTime = 0;
     },
