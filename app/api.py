@@ -166,6 +166,23 @@ def get_planogram_types(store_id: str):
 
 # --- Search ---
 
+def _scanned_upc_to_db_formats(upc: str) -> list[str]:
+    """Convert a scanned barcode value to candidate DB lookup formats.
+
+    The planogram DB stores 13-digit UPCs: the barcode digits *without* the
+    check digit, left-zero-padded to 13 characters.  Barcode scanners return
+    the full code *with* the check digit (12 digits for UPC-A, 13 for EAN-13,
+    8 for UPC-E).  This helper returns a list of candidate strings so the
+    search query can try all plausible formats.
+    """
+    candidates = [upc]
+    if len(upc) in (8, 12, 13) and upc.isdigit():
+        without_check = upc[:-1].zfill(13)
+        if without_check != upc:
+            candidates.append(without_check)
+    return candidates
+
+
 @router.get("/search")
 def search_product(
     store: str = Query(..., min_length=1),
@@ -190,13 +207,15 @@ def search_product(
     upc_clean = upc.strip()
 
     if len(upc_clean) >= 10:
+        upc_candidates = _scanned_upc_to_db_formats(upc_clean)
+        upc_placeholders = ",".join("?" * len(upc_candidates))
         sql = (
             f"SELECT p.*, pg.name as planogram_name, pg.category "
             f"FROM products p JOIN planograms pg ON p.planogram_dbkey = pg.dbkey "
-            f"WHERE p.planogram_dbkey IN ({placeholders}) AND p.upc = ? "
+            f"WHERE p.planogram_dbkey IN ({placeholders}) AND p.upc IN ({upc_placeholders}) "
             f"ORDER BY pg.category, p.bay, p.shelf, p.position"
         )
-        params = dbkeys + [upc_clean]
+        params = dbkeys + upc_candidates
     else:
         sql = (
             f"SELECT p.*, pg.name as planogram_name, pg.category "
@@ -220,12 +239,14 @@ def search_product(
 
     # Also check deleted products
     if len(upc_clean) >= 10:
+        upc_candidates = _scanned_upc_to_db_formats(upc_clean)
+        upc_placeholders = ",".join("?" * len(upc_candidates))
         del_sql = (
             f"SELECT dp.*, pg.name as planogram_name, pg.category "
             f"FROM deleted_products dp JOIN planograms pg ON dp.planogram_dbkey = pg.dbkey "
-            f"WHERE dp.planogram_dbkey IN ({placeholders}) AND dp.upc = ?"
+            f"WHERE dp.planogram_dbkey IN ({placeholders}) AND dp.upc IN ({upc_placeholders})"
         )
-        del_params = dbkeys + [upc_clean]
+        del_params = dbkeys + upc_candidates
     else:
         del_sql = (
             f"SELECT dp.*, pg.name as planogram_name, pg.category "
@@ -255,7 +276,9 @@ def check_deleted(upc: str):
     """Quick check if a UPC is in the deleted products list."""
     upc_clean = upc.strip()
     if len(upc_clean) >= 10:
-        rows = query("SELECT * FROM deleted_products WHERE upc = ?", (upc_clean,))
+        candidates = _scanned_upc_to_db_formats(upc_clean)
+        placeholders = ",".join("?" * len(candidates))
+        rows = query(f"SELECT * FROM deleted_products WHERE upc IN ({placeholders})", candidates)
     else:
         rows = query("SELECT * FROM deleted_products WHERE upc LIKE ?", (f"%{upc_clean}",))
     return {"is_deleted": len(rows) > 0, "matches": rows}
