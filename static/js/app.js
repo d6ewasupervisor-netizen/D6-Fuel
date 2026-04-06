@@ -102,11 +102,7 @@ const App = {
         };
 
         // Search
-        document.getElementById('upc-submit').onclick = () => this.doSearch();
-        document.getElementById('upc-input').onkeydown = (e) => { if (e.key === 'Enter') this.doSearch(); };
         document.getElementById('toggle-scanner').onclick = () => this.toggleScanner();
-        document.getElementById('image-scan-btn').onclick = () => document.getElementById('image-scan-input').click();
-        document.getElementById('image-scan-input').onchange = (e) => this.scanFromImage(e);
 
         // Product overlay
         document.getElementById('close-overlay').onclick = () => this.closeOverlay();
@@ -163,11 +159,9 @@ const App = {
 
         if (name === 'search') {
             document.getElementById('store-label').textContent = `Store #${this.storeId}`;
-            document.getElementById('upc-input').value = '';
             document.getElementById('search-error').classList.add('hidden');
             document.getElementById('search-spinner').classList.add('hidden');
             document.getElementById('search-results-list').classList.add('hidden');
-            document.getElementById('upc-input').focus();
         } else if (name === 'bay') {
             // Init gestures on bay container
             const container = document.getElementById('bay-shelf-container');
@@ -350,9 +344,7 @@ const App = {
     },
 
     openTextSearch(fromView) {
-        this.previousView = fromView || 'type-select';
-        this.showView('search');
-        setTimeout(() => document.getElementById('upc-input').focus(), 300);
+        this.openCameraScan(fromView);
     },
 
     async doBaySearch() {
@@ -428,11 +420,10 @@ const App = {
             API.logActivity('scanner_start', '', { view_name: 'search' });
             await this.requestWakeLock();
             await Scanner.start('scanner-region', (code) => {
-                document.getElementById('upc-input').value = code;
                 Scanner.stop();
                 this.releaseWakeLock();
                 btn.textContent = 'Start camera scanner';
-                this.doSearch();
+                this.doSearch(code);
             });
             if (!Scanner.isRunning) {
                 this.releaseWakeLock();
@@ -441,28 +432,8 @@ const App = {
         }
     },
 
-    async scanFromImage(e) {
-        const file = e.target.files && e.target.files[0];
-        const imgError = document.getElementById('image-scan-error');
-        imgError.classList.add('hidden');
-        if (!file) return;
-
-        // Reset input so the same file can be re-selected
-        e.target.value = '';
-
-        await Scanner.scanImage(file, (code) => {
-            if (code) {
-                document.getElementById('upc-input').value = code;
-                this.doSearch();
-            } else {
-                imgError.textContent = 'No barcode found in image';
-                imgError.classList.remove('hidden');
-            }
-        });
-    },
-
-    async doSearch() {
-        const upc = document.getElementById('upc-input').value.trim();
+    async doSearch(upcCode) {
+        const upc = (upcCode || '').trim();
         const error = document.getElementById('search-error');
         const spinner = document.getElementById('search-spinner');
         const resultsList = document.getElementById('search-results-list');
