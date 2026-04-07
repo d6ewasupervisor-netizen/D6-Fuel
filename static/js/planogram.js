@@ -16,6 +16,7 @@ const Planogram = {
     highlightGroup: null,     // Multi-facing group wrapper
     onProductClick: null,
     onBayChange: null,        // Callback for bay change
+    _observer: null,          // IntersectionObserver for lazy image loading
 
     setHighlight(upc, bay, shelf, position) {
         this.highlightUpc = upc;
@@ -102,6 +103,13 @@ const Planogram = {
     },
 
     renderBay(bayData) {
+        // Disconnect previous observer before clearing the DOM so stale callbacks
+        // don't fire against detached image nodes after bay navigation.
+        if (this._observer) {
+            this._observer.disconnect();
+            this._observer = null;
+        }
+
         const container = document.getElementById('bay-shelf-container');
         container.innerHTML = '';
 
@@ -291,6 +299,8 @@ const Planogram = {
                     }
                 });
             }, { root: container, rootMargin: '100px' });
+
+            this._observer = observer;
 
             container.querySelectorAll('img.slot-thumb[data-src]').forEach(img => {
                 observer.observe(img);

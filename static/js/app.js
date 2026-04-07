@@ -10,6 +10,7 @@ const App = {
     overlayNav: null, // current navigation context for overlay
     _viewEnterTime: 0,
     _currentView: null,
+    _navToken: null,  // guards against stale planogram responses from rapid navigation
 
     init() {
         this.bindEvents();
@@ -199,6 +200,7 @@ const App = {
         const nameInput = document.getElementById('name-input');
         const passwordInput = document.getElementById('password-input');
         const storeInput = document.getElementById('store-input');
+        const submitBtn = document.getElementById('store-submit');
         const error = document.getElementById('store-error');
 
         const name = nameInput.value.trim();
@@ -222,6 +224,8 @@ const App = {
         }
 
         error.classList.add('hidden');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in…';
 
         try {
             const data = await API.login(name, raw, password);
@@ -239,6 +243,9 @@ const App = {
                 ? 'Invalid password.'
                 : 'Login failed. Try again.';
             error.classList.remove('hidden');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Go';
         }
     },
 
@@ -340,19 +347,20 @@ const App = {
             meta: JSON.stringify({ dbkey: type.planogram_dbkey, bays: type.num_bays }),
         });
 
-        // Load the planogram
+        // Switch to bay view immediately so user sees something
+        document.getElementById('bay-pog-name').textContent = type.label;
+        const shelfContainer = document.getElementById('bay-shelf-container');
+        shelfContainer.innerHTML = '<div class="spinner" style="margin:60px auto;"></div>';
+        this.showView('bay');
+
         try {
             const pog = await API.getPlanogram(type.planogram_dbkey);
             this.currentPlanogram = pog;
-
-            const pogName = type.label;
-            document.getElementById('bay-pog-name').textContent = pogName;
-
             Planogram.clearHighlight();
             Planogram.loadPlanogram(pog);
-            this.showView('bay');
         } catch (e) {
             console.error('Failed to load planogram:', e);
+            shelfContainer.innerHTML = '<p class="error" style="text-align:center;padding:32px;">Failed to load planogram.<br>Please go back and try again.</p>';
         }
     },
 
@@ -360,7 +368,9 @@ const App = {
     openCameraScan(fromView) {
         this.previousView = fromView || 'type-select';
         this.showView('search');
-        setTimeout(() => this.toggleScanner(), 300);
+        // Call within the same event-loop tick to keep getUserMedia tied to the user gesture.
+        // A rAF gives the browser one frame to paint the view before camera starts.
+        requestAnimationFrame(() => this.toggleScanner());
     },
 
     openTextSearch(fromView) {
@@ -538,26 +548,31 @@ const App = {
             await Scanner.stop();
             this.releaseWakeLock();
             btn.textContent = 'Start camera scanner';
+            btn.disabled = false;
             torchBtn.classList.add('hidden');
             torchBtn.classList.remove('torch-on');
             hint.classList.add('hidden');
         } else {
-            btn.textContent = 'Stop scanner';
+            btn.disabled = true;
+            btn.textContent = 'Starting camera…';
             API.logActivity('scanner_start', '', { view_name: 'search' });
             await this.requestWakeLock();
             await Scanner.start('scanner-region', async (code) => {
                 await Scanner.stop();
                 this.releaseWakeLock();
                 btn.textContent = 'Start camera scanner';
+                btn.disabled = false;
                 torchBtn.classList.add('hidden');
                 torchBtn.classList.remove('torch-on');
                 hint.classList.add('hidden');
                 this.doSearch(code);
             });
+            btn.disabled = false;
             if (!Scanner.isRunning) {
                 this.releaseWakeLock();
                 btn.textContent = 'Camera unavailable';
             } else {
+                btn.textContent = 'Stop scanner';
                 hint.classList.remove('hidden');
                 // Show torch button after a short delay so camera capabilities are ready
                 setTimeout(() => {
@@ -659,17 +674,33 @@ const App = {
     },
 
     async navigateToProduct(result) {
-        // Load the planogram if needed
+        // Request token: if another navigation starts before this one finishes,
+        // the stale response is discarded and won't overwrite newer data.
+        const navToken = Symbol();
+        this._navToken = navToken;
+
+        // Load the planogram only if the dbkey differs from what's already loaded
         if (!this.currentPlanogram || this.currentPlanogramDbkey !== result.planogram_dbkey) {
+            // Show bay view with loading state immediately so the user isn't stranded
+            document.getElementById('bay-pog-name').textContent =
+                result.planogram_name || result.category || 'Planogram';
+            const shelfContainer = document.getElementById('bay-shelf-container');
+            shelfContainer.innerHTML = '<div class="spinner" style="margin:60px auto;"></div>';
+            this.showView('bay');
+
             try {
                 const pog = await API.getPlanogram(result.planogram_dbkey);
+
+                // Discard if superseded by a newer navigation
+                if (this._navToken !== navToken) return;
+
                 this.currentPlanogram = pog;
                 this.currentPlanogramDbkey = result.planogram_dbkey;
                 this.currentCategory = result.category || pog.category || null;
-                document.getElementById('bay-pog-name').textContent =
-                    result.planogram_name || result.category || 'Planogram';
             } catch (e) {
                 console.error('Failed to load planogram:', e);
+                if (this._navToken !== navToken) return;
+                shelfContainer.innerHTML = '<p class="error" style="text-align:center;padding:32px;">Failed to load planogram.<br>Please go back and try again.</p>';
                 return;
             }
         } else if (result.category) {
@@ -866,6 +897,9 @@ const App = {
     // --- PDF ---
     async openPdfForCurrentPlanogram() {
         if (!this.currentPlanogramDbkey) return;
+        const btn = document.getElementById('bay-pdf-btn');
+        btn.disabled = true;
+        btn.textContent = 'Loading…';
         try {
             const info = await API.getPdfInfo(this.currentPlanogramDbkey);
             if (info && info.pdf_url) {
@@ -874,15 +908,27 @@ const App = {
                     returnView: 'bay',
                 });
                 API.logActivity('open_pdf', info.name, { view_name: 'bay', meta: JSON.stringify({ dbkey: this.currentPlanogramDbkey }) });
+            } else {
+                btn.textContent = 'No PDF';
+                setTimeout(() => { btn.textContent = 'PDF'; btn.disabled = false; }, 2000);
+                return;
             }
         } catch (e) {
             console.error('Failed to open PDF:', e);
+            btn.textContent = 'Failed';
+            setTimeout(() => { btn.textContent = 'PDF'; btn.disabled = false; }, 1500);
+            return;
         }
+        btn.disabled = false;
+        btn.textContent = 'PDF';
     },
 
     async openPdfFromOverlay() {
         if (!this.currentPlanogramDbkey) return;
         const product = this.overlayNav?.products[this.overlayNav?.prodIdx];
+        const btn = document.getElementById('overlay-pdf-btn');
+        btn.disabled = true;
+        btn.textContent = 'Loading…';
         try {
             const info = await API.getPdfInfo(this.currentPlanogramDbkey);
             if (info && info.pdf_url) {
@@ -901,12 +947,20 @@ const App = {
             }
         } catch (e) {
             console.error('Failed to open PDF:', e);
+            btn.textContent = 'Failed';
+            setTimeout(() => { btn.textContent = 'View in PDF'; btn.disabled = false; }, 1500);
+            return;
         }
+        btn.disabled = false;
+        btn.textContent = 'View in PDF';
     },
 
     // --- Notes ---
     async openNotesForCurrentPlanogram() {
         if (!this.currentCategory) return;
+        const btn = document.getElementById('bay-notes-btn');
+        btn.disabled = true;
+        btn.textContent = 'Loading…';
         try {
             const info = await API.getNotesInfo(this.currentCategory);
             if (info && info.available && info.notes_url) {
@@ -918,10 +972,19 @@ const App = {
                     view_name: 'bay',
                     meta: JSON.stringify({ category: this.currentCategory }),
                 });
+            } else {
+                btn.textContent = 'No Notes';
+                setTimeout(() => { btn.textContent = 'Notes'; btn.disabled = false; }, 2000);
+                return;
             }
         } catch (e) {
             console.error('Failed to open notes:', e);
+            btn.textContent = 'Failed';
+            setTimeout(() => { btn.textContent = 'Notes'; btn.disabled = false; }, 1500);
+            return;
         }
+        btn.disabled = false;
+        btn.textContent = 'Notes';
     },
 
     // --- Mobile Optimizations ---
@@ -933,7 +996,7 @@ const App = {
 
         // Prevent pull-to-refresh on mobile
         document.body.addEventListener('touchmove', (e) => {
-            if (document.scrollingElement.scrollTop === 0 && e.touches[0].clientY > 0) {
+            if (document.scrollingElement.scrollTop === 0 && e.touches.length > 0 && e.touches[0].clientY > 0) {
                 // Only prevent if at top of page and pulling down
                 const target = e.target.closest('.bay-shelf-container, .overlay-content, .pdf-canvas-container');
                 if (!target) e.preventDefault();
@@ -954,6 +1017,13 @@ const App = {
 
         // Keep screen awake during scanner use
         this._wakeLock = null;
+
+        // Re-acquire wake lock when returning to tab while scanner is active
+        document.addEventListener('visibilitychange', async () => {
+            if (document.visibilityState === 'visible' && Scanner.isRunning && !this._wakeLock) {
+                await this.requestWakeLock();
+            }
+        });
     },
 
     async requestWakeLock() {

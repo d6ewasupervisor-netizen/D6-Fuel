@@ -14,6 +14,7 @@ const Scanner = {
     _torchOn: false,
     _canvas: null,
     _ctx: null,
+    _audioCtx: null,     // Reused across scans to avoid per-scan AudioContext churn
     DEBOUNCE_MS: 1200,
     SCAN_INTERVAL_MS: 80,
 
@@ -28,15 +29,18 @@ const Scanner = {
     _onDetected(code) {
         if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
         try {
-            const beep = new AudioContext();
-            const osc = beep.createOscillator();
-            const gain = beep.createGain();
+            // Reuse a single AudioContext across scans — creating one per scan
+            // accumulates resources on mobile and can hit browser context limits.
+            if (!this._audioCtx) this._audioCtx = new AudioContext();
+            const ctx = this._audioCtx;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
             osc.type = 'square';
             osc.frequency.value = 1800;
             gain.gain.value = 0.08;
-            osc.connect(gain).connect(beep.destination);
+            osc.connect(gain).connect(ctx.destination);
             osc.start();
-            osc.stop(beep.currentTime + 0.08);
+            osc.stop(ctx.currentTime + 0.08);
         } catch { /* audio not available */ }
 
         const container = document.getElementById(this._containerId);
@@ -90,13 +94,23 @@ const Scanner = {
 
         this._detector = new BarcodeDetector({ formats });
 
-        this._stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: { ideal: 'environment' },
-                width: { ideal: 1920 },
-                height: { ideal: 1080 },
-            },
-        });
+        // Lower resolution reduces CPU, heat and battery on mobile.
+        // 1280×720 is sufficient for UPC detection after downscaling to 640px.
+        try {
+            this._stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: { ideal: 'environment' },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                },
+            });
+        } catch (e) {
+            console.warn('getUserMedia failed, falling back to legacy:', e);
+            this._detector = null;
+            if (container) container.innerHTML = '';
+            await this._startLegacy(elementId);
+            return;
+        }
 
         // Apply continuous autofocus + torch readiness on the track
         const track = this._stream.getVideoTracks()[0];
@@ -118,7 +132,20 @@ const Scanner = {
         video.style.cssText = 'width:100%;border-radius:12px;display:block;';
         container.prepend(video);
         this._video = video;
-        await video.play();
+
+        try {
+            await video.play();
+        } catch (e) {
+            console.warn('Video play failed, falling back to legacy:', e);
+            this._stream.getTracks().forEach(t => t.stop());
+            this._stream = null;
+            this._detector = null;
+            video.remove();
+            this._video = null;
+            if (container) container.innerHTML = '';
+            await this._startLegacy(elementId);
+            return;
+        }
 
         // Off-screen canvas for fast detection at reduced resolution
         this._canvas = document.createElement('canvas');
@@ -203,7 +230,7 @@ const Scanner = {
             await this._legacyInstance.start(
                 { facingMode: 'environment' },
                 {
-                    fps: 25,
+                    fps: 15,
                     qrbox: undefined,
                     aspectRatio: 16 / 9,
                     disableFlip: false,
@@ -333,6 +360,11 @@ const Scanner = {
             } catch { /* ok */ }
         }
         this._legacyInstance = null;
+
+        if (this._audioCtx) {
+            this._audioCtx.close().catch(() => {});
+            this._audioCtx = null;
+        }
 
         this._mode = null;
         this._lastCode = '';

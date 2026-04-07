@@ -95,6 +95,24 @@ const PDFViewer = {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById('view-pdf').classList.add('active');
 
+        // Show loading state while the document fetches and parses
+        const canvasContainer = document.getElementById('pdf-canvas-container');
+        const canvas = document.getElementById('pdf-canvas');
+        const textLayer = document.getElementById('pdf-text-layer');
+        canvas.style.display = 'none';
+        textLayer.style.display = 'none';
+
+        let loadSpinner = document.getElementById('pdf-load-spinner');
+        if (!loadSpinner) {
+            loadSpinner = document.createElement('div');
+            loadSpinner.id = 'pdf-load-spinner';
+            loadSpinner.style.cssText = 'display:flex;justify-content:center;align-items:center;padding:80px 0;';
+            loadSpinner.innerHTML = '<div class="spinner"></div>';
+            canvasContainer.appendChild(loadSpinner);
+        }
+        loadSpinner.style.display = 'flex';
+        document.getElementById('pdf-page-info').textContent = 'Loading…';
+
         try {
             if (!this.pdfjsLib) await this.init();
             const loadingTask = this.pdfjsLib.getDocument(pdfUrl);
@@ -115,11 +133,19 @@ const PDFViewer = {
                 }
             }
 
+            // Reveal canvas before rendering so dimensions resolve correctly
+            loadSpinner.style.display = 'none';
+            canvas.style.display = '';
+            textLayer.style.display = '';
+
             await this.renderPage(this.currentPage);
         } catch (err) {
             console.error('Failed to load PDF:', err);
-            document.getElementById('pdf-canvas-container').innerHTML =
-                '<p style="color:var(--danger);text-align:center;padding:40px;">Failed to load PDF</p>';
+            loadSpinner.style.display = 'none';
+            canvas.style.display = '';
+            textLayer.style.display = '';
+            canvasContainer.innerHTML =
+                '<p style="color:var(--danger);text-align:center;padding:40px;">Failed to load PDF. Please go back and try again.</p>';
         }
     },
 

@@ -67,13 +67,17 @@ const ImageCache = {
 
     /**
      * Load an image element: try cache first, then network (and cache the result).
-     * Returns an object URL string or null.
+     * Object URLs are revoked after the browser decodes the image to prevent
+     * long-session memory growth on low-RAM mobile devices.
      */
     async loadImage(img, url) {
         // Try cached blob first
         const cached = await this.get(url);
         if (cached) {
-            img.src = URL.createObjectURL(cached);
+            const objUrl = URL.createObjectURL(cached);
+            img.addEventListener('load', () => URL.revokeObjectURL(objUrl), { once: true });
+            img.addEventListener('error', () => URL.revokeObjectURL(objUrl), { once: true });
+            img.src = objUrl;
             return;
         }
 
@@ -82,7 +86,10 @@ const ImageCache = {
             const resp = await fetch(url);
             if (!resp.ok) throw new Error('fetch failed');
             const blob = await resp.blob();
-            img.src = URL.createObjectURL(blob);
+            const objUrl = URL.createObjectURL(blob);
+            img.addEventListener('load', () => URL.revokeObjectURL(objUrl), { once: true });
+            img.addEventListener('error', () => URL.revokeObjectURL(objUrl), { once: true });
+            img.src = objUrl;
             // Store in cache (fire and forget)
             this.put(url, blob);
         } catch {
