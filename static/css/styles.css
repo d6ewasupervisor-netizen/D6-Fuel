@@ -952,18 +952,22 @@ input[type="password"]:focus {
     z-index: 20;
 }
 
-/* Product highlight — neon green flash, 3 blinks of 0.5s then solid */
+/* Product highlight — solid neon green border */
 .product-slot.highlight {
-    animation: neon-flash 0.5s ease-in-out 3;
     z-index: 20;
-    border: 3px solid #39ff14;
-    box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57, 255, 20, 0.4);
+    border: 6px solid #39ff14;
+    box-shadow: 0 0 16px #39ff14, 0 0 32px rgba(57, 255, 20, 0.5);
 }
 
-@keyframes neon-flash {
+/* Rapid blink phase after overlay dismisses */
+.product-slot.highlight-blink {
+    animation: neon-rapid-blink 0.2s ease-in-out infinite;
+}
+
+@keyframes neon-rapid-blink {
     0%, 100% {
         border-color: #39ff14;
-        box-shadow: 0 0 12px #39ff14, 0 0 24px rgba(57, 255, 20, 0.4);
+        box-shadow: 0 0 16px #39ff14, 0 0 32px rgba(57, 255, 20, 0.5);
     }
     50% {
         border-color: transparent;
@@ -977,14 +981,17 @@ input[type="password"]:focus {
     box-shadow:
         inset 1px 1px 2px rgba(255, 255, 255, 0.18),
         inset -1px -1px 2px rgba(0, 0, 0, 0.25),
-        0 0 14px #39ff14, 0 0 28px rgba(57, 255, 20, 0.3);
-    animation: neon-group-flash 0.5s ease-in-out 3;
+        0 0 18px #39ff14, 0 0 36px rgba(57, 255, 20, 0.4);
 }
 
-@keyframes neon-group-flash {
+.multi-facing-group.highlight-group-blink {
+    animation: neon-group-rapid-blink 0.2s ease-in-out infinite;
+}
+
+@keyframes neon-group-rapid-blink {
     0%, 100% {
         border-color: #39ff14;
-        box-shadow: 0 0 14px #39ff14, 0 0 28px rgba(57, 255, 20, 0.3);
+        box-shadow: 0 0 18px #39ff14, 0 0 36px rgba(57, 255, 20, 0.4);
     }
     50% {
         border-color: rgba(251, 191, 36, 0.55);
@@ -1137,6 +1144,24 @@ input[type="password"]:focus {
     color: #39ff14;
     text-shadow: 0 0 14px rgba(57, 255, 20, 0.7), 0 0 40px rgba(57, 255, 20, 0.3);
     line-height: 1.1;
+}
+
+.location-flash-category-row {
+    justify-content: center;
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(57, 255, 20, 0.35);
+    width: 100%;
+}
+
+.location-flash-category-text {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-align: center;
+    text-shadow: 0 0 12px rgba(57, 255, 20, 0.6), 0 0 30px rgba(57, 255, 20, 0.25);
 }
 
 /* Bay numbers */
@@ -2031,8 +2056,8 @@ input[type="password"]:focus {
 
 @media (prefers-reduced-motion: reduce) {
     .spinner { animation: none; }
-    .product-slot.highlight { animation: none; }
-    .multi-facing-group.highlight-group { animation: none; }
+    .product-slot.highlight-blink { animation: none; }
+    .multi-facing-group.highlight-group-blink { animation: none; }
     .location-flash-pop { animation: none; opacity: 1; transform: scale(1); }
     .deleted-icon { animation: none; }
     .deleted-overlay.flash { animation: none; }
@@ -2271,6 +2296,11 @@ input[type="search"] {
 
     .location-flash-value {
         font-size: 2.2rem;
+    }
+
+    .location-flash-category-text {
+        font-size: 1.15rem;
+        letter-spacing: 2px;
     }
 
     /* Toolbar scan icons */

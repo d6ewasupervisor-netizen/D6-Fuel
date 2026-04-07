@@ -676,13 +676,14 @@ const App = {
             this.currentCategory = result.category;
         }
 
+        const categoryLabel = result.category === 'C678' ? 'Natural Vitamins' : 'Regular Vitamins';
         Planogram.setHighlight(result.upc, result.bay, result.shelf, result.position);
         Planogram.loadPlanogram(this.currentPlanogram, result.bay);
         this.showView('bay');
-        this.showLocationOverlay(result.bay, result.shelf, result.position);
+        this.showLocationOverlay(categoryLabel, result.bay, result.shelf, result.position);
     },
 
-    showLocationOverlay(bay, shelf, position) {
+    showLocationOverlay(categoryLabel, bay, shelf, position) {
         const existing = document.getElementById('location-flash-overlay');
         if (existing) existing.remove();
 
@@ -691,6 +692,9 @@ const App = {
         overlay.className = 'location-flash-overlay';
         overlay.innerHTML = `
             <div class="location-flash-content location-flash-stacked">
+                <div class="location-flash-row location-flash-hidden location-flash-category-row" data-flash="category">
+                    <span class="location-flash-category-text">${categoryLabel}</span>
+                </div>
                 <div class="location-flash-row location-flash-hidden" data-flash="bay">
                     <span class="location-flash-label">BAY</span>
                     <span class="location-flash-value">${bay}</span>
@@ -710,12 +714,15 @@ const App = {
         bayContainer.appendChild(overlay);
         requestAnimationFrame(() => overlay.classList.add('visible'));
 
-        const FLASH_MS = 500;
-        const HOLD_MS = 3000;
-        const OVERLAY_TOTAL_MS = (FLASH_MS * 3) + HOLD_MS; // 4.5s
-        const BORDER_TOTAL_MS = OVERLAY_TOTAL_MS * 2;       // 9s
+        const FLASH_MS = 1000;
+        const HOLD_MS = 5000;
+        const NUM_ROWS = 4;
+        const ROWS_TOTAL = FLASH_MS * NUM_ROWS;
+        const OVERLAY_TOTAL_MS = ROWS_TOTAL + HOLD_MS;
+        const BLINK_MS = 2000;
+        const STATIC_MS = 2000;
 
-        // Sequential flash: Bay → Shelf → Position
+        // Sequential flash: Category → Bay → Shelf → Position
         const rows = overlay.querySelectorAll('.location-flash-row');
         rows.forEach((row, i) => {
             setTimeout(() => {
@@ -724,8 +731,8 @@ const App = {
             }, FLASH_MS * i);
         });
 
-        // After all 3 flashes, activate the item border highlight
-        setTimeout(() => Planogram.activateHighlight(), FLASH_MS * 3);
+        // After all rows flash, activate the solid border highlight
+        setTimeout(() => Planogram.activateHighlight(), ROWS_TOTAL);
 
         // Dismiss overlay after total time
         setTimeout(() => {
@@ -735,8 +742,10 @@ const App = {
             setTimeout(() => { if (overlay.parentNode) overlay.remove(); }, 600);
         }, OVERLAY_TOTAL_MS);
 
-        // Remove highlight border after 2x overlay duration
-        setTimeout(() => Planogram.deactivateHighlight(), FLASH_MS * 3 + BORDER_TOTAL_MS);
+        // After overlay fades: rapid blink for 2s, then static 2s, then remove
+        setTimeout(() => Planogram.startBlinkHighlight(), OVERLAY_TOTAL_MS);
+        setTimeout(() => Planogram.stopBlinkHighlight(), OVERLAY_TOTAL_MS + BLINK_MS);
+        setTimeout(() => Planogram.deactivateHighlight(), OVERLAY_TOTAL_MS + BLINK_MS + STATIC_MS);
     },
 
     // --- Product Overlay ---

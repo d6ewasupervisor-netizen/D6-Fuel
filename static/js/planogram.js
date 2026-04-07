@@ -42,13 +42,31 @@ const Planogram = {
         }
     },
 
+    startBlinkHighlight() {
+        if (this.highlightElement) {
+            this.highlightElement.classList.add('highlight-blink');
+            if (this.highlightGroup) {
+                this.highlightGroup.classList.add('highlight-group-blink');
+            }
+        }
+    },
+
+    stopBlinkHighlight() {
+        if (this.highlightElement) {
+            this.highlightElement.classList.remove('highlight-blink');
+            if (this.highlightGroup) {
+                this.highlightGroup.classList.remove('highlight-group-blink');
+            }
+        }
+    },
+
     deactivateHighlight() {
         if (this.highlightElement) {
-            this.highlightElement.classList.remove('highlight');
+            this.highlightElement.classList.remove('highlight', 'highlight-blink');
             this.highlightElement.classList.remove('highlight-target');
         }
         if (this.highlightGroup) {
-            this.highlightGroup.classList.remove('highlight-group');
+            this.highlightGroup.classList.remove('highlight-group', 'highlight-group-blink');
         }
         this.highlightElement = null;
         this.highlightGroup = null;
