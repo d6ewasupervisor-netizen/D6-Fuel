@@ -105,9 +105,19 @@ const App = {
             if (e.key === 'Enter') this.doBaySearch();
         };
 
-        // Search
+        // Search (camera)
         document.getElementById('toggle-scanner').onclick = () => this.toggleScanner();
         document.getElementById('toggle-torch').onclick = () => this.toggleTorch();
+
+        // Text search view
+        document.getElementById('back-from-text-search').onclick = () => {
+            this.showView(this.previousView);
+        };
+        document.getElementById('text-search-store-label').onclick = () => this.showView('type-select');
+        document.getElementById('text-search-go').onclick = () => this.doTextSearch();
+        document.getElementById('text-search-input').onkeydown = (e) => {
+            if (e.key === 'Enter') this.doTextSearch();
+        };
 
         // Product overlay
         document.getElementById('close-overlay').onclick = () => this.closeOverlay();
@@ -167,6 +177,12 @@ const App = {
             document.getElementById('search-error').classList.add('hidden');
             document.getElementById('search-spinner').classList.add('hidden');
             document.getElementById('search-results-list').classList.add('hidden');
+        } else if (name === 'text-search') {
+            document.getElementById('text-search-store-label').textContent = `Store #${this.storeId}`;
+            document.getElementById('text-search-input').value = '';
+            document.getElementById('text-search-error').classList.add('hidden');
+            document.getElementById('text-search-spinner').classList.add('hidden');
+            document.getElementById('text-search-results').classList.add('hidden');
         } else if (name === 'bay') {
             // Init gestures on bay container
             const container = document.getElementById('bay-shelf-container');
@@ -300,7 +316,6 @@ const App = {
                     <img src="/static/images/search-upc-text.png" alt="Enter last four of UPC" draggable="false">
                 </div>
                 <div class="type-card-text">
-                    <h3 class="type-label">Enter Last 4 of UPC</h3>
                     <p class="type-desc">Type in the last digits of the UPC to search</p>
                 </div>
             `;
@@ -349,7 +364,12 @@ const App = {
     },
 
     openTextSearch(fromView) {
-        this.openCameraScan(fromView);
+        this.previousView = fromView || 'type-select';
+        this.showView('text-search');
+        setTimeout(() => {
+            const input = document.getElementById('text-search-input');
+            if (input) input.focus();
+        }, 300);
     },
 
     async doBaySearch() {
@@ -413,7 +433,96 @@ const App = {
         }
     },
 
-    // --- Search ---
+    // --- Text UPC Search ---
+    async doTextSearch() {
+        const input = document.getElementById('text-search-input');
+        const btn = document.getElementById('text-search-go');
+        const error = document.getElementById('text-search-error');
+        const spinner = document.getElementById('text-search-spinner');
+        const resultsList = document.getElementById('text-search-results');
+        const upc = input.value.trim();
+
+        if (!upc || upc.length < 4) {
+            error.textContent = 'Enter at least 4 digits';
+            error.classList.remove('hidden');
+            return;
+        }
+
+        error.classList.add('hidden');
+        spinner.classList.remove('hidden');
+        resultsList.classList.add('hidden');
+        btn.disabled = true;
+        btn.textContent = 'Searching...';
+
+        API.logActivity('search', upc, { view_name: 'text-search', meta: JSON.stringify({ digits: upc.length, source: 'text_entry' }) });
+
+        try {
+            const data = await API.search(this.storeId, upc);
+            spinner.classList.add('hidden');
+
+            const movingResults = (data.results || []).filter(r => r.is_moving);
+            const deletedResults = (data.results || []).filter(r => r.is_deleted);
+            const activeResults = (data.results || []).filter(r => !r.is_deleted && !r.is_moving);
+
+            if (movingResults.length > 0) {
+                this.showMovingOverlay(movingResults[0]);
+            } else if (deletedResults.length > 0) {
+                this.showDeletedOverlay(deletedResults[0]);
+            }
+
+            if (activeResults.length === 0 && deletedResults.length === 0 && movingResults.length === 0) {
+                error.textContent = 'Product not found on any planogram for your store.';
+                error.classList.remove('hidden');
+                return;
+            }
+
+            if (activeResults.length === 1) {
+                this.navigateToProduct(activeResults[0]);
+                return;
+            }
+
+            if (activeResults.length > 0) {
+                this.renderTextSearchResults(activeResults);
+            }
+        } catch (e) {
+            spinner.classList.add('hidden');
+            error.textContent = 'Search failed. Try again.';
+            error.classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Search';
+        }
+    },
+
+    renderTextSearchResults(results) {
+        const container = document.getElementById('text-search-results');
+        container.innerHTML = '';
+        container.classList.remove('hidden');
+
+        results.forEach(r => {
+            const card = document.createElement('button');
+            const isOtherPlanogram = this.currentPlanogramDbkey && r.planogram_dbkey !== this.currentPlanogramDbkey;
+            card.className = 'search-result-card' + (isOtherPlanogram ? ' search-result-other-pog' : '');
+            const badgeHtml = r.is_new ? '<span class="badge badge-new">NEW</span>'
+                : r.is_changed ? '<span class="badge badge-changed">CHANGED</span>' : '';
+            const pogLabel = r.category === 'C678' ? 'Natural Vitamins' : 'Regular Vitamins';
+            const pogClass = r.category === 'C678' ? 'pog-tag-natural' : 'pog-tag-regular';
+            const otherHint = isOtherPlanogram ? ' <span class="pog-tag-other">OTHER POG</span>' : '';
+            card.innerHTML = `
+                <div class="search-result-info">
+                    <h3 class="search-result-name">${r.full_name || r.description || 'Unknown'} ${badgeHtml}</h3>
+                    <p class="search-result-detail">UPC: ${r.upc} | ${r.size || '-'}</p>
+                    <p class="search-result-location">Aisle ${r.aisle || '?'} &bull; Bay ${r.bay} / Shelf ${r.shelf} / Pos ${r.position}</p>
+                    <p class="search-result-pog"><span class="pog-tag ${pogClass}">${pogLabel}</span>${otherHint}</p>
+                </div>
+                <span class="search-result-arrow">&rsaquo;</span>
+            `;
+            card.onclick = () => this.navigateToProduct(r);
+            container.appendChild(card);
+        });
+    },
+
+    // --- Camera Scanner ---
     async toggleScanner() {
         const btn = document.getElementById('toggle-scanner');
         const torchBtn = document.getElementById('toggle-torch');

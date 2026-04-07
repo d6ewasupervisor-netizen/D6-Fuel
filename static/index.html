@@ -152,6 +152,33 @@
         </div>
     </div>
 
+    <!-- View 5: Text UPC Search -->
+    <div id="view-text-search" class="view">
+        <div class="container safe-bottom">
+            <div class="top-bar">
+                <button type="button" id="back-from-text-search" class="btn-icon" aria-label="Back">&larr;</button>
+                <div class="top-bar-brand">
+                    <img src="/static/images/mascot.png" alt="" class="top-bar-mascot" width="40" height="40" decoding="async">
+                    <span class="top-bar-title">Supplemental Intelligence</span>
+                </div>
+                <span id="text-search-store-label" class="store-badge store-badge-clickable" role="button" tabindex="0">Store #00000</span>
+            </div>
+            <div class="text-search-body">
+                <img src="/static/images/search-upc-text.png" alt="" class="text-search-hero" draggable="false">
+                <div class="text-search-form">
+                    <input type="text" id="text-search-input" inputmode="numeric"
+                           placeholder="Enter partial UPC (last 4+ digits)"
+                           maxlength="13" autocomplete="off" enterkeyhint="search"
+                           autocorrect="off" autocapitalize="none" spellcheck="false">
+                    <button type="button" id="text-search-go" class="btn btn-primary btn-full">Search</button>
+                </div>
+                <p id="text-search-error" class="error hidden" role="alert"></p>
+                <div id="text-search-spinner" class="spinner hidden" aria-hidden="true"></div>
+                <div id="text-search-results" class="search-results-list hidden"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Product Detail Overlay -->
     <div id="product-overlay" class="overlay hidden">
         <div class="overlay-content safe-bottom">
