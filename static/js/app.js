@@ -657,12 +657,15 @@ const App = {
                 const pog = await API.getPlanogram(result.planogram_dbkey);
                 this.currentPlanogram = pog;
                 this.currentPlanogramDbkey = result.planogram_dbkey;
+                this.currentCategory = result.category || pog.category || null;
                 document.getElementById('bay-pog-name').textContent =
                     result.planogram_name || result.category || 'Planogram';
             } catch (e) {
                 console.error('Failed to load planogram:', e);
                 return;
             }
+        } else if (result.category) {
+            this.currentCategory = result.category;
         }
 
         Planogram.setHighlight(result.upc, result.bay, result.shelf, result.position);
