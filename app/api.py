@@ -261,6 +261,11 @@ def search_product(
         r["is_deleted"] = False
         r["full_name"] = desc_map.get(r["upc"]) or None
 
+        moving = MOVING_PRODUCTS.get(r["upc"])
+        if moving and r.get("category") == moving["to_category"]:
+            r["moved_from"] = moving["from_label"]
+            r["moved_to"] = moving["to_label"]
+
     # Also check deleted products
     if len(upc_clean) >= 10:
         upc_candidates = _scanned_upc_to_db_formats(upc_clean)
@@ -332,6 +337,7 @@ def search_product(
         "store": store_padded,
         "has_deleted": any(r.get("is_deleted") for r in deleted_results),
         "has_moving": any(r.get("is_moving") for r in deleted_results),
+        "has_moved": any(r.get("moved_from") for r in results),
     }
 
 

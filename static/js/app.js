@@ -394,6 +394,7 @@ const App = {
             const movingResults = (data.results || []).filter(r => r.is_moving);
             const deletedResults = (data.results || []).filter(r => r.is_deleted);
             const activeResults = (data.results || []).filter(r => !r.is_deleted && !r.is_moving);
+            const movedResult = activeResults.find(r => r.moved_from);
 
             if (movingResults.length > 0) {
                 this.showMovingOverlay(movingResults[0]);
@@ -416,6 +417,7 @@ const App = {
 
             if (activeResults.length === 1) {
                 this.navigateToProduct(activeResults[0]);
+                if (movedResult) this.showMovedToast(movedResult);
                 return;
             }
 
@@ -423,6 +425,7 @@ const App = {
                 this.previousView = 'bay';
                 this.showView('search');
                 this.renderSearchResults(activeResults);
+                if (movedResult) this.showMovedToast(movedResult);
             }
         } catch {
             input.classList.add('bay-search-error');
@@ -463,6 +466,7 @@ const App = {
             const movingResults = (data.results || []).filter(r => r.is_moving);
             const deletedResults = (data.results || []).filter(r => r.is_deleted);
             const activeResults = (data.results || []).filter(r => !r.is_deleted && !r.is_moving);
+            const movedResult = activeResults.find(r => r.moved_from);
 
             if (movingResults.length > 0) {
                 this.showMovingOverlay(movingResults[0]);
@@ -478,11 +482,13 @@ const App = {
 
             if (activeResults.length === 1) {
                 this.navigateToProduct(activeResults[0]);
+                if (movedResult) this.showMovedToast(movedResult);
                 return;
             }
 
             if (activeResults.length > 0) {
                 this.renderTextSearchResults(activeResults);
+                if (movedResult) this.showMovedToast(movedResult);
             }
         } catch (e) {
             spinner.classList.add('hidden');
@@ -593,6 +599,7 @@ const App = {
             const movingResults = (data.results || []).filter(r => r.is_moving);
             const deletedResults = (data.results || []).filter(r => r.is_deleted);
             const activeResults = (data.results || []).filter(r => !r.is_deleted && !r.is_moving);
+            const movedResult = activeResults.find(r => r.moved_from);
 
             if (movingResults.length > 0) {
                 this.showMovingOverlay(movingResults[0]);
@@ -607,13 +614,14 @@ const App = {
             }
 
             if (activeResults.length === 1) {
-                // Single result: skip search results, navigate directly
                 this.navigateToProduct(activeResults[0]);
+                if (movedResult) this.showMovedToast(movedResult);
                 return;
             }
 
             if (activeResults.length > 0) {
                 this.renderSearchResults(activeResults);
+                if (movedResult) this.showMovedToast(movedResult);
             }
         } catch (e) {
             spinner.classList.add('hidden');
@@ -986,6 +994,36 @@ const App = {
         }
 
         overlay.classList.remove('hidden');
+    },
+
+    // --- Subtle "Moved" Toast (for items already on their destination planogram) ---
+    showMovedToast(item) {
+        const toast = document.getElementById('moved-toast');
+        const msg = document.getElementById('moved-toast-msg');
+        const loc = document.getElementById('moved-toast-loc');
+
+        msg.textContent = `Moved from ${item.moved_from} to ${item.moved_to}`;
+
+        if (item.aisle) {
+            loc.textContent = `Aisle ${item.aisle} \u2022 Bay ${item.bay} / Shelf ${item.shelf} / Pos ${item.position}`;
+        } else {
+            loc.textContent = `Bay ${item.bay} / Shelf ${item.shelf} / Pos ${item.position}`;
+        }
+
+        toast.classList.remove('hidden');
+        toast.classList.remove('moved-toast-exit');
+        void toast.offsetWidth;
+        toast.classList.add('moved-toast-enter');
+
+        clearTimeout(this._movedToastTimer);
+        this._movedToastTimer = setTimeout(() => {
+            toast.classList.remove('moved-toast-enter');
+            toast.classList.add('moved-toast-exit');
+            toast.addEventListener('animationend', () => {
+                toast.classList.add('hidden');
+                toast.classList.remove('moved-toast-exit');
+            }, { once: true });
+        }, 6000);
     }
 };
 

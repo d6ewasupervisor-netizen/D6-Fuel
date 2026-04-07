@@ -1803,6 +1803,79 @@ input[type="password"]:focus {
 }
 
 /* ============================================
+   SUBTLE "MOVED" TOAST
+   ============================================ */
+
+.moved-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 180;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(10, 80, 160, 0.92);
+    color: #fff;
+    border: 1px solid rgba(77, 184, 255, 0.5);
+    border-radius: 14px;
+    padding: 12px 18px;
+    max-width: 92vw;
+    width: max-content;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    pointer-events: none;
+}
+
+.moved-toast.hidden { display: none; }
+
+.moved-toast-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.moved-toast-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.88rem;
+    line-height: 1.3;
+}
+
+.moved-toast-loc {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: #90d5ff;
+}
+
+.moved-toast-enter {
+    animation: toast-slide-in 0.35s ease-out forwards;
+}
+
+.moved-toast-exit {
+    animation: toast-fade-out 0.4s ease-in forwards;
+}
+
+@keyframes toast-slide-in {
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes toast-fade-out {
+    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+    to   { opacity: 0; transform: translateX(-50%) translateY(10px); }
+}
+
+@media (max-width: 480px) {
+    .moved-toast {
+        bottom: max(20px, env(safe-area-inset-bottom, 20px));
+        padding: 10px 14px;
+        border-radius: 12px;
+    }
+}
+
+/* ============================================
    PDF VIEWER
    ============================================ */
 
