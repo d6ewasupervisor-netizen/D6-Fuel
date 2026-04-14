@@ -24,7 +24,7 @@ app.post('/api/send-photos', async (req, res) => {
   }));
 
   const photoList = coolerPhotos.map(p => `<li style="margin:4px 0">${p.fileName} — ${p.name}</li>`).join('');
-  const fromAddress = `FM${storeId} <FM${storeId}@retail-odyssey.com>`;
+  const fromAddress = `FM${storeId} <FM${storeId}@the-dump-bin.com>`;
 
   try {
     const { data, error } = await resend.emails.send({
