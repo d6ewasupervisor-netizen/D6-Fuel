@@ -203,8 +203,32 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .pog-detail-sheet { width: 100%; max-width: 600px; background: #1a2332; border-radius: 20px 20px 0 0; padding: 20px; max-height: 80vh; overflow-y: auto; animation: slideUp 0.2s ease; }
 @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 .pog-detail-sheet .handle { width: 36px; height: 4px; border-radius: 2px; background: #3a4a5a; margin: 0 auto 16px; }
-.pog-detail-sheet .detail-img { width: 120px; height: 120px; margin: 0 auto 12px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.pog-detail-sheet .detail-img { width: 120px; height: 120px; margin: 0 auto 12px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: zoom-in; }
 .pog-detail-sheet .detail-img img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.pog-full-img-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1100; display: flex; align-items: center; justify-content: center; padding: 16px; animation: fadeIn 0.15s ease; cursor: zoom-out; }
+.pog-full-img-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; pointer-events: none; }
+.pog-full-img-hint { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; font-size: 12px; color: #8899aa; }
+
+/* Product scan */
+.scan-panel { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 14px; margin-bottom: 16px; }
+.scan-panel .scan-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+.scan-panel .scan-desc { font-size: 11px; color: var(--dim); line-height: 1.45; margin-bottom: 12px; }
+.scan-video-wrap { position: relative; width: 100%; border-radius: 10px; overflow: hidden; background: #0a0f14; aspect-ratio: 4/3; margin-bottom: 10px; display: none; }
+.scan-video-wrap.active { display: block; }
+.scan-video-wrap video { width: 100%; height: 100%; object-fit: cover; }
+.scan-controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.scan-btn { padding: 8px 14px; border-radius: 8px; border: 1px solid var(--card-border); background: #243447; color: var(--text); font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.scan-btn:hover { border-color: var(--accent); }
+.scan-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.scan-manual { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.scan-manual input { flex: 1; min-width: 140px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--card-border); background: #131c28; color: var(--text); font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+.scan-result { font-size: 12px; line-height: 1.5; margin-top: 10px; padding: 10px; border-radius: 8px; background: #131c28; border: 1px solid var(--card-border); }
+.scan-result.empty { color: var(--dim); }
+.scan-loc { margin-top: 8px; padding: 8px; border-radius: 8px; background: #0f1419; border-left: 3px solid var(--accent); }
+.scan-loc .loc-title { font-weight: 600; color: var(--accent); font-size: 12px; margin-bottom: 4px; }
+.scan-loc .loc-meta { font-size: 11px; color: var(--muted); }
+.scan-open-btn { margin-top: 6px; padding: 6px 10px; font-size: 11px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; font-family: inherit; font-weight: 600; }
+.scan-open-btn:hover { background: rgba(58,143,212,0.15); }
 .pog-detail-sheet .detail-name { font-size: 16px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 4px; }
 .pog-detail-sheet .detail-desc { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 12px; }
 .pog-detail-sheet .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -315,16 +339,20 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <script>
 // ── Data ──────────────────────────────────────────────────────────────────────
 const STORES = [
-  { id:"486", city:"Yakima", state:"WA", address:"1206 N 40th Ave", zip:"98908", energySet:"20 FT", resetDate:"Wednesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"652", city:"Ellensburg", state:"WA", address:"201 S Water St", zip:"98926", energySet:"16 FT", resetDate:"Wednesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"351", city:"Spokane Valley", state:"WA", address:"15609 E Sprague Ave", zip:"99037", energySet:"24 FT", resetDate:"Wednesday, April 15, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 14", gdm:2, adds:45, deletes:24 },
-  { id:"049", city:"Coeur d'Alene", state:"ID", address:"560 W Kathleen Ave", zip:"83815", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:33, deletes:61, discrepancy:true },
-  { id:"214", city:"Spokane", state:"WA", address:"12120 N Division St", zip:"99218", energySet:"24 FT", resetDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
-  { id:"657", city:"Spokane", state:"WA", address:"400 S Thor St", zip:"99202", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
-  { id:"163", city:"Kennewick", state:"WA", address:"2811 W 10th Ave", zip:"99336", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Wednesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"286", city:"Richland", state:"WA", address:"101 Wellsian Way", zip:"99352", energySet:"21 FT", resetDate:"Thursday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Wednesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"654", city:"East Wenatchee", state:"WA", address:"11 Grant Rd", zip:"98802", energySet:"12 FT", resetDate:"Tuesday, May 12, 2026", swap:true },
+  { id:"486", city:"Yakima", state:"WA", address:"1206 N 40th Ave", zip:"98908", energySet:"20 FT", resetDate:"Wednesday, April 15, 2026", kompassDate:"Friday, April 17, 2026", fike:"Saturday, April 11", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"652", city:"Ellensburg", state:"WA", address:"201 S Water St", zip:"98926", energySet:"16 FT", resetDate:"Wednesday, April 15, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Saturday, April 11", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"351", city:"Spokane Valley", state:"WA", address:"15609 E Sprague Ave", zip:"99037", energySet:"24 FT", resetDate:"Wednesday, April 15, 2026", kompassDate:"Friday, April 17, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 14", gdm:2, adds:45, deletes:24 },
+  { id:"049", city:"Coeur d'Alene", state:"ID", address:"560 W Kathleen Ave", zip:"83815", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:33, deletes:61, discrepancy:true },
+  { id:"214", city:"Spokane", state:"WA", address:"12120 N Division St", zip:"99218", energySet:"24 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Friday, April 17, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
+  { id:"657", city:"Spokane", state:"WA", address:"400 S Thor St", zip:"99202", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
+  { id:"163", city:"Kennewick", state:"WA", address:"2811 W 10th Ave", zip:"99336", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Wednesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"286", city:"Richland", state:"WA", address:"101 Wellsian Way", zip:"99352", energySet:"21 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Wednesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"654", city:"East Wenatchee", state:"WA", address:"11 Grant Rd", zip:"98802", energySet:"12 FT", resetDate:"Tuesday, May 12, 2026", kompassDate:"Tuesday, May 12, 2026", swap:true },
 ];
+
+function kompassDisplay(s) {
+  return s.kompassDate != null ? s.kompassDate : s.resetDate;
+}
 
 const POGS = {
   csd:   { file:"D701_L00000_D58_C142_V898_D001_MX - GDM 9- CSD.pdf", label:"GDM 9 — CSD", icon:"csd", sub:"V898_D001 — 9 FT" },
@@ -365,6 +393,9 @@ let photoState     = {};     // { storeId: { before: {coolerId: dataUrl}, after:
 let sendingPhotos  = false;
 let sendResult     = null;
 let workflowStep   = {};     // { storeId: 'before' | 'reset' | 'after' | 'done' }
+let UPC_INDEX      = null;   // normalized UPC -> location entries (from planograms)
+let scanStream     = null;
+let scanAnimationId = null;
 
 // Load data on start
 fetch('products.json')
@@ -374,11 +405,20 @@ fetch('products.json')
 
 fetch('planograms.json')
   .then(r => r.json())
-  .then(data => { PLANOGRAMS = data; })
-  .catch(() => { PLANOGRAMS = {}; });
+  .then(data => { PLANOGRAMS = data; buildUpcIndex(); })
+  .catch(() => { PLANOGRAMS = {}; UPC_INDEX = {}; });
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function render() {
+  if (scanAnimationId != null) {
+    cancelAnimationFrame(scanAnimationId);
+    scanAnimationId = null;
+  }
+  if (scanStream) {
+    scanStream.getTracks().forEach(t => t.stop());
+    scanStream = null;
+  }
+
   const app = document.getElementById('app');
   if (selectedStore) {
     const s = STORES.find(x => x.id === selectedStore);
@@ -392,6 +432,7 @@ function render() {
 }
 
 function switchTab(tab) {
+  if (activeTab === 'scan' && tab !== 'scan') stopBarcodeScan();
   activeTab = tab;
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tab));
@@ -428,7 +469,7 @@ function renderDashboard() {
               <span class="fm">FM ${s.id}</span>
               ${s.swap ? '<span class="swap-badge">ONSITE SWAP</span>' : ''}
               <div class="city">${s.city}, ${s.state}</div>
-              <div class="date">${s.resetDate}</div>
+              <div class="date">${kompassDisplay(s)}</div>
               <div class="meta">${s.energySet} energy set${s.addNote ? '' : ` — ${s.adds} adds / ${s.deletes} deletes`}</div>
             </div>
           </div>
@@ -475,7 +516,7 @@ function renderStore(s) {
     <div class="store-header">
       <h2>FM ${s.id}</h2>
       <div class="addr">${s.city}, ${s.state} ${s.zip} — ${s.address}</div>
-      <div class="detail">${s.energySet} energy set — Reset: ${s.resetDate}${s.swap ? ' — ONSITE SWAP' : ''}</div>
+      <div class="detail">${s.energySet} energy set — Kompass: ${kompassDisplay(s)}${s.swap ? ' — ONSITE SWAP' : ''}</div>
     </div>
 
     ${inWorkflow ? renderWorkflowSteps(s) : renderFullView(s)}
@@ -618,6 +659,7 @@ function renderFullView(s) {
       <button class="tab-btn ${activeTab==='planograms'?'active':''}" data-tab="planograms" onclick="switchTab('planograms')">📐 Planograms</button>
       <button class="tab-btn ${activeTab==='products'?'active':''}" data-tab="products" onclick="switchTab('products')">🛒 Products</button>
       <button class="tab-btn ${activeTab==='checklist'?'active':''}" data-tab="checklist" onclick="switchTab('checklist')">✅ Checklist</button>
+      <button class="tab-btn ${activeTab==='scan'?'active':''}" data-tab="scan" onclick="switchTab('scan')">🔎 Scan</button>
     </div>
 
     <!-- INFO TAB -->
@@ -636,7 +678,7 @@ function renderFullView(s) {
           <div class="card-row"><span class="label">Habco Shroud Delivery</span><span class="value">Week of April 6</span></div>
           <div class="card-row"><span class="label">Fike Bolts Shrouds</span><span class="value">${s.fike}</span></div>
           <div class="card-row"><span class="label">Coolers Delivered</span><span class="value">${s.coolerDelivery}</span></div>
-          <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${s.resetDate}</span></div>
+          <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${kompassDisplay(s)}</span></div>
         </div>
       </div>
       ` : `
@@ -645,7 +687,7 @@ function renderFullView(s) {
         <div class="card">
           <div class="card-row"><span class="label">Kiosk Pre-Conversion Cleaning</span><span class="value">Sunday, May 10, 2026</span></div>
           <div class="card-row"><span class="label">RB/Monster Shelf Adjustments</span><span class="value">Monday, May 11, 2026</span></div>
-          <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${s.resetDate}</span></div>
+          <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${kompassDisplay(s)}</span></div>
         </div>
       </div>
       `}
@@ -691,6 +733,11 @@ function renderFullView(s) {
         <div class="check-item"><div class="box"></div>Photograph the space where RB cooler will go even if missing</div>
         <div class="check-item"><div class="box"></div>Email any issues to april.gauthier@retailodyssey.com</div>
       </div>
+    </div>
+
+    <!-- SCAN TAB -->
+    <div class="tab-panel ${activeTab==='scan'?'active':''}" data-panel="scan">
+      ${renderProductScanPanel(s)}
     </div>
 
     <div class="footer">Generated by TacTag for Retail Odyssey / Advantage Solutions — District 6</div>
@@ -911,6 +958,22 @@ function renderShelfProducts(shelf, bayWidthInches, rowHeight, sec) {
 }
 
 // ── Product detail overlay ────────────────────────────────────────────────────
+function showPogFullImage(src) {
+  if (!src) return;
+  const full = document.createElement('div');
+  full.className = 'pog-full-img-overlay';
+  const img = document.createElement('img');
+  img.src = src;
+  img.alt = '';
+  const hint = document.createElement('div');
+  hint.className = 'pog-full-img-hint';
+  hint.textContent = 'Tap anywhere to close';
+  full.appendChild(img);
+  full.appendChild(hint);
+  full.onclick = () => full.remove();
+  document.body.appendChild(full);
+}
+
 function showProductDetail(el) {
   const d = el.dataset;
   if (!d.upc) return;
@@ -941,6 +1004,201 @@ function showProductDetail(el) {
       </div>
     </div>`;
   document.body.appendChild(overlay);
+  const imgWrap = overlay.querySelector('.detail-img');
+  if (imgWrap) {
+    imgWrap.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      showPogFullImage(d.img);
+    });
+  }
+}
+
+// ── UPC location index & product scan ─────────────────────────────────────────
+function buildUpcIndex() {
+  UPC_INDEX = {};
+  if (!PLANOGRAMS) return;
+  Object.keys(PLANOGRAMS).forEach(coolerKey => {
+    const pog = PLANOGRAMS[coolerKey];
+    if (!pog || !pog.bays) return;
+    const sec = COOLER_SECTIONS.find(c => c.key === coolerKey);
+    const label = sec ? sec.label : coolerKey;
+    pog.bays.forEach(bay => {
+      (bay.shelves || []).forEach(sh => {
+        (sh.products || []).forEach(p => {
+          const k = normalizeUpcKey(p.upc);
+          if (!k) return;
+          const entry = {
+            coolerKey,
+            coolerLabel: label,
+            bayNum: bay.bay,
+            shelf: sh.shelf,
+            position: p.position,
+            name: (p.full_name || p.description || '')
+          };
+          if (!UPC_INDEX[k]) UPC_INDEX[k] = [];
+          UPC_INDEX[k].push(entry);
+        });
+      });
+    });
+  });
+}
+
+function normalizeUpcKey(str) {
+  let d = String(str || '').replace(/\D/g, '');
+  if (!d) return '';
+  if (d.length === 13 && d[0] === '0') d = d.slice(1);
+  while (d.length < 12) d = '0' + d;
+  if (d.length > 12) d = d.slice(-12);
+  return d;
+}
+
+function findLocationsForUpc(raw) {
+  if (!UPC_INDEX) buildUpcIndex();
+  const k = normalizeUpcKey(raw);
+  if (!k) return null;
+  const list = UPC_INDEX[k];
+  if (list && list.length) return { key: k, list: list.slice() };
+  return null;
+}
+
+function scanEscapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/"/g, '&quot;');
+}
+
+function showUpcLookupResult(raw, container) {
+  if (!container) return;
+  const found = findLocationsForUpc(raw);
+  const displayUpc = normalizeUpcKey(raw) || String(raw).replace(/\D/g, '');
+  if (!found || !found.list.length) {
+    container.innerHTML = '<div class="scan-result">No match for <strong>' + scanEscapeHtml(String(raw)) + '</strong> in the fuel cooler planograms. Check the UPC or confirm the item is on this project.</div>';
+    return;
+  }
+  const rows = found.list.map(loc => {
+    const ck = JSON.stringify(loc.coolerKey);
+    return '<div class="scan-loc"><div class="loc-title">' + scanEscapeHtml(loc.coolerLabel) + '</div>'
+      + '<div class="loc-meta">Bay ' + loc.bayNum + ' · Shelf ' + loc.shelf + ' · Position ' + loc.position + '</div>'
+      + '<div class="loc-meta" style="margin-top:4px">' + scanEscapeHtml(loc.name) + '</div>'
+      + '<button type="button" class="scan-open-btn" onclick="goToPlanogramLocation(' + ck + ', ' + loc.bayNum + ')">Open planogram</button></div>';
+  }).join('');
+  const multi = found.list.length > 1 ? ' (multiple placements)' : '';
+  container.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(displayUpc) + '</strong>' + multi + '</div>' + rows;
+}
+
+function goToPlanogramLocation(coolerKey, bayNum) {
+  selectedCooler = coolerKey;
+  const pog = PLANOGRAMS[coolerKey];
+  if (pog && pog.bays && pog.bays.length) {
+    const idx = pog.bays.findIndex(b => b.bay === bayNum);
+    currentBayIdx = idx >= 0 ? idx : 0;
+  } else {
+    currentBayIdx = 0;
+  }
+  showUpcList = false;
+  activeTab = 'planograms';
+  render();
+  switchTab('planograms');
+}
+
+function renderProductScanPanel(s) {
+  if (!PLANOGRAMS || !Object.keys(PLANOGRAMS).length) {
+    return '<div style="padding:20px;text-align:center;color:var(--dim);font-size:13px">Loading planogram data for scan…</div>';
+  }
+  return '<div class="scan-panel">'
+    + '<div class="scan-title">Find product in coolers</div>'
+    + '<div class="scan-desc">Scan a UPC with the camera (Chrome or Edge — use manual entry on Safari/iOS) or type the code below. See which cooler it belongs in and the bay, shelf, and position.</div>'
+    + '<div class="scan-video-wrap" id="scan-video-wrap"><video id="scan-video" playsinline muted></video></div>'
+    + '<div class="scan-controls">'
+    + '<button type="button" class="scan-btn primary" id="scan-start-btn" onclick="startBarcodeScan()">Start camera scan</button>'
+    + '<button type="button" class="scan-btn" id="scan-stop-btn" onclick="stopBarcodeScan()" style="display:none">Stop camera</button>'
+    + '</div>'
+    + '<div class="scan-manual">'
+    + '<input type="text" id="scan-manual-input" placeholder="Enter UPC (digits)" inputmode="numeric" autocomplete="off" onkeydown="if(event.key===\'Enter\')lookupManualUpc()">'
+    + '<button type="button" class="scan-btn primary" onclick="lookupManualUpc()">Look up</button>'
+    + '</div>'
+    + '<div id="scan-result-area"></div>'
+    + '</div>';
+}
+
+function lookupManualUpc() {
+  const inp = document.getElementById('scan-manual-input');
+  const raw = inp && inp.value.trim();
+  if (!raw) return;
+  showUpcLookupResult(raw, document.getElementById('scan-result-area'));
+}
+
+function stopBarcodeScan() {
+  if (scanAnimationId != null) {
+    cancelAnimationFrame(scanAnimationId);
+    scanAnimationId = null;
+  }
+  const video = document.getElementById('scan-video');
+  if (video && video.srcObject) {
+    video.srcObject.getTracks().forEach(t => t.stop());
+    video.srcObject = null;
+  } else if (scanStream) {
+    scanStream.getTracks().forEach(t => t.stop());
+  }
+  scanStream = null;
+  const wrap = document.getElementById('scan-video-wrap');
+  if (wrap) wrap.classList.remove('active');
+  const startBtn = document.getElementById('scan-start-btn');
+  const stopBtn = document.getElementById('scan-stop-btn');
+  if (startBtn) startBtn.style.display = 'inline-block';
+  if (stopBtn) stopBtn.style.display = 'none';
+}
+
+async function startBarcodeScan() {
+  const resultEl = document.getElementById('scan-result-area');
+  const wrap = document.getElementById('scan-video-wrap');
+  const video = document.getElementById('scan-video');
+  const startBtn = document.getElementById('scan-start-btn');
+  const stopBtn = document.getElementById('scan-stop-btn');
+  if (!video || !wrap) return;
+
+  if (typeof BarcodeDetector === 'undefined') {
+    if (resultEl) {
+      resultEl.innerHTML = '<div class="scan-result">Live barcode scanning needs Chrome or Edge (BarcodeDetector API). Use <strong>Look up</strong> with the UPC typed in — that works in every browser.</div>';
+    }
+    return;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+    scanStream = stream;
+    video.srcObject = stream;
+    await video.play();
+    wrap.classList.add('active');
+    if (startBtn) startBtn.style.display = 'none';
+    if (stopBtn) stopBtn.style.display = 'inline-block';
+
+    const detector = new BarcodeDetector({ formats: ['upc_a', 'ean_13', 'ean_8', 'code_128', 'code_39'] });
+
+    function loop() {
+      if (!scanStream) return;
+      detector.detect(video).then(codes => {
+        if (!scanStream) return;
+        if (codes && codes.length) {
+          const raw = codes[0].rawValue;
+          stopBarcodeScan();
+          const inp = document.getElementById('scan-manual-input');
+          if (inp) inp.value = raw;
+          showUpcLookupResult(raw, document.getElementById('scan-result-area'));
+          return;
+        }
+        scanAnimationId = requestAnimationFrame(loop);
+      }).catch(() => {
+        if (scanStream) scanAnimationId = requestAnimationFrame(loop);
+      });
+    }
+    scanAnimationId = requestAnimationFrame(loop);
+  } catch (e) {
+    if (resultEl) {
+      resultEl.innerHTML = '<div class="scan-result">Could not open camera: ' + scanEscapeHtml(e.message || 'permission denied') + '</div>';
+    }
+  }
 }
 
 // ── UPC list view ─────────────────────────────────────────────────────────────
@@ -1050,7 +1308,7 @@ async function sendAndAdvance(storeId, phase, nextStep) {
         state: s.state,
         address: s.address,
         energySet: s.energySet,
-        resetDate: s.resetDate,
+        resetDate: kompassDisplay(s),
         phase,
         coolerPhotos
       })
