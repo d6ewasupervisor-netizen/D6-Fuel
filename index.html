@@ -140,6 +140,76 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 
 /* ── Footer ── */
 .footer { text-align: center; font-size: 11px; color: #445566; margin-top: 24px; padding-top: 16px; border-top: 1px solid #1a2332; }
+
+/* ── Planogram: Cooler selector ── */
+.cooler-select-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.cooler-select-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 18px 10px; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; font-family: inherit; color: var(--text); transition: all 0.15s ease; }
+.cooler-select-btn:hover { border-color: #3a5a7a; transform: translateY(-1px); }
+.cooler-select-btn .cs-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.cooler-select-btn .cs-name { font-size: 12px; font-weight: 600; text-align: center; line-height: 1.3; }
+.cooler-select-btn .cs-count { font-size: 10px; color: var(--dim); }
+.cooler-select-btn.backup { opacity: 0.65; }
+.cooler-select-btn.backup .cs-name::after { content: ' (Backup)'; font-weight: 400; color: var(--dim); font-size: 10px; }
+
+/* ── Planogram: Bay viewer ── */
+.pog-viewer { position: relative; }
+.pog-viewer-back { background: none; border: none; color: #5588aa; font-size: 13px; cursor: pointer; padding: 0; margin-bottom: 12px; font-family: inherit; }
+.pog-viewer-back:hover { color: #77aacc; }
+.pog-viewer-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.pog-viewer-sub { font-size: 11px; color: var(--dim); margin-bottom: 12px; }
+
+/* Bay navigation */
+.bay-nav { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
+.bay-nav-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--card); color: var(--muted); font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: inherit; transition: all 0.15s; }
+.bay-nav-btn:hover { border-color: var(--accent); color: #fff; }
+.bay-nav-btn:disabled { opacity: 0.3; cursor: default; }
+.bay-nav-btn:disabled:hover { border-color: var(--card-border); color: var(--muted); }
+.bay-dot { width: 10px; height: 10px; border-radius: 50%; background: #2a3a4a; transition: background 0.2s; }
+.bay-dot.active { background: var(--accent); box-shadow: 0 0 6px #3a8fd466; }
+.bay-label { font-size: 12px; font-weight: 600; color: var(--muted); margin: 0 4px; }
+
+/* Cooler frame */
+.cooler-frame { background: linear-gradient(180deg, #0d1520 0%, #111b28 100%); border: 2px solid #2a3a4a; border-radius: 12px; padding: 8px 6px; overflow: hidden; position: relative; }
+.cooler-frame::before { content: ''; position: absolute; inset: 0; border-radius: 10px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; }
+
+/* Shelf row */
+.shelf-row { display: flex; align-items: stretch; position: relative; border-bottom: 2px solid #2a3a4a; background: linear-gradient(180deg, transparent 0%, rgba(42,58,74,0.15) 100%); }
+.shelf-row:last-child { border-bottom: none; }
+.shelf-label-tag { position: absolute; left: 2px; top: 2px; font-size: 9px; font-weight: 600; color: #445566; font-family: 'JetBrains Mono', monospace; z-index: 2; }
+
+/* Products container */
+.shelf-products { display: flex; align-items: flex-end; width: 100%; min-height: 40px; }
+
+/* Product slot */
+.product-slot { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; transition: background 0.1s; border-right: 1px solid rgba(42,58,74,0.4); }
+.product-slot:last-child { border-right: none; }
+.product-slot:hover { background: rgba(58,143,212,0.08); }
+.product-slot img.slot-thumb { width: 100%; height: 100%; object-fit: contain; padding: 1px; }
+.product-slot .slot-fallback { font-size: 10px; color: #445566; text-align: center; line-height: 1.2; padding: 2px; word-break: break-word; overflow: hidden; }
+
+/* Multi-facing group */
+.multi-facing-group { position: relative; display: flex; align-items: stretch; flex-shrink: 0; border: 1px solid rgba(212,175,55,0.25); border-radius: 2px; }
+.facing-badge { position: absolute; top: 1px; right: 1px; font-size: 8px; font-weight: 700; color: #d4af37; background: rgba(0,0,0,0.6); padding: 1px 3px; border-radius: 3px; z-index: 2; line-height: 1; }
+
+/* NEW / CHANGED badges */
+.new-badge, .changed-badge { position: absolute; bottom: 1px; left: 1px; font-size: 7px; font-weight: 700; padding: 1px 3px; border-radius: 3px; z-index: 2; line-height: 1; }
+.new-badge { color: #fff; background: #00d084; }
+.changed-badge { color: #fff; background: #3a8fd4; }
+
+/* ── Product detail overlay ── */
+.pog-detail-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; animation: fadeIn 0.15s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.pog-detail-sheet { width: 100%; max-width: 600px; background: #1a2332; border-radius: 20px 20px 0 0; padding: 20px; max-height: 80vh; overflow-y: auto; animation: slideUp 0.2s ease; }
+@keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.pog-detail-sheet .handle { width: 36px; height: 4px; border-radius: 2px; background: #3a4a5a; margin: 0 auto 16px; }
+.pog-detail-sheet .detail-img { width: 120px; height: 120px; margin: 0 auto 12px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.pog-detail-sheet .detail-img img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.pog-detail-sheet .detail-name { font-size: 16px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 4px; }
+.pog-detail-sheet .detail-desc { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 12px; }
+.pog-detail-sheet .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pog-detail-sheet .detail-cell { background: #131c28; border-radius: 8px; padding: 10px; }
+.pog-detail-sheet .detail-cell .dl { font-size: 10px; color: var(--dim); margin-bottom: 2px; }
+.pog-detail-sheet .detail-cell .dv { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
 </style>
 </head>
 <body>
@@ -181,15 +251,23 @@ const COOLER_SECTIONS = [
 const ICONS = { csd:"🥤", bev:"🧃", monster:"⚡", rb:"🐂" };
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let selectedStore = null;
-let activeTab     = 'info';    // 'info' | 'products' | 'checklist'
-let PRODUCTS      = null;
+let selectedStore  = null;
+let activeTab      = 'info';
+let PRODUCTS       = null;
+let PLANOGRAMS     = null;
+let selectedCooler = null;   // section key when viewing a planogram
+let currentBayIdx  = 0;      // which bay is displayed
 
-// Load products.json on start
+// Load data on start
 fetch('products.json')
   .then(r => r.json())
   .then(data => { PRODUCTS = data; })
   .catch(() => { PRODUCTS = {}; });
+
+fetch('planograms.json')
+  .then(r => r.json())
+  .then(data => { PLANOGRAMS = data; })
+  .catch(() => { PLANOGRAMS = {}; });
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function render() {
@@ -200,6 +278,8 @@ function render() {
   } else {
     app.innerHTML = renderDashboard();
     activeTab = 'info';
+    selectedCooler = null;
+    currentBayIdx = 0;
   }
 }
 
@@ -257,7 +337,7 @@ function renderStore(s) {
   const pogKeys = isSwap ? [] : (s.discrepancy ? ['csd','bev','mon12','rb12','mon8','rb8'] : ['csd','bev','mon12','rb12']);
 
   return `
-    <button class="back-btn" onclick="selectedStore=null;render()">← All Stores</button>
+    <button class="back-btn" onclick="selectedStore=null;selectedCooler=null;currentBayIdx=0;render()">← All Stores</button>
     <div class="store-header">
       <h2>FM ${s.id}</h2>
       <div class="addr">${s.city}, ${s.state} ${s.zip} — ${s.address}</div>
@@ -266,6 +346,7 @@ function renderStore(s) {
 
     <div class="store-tabs">
       <button class="tab-btn ${activeTab==='info'?'active':''}" data-tab="info" onclick="switchTab('info')">📋 Info</button>
+      <button class="tab-btn ${activeTab==='planograms'?'active':''}" data-tab="planograms" onclick="switchTab('planograms')">📐 Planograms</button>
       <button class="tab-btn ${activeTab==='products'?'active':''}" data-tab="products" onclick="switchTab('products')">🛒 Products</button>
       <button class="tab-btn ${activeTab==='checklist'?'active':''}" data-tab="checklist" onclick="switchTab('checklist')">✅ Checklist</button>
     </div>
@@ -333,6 +414,11 @@ function renderStore(s) {
           <div class="card-row"><span class="label">Issues email</span><span class="value"><a href="mailto:tyson.gauthier@retailodyssey.com" style="color:var(--accent)">tyson.gauthier@retailodyssey.com</a></span></div>
         </div>
       </div>
+    </div>
+
+    <!-- PLANOGRAMS TAB -->
+    <div class="tab-panel ${activeTab==='planograms'?'active':''}" data-panel="planograms">
+      ${renderPlanogramTab(s)}
     </div>
 
     <!-- PRODUCTS TAB -->
@@ -419,6 +505,216 @@ function renderProductsTab(s) {
     `;
   }).join('');
 }
+
+// ── Planogram tab ─────────────────────────────────────────────────────────────
+function renderPlanogramTab(s) {
+  if (!PLANOGRAMS) {
+    return '<div style="padding:20px;text-align:center;color:var(--dim);font-size:13px">Loading planogram data...</div>';
+  }
+  if (selectedCooler) {
+    return renderPlanogramViewer(s);
+  }
+  return renderCoolerSelector(s);
+}
+
+function renderCoolerSelector(s) {
+  const showBackup = s.discrepancy;
+  const sections = COOLER_SECTIONS.filter(sec => showBackup || !sec.backup);
+
+  return `
+    <div class="section">
+      <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Select a Cooler to View Planogram</h3></div>
+    </div>
+    <div class="cooler-select-grid">
+      ${sections.map(sec => {
+        const pog = PLANOGRAMS[sec.key];
+        const count = pog ? pog.bays.reduce((n, b) => n + b.shelves.reduce((m, sh) => m + sh.products.length, 0), 0) : 0;
+        const bayCount = pog ? pog.bays.length : 0;
+        return `
+          <button class="cooler-select-btn ${sec.backup ? 'backup' : ''}" onclick="openCooler('${sec.key}')">
+            <div class="cs-icon" style="background:${sec.color}22">${sec.icon}</div>
+            <div class="cs-name">${sec.label.replace(' (Backup)','')}</div>
+            <div class="cs-count">${count} products · ${bayCount} ${bayCount === 1 ? 'bay' : 'bays'}</div>
+          </button>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function openCooler(key) {
+  selectedCooler = key;
+  currentBayIdx = 0;
+  render();
+  switchTab('planograms');
+}
+
+function closeCooler() {
+  selectedCooler = null;
+  currentBayIdx = 0;
+  render();
+  switchTab('planograms');
+}
+
+function switchBay(idx) {
+  const pog = PLANOGRAMS[selectedCooler];
+  if (!pog) return;
+  currentBayIdx = Math.max(0, Math.min(idx, pog.bays.length - 1));
+  render();
+  switchTab('planograms');
+}
+
+function renderPlanogramViewer(s) {
+  const pog = PLANOGRAMS[selectedCooler];
+  if (!pog || !pog.bays.length) {
+    return '<div style="padding:20px;text-align:center;color:var(--dim);font-size:13px">No planogram data available.</div>';
+  }
+
+  const sec = COOLER_SECTIONS.find(c => c.key === selectedCooler) || {};
+  const bay = pog.bays[currentBayIdx];
+  const hasBayNav = pog.bays.length > 1;
+
+  let bayNav = '';
+  if (hasBayNav) {
+    bayNav = `
+      <div class="bay-nav">
+        <button class="bay-nav-btn" onclick="switchBay(${currentBayIdx - 1})" ${currentBayIdx === 0 ? 'disabled' : ''}>‹</button>
+        ${pog.bays.map((_, i) => `<div class="bay-dot ${i === currentBayIdx ? 'active' : ''}"></div>`).join('')}
+        <span class="bay-label">Bay ${bay.bay} of ${pog.bays.length}</span>
+        <button class="bay-nav-btn" onclick="switchBay(${currentBayIdx + 1})" ${currentBayIdx === pog.bays.length - 1 ? 'disabled' : ''}>›</button>
+      </div>`;
+  }
+
+  return `
+    <div class="pog-viewer">
+      <button class="pog-viewer-back" onclick="closeCooler()">← All Coolers</button>
+      <div class="pog-viewer-title" style="color:${sec.color || '#fff'}">${sec.icon || ''} ${sec.label || selectedCooler}</div>
+      <div class="pog-viewer-sub">DBKey ${pog.dbkey} · ${pog.effective_date} · ${pog.fixture_type || ''}</div>
+      ${bayNav}
+      <div class="cooler-frame">
+        ${renderBayShelves(bay, sec)}
+      </div>
+    </div>`;
+}
+
+function renderBayShelves(bay, sec) {
+  if (!bay || !bay.shelves || !bay.shelves.length) return '';
+
+  const bayWidthInches = bay.width_inches || 22;
+  const shelves = [...bay.shelves].sort((a, b) => a.shelf - b.shelf);
+
+  // Calculate scale to fit all shelves in viewport
+  const availableHeight = window.innerHeight - 260;
+  const totalProductHeight = shelves.reduce((sum, sh) => {
+    const maxH = sh.products.length ? Math.max(...sh.products.map(p => p.height_inches || 6)) : 6;
+    return sum + maxH;
+  }, 0);
+  const pixelsPerInch = Math.min(14, Math.max(5, availableHeight / totalProductHeight));
+
+  // Render shelves from top to bottom (highest shelf number first)
+  const reversed = [...shelves].reverse();
+  return reversed.map(shelf => {
+    const maxH = shelf.products.length ? Math.max(...shelf.products.map(p => p.height_inches || 6)) : 6;
+    const rowHeight = Math.max(36, maxH * pixelsPerInch);
+
+    const productsHtml = renderShelfProducts(shelf, bayWidthInches, rowHeight, sec);
+    return `
+      <div class="shelf-row" style="height:${rowHeight}px">
+        <span class="shelf-label-tag">S${shelf.shelf}</span>
+        <div class="shelf-products">${productsHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderShelfProducts(shelf, bayWidthInches, rowHeight, sec) {
+  if (!shelf.products || !shelf.products.length) return '';
+
+  // Total raw width across all products (width * facings)
+  const totalRawWidth = shelf.products.reduce((sum, p) =>
+    sum + (p.width_inches || 2.5) * (p.facings || 1), 0);
+  const scale = totalRawWidth > 0 ? bayWidthInches / totalRawWidth : 1;
+
+  return shelf.products.map(p => {
+    const facings = p.facings || 1;
+    const rawW = (p.width_inches || 2.5) * facings;
+    const pct = (rawW * scale / bayWidthInches * 100).toFixed(2);
+    const imgSrc = p.image || `images/${p.upc}.jpg`;
+    const name = p.full_name || p.description || '';
+    const displayName = p.description || '';
+
+    // Build slot inner HTML
+    const imgTag = `<img class="slot-thumb" src="${imgSrc}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`;
+    const fallback = `<div class="slot-fallback" style="display:none">${displayName.substring(0, 20)}</div>`;
+    const newBadge = p.is_new ? '<span class="new-badge">NEW</span>' : '';
+    const chgBadge = p.is_changed ? '<span class="changed-badge">CHG</span>' : '';
+
+    const dataAttrs = `data-upc="${p.upc}" data-name="${name.replace(/"/g, '&quot;')}" data-desc="${displayName.replace(/"/g, '&quot;')}" data-size="${p.size || ''}" data-pos="${p.position}" data-fac="${facings}" data-h="${p.height_inches}" data-w="${p.width_inches}" data-img="${imgSrc}" data-shelf="${shelf.shelf}" data-bay="${selectedCooler}" data-new="${p.is_new?1:0}" data-chg="${p.is_changed?1:0}"`;
+
+    if (facings > 1) {
+      // Multi-facing: wrap all facings in a group
+      const slotPct = (100 / facings).toFixed(2);
+      let slots = '';
+      for (let f = 0; f < facings; f++) {
+        slots += `<div class="product-slot" style="width:${slotPct}%;height:100%" onclick="showProductDetail(this.parentElement)" ${f === 0 ? dataAttrs : ''}>${imgTag}${fallback}${f === 0 ? newBadge + chgBadge : ''}</div>`;
+      }
+      return `<div class="multi-facing-group" style="width:${pct}%;height:100%;flex-shrink:0" ${dataAttrs}>
+        <span class="facing-badge">\u00d7${facings}</span>
+        ${slots}
+      </div>`;
+    }
+
+    return `<div class="product-slot" style="width:${pct}%;height:100%;flex-shrink:0" onclick="showProductDetail(this)" ${dataAttrs}>${imgTag}${fallback}${newBadge}${chgBadge}</div>`;
+  }).join('');
+}
+
+// ── Product detail overlay ────────────────────────────────────────────────────
+function showProductDetail(el) {
+  const d = el.dataset;
+  if (!d.upc) return;
+
+  const isNew = d.new === '1';
+  const isChg = d.chg === '1';
+  const statusHtml = isNew ? '<span style="color:#00d084;font-weight:600"> — NEW</span>'
+                   : isChg ? '<span style="color:#3a8fd4;font-weight:600"> — CHANGED</span>' : '';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'pog-detail-overlay';
+  overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+  overlay.innerHTML = `
+    <div class="pog-detail-sheet" onclick="event.stopPropagation()">
+      <div class="handle"></div>
+      <div class="detail-img">
+        <img src="${d.img}" alt="" onerror="this.parentElement.innerHTML='<div style=\\'font-size:40px\\'>📦</div>'">
+      </div>
+      <div class="detail-name">${d.name || d.desc}${statusHtml}</div>
+      <div class="detail-desc">${d.desc !== d.name ? d.desc : ''}</div>
+      <div class="detail-grid">
+        <div class="detail-cell"><div class="dl">UPC</div><div class="dv">${d.upc}</div></div>
+        <div class="detail-cell"><div class="dl">Size</div><div class="dv">${d.size}</div></div>
+        <div class="detail-cell"><div class="dl">Position</div><div class="dv">Shelf ${d.shelf}, Pos ${d.pos}</div></div>
+        <div class="detail-cell"><div class="dl">Facings</div><div class="dv">${d.fac}</div></div>
+        <div class="detail-cell"><div class="dl">Height</div><div class="dv">${d.h} in</div></div>
+        <div class="detail-cell"><div class="dl">Width</div><div class="dv">${d.w} in</div></div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+// ── Swipe gesture for bay navigation ──────────────────────────────────────────
+let _touchStartX = 0;
+document.addEventListener('touchstart', e => {
+  const frame = e.target.closest('.cooler-frame');
+  if (frame) _touchStartX = e.touches[0].clientX;
+}, { passive: true });
+document.addEventListener('touchend', e => {
+  if (!_touchStartX || !selectedCooler) return;
+  const dx = e.changedTouches[0].clientX - _touchStartX;
+  _touchStartX = 0;
+  if (Math.abs(dx) < 50) return;
+  const pog = PLANOGRAMS[selectedCooler];
+  if (!pog || pog.bays.length < 2) return;
+  if (dx < 0 && currentBayIdx < pog.bays.length - 1) switchBay(currentBayIdx + 1);
+  else if (dx > 0 && currentBayIdx > 0) switchBay(currentBayIdx - 1);
+}, { passive: true });
 
 render();
 </script>

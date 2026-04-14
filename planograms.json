@@ -1,0 +1,3733 @@
+{
+  "HABCO Red Bull Cooler 12 FT": {
+    "section_key": "HABCO Red Bull Cooler 12 FT",
+    "name": "D701_L00000_D58_C142_V664_D002_MX",
+    "description": "HABCO- RED BULL COOLER 12 FT ASSORTMENT",
+    "dbkey": 8570449,
+    "effective_date": "1/25/2026",
+    "period_week": "P13 W04 Y2025",
+    "width_inches": 42.5,
+    "height_inches": 23,
+    "depth_inches": 78,
+    "num_bays": 2,
+    "num_shelves": 0,
+    "num_products": 0,
+    "fixture_type": "HABCO-ESM46",
+    "pdf_filename": "D701_L00000_D58_C142_V664_D002_MX - HABCO- RED BULL COOLER 12 FT ASSORTMENT.pdf",
+    "added": [
+      {
+        "upc": "0061126900184",
+        "description": "RED BULL WE VAN BERRY 12 FO 1 0061126900086 RED BULL RD ED WTRMLN",
+        "size": "4PK 4/12 FO"
+      },
+      {
+        "upc": "0061126900190",
+        "description": "RED BULL WE VAN BRRY 4PK 4/12 FO 2 0061126900183 RED BULL SBE JNBRY ED",
+        "size": "4PK 48 FO"
+      },
+      {
+        "upc": "0061126900244",
+        "description": "RED BULL SF WE VAN BRRY 12 FO 3 0061126900192 RED BULL SE CE ENRGY DRNK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900273",
+        "description": "RED BULL WHIT PEACH DRNK 4/12 FO 4 0061126900206 RED BULL SF RD EDTN WM ED",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900214",
+        "description": "RED BULL SF AMB EDT SB ED",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900226",
+        "description": "RED BULL SF SEA BLUE EDIT",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126918246",
+        "description": "RED BULL BLUE EDITION",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126932121",
+        "description": "RED BULL SMR CCNT TWST",
+        "size": "12 FO"
+      }
+    ],
+    "removed": [],
+    "bays": [
+      {
+        "bay": 1,
+        "width_inches": 21.25,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900276",
+                "facings": 5,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL SGR FR WHT PCH",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Peach Edition Sugarfree Energy Drink White Peach Can",
+                "image": "images/0061126900276.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900244",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SF WE VAN BRRY",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Iced Edition Sugarfree Energy Drink Iced Vanilla Berry Can",
+                "image": "images/0061126900244.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126971646",
+                "facings": 6,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL SGF ENERGY DRINK",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Sugar Free Energy Drink",
+                "image": "images/0061126971646.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126962373",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL TOTAL ZERO",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Zero Energy Drink",
+                "image": "images/0061126962373.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 33.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126981899",
+                "facings": 9,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRINK",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126981899.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 41.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126954602",
+                "facings": 8,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL SGF ENERGY DRINK",
+                "size": "16 FO",
+                "height_inches": 6.95,
+                "width_inches": 2.48,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Sugar Free Energy Drink",
+                "image": "images/0061126954602.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 51.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126954601",
+                "facings": 8,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL CHAMPIONS LMT ED",
+                "size": "16 FO",
+                "height_inches": 6.95,
+                "width_inches": 2.48,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126954601.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 60.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126942672",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRNK",
+                "size": "12PK 12/8....",
+                "height_inches": 5.37,
+                "width_inches": 12.5,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126942672.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126926373",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRINK",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126926373.jpg"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "bay": 2,
+        "width_inches": 21.25,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900293",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL WNT ED AP GNG SF",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Winter Edition Sugarfree Energy Drink Fuji Apple & Ginger Can",
+                "image": "images/0061126900293.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900304",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL SF PNK WB ENR DR",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Pink Edition Sugar Free Wild Berries Energy Drink",
+                "image": "images/0061126900304.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0061126911357",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL YELLOW EDITION",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Yellow Edition Tropical Energy Drink",
+                "image": "images/0061126911357.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900130",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL SMR ED SBRY APRT",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Amber Edition Strawberry Apricot Energy Drink",
+                "image": "images/0061126900130.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126933282",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL WATERMELON",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Red Edition Watermelon Energy Drink",
+                "image": "images/0061126933282.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0061126900164",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL JUNBRY ENRGY DRK",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Sea Blue Edition Juneberry Energy Drink",
+                "image": "images/0061126900164.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 33.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900286",
+                "facings": 4,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL WNTR ED AP GNG",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Winter Edition Energy Drink Fuji Apple & Ginger Can",
+                "image": "images/0061126900286.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900312",
+                "facings": 5,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL PNK WLD BR EN DR",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Pink Edition Wild Berries Energy Drink",
+                "image": "images/0061126900312.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 40.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900270",
+                "facings": 5,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL WHT PCH DRNK",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Peach Edition Energy Drink White Peach Can",
+                "image": "images/0061126900270.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900184",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WE VAN BERRY",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Winter Edition Iced Vanilla Berry Energy Drink",
+                "image": "images/0061126900184.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 48.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126910171",
+                "facings": 6,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL SGF ENERGY DRINK",
+                "size": "8.4 FO",
+                "height_inches": 5.3,
+                "width_inches": 2.1,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Sugar Free Energy Drink",
+                "image": "images/0061126910171.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126962372",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL TOTAL ZERO",
+                "size": "8.4 FO",
+                "height_inches": 5.3,
+                "width_inches": 2.1,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Zero Energy Drink",
+                "image": "images/0061126962372.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 55.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126999100",
+                "facings": 9,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRINK",
+                "size": "8.4 FO",
+                "height_inches": 5.3,
+                "width_inches": 2.1,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126999100.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 7,
+            "height_from_base": 62.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126976663",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL SGF",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Sugar Free Energy Drink Multipack Cans",
+                "image": "images/0061126976663.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126904245",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "RED BULL YLLW EDITION",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.2,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Yellow Edition Tropical Energy Drink",
+                "image": "images/0061126904245.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0061126900190",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WE VAN BRRY",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Iced Edition Energy Drink Iced Vanilla Berry Multipack",
+                "image": "images/0061126900190.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0061126900273",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WHIT PEACH DRNK",
+                "size": "4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Peach Edition Energy Drink White Peach Multipack",
+                "image": "images/0061126900273.jpg"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "HABCO Monster Cooler 12 FT": {
+    "section_key": "HABCO Monster Cooler 12 FT",
+    "name": "D701_L00000_D58_C142_V670_D002_MX",
+    "description": "HABCO MONSTER COOLER 12 FT ASSORTMENT",
+    "dbkey": 8715978,
+    "effective_date": "1/25/2026",
+    "period_week": "P13 W04 Y2025",
+    "width_inches": 44.0,
+    "height_inches": 23,
+    "depth_inches": 78,
+    "num_bays": 2,
+    "num_shelves": 0,
+    "num_products": 0,
+    "fixture_type": "HABCO-ESM46",
+    "pdf_filename": "D701_L00000_D58_C142_V670_D002_MX - HABCO MONSTER COOLER 12 FT ASSORTMENT.pdf",
+    "added": [
+      {
+        "upc": "0007084700030",
+        "description": "MONSTER ENERGY 12 FO 1 0007084703462 MONSTER ULTRA FIESTA",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084701770",
+        "description": "MONSTER ULTRA ENERGY ZERO 24 FO 2 0007084703694 MONSTER JUICE KHAOT",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084703270",
+        "description": "MONSTER JUICE MANGO LOCO 4/16 FO 3 0061076401781 BANG ENERGY SOUR ROPES",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084703754",
+        "description": "MONSTER ZERO ULTRA 12 FO 4 0061076401784 BANG ENRGY ORANGE",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084781124",
+        "description": "MONSTER ENERGY MEGA 24 FO 5 0061076482617 BANG PURPLE HAZE DRINK",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084789183",
+        "description": "MONSTER ULTRA STRAWBRRY 12 FO 6 0061076486381 BANG PEACH MANGO DRINK",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084789529",
+        "description": "MONSTER ULTRA SUNRISE 12 FO 7 0081515402009 NOS ENERGY GRAPE DRINK",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084789824",
+        "description": "MONSTER ULTRA BLUE EN DR 16 FO 8 0081515402166 REIGN RAZZLE BERRY",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084789943",
+        "description": "MONSTER JUICE VOODO 16 FO 9 0081515402545 REIGN STORM ORG ENRG DRNK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0007084789948",
+        "description": "MONSTER ULTRA WLD PASSN 16 FO 10 0081515402548 REIGN STORM GRP ENRG DRNK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0007084789953",
+        "description": "MONSTER ULTRA WLD PSSN 12 FO 11 0081515402551 REIGN STORM KIWI ENRG DRK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0007084789961",
+        "description": "MONSTER ULTRA PUNK 16 FO 12 0081515402671 REIGN STORM TROPICAL 12",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0007084789969",
+        "description": "MONSTER STRAWBERRY",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084789977",
+        "description": "MONSTER ZERO SUGAR",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0007084789988",
+        "description": "MONSTER VOODOO GRP",
+        "size": "4PK 4/16 FO"
+      },
+      {
+        "upc": "0007084790003",
+        "description": "MONSTER ULTRA BLUE HWII",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0007084790020",
+        "description": "MONSTER LANDO NORRIS ZS",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0081515402007",
+        "description": "NOS ENERGY MEGA",
+        "size": "24 FO"
+      }
+    ],
+    "removed": [],
+    "bays": [
+      {
+        "bay": 1,
+        "width_inches": 22.0,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084703756",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY",
+                "size": "12PK 12/16...",
+                "height_inches": 6.23,
+                "width_inches": 7.85,
+                "merch_style": "Unit",
+                "full_name": "Monster® Energy Drink Multipack Cans",
+                "image": "images/0007084703756.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084781117",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Energy Drink Multipack Cans",
+                "image": "images/0007084781117.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084700005",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ZERO SUGAR",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Energy Drink Multipack Cans",
+                "image": "images/0007084700005.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0081515402000",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "NOS ENERGY DRINK",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "NOS Original Energy Drink Can",
+                "image": "images/0081515402000.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0081515402591",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "NOS ZERO SUGAR",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "NOS Zero Sugar Energy Drink Can",
+                "image": "images/0081515402591.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0081515402018",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "FULL THROTTLE CITRUS",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Full Throttle Citrus Energy Drink Can",
+                "image": "images/0081515402018.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 34.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084781260",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MNSTR MEAN BEAN DRNK",
+                "size": "15 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.59,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Mean Bean® Coffee Energy Drink Can",
+                "image": "images/0007084781260.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084781271",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MNSTR LOCA MOCA DRNK",
+                "size": "15 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.59,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Loca Moca Coffee Energy Drink Can",
+                "image": "images/0007084781271.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084702402",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MNSTR SALTED CARAMEL",
+                "size": "15 FO",
+                "height_inches": 6.3,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Salted Caramel Coffee Energy Drink Can",
+                "image": "images/0007084702402.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084781251",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MONSTER IRISH CREME",
+                "size": "15 FO",
+                "height_inches": 6.3,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Irish Crème Coffee Energy Drink Can",
+                "image": "images/0007084781251.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084789199",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JM CFE ENRGY DRNK",
+                "size": "15 FO",
+                "height_inches": 6.25,
+                "width_inches": 2.5,
+                "merch_style": "Unit",
+                "full_name": "Monster® Java Cafe Latte Coffee Energy Drink Can",
+                "image": "images/0007084789199.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 42.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084702901",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JUICE MANGO LOCO",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Mango Loco Energy Drink Can",
+                "image": "images/0007084702901.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084702290",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JUICE PIPLNE PNCH",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Pipeline Punch® Energy Drink Can",
+                "image": "images/0007084702290.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789956",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JUICE BAD APPLE",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster Bad Apple Energy Drink Can",
+                "image": "images/0007084789956.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084703191",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MNSTR JUICE PACIFIC PUNCH",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Pacific Punch Energy Drink Can",
+                "image": "images/0007084703191.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084789832",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JCE VKING BERRY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Viking Berry 16 Fl Oz",
+                "image": "images/0007084789832.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0007084789943",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER JUICE VOODO",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Voodoo Grape 24/16oz",
+                "image": "images/0007084789943.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 51.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084781116",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy Original Energy Drink Can",
+                "image": "images/0007084781116.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084781126",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY LC",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Locarb Energy Drink Can",
+                "image": "images/0007084781126.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084700003",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ZERO SUGAR",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Energy Drink Can",
+                "image": "images/0007084700003.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084789969",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER STRAWBERRY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Strawberry Shot Energy Drink Can",
+                "image": "images/0007084789969.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084789977",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ZERO SUGAR",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Strawberry Shot Energy Drink Can",
+                "image": "images/0007084789977.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0007084790020",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER LANDO NORRIS ZS",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Lando Norris Energy Drink Can",
+                "image": "images/0007084790020.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 59.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084781124",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ENERGY MEGA",
+                "size": "24 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.87,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy 12/24oz",
+                "image": "images/0007084781124.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084701770",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA ENERGY ZERO",
+                "size": "24 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.87,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy Ultra Zero Ultra 12/24oz",
+                "image": "images/0007084701770.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0081515402007",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "NOS ENERGY MEGA",
+                "size": "24 FO",
+                "height_inches": 8.48,
+                "width_inches": 2.87,
+                "merch_style": "Unit",
+                "full_name": "NOS Original 12/24oz",
+                "image": "images/0081515402007.jpg"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "bay": 2,
+        "width_inches": 22.0,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084701324",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA ZERO",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Zero Ultra Energy Drink Multipack Cans",
+                "image": "images/0007084701324.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084789988",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER VOODOO GRP",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.3,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Voodoo Grape 6/4/16oz",
+                "image": "images/0007084789988.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084703270",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER JUICE MANGO LOCO",
+                "size": "4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Mango Loco 6/4/16oz",
+                "image": "images/0007084703270.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084700334",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER REHAB T/LMNDE",
+                "size": "4PK 4/15....",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Rehab Energy Drink Multipack Cans",
+                "image": "images/0007084700334.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084700030",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": true,
+                "description": "MONSTER ENERGY",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy 24/12oz",
+                "image": "images/0007084700030.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084703754",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": true,
+                "description": "MONSTER ZERO ULTRA",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Zero Ultra Energy Drink Can",
+                "image": "images/0007084703754.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789529",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA SUNRISE",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Sunrise Energy Drink Can",
+                "image": "images/0007084789529.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084789183",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA STRAWBRRY",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy Ultra Strawberry Dreams 24/12oz",
+                "image": "images/0007084789183.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084790003",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA BLUE HWII",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy Ultra Blue Hawaiian 24/12oz",
+                "image": "images/0007084790003.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0007084789953",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA WLD PSSN",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Wild Passion Energy Drink Can",
+                "image": "images/0007084789953.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 34.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084702732",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY ULT VLT US",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Violet Energy Drink Can",
+                "image": "images/0007084702732.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084789814",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA VICE GUAVA",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Vice Guava Energy Drink Can",
+                "image": "images/0007084789814.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084703308",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA PARADISE",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Paradise Energy Drink Can",
+                "image": "images/0007084703308.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084789618",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA FNTSY RR ED",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Fantasy Ruby Red Energy Drink Can",
+                "image": "images/0007084789618.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084700322",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER REHAB TEA/LEMNADE",
+                "size": "15.5 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Rehab Energy Drink Can",
+                "image": "images/0007084700322.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0007084702152",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER REHAB PEACH TEA",
+                "size": "15.5 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Rehab Peach Energy Drink Can",
+                "image": "images/0007084702152.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 42.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084789824",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA BLUE EN DR",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Blue Hawaiian Energy Drink Can",
+                "image": "images/0007084789824.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084789961",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA PUNK",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Punk Punch Energy Drink Can",
+                "image": "images/0007084789961.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789948",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MONSTER ULTRA WLD PASSN",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster Ultra Wild Passion Energy Drink Can",
+                "image": "images/0007084789948.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084702942",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA PCHY KEEN",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Peachy Keen Energy Drink Can",
+                "image": "images/0007084702942.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 51.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084701247",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY ZERO ULTRA",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Zero Ultra Energy Drink Can",
+                "image": "images/0007084701247.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084702090",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA ENRGY SNRSE",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Sunrise Energy Drink Can",
+                "image": "images/0007084702090.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789185",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ZS ULTRA STRWBRY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Strawberry Dreams Energy Drink Can",
+                "image": "images/0007084789185.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 59.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0081515402141",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "REIGN REIGNBOW SHERBAT",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "REIGN Total Body Fuel, Reignbow Sherbet, Fitness & Performance Drink, 16 Fl Oz",
+                "image": "images/0081515402141.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0081515402597",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "REIGN SOUR GUMY WRMS DRNK",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Reign® Total Body Fuel Sour Gummy Worm Energy Drink Can",
+                "image": "images/0081515402597.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0081515402190",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "REIGN ORANGE DREAMSICLE",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Reign® Total Body Fuel Orange Dreamsicle Energy Drink Can",
+                "image": "images/0081515402190.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0081515402326",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "REIGN WHITE GUMMY BEAR",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Reign® White Gummy Bear Energy Drink Can",
+                "image": "images/0081515402326.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0081515402677",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "REIGN WHITE HAZE",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Reign® Total Body Fuel White Haze Energy Drink Can",
+                "image": "images/0081515402677.jpg"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "HABCO Monster Cooler 8 FT": {
+    "section_key": "HABCO Monster Cooler 8 FT",
+    "name": "D701_L00000_D58_C142_V671_D002_MX",
+    "description": "HABCO MONSTER COOLER 8 FT ASSORTMENT",
+    "dbkey": 8715979,
+    "effective_date": "1/25/2026",
+    "period_week": "P13 W04 Y2025",
+    "width_inches": 44.0,
+    "height_inches": 23,
+    "depth_inches": 78,
+    "num_bays": 2,
+    "num_shelves": 0,
+    "num_products": 0,
+    "fixture_type": "HABCO-ESM46",
+    "pdf_filename": "D701_L00000_D58_C142_V671_D002_MX - HABCO MONSTER COOLER 8 FT ASSORTMENT.pdf",
+    "added": [],
+    "removed": [],
+    "bays": [
+      {
+        "bay": 1,
+        "width_inches": 22.0,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084703756",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY",
+                "size": "12PK 12/16...",
+                "height_inches": 6.23,
+                "width_inches": 7.85,
+                "merch_style": "Unit",
+                "full_name": "Monster® Energy Drink Multipack Cans",
+                "image": "images/0007084703756.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084781117",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Energy Drink Multipack Cans",
+                "image": "images/0007084781117.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084700005",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ZERO SUGAR",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Energy Drink Multipack Cans",
+                "image": "images/0007084700005.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084789840",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER KLR BRW MN BEAN",
+                "size": "15 FO",
+                "height_inches": 6.25,
+                "width_inches": 2.5,
+                "merch_style": "Unit",
+                "full_name": "Monster Killer Brew Mean Bean Energy Drink Can",
+                "image": "images/0007084789840.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084789843",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER KLR BRW LCA MCA",
+                "size": "15 FO",
+                "height_inches": 6.25,
+                "width_inches": 2.5,
+                "merch_style": "Unit",
+                "full_name": "Monster Killer Brew Loca Moca Energy Drink Can",
+                "image": "images/0007084789843.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0081515402000",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "NOS ENERGY DRINK",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "NOS Original Energy Drink Can",
+                "image": "images/0081515402000.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 34.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084781260",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MNSTR MEAN BEAN DRNK",
+                "size": "15 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.59,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Mean Bean® Coffee Energy Drink Can",
+                "image": "images/0007084781260.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084781271",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MNSTR LOCA MOCA DRNK",
+                "size": "15 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.59,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Loca Moca Coffee Energy Drink Can",
+                "image": "images/0007084781271.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084702402",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MNSTR SALTED CARAMEL",
+                "size": "15 FO",
+                "height_inches": 6.3,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Salted Caramel Coffee Energy Drink Can",
+                "image": "images/0007084702402.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084781251",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "JAVA MONSTER IRISH CREME",
+                "size": "15 FO",
+                "height_inches": 6.3,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Java Monster® Irish Crème Coffee Energy Drink Can",
+                "image": "images/0007084781251.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084789199",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JM CFE ENRGY DRNK",
+                "size": "15 FO",
+                "height_inches": 6.25,
+                "width_inches": 2.5,
+                "merch_style": "Unit",
+                "full_name": "Monster® Java Cafe Latte Coffee Energy Drink Can",
+                "image": "images/0007084789199.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 42.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084702901",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JUICE MANGO LOCO",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Mango Loco Energy Drink Can",
+                "image": "images/0007084702901.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084702290",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JUICE PIPLNE PNCH",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Pipeline Punch® Energy Drink Can",
+                "image": "images/0007084702290.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084703191",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MNSTR JUICE PACIFIC PUNCH",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Pacific Punch Energy Drink Can",
+                "image": "images/0007084703191.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084789832",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JCE VKING BERRY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Viking Berry 16 Fl Oz",
+                "image": "images/0007084789832.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084789943",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JUICE VOODO",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Voodoo Grape 24/16oz",
+                "image": "images/0007084789943.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 51.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084781126",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY LC",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Locarb Energy Drink Can",
+                "image": "images/0007084781126.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084700003",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ZERO SUGAR",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Energy Drink Can",
+                "image": "images/0007084700003.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789969",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER STRAWBERRY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Strawberry Shot Energy Drink Can",
+                "image": "images/0007084789969.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084789977",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ZERO SUGAR",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Strawberry Shot Energy Drink Can",
+                "image": "images/0007084789977.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084790020",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER LANDO NORRIS ZS",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Lando Norris Energy Drink Can",
+                "image": "images/0007084790020.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 59.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084781116",
+                "facings": 7,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy Original Energy Drink Can",
+                "image": "images/0007084781116.jpg"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "bay": 2,
+        "width_inches": 22.0,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084701324",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA ZERO",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Zero Ultra Energy Drink Multipack Cans",
+                "image": "images/0007084701324.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084789988",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER VOODOO GRP",
+                "size": "4PK 4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.3,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Voodoo Grape 6/4/16oz",
+                "image": "images/0007084789988.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084703270",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER JUICE MANGO LOCO",
+                "size": "4/16 FO",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Juice Monster Mango Loco 6/4/16oz",
+                "image": "images/0007084703270.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084700334",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER REHAB T/LMNDE",
+                "size": "4PK 4/15....",
+                "height_inches": 6.2,
+                "width_inches": 5.31,
+                "merch_style": "Unit",
+                "full_name": "Monster® Rehab Energy Drink Multipack Cans",
+                "image": "images/0007084700334.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084700030",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": true,
+                "description": "MONSTER ENERGY",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy 24/12oz",
+                "image": "images/0007084700030.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084703754",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": true,
+                "description": "MONSTER ZERO ULTRA",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Zero Ultra Energy Drink Can",
+                "image": "images/0007084703754.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789529",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA SUNRISE",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Sunrise Energy Drink Can",
+                "image": "images/0007084789529.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084789183",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA STRAWBRRY",
+                "size": "12 FO",
+                "height_inches": 6.14,
+                "width_inches": 2.26,
+                "merch_style": "Unit",
+                "full_name": "Monster Energy Ultra Strawberry Dreams 24/12oz",
+                "image": "images/0007084789183.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 34.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084702732",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY ULT VLT US",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Violet Energy Drink Can",
+                "image": "images/0007084702732.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084789814",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA VICE GUAVA",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Vice Guava Energy Drink Can",
+                "image": "images/0007084789814.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084703308",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA PARADISE",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Paradise Energy Drink Can",
+                "image": "images/0007084703308.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084789618",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA FNTSY RR ED",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Fantasy Ruby Red Energy Drink Can",
+                "image": "images/0007084789618.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007084700322",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER REHAB TEA/LEMNADE",
+                "size": "15.5 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Rehab Energy Drink Can",
+                "image": "images/0007084700322.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0007084702152",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER REHAB PEACH TEA",
+                "size": "15.5 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Rehab Peach Energy Drink Can",
+                "image": "images/0007084702152.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 42.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084789824",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA BLUE EN DR",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Blue Hawaiian Energy Drink Can",
+                "image": "images/0007084789824.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084789961",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA PUNK",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Punk Punch Energy Drink Can",
+                "image": "images/0007084789961.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789948",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA WLD PASSN",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster Ultra Wild Passion Energy Drink Can",
+                "image": "images/0007084789948.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0007084702942",
+                "facings": 1,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA PCHY KEEN",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Peachy Keen Energy Drink Can",
+                "image": "images/0007084702942.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 51.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0007084701247",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ENERGY ZERO ULTRA",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Zero Ultra Energy Drink Can",
+                "image": "images/0007084701247.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0007084702090",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ULTRA ENRGY SNRSE",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Sunrise Energy Drink Can",
+                "image": "images/0007084702090.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0007084789185",
+                "facings": 2,
+                "is_new": false,
+                "is_changed": false,
+                "description": "MONSTER ZS ULTRA STRWBRY",
+                "size": "16 FO",
+                "height_inches": 6.21,
+                "width_inches": 2.61,
+                "merch_style": "Unit",
+                "full_name": "Monster® Zero Sugar Ultra Strawberry Dreams Energy Drink Can",
+                "image": "images/0007084789185.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 59.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0081515402141",
+                "facings": 4,
+                "is_new": false,
+                "is_changed": false,
+                "description": "REIGN REIGNBOW SHERBAT",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "REIGN Total Body Fuel, Reignbow Sherbet, Fitness & Performance Drink, 16 Fl Oz",
+                "image": "images/0081515402141.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0081515402190",
+                "facings": 3,
+                "is_new": false,
+                "is_changed": false,
+                "description": "REIGN ORANGE DREAMSICLE",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Reign® Total Body Fuel Orange Dreamsicle Energy Drink Can",
+                "image": "images/0081515402190.jpg"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "HABCO Red Bull Cooler 8 FT": {
+    "section_key": "HABCO Red Bull Cooler 8 FT",
+    "name": "D701_L00000_D58_C142_V707_D002_MX",
+    "description": "HABCO- RED BULL COOLER 8 FT ASSORTMENT",
+    "dbkey": 8802706,
+    "effective_date": "2/6/2026",
+    "period_week": "P01 W01 Y2026",
+    "width_inches": 42.5,
+    "height_inches": 23,
+    "depth_inches": 78,
+    "num_bays": 2,
+    "num_shelves": 0,
+    "num_products": 0,
+    "fixture_type": "HABCO-ESM46",
+    "pdf_filename": "D701_L00000_D58_C142_V707_D002_MX - HABCO- RED BULL COOLER 8 FT ASSORTMENT.pdf",
+    "added": [
+      {
+        "upc": "0061126900130",
+        "description": "RED BULL SMR ED SBRY APRT",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900164",
+        "description": "RED BULL JUNBRY ENRGY DRK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900184",
+        "description": "RED BULL WE VAN BERRY",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900190",
+        "description": "RED BULL WE VAN BRRY",
+        "size": "4PK 4/12 FO"
+      },
+      {
+        "upc": "0061126900244",
+        "description": "RED BULL SF WE VAN BRRY",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900270",
+        "description": "RED BULL WHT PCH DRNK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900273",
+        "description": "RED BULL WHIT PEACH DRNK",
+        "size": "4/12 FO"
+      },
+      {
+        "upc": "0061126900276",
+        "description": "RED BULL SGR FR WHT PCH",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900286",
+        "description": "RED BULL WNTR ED AP GNG",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900293",
+        "description": "RED BULL WNT ED AP GNG SF",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900304",
+        "description": "RED BULL SF PNK WB ENR DR",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126900312",
+        "description": "RED BULL PNK WLD BR EN DR",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126904245",
+        "description": "RED BULL YLLW EDITION",
+        "size": "4PK 4/12 FO"
+      },
+      {
+        "upc": "0061126910171",
+        "description": "RED BULL SGF ENERGY DRINK",
+        "size": "8.4 FO"
+      },
+      {
+        "upc": "0061126911357",
+        "description": "RED BULL YELLOW EDITION",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126926373",
+        "description": "RED BULL ENERGY DRINK",
+        "size": "4PK 4/12 FO"
+      },
+      {
+        "upc": "0061126933282",
+        "description": "RED BULL WATERMELON",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126942672",
+        "description": "RED BULL ENERGY DRNK",
+        "size": "12PK 12/8.4 FO"
+      },
+      {
+        "upc": "0061126954601",
+        "description": "RED BULL CHAMPIONS LMT ED",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0061126962372",
+        "description": "RED BULL TOTAL ZERO",
+        "size": "8.4 FO"
+      },
+      {
+        "upc": "0061126962373",
+        "description": "RED BULL TOTAL ZERO",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126971646",
+        "description": "RED BULL SGF ENERGY DRINK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126976663",
+        "description": "RED BULL SGF",
+        "size": "4PK 4/12 FO"
+      },
+      {
+        "upc": "0061126981899",
+        "description": "RED BULL ENERGY DRINK",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0061126999100",
+        "description": "RED BULL ENERGY DRINK",
+        "size": "8.4 FO"
+      }
+    ],
+    "removed": [],
+    "bays": [
+      {
+        "bay": 1,
+        "width_inches": 21.25,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900244",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SF WE VAN BRRY",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Iced Edition Sugarfree Energy Drink Iced Vanilla Berry Can",
+                "image": "images/0061126900244.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900276",
+                "facings": 5,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SGR FR WHT PCH",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Peach Edition Sugarfree Energy Drink White Peach Can",
+                "image": "images/0061126900276.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900304",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SF PNK WB ENR DR",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Pink Edition Sugar Free Wild Berries Energy Drink",
+                "image": "images/0061126900304.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900293",
+                "facings": 5,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WNT ED AP GNG SF",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Winter Edition Sugarfree Energy Drink Fuji Apple & Ginger Can",
+                "image": "images/0061126900293.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 33.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126971646",
+                "facings": 6,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SGF ENERGY DRINK",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Sugar Free Energy Drink",
+                "image": "images/0061126971646.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126962373",
+                "facings": 3,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL TOTAL ZERO",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Zero Energy Drink",
+                "image": "images/0061126962373.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 41.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126981899",
+                "facings": 9,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRINK",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126981899.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 51.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126954601",
+                "facings": 8,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL CHAMPIONS LMT ED",
+                "size": "16 FO",
+                "height_inches": 6.95,
+                "width_inches": 2.48,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126954601.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 60.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126942672",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRNK",
+                "size": "12PK 12/8....",
+                "height_inches": 5.37,
+                "width_inches": 12.5,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126942672.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126926373",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRINK",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126926373.jpg"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "bay": 2,
+        "width_inches": 21.25,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 17.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900164",
+                "facings": 5,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL JUNBRY ENRGY DRK",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Sea Blue Edition Juneberry Energy Drink",
+                "image": "images/0061126900164.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900130",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SMR ED SBRY APRT",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Amber Edition Strawberry Apricot Energy Drink",
+                "image": "images/0061126900130.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 25.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126933282",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WATERMELON",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Red Edition Watermelon Energy Drink",
+                "image": "images/0061126933282.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126911357",
+                "facings": 5,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL YELLOW EDITION",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Yellow Edition Tropical Energy Drink",
+                "image": "images/0061126911357.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 33.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900270",
+                "facings": 5,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WHT PCH DRNK",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Peach Edition Energy Drink White Peach Can",
+                "image": "images/0061126900270.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900184",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WE VAN BERRY",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Winter Edition Iced Vanilla Berry Energy Drink",
+                "image": "images/0061126900184.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 4,
+            "height_from_base": 40.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126900286",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WNTR ED AP GNG",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Winter Edition Energy Drink Fuji Apple & Ginger Can",
+                "image": "images/0061126900286.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126900312",
+                "facings": 5,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL PNK WLD BR EN DR",
+                "size": "12 FO",
+                "height_inches": 6.19,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Pink Edition Wild Berries Energy Drink",
+                "image": "images/0061126900312.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 5,
+            "height_from_base": 48.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126910171",
+                "facings": 6,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SGF ENERGY DRINK",
+                "size": "8.4 FO",
+                "height_inches": 5.3,
+                "width_inches": 2.1,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Sugar Free Energy Drink",
+                "image": "images/0061126910171.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126962372",
+                "facings": 3,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL TOTAL ZERO",
+                "size": "8.4 FO",
+                "height_inches": 5.3,
+                "width_inches": 2.1,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Zero Energy Drink",
+                "image": "images/0061126962372.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 6,
+            "height_from_base": 55.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126999100",
+                "facings": 9,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL ENERGY DRINK",
+                "size": "8.4 FO",
+                "height_inches": 5.3,
+                "width_inches": 2.1,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Energy Drink Multipack Cans",
+                "image": "images/0061126999100.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 7,
+            "height_from_base": 62.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0061126976663",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL SGF",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Original Sugar Free Energy Drink Multipack Cans",
+                "image": "images/0061126976663.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0061126904245",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL YLLW EDITION",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.2,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Yellow Edition Tropical Energy Drink",
+                "image": "images/0061126904245.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0061126900190",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WE VAN BRRY",
+                "size": "4PK 4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Iced Edition Energy Drink Iced Vanilla Berry Multipack",
+                "image": "images/0061126900190.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0061126900273",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "RED BULL WHIT PEACH DRNK",
+                "size": "4/12 FO",
+                "height_inches": 6.23,
+                "width_inches": 4.56,
+                "merch_style": "Unit",
+                "full_name": "Red Bull Peach Edition Energy Drink White Peach Multipack",
+                "image": "images/0061126900273.jpg"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "GDM 9 - CSD": {
+    "section_key": "GDM 9 - CSD",
+    "name": "D701_L00000_D58_C142_V898_D001_MX",
+    "description": "GDM 9- CSD",
+    "dbkey": 8607502,
+    "effective_date": "12/18/2025",
+    "period_week": "P12 W02 Y2025",
+    "width_inches": 31.75,
+    "height_inches": 24,
+    "depth_inches": 40,
+    "num_bays": 1,
+    "num_shelves": 0,
+    "num_products": 0,
+    "fixture_type": "GDM-9-LD",
+    "pdf_filename": "D701_L00000_D58_C142_V898_D001_MX - GDM 9- CSD.pdf",
+    "added": [
+      {
+        "upc": "0001200000129",
+        "description": "PEPSI",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200000131",
+        "description": "MTN DEW",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200000134",
+        "description": "DIET MTN DEW",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200000559",
+        "description": "PEPSI WILD CHERRY",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200001880",
+        "description": "PEPSI ZERO SUGAR",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200013027",
+        "description": "MTN DEW BAJA BLAST",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200017174",
+        "description": "DIET PEPSI PLASTIC BOTTLE",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200022151",
+        "description": "STARRY LEMON LIME",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900000044",
+        "description": "COKE CLASSIC CONTOUR BTL",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900000045",
+        "description": "DIET COKE CONTOUR BTL",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900000764",
+        "description": "SPRITE",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900001801",
+        "description": "COKE CHERRY",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900001916",
+        "description": "FANTA ORANGE",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900004086",
+        "description": "COKE ZERO",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0007800003530",
+        "description": "DR PEPPER ZERO SUGAR",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0007800004058",
+        "description": "DR PEPPER BLACKBERRY",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0007800008240",
+        "description": "DR PEPPER",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0007800008340",
+        "description": "DR PEPPER DIET",
+        "size": "20 FO"
+      }
+    ],
+    "removed": [],
+    "bays": [
+      {
+        "bay": 1,
+        "width_inches": 31.75,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 4.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0001200000129",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "PEPSI",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Pepsi Cola® Soda Bottle",
+                "image": "images/0001200000129.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0001200000559",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "PEPSI WILD CHERRY",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Pepsi Cola® Wild Cherry Soda Bottle",
+                "image": "images/0001200000559.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0001200001880",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "PEPSI ZERO SUGAR",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Pepsi Cola® Zero Sugar Soda Bottle",
+                "image": "images/0001200001880.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0001200017174",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DIET PEPSI PLASTIC BOTTLE",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Pepsi Cola® Diet Soda Bottle",
+                "image": "images/0001200017174.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007800008340",
+                "facings": 3,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DR PEPPER DIET",
+                "size": "20 FO",
+                "height_inches": 8.4,
+                "width_inches": 2.9,
+                "merch_style": "Unit",
+                "full_name": "Diet Dr Pepper Soda Bottle",
+                "image": "images/0007800008340.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0007800004058",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DR PEPPER BLACKBERRY",
+                "size": "20 FO",
+                "height_inches": 8.4,
+                "width_inches": 2.9,
+                "merch_style": "Unit",
+                "full_name": "Dr Pepper Blackberry Soda Bottle",
+                "image": "images/0007800004058.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 14.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0001200000131",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MTN DEW",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Mountain Dew® Soda Bottle",
+                "image": "images/0001200000131.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0001200000134",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DIET MTN DEW",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Diet Mountain Dew® Citrus Soda Bottle",
+                "image": "images/0001200000134.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0001200013027",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "MTN DEW BAJA BLAST",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Mountain Dew® Baja Blast Soda Bottle",
+                "image": "images/0001200013027.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0001200022151",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "STARRY LEMON LIME",
+                "size": "20 FO",
+                "height_inches": 8.5,
+                "width_inches": 2.8,
+                "merch_style": "Unit",
+                "full_name": "Starry™ Lemon Lime Caffeine Free Soda Bottle",
+                "image": "images/0001200022151.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0007800008240",
+                "facings": 3,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DR PEPPER",
+                "size": "20 FO",
+                "height_inches": 8.4,
+                "width_inches": 2.9,
+                "merch_style": "Unit",
+                "full_name": "Dr Pepper Soda Bottle",
+                "image": "images/0007800008240.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0007800003530",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DR PEPPER ZERO SUGAR",
+                "size": "20 FO",
+                "height_inches": 8.4,
+                "width_inches": 2.9,
+                "merch_style": "Unit",
+                "full_name": "Dr Pepper Zero Sugar Soda Bottle",
+                "image": "images/0007800003530.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 25.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0004900000044",
+                "facings": 3,
+                "is_new": true,
+                "is_changed": false,
+                "description": "COKE CLASSIC CONTOUR BTL",
+                "size": "20 FO",
+                "height_inches": 8.89,
+                "width_inches": 2.86,
+                "merch_style": "Unit",
+                "full_name": "Coca-Cola® Soda Bottle",
+                "image": "images/0004900000044.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0004900004086",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "COKE ZERO",
+                "size": "20 FO",
+                "height_inches": 8.88,
+                "width_inches": 2.86,
+                "merch_style": "Unit",
+                "full_name": "Coca-Cola® Zero Sugar Soda Bottle",
+                "image": "images/0004900004086.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0004900001801",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "COKE CHERRY",
+                "size": "20 FO",
+                "height_inches": 8.89,
+                "width_inches": 2.86,
+                "merch_style": "Unit",
+                "full_name": "Coca-Cola® Cherry Soda Bottle",
+                "image": "images/0004900001801.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0004900000045",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DIET COKE CONTOUR BTL",
+                "size": "20 FO",
+                "height_inches": 8.88,
+                "width_inches": 2.86,
+                "merch_style": "Unit",
+                "full_name": "Diet Coke® Soda Bottle",
+                "image": "images/0004900000045.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0004900000764",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "SPRITE",
+                "size": "20 FO",
+                "height_inches": 8.88,
+                "width_inches": 2.86,
+                "merch_style": "Unit",
+                "full_name": "Sprite® Lemon Lime Caffeine Free Soda Bottle",
+                "image": "images/0004900000764.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0004900001916",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "FANTA ORANGE",
+                "size": "20 FO",
+                "height_inches": 8.88,
+                "width_inches": 2.86,
+                "merch_style": "Unit",
+                "full_name": "Fanta® Orange Soda Bottle",
+                "image": "images/0004900001916.jpg"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "GDM 9 - All Beverage": {
+    "section_key": "GDM 9 - All Beverage",
+    "name": "D701_L00000_D58_C142_V899_D001_MX",
+    "description": "GDM 9- ALL BEVERAGE",
+    "dbkey": 8608710,
+    "effective_date": "12/18/2025",
+    "period_week": "P12 W02 Y2025",
+    "width_inches": 31.75,
+    "height_inches": 24,
+    "depth_inches": 40,
+    "num_bays": 1,
+    "num_shelves": 0,
+    "num_products": 0,
+    "fixture_type": "GDM-9-LD",
+    "pdf_filename": "D701_L00000_D58_C142_V899_D001_MX - GDM 9- ALL BEVERAGE.pdf",
+    "added": [
+      {
+        "upc": "0001111089271",
+        "description": "FDMY OR PURIFIED WATER",
+        "size": "16.9 FO"
+      },
+      {
+        "upc": "0001200000159",
+        "description": "AQUAFINA PURFIED WATER",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0001200000452",
+        "description": "STRBCK FRAPP MOCHA DRINK",
+        "size": "13.7 FO"
+      },
+      {
+        "upc": "0001200028619",
+        "description": "PURE LF SWEET TEA",
+        "size": "18.5 FO"
+      },
+      {
+        "upc": "0001200028620",
+        "description": "PURE LF UNSWEETENED TEA",
+        "size": "18.5 FO"
+      },
+      {
+        "upc": "0001200081331",
+        "description": "STRBCK FRAPP VANILLA DRNK",
+        "size": "13.7 FO"
+      },
+      {
+        "upc": "0004900000371",
+        "description": "POWERADE FRUIT PUNCH",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900000790",
+        "description": "POWERADE MTN BERRY BLAST",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0004900000977",
+        "description": "DASANI PURIFIED WATER",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0005200032481",
+        "description": "GATORADE COOL BLUE",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0005200032866",
+        "description": "GATORADE FRUIT PUNCH",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0078616201000",
+        "description": "GLAC VITMWTR PWR C DRGNFT",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0078616215000",
+        "description": "GLAC VITMWTR XXX ACA BLB",
+        "size": "20 FO"
+      },
+      {
+        "upc": "0081003051225",
+        "description": "ALANI ENERGY CHERRY SS",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0081003051382",
+        "description": "ALANI ENERGY JCY PCH SS",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0081012852819",
+        "description": "GHST ENRGY WELCH GRP ENRG",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0081016960336",
+        "description": "GHOST BLUE RASPBERR",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0081162002063",
+        "description": "FAIRLF CORE POWER ELITE",
+        "size": "14 FO"
+      },
+      {
+        "upc": "0081162002195",
+        "description": "CORE PWR CHOCOLATE MLKSHK",
+        "size": "14 FO"
+      },
+      {
+        "upc": "0081162002196",
+        "description": "CORE PWR VANILLA MLKSHK",
+        "size": "14 FO"
+      },
+      {
+        "upc": "0081369402667",
+        "description": "BAI ZMBI BNG CHRY",
+        "size": "18 FO"
+      },
+      {
+        "upc": "0081369402671",
+        "description": "BAI MOLOKAI CCNUT",
+        "size": "18 FO"
+      },
+      {
+        "upc": "0085817600206",
+        "description": "BDYARMR SPRDRNK STR BANAN",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0085817600213",
+        "description": "BDYARMR SPRDRNK FRT PUNCH",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0085817600227",
+        "description": "BDYARMR PEACH MANGO LYTE",
+        "size": "16 FO"
+      },
+      {
+        "upc": "0088939200031",
+        "description": "CELSIUS SPARKLING ORANGE",
+        "size": "12 FO"
+      },
+      {
+        "upc": "0088939201019",
+        "description": "CELSIUS PEACH VIBE",
+        "size": "12 FO"
+      }
+    ],
+    "removed": [],
+    "bays": [
+      {
+        "bay": 1,
+        "width_inches": 31.75,
+        "shelves": [
+          {
+            "shelf": 1,
+            "height_from_base": 4.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0081162002195",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "CORE PWR CHOCOLATE MLKSHK",
+                "size": "14 FO",
+                "height_inches": 7.06,
+                "width_inches": 2.64,
+                "merch_style": "Unit",
+                "full_name": "Core Power Chocolate Protein Shake",
+                "image": "images/0081162002195.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0081162002196",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "CORE PWR VANILLA MLKSHK",
+                "size": "14 FO",
+                "height_inches": 7.06,
+                "width_inches": 2.64,
+                "merch_style": "Unit",
+                "full_name": "Core Power Vanilla Protein Shake",
+                "image": "images/0081162002196.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0081162002063",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "FAIRLF CORE POWER ELITE",
+                "size": "14 FO",
+                "height_inches": 7.1,
+                "width_inches": 2.64,
+                "merch_style": "Unit",
+                "full_name": "Core Power Elite Chocolate High Protein Shake",
+                "image": "images/0081162002063.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0001200000452",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "STRBCK FRAPP MOCHA DRINK",
+                "size": "13.7 FO",
+                "height_inches": 7.6,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Starbucks® Frappuccino® Mocha Iced Coffee Bottle",
+                "image": "images/0001200000452.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0001200081331",
+                "facings": 2,
+                "is_new": true,
+                "is_changed": false,
+                "description": "STRBCK FRAPP VANILLA DRNK",
+                "size": "13.7 FO",
+                "height_inches": 7.6,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Starbucks® Frappuccino® Vanilla Iced Coffee Bottle",
+                "image": "images/0001200081331.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0001200028619",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "PURE LF SWEET TEA",
+                "size": "18.5 FO",
+                "height_inches": 8.59,
+                "width_inches": 2.57,
+                "merch_style": "Unit",
+                "full_name": "Pure Leaf® Sweet Black Iced Tea Bottle",
+                "image": "images/0001200028619.jpg"
+              },
+              {
+                "position": 7,
+                "upc": "0001200028620",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "PURE LF UNSWEETENED TEA",
+                "size": "18.5 FO",
+                "height_inches": 8.59,
+                "width_inches": 2.57,
+                "merch_style": "Unit",
+                "full_name": "Pure Leaf® Unsweetened Black Iced Tea Bottle",
+                "image": "images/0001200028620.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 2,
+            "height_from_base": 14.5,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0004900000790",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "POWERADE MTN BERRY BLAST",
+                "size": "20 FO",
+                "height_inches": 7.88,
+                "width_inches": 2.82,
+                "merch_style": "Unit",
+                "full_name": "POWERADE® Mountain Berry Blast Sports Drink Bottle",
+                "image": "images/0004900000790.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0004900000371",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "POWERADE FRUIT PUNCH",
+                "size": "20 FO",
+                "height_inches": 7.9,
+                "width_inches": 2.9,
+                "merch_style": "Unit",
+                "full_name": "Powerade® Red Fruit Punch Sports Drink Bottle",
+                "image": "images/0004900000371.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0005200032866",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "GATORADE FRUIT PUNCH",
+                "size": "20 FO",
+                "height_inches": 7.65,
+                "width_inches": 2.85,
+                "merch_style": "Unit",
+                "full_name": "Gatorade® Red Fruit Punch Sports Drink Bottle",
+                "image": "images/0005200032866.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0005200032481",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "GATORADE COOL BLUE",
+                "size": "20 FO",
+                "height_inches": 7.65,
+                "width_inches": 2.85,
+                "merch_style": "Unit",
+                "full_name": "Gatorade® Cool Blue Sports Drink Bottle",
+                "image": "images/0005200032481.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0085817600213",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "BDYARMR SPRDRNK FRT PUNCH",
+                "size": "16 FO",
+                "height_inches": 7.35,
+                "width_inches": 2.76,
+                "merch_style": "Unit",
+                "full_name": "BODYARMOR® Fruit Punch Sports Drink Bottle",
+                "image": "images/0085817600213.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0085817600206",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "BDYARMR SPRDRNK STR BANAN",
+                "size": "16 FO",
+                "height_inches": 7.35,
+                "width_inches": 2.76,
+                "merch_style": "Unit",
+                "full_name": "BODYARMOR® Strawberry Banana Sports Drink Bottle",
+                "image": "images/0085817600206.jpg"
+              },
+              {
+                "position": 7,
+                "upc": "0085817600227",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "BDYARMR PEACH MANGO LYTE",
+                "size": "16 FO",
+                "height_inches": 7.35,
+                "width_inches": 2.76,
+                "merch_style": "Unit",
+                "full_name": "BODYARMOR® Lyte Peach Mango Sports Drink Bottle",
+                "image": "images/0085817600227.jpg"
+              },
+              {
+                "position": 8,
+                "upc": "0078616201000",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "GLAC VITMWTR PWR C DRGNFT",
+                "size": "20 FO",
+                "height_inches": 7.45,
+                "width_inches": 2.84,
+                "merch_style": "Unit",
+                "full_name": "vitaminwater® Power-C Dragonfruit Flavored Bottled Water Beverage",
+                "image": "images/0078616201000.jpg"
+              },
+              {
+                "position": 9,
+                "upc": "0078616215000",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "GLAC VITMWTR XXX ACA BLB",
+                "size": "20 FO",
+                "height_inches": 7.45,
+                "width_inches": 2.84,
+                "merch_style": "Unit",
+                "full_name": "vitaminwater® XXX Acai-Blueberry-Pomegranate Flavored Bottled Water Beverage",
+                "image": "images/0078616215000.jpg"
+              },
+              {
+                "position": 10,
+                "upc": "0081369402671",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "BAI MOLOKAI CCNUT",
+                "size": "18 FO",
+                "height_inches": 7.92,
+                "width_inches": 2.65,
+                "merch_style": "Unit",
+                "full_name": "Bai Molokai Coconut Water Beverage Bottle",
+                "image": "images/0081369402671.jpg"
+              },
+              {
+                "position": 11,
+                "upc": "0081369402667",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "BAI ZMBI BNG CHRY",
+                "size": "18 FO",
+                "height_inches": 7.92,
+                "width_inches": 2.65,
+                "merch_style": "Unit",
+                "full_name": "Bai Zambia Bing Cherry Water Beverage Bottle",
+                "image": "images/0081369402667.jpg"
+              }
+            ]
+          },
+          {
+            "shelf": 3,
+            "height_from_base": 25.0,
+            "products": [
+              {
+                "position": 1,
+                "upc": "0088939200031",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "CELSIUS SPARKLING ORANGE",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "CELSIUS® Sparkling Orange Energy Drink Can",
+                "image": "images/0088939200031.jpg"
+              },
+              {
+                "position": 2,
+                "upc": "0088939201019",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "CELSIUS PEACH VIBE",
+                "size": "12 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "CELSIUS® Sparkling Peach Vibe Energy Drink Can",
+                "image": "images/0088939201019.jpg"
+              },
+              {
+                "position": 3,
+                "upc": "0081003051225",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "ALANI ENERGY CHERRY SS",
+                "size": "12 FO",
+                "height_inches": 6.25,
+                "width_inches": 2.3,
+                "merch_style": "Unit",
+                "full_name": "Alani Nu Cherry Slush Sugar Free Energy Drink Can",
+                "image": "images/0081003051225.jpg"
+              },
+              {
+                "position": 4,
+                "upc": "0081003051382",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "ALANI ENERGY JCY PCH SS",
+                "size": "12 FO",
+                "height_inches": 6.25,
+                "width_inches": 2.25,
+                "merch_style": "Unit",
+                "full_name": "Alani Nu Juicy Peach Sugar Free Energy Drink Can",
+                "image": "images/0081003051382.jpg"
+              },
+              {
+                "position": 5,
+                "upc": "0081012852819",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "GHST ENRGY WELCH GRP ENRG",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Ghost Zero Sugar Welch's Grape Energy Drink Can",
+                "image": "images/0081012852819.jpg"
+              },
+              {
+                "position": 6,
+                "upc": "0081016960336",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "GHOST BLUE RASPBERR",
+                "size": "16 FO",
+                "height_inches": 6.2,
+                "width_inches": 2.63,
+                "merch_style": "Unit",
+                "full_name": "Ghost® Blue Raspberry Zero Sugar Energy Drink Can",
+                "image": "images/0081016960336.jpg"
+              },
+              {
+                "position": 7,
+                "upc": "0001111089271",
+                "facings": 4,
+                "is_new": true,
+                "is_changed": false,
+                "description": "FDMY OR PURIFIED WATER",
+                "size": "16.9 FO",
+                "height_inches": 7.5,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Fred Meyer® Purified Bottled Water",
+                "image": "images/0001111089271.jpg"
+              },
+              {
+                "position": 8,
+                "upc": "0001200000159",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "AQUAFINA PURFIED WATER",
+                "size": "20 FO",
+                "height_inches": 8.68,
+                "width_inches": 2.9,
+                "merch_style": "Unit",
+                "full_name": "Aquafina® Purified Drinking Bottled Water",
+                "image": "images/0001200000159.jpg"
+              },
+              {
+                "position": 9,
+                "upc": "0004900000977",
+                "facings": 1,
+                "is_new": true,
+                "is_changed": false,
+                "description": "DASANI PURIFIED WATER",
+                "size": "20 FO",
+                "height_inches": 9.0,
+                "width_inches": 2.6,
+                "merch_style": "Unit",
+                "full_name": "Dasani Purified Water Bottle",
+                "image": "images/0004900000977.jpg"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
