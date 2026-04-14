@@ -986,7 +986,7 @@ function triggerCapture(storeId, coolerId, phase) {
 function handleCapture(input, storeId, coolerId, phase) {
   const file = input.files[0];
   if (!file) return;
-  resizeImage(file, 1920, 0.85).then(dataUrl => {
+  resizeImage(file, 1200, 0.60).then(dataUrl => {
     if (!photoState[storeId]) photoState[storeId] = { before: {}, after: {} };
     if (!photoState[storeId][phase]) photoState[storeId][phase] = {};
     photoState[storeId][phase][coolerId] = dataUrl;

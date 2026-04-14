@@ -30,6 +30,7 @@ app.post('/api/send-photos', async (req, res) => {
     const { data, error } = await resend.emails.send({
       from: fromAddress,
       to: 'april.gauthier@retailodyssey.com',
+      cc: 'tyson.gauthier@retailodyssey.com',
       subject: `FM ${storeId} ${phaseLabel} Photos — ${city}, ${state}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px">
