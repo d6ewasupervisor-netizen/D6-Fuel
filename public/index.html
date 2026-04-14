@@ -1043,9 +1043,50 @@ function buildUpcIndex() {
   });
 }
 
+/** UPC-A check digit for first 11 digits (odd positions from left ×3). */
+function upcCheckDigit11(eleven) {
+  let sum = 0;
+  for (let i = 0; i < 11; i++) {
+    const n = parseInt(eleven[i], 10);
+    if (Number.isNaN(n)) return null;
+    sum += (i % 2 === 0) ? n * 3 : n;
+  }
+  return (10 - (sum % 10)) % 10;
+}
+
+/**
+ * Expand GS1 UPC-E (8 digits, number system 0) to 12-digit UPC-A for lookup.
+ * Planograms store 12-digit UPCs; small packages often print UPC-E only.
+ */
+function expandUpcEto12(upc8) {
+  const d = String(upc8 || '').replace(/\D/g, '');
+  if (d.length !== 8 || d[0] !== '0') return null;
+  const ns = d[0];
+  const d1 = d[1], d2 = d[2], d3 = d[3], d4 = d[4], d5 = d[5], d6 = d[6];
+  let eleven;
+  if (d6 <= '2') {
+    eleven = ns + d1 + d2 + d6 + '0000' + d3 + d4 + d5;
+  } else if (d6 === '3') {
+    eleven = ns + d1 + d2 + d3 + '00000' + d4 + d5;
+  } else if (d6 === '4') {
+    eleven = ns + d1 + d2 + d3 + d4 + '00000' + d5;
+  } else {
+    eleven = ns + d1 + d2 + d3 + d4 + d5 + '0000' + d6;
+  }
+  if (eleven.length !== 11) return null;
+  const chk = upcCheckDigit11(eleven);
+  if (chk === null) return null;
+  return eleven + String(chk);
+}
+
 function normalizeUpcKey(str) {
   let d = String(str || '').replace(/\D/g, '');
   if (!d) return '';
+  if (d.length === 8 && d[0] === '0') {
+    const expanded = expandUpcEto12(d);
+    if (!expanded) return '';
+    d = expanded;
+  }
   if (d.length === 13 && d[0] === '0') d = d.slice(1);
   while (d.length < 12) d = '0' + d;
   if (d.length > 12) d = d.slice(-12);
@@ -1070,10 +1111,16 @@ function scanEscapeHtml(s) {
 
 function showUpcLookupResult(raw, container) {
   if (!container) return;
+  const rawDigits = String(raw).replace(/\D/g, '');
+  const displayUpc = normalizeUpcKey(raw) || rawDigits;
   const found = findLocationsForUpc(raw);
-  const displayUpc = normalizeUpcKey(raw) || String(raw).replace(/\D/g, '');
+  const upcENote = (rawDigits.length === 8 && rawDigits[0] === '0' && expandUpcEto12(rawDigits) === displayUpc)
+    ? ' <span style="color:var(--dim);font-size:11px;font-weight:500">(UPC-E ' + scanEscapeHtml(rawDigits) + ')</span>'
+    : '';
   if (!found || !found.list.length) {
-    container.innerHTML = '<div class="scan-result">No match for <strong>' + scanEscapeHtml(String(raw)) + '</strong> in the fuel cooler planograms. Check the UPC or confirm the item is on this project.</div>';
+    container.innerHTML = '<div class="scan-result">No match for <strong>' + scanEscapeHtml(String(raw)) + '</strong>'
+      + (displayUpc && displayUpc !== rawDigits ? ' → ' + scanEscapeHtml(displayUpc) : '')
+      + ' in the fuel cooler planograms. Check the UPC or confirm the item is on this project.</div>';
     return;
   }
   const rows = found.list.map(loc => {
@@ -1084,7 +1131,7 @@ function showUpcLookupResult(raw, container) {
       + '<button type="button" class="scan-open-btn" onclick="goToPlanogramLocation(' + ck + ', ' + loc.bayNum + ')">Open planogram</button></div>';
   }).join('');
   const multi = found.list.length > 1 ? ' (multiple placements)' : '';
-  container.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(displayUpc) + '</strong>' + multi + '</div>' + rows;
+  container.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(displayUpc) + '</strong>' + upcENote + multi + '</div>' + rows;
 }
 
 function goToPlanogramLocation(coolerKey, bayNum) {
@@ -1108,7 +1155,7 @@ function renderProductScanPanel(s) {
   }
   return '<div class="scan-panel">'
     + '<div class="scan-title">Find product in coolers</div>'
-    + '<div class="scan-desc">Scan a UPC with the camera (Chrome or Edge — use manual entry on Safari/iOS) or type the code below. See which cooler it belongs in and the bay, shelf, and position.</div>'
+    + '<div class="scan-desc">Scan a UPC with the camera (Chrome or Edge — use manual entry on Safari/iOS) or type the code below. Short <strong>UPC-E</strong> codes (8 digits on small packs) are converted to full UPC for lookup. Hold the phone so bars are vertical when possible.</div>'
     + '<div class="scan-video-wrap" id="scan-video-wrap"><video id="scan-video" playsinline muted></video></div>'
     + '<div class="scan-controls">'
     + '<button type="button" class="scan-btn primary" id="scan-start-btn" onclick="startBarcodeScan()">Start camera scan</button>'
@@ -1174,7 +1221,7 @@ async function startBarcodeScan() {
     if (startBtn) startBtn.style.display = 'none';
     if (stopBtn) stopBtn.style.display = 'inline-block';
 
-    const detector = new BarcodeDetector({ formats: ['upc_a', 'ean_13', 'ean_8', 'code_128', 'code_39'] });
+    const detector = new BarcodeDetector({ formats: ['upc_a', 'upc_e', 'ean_13', 'ean_8', 'code_128', 'code_39'] });
 
     function loop() {
       if (!scanStream) return;
