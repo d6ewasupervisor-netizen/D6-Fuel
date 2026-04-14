@@ -210,6 +210,54 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .pog-detail-sheet .detail-cell { background: #131c28; border-radius: 8px; padding: 10px; }
 .pog-detail-sheet .detail-cell .dl { font-size: 10px; color: var(--dim); margin-bottom: 2px; }
 .pog-detail-sheet .detail-cell .dv { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+
+/* ── UPC overlay on product slots ── */
+.slot-upc { position: absolute; bottom: 0; left: 0; right: 0; font-size: 7px; font-family: 'JetBrains Mono', monospace; color: #fff; background: rgba(0,0,0,0.75); text-align: center; padding: 1px 0; line-height: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; pointer-events: none; }
+
+/* ── UPC list view toggle ── */
+.upc-toggle-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--card); color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; margin-bottom: 12px; }
+.upc-toggle-btn:hover { border-color: var(--accent); color: #fff; }
+.upc-toggle-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ── UPC list ── */
+.upc-list-shelf { margin-bottom: 14px; }
+.upc-list-shelf-label { font-size: 11px; font-weight: 700; color: var(--dim); letter-spacing: 1px; text-transform: uppercase; padding: 6px 12px; background: #131c28; border-radius: 8px 8px 0 0; border: 1px solid var(--card-border); border-bottom: none; }
+.upc-list-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--card); border: 1px solid var(--card-border); border-top: none; }
+.upc-list-item:last-child { border-radius: 0 0 8px 8px; }
+.upc-list-pos { width: 28px; height: 28px; border-radius: 6px; background: #131c28; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--muted); font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+.upc-list-info { flex: 1; min-width: 0; }
+.upc-list-code { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+.upc-list-name { font-size: 11px; color: var(--muted); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.upc-list-badges { display: flex; gap: 4px; flex-shrink: 0; }
+
+/* ── Photo capture tab ── */
+.photo-grid { display: grid; gap: 12px; margin-bottom: 16px; }
+.photo-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; transition: border-color 0.15s; }
+.photo-card.captured { border-color: var(--green); }
+.photo-card-header { display: flex; align-items: center; gap: 12px; }
+.photo-card-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.photo-card-info { flex: 1; }
+.photo-card-info .pc-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.photo-card-info .pc-status { font-size: 11px; color: var(--dim); margin-top: 2px; }
+.photo-card-info .pc-status.done { color: var(--green); }
+.capture-btn { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; margin-top: 12px; border-radius: 8px; border: 1px dashed #3a4a5a; background: #131c28; color: var(--muted); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.capture-btn:hover { border-color: var(--accent); color: var(--accent); background: #1a2332; }
+.photo-preview { position: relative; margin-top: 12px; border-radius: 8px; overflow: hidden; }
+.photo-preview img { width: 100%; height: 160px; object-fit: cover; border-radius: 8px; }
+.photo-preview .retake-btn { position: absolute; top: 6px; right: 6px; padding: 4px 10px; border-radius: 6px; border: none; background: rgba(0,0,0,0.7); color: #fff; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.photo-preview .retake-btn:hover { background: var(--red); }
+.photo-progress { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; margin-bottom: 16px; }
+.photo-progress-bar { flex: 1; height: 6px; background: #131c28; border-radius: 3px; overflow: hidden; }
+.photo-progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.3s ease; }
+.photo-progress-text { font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.send-photos-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; border-radius: 10px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.send-photos-btn.ready { background: var(--green); color: #000; }
+.send-photos-btn.ready:hover { background: #00e090; transform: translateY(-1px); }
+.send-photos-btn.disabled { background: #1e2c3e; color: #445566; cursor: not-allowed; }
+.send-photos-btn.sending { background: var(--accent); color: #fff; }
+.send-result { text-align: center; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 500; margin-top: 12px; }
+.send-result.success { background: #00d08420; color: var(--green); border: 1px solid #00d08444; }
+.send-result.error { background: #e74c3c20; color: var(--red); border: 1px solid #e74c3c44; }
 </style>
 </head>
 <body>
@@ -219,14 +267,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <script>
 // ── Data ──────────────────────────────────────────────────────────────────────
 const STORES = [
-  { id:"486", city:"Yakima", state:"WA", address:"1206 N 40th Ave", zip:"98908", energySet:"20 FT", resetDate:"Tuesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Monday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"652", city:"Ellensburg", state:"WA", address:"201 S Water St", zip:"98926", energySet:"16 FT", resetDate:"Tuesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Monday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"351", city:"Spokane Valley", state:"WA", address:"15609 E Sprague Ave", zip:"99037", energySet:"24 FT", resetDate:"Tuesday, April 15, 2026", fike:"Sunday, April 12", coolerDelivery:"Monday, April 14", gdm:2, adds:45, deletes:24 },
-  { id:"049", city:"Coeur d'Alene", state:"ID", address:"560 W Kathleen Ave", zip:"83815", energySet:"12 FT", resetDate:"Wednesday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 15", gdm:1, adds:33, deletes:61, discrepancy:true },
-  { id:"214", city:"Spokane", state:"WA", address:"12120 N Division St", zip:"99218", energySet:"24 FT", resetDate:"Wednesday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
-  { id:"657", city:"Spokane", state:"WA", address:"400 S Thor St", zip:"99202", energySet:"12 FT", resetDate:"Wednesday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
-  { id:"163", city:"Kennewick", state:"WA", address:"2811 W 10th Ave", zip:"99336", energySet:"12 FT", resetDate:"Wednesday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Tuesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"286", city:"Richland", state:"WA", address:"101 Wellsian Way", zip:"99352", energySet:"21 FT", resetDate:"Wednesday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Tuesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"486", city:"Yakima", state:"WA", address:"1206 N 40th Ave", zip:"98908", energySet:"20 FT", resetDate:"Wednesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"652", city:"Ellensburg", state:"WA", address:"201 S Water St", zip:"98926", energySet:"16 FT", resetDate:"Wednesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"351", city:"Spokane Valley", state:"WA", address:"15609 E Sprague Ave", zip:"99037", energySet:"24 FT", resetDate:"Wednesday, April 15, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 14", gdm:2, adds:45, deletes:24 },
+  { id:"049", city:"Coeur d'Alene", state:"ID", address:"560 W Kathleen Ave", zip:"83815", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:33, deletes:61, discrepancy:true },
+  { id:"214", city:"Spokane", state:"WA", address:"12120 N Division St", zip:"99218", energySet:"24 FT", resetDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
+  { id:"657", city:"Spokane", state:"WA", address:"400 S Thor St", zip:"99202", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
+  { id:"163", city:"Kennewick", state:"WA", address:"2811 W 10th Ave", zip:"99336", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Wednesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"286", city:"Richland", state:"WA", address:"101 Wellsian Way", zip:"99352", energySet:"21 FT", resetDate:"Thursday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Wednesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
   { id:"654", city:"East Wenatchee", state:"WA", address:"11 Grant Rd", zip:"98802", energySet:"12 FT", resetDate:"Tuesday, May 12, 2026", swap:true },
 ];
 
@@ -250,13 +298,24 @@ const COOLER_SECTIONS = [
 
 const ICONS = { csd:"🥤", bev:"🧃", monster:"⚡", rb:"🐂" };
 
+const PHOTO_COOLERS = [
+  { id:'gdm-csd',  label:'GDM 9 — CSD',              icon:'🥤', color:'#3a8fd4', fileName:'GDM9-CSD' },
+  { id:'gdm-bev',  label:'GDM 9 — All Beverage',     icon:'🧃', color:'#00d084', fileName:'GDM9-AllBev' },
+  { id:'monster',   label:'HABCO Monster Cooler',      icon:'⚡', color:'#e67e22', fileName:'Monster' },
+  { id:'redbull',   label:'HABCO Red Bull Cooler',     icon:'🐂', color:'#e74c3c', fileName:'RedBull' },
+];
+
 // ── State ─────────────────────────────────────────────────────────────────────
 let selectedStore  = null;
 let activeTab      = 'info';
 let PRODUCTS       = null;
 let PLANOGRAMS     = null;
-let selectedCooler = null;   // section key when viewing a planogram
-let currentBayIdx  = 0;      // which bay is displayed
+let selectedCooler = null;
+let currentBayIdx  = 0;
+let showUpcList    = false;
+let photoState     = {};
+let sendingPhotos  = false;
+let sendResult     = null;
 
 // Load data on start
 fetch('products.json')
@@ -348,6 +407,7 @@ function renderStore(s) {
       <button class="tab-btn ${activeTab==='info'?'active':''}" data-tab="info" onclick="switchTab('info')">📋 Info</button>
       <button class="tab-btn ${activeTab==='planograms'?'active':''}" data-tab="planograms" onclick="switchTab('planograms')">📐 Planograms</button>
       <button class="tab-btn ${activeTab==='products'?'active':''}" data-tab="products" onclick="switchTab('products')">🛒 Products</button>
+      <button class="tab-btn ${activeTab==='photos'?'active':''}" data-tab="photos" onclick="switchTab('photos')">📸 Photos</button>
       <button class="tab-btn ${activeTab==='checklist'?'active':''}" data-tab="checklist" onclick="switchTab('checklist')">✅ Checklist</button>
     </div>
 
@@ -411,7 +471,7 @@ function renderStore(s) {
           <div class="card-row"><span class="label">Bill time under</span><span class="value">Project #12440</span></div>
           <div class="card-row"><span class="label">Photo upload</span><span class="value"><a href="https://advantagesolutionsnet-my.sharepoint.com/:f:/r/personal/tyson_gauthier_advantagesolutions_net/Documents/2026%20Dump%20Bin/Special%20Projects/P02W4%20Fuel%20Cooler%20Project/WA?csf=1&web=1&e=DMaAIpWA" target="_blank" style="color:var(--accent)">Open WA Folder</a></span></div>
           <div class="card-row"><span class="label">File naming</span><span class="value" style="font-family:'JetBrains Mono',monospace;font-size:11px">FM${s.id}_[before/after]_[cooler].jpg</span></div>
-          <div class="card-row"><span class="label">Issues email</span><span class="value"><a href="mailto:tyson.gauthier@retailodyssey.com" style="color:var(--accent)">tyson.gauthier@retailodyssey.com</a></span></div>
+          <div class="card-row"><span class="label">Issues email</span><span class="value"><a href="mailto:april.gauthier@retailodyssey.com" style="color:var(--accent)">april.gauthier@retailodyssey.com</a></span></div>
         </div>
       </div>
     </div>
@@ -424,6 +484,11 @@ function renderStore(s) {
     <!-- PRODUCTS TAB -->
     <div class="tab-panel ${activeTab==='products'?'active':''}" data-panel="products">
       ${renderProductsTab(s)}
+    </div>
+
+    <!-- PHOTOS TAB -->
+    <div class="tab-panel ${activeTab==='photos'?'active':''}" data-panel="photos">
+      ${renderPhotosTab(s)}
     </div>
 
     <!-- CHECKLIST TAB -->
@@ -449,7 +514,7 @@ function renderStore(s) {
         <div class="check-item"><div class="box"></div>Take AFTER photos of ALL coolers (even if RB missing)</div>
         <div class="check-item"><div class="box"></div>Upload to WA state folder in OneDrive</div>
         <div class="check-item"><div class="box"></div>Label files with FM store number</div>
-        <div class="check-item"><div class="box"></div>Email any issues/exceptions to Tyson at tyson.gauthier@retailodyssey.com</div>
+        <div class="check-item"><div class="box"></div>Email any issues/exceptions to April at april.gauthier@retailodyssey.com</div>
       </div>
     </div>
 
@@ -551,6 +616,7 @@ function openCooler(key) {
 function closeCooler() {
   selectedCooler = null;
   currentBayIdx = 0;
+  showUpcList = false;
   render();
   switchTab('planograms');
 }
@@ -589,10 +655,11 @@ function renderPlanogramViewer(s) {
       <button class="pog-viewer-back" onclick="closeCooler()">← All Coolers</button>
       <div class="pog-viewer-title" style="color:${sec.color || '#fff'}">${sec.icon || ''} ${sec.label || selectedCooler}</div>
       <div class="pog-viewer-sub">DBKey ${pog.dbkey} · ${pog.effective_date} · ${pog.fixture_type || ''}</div>
-      ${bayNav}
-      <div class="cooler-frame">
-        ${renderBayShelves(bay, sec)}
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <button class="upc-toggle-btn ${showUpcList?'active':''}" onclick="toggleUpcList()">🏷️ UPC List</button>
       </div>
+      ${bayNav}
+      ${showUpcList ? renderUpcList(bay) : `<div class="cooler-frame">${renderBayShelves(bay, sec)}</div>`}
     </div>`;
 }
 
@@ -644,6 +711,7 @@ function renderShelfProducts(shelf, bayWidthInches, rowHeight, sec) {
     // Build slot inner HTML
     const imgTag = `<img class="slot-thumb" src="${imgSrc}" alt="" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`;
     const fallback = `<div class="slot-fallback" style="display:none">${displayName.substring(0, 20)}</div>`;
+    const upcLabel = `<span class="slot-upc">${p.upc}</span>`;
     const newBadge = p.is_new ? '<span class="new-badge">NEW</span>' : '';
     const chgBadge = p.is_changed ? '<span class="changed-badge">CHG</span>' : '';
 
@@ -654,7 +722,7 @@ function renderShelfProducts(shelf, bayWidthInches, rowHeight, sec) {
       const slotPct = (100 / facings).toFixed(2);
       let slots = '';
       for (let f = 0; f < facings; f++) {
-        slots += `<div class="product-slot" style="width:${slotPct}%;height:100%" onclick="showProductDetail(this.parentElement)" ${f === 0 ? dataAttrs : ''}>${imgTag}${fallback}${f === 0 ? newBadge + chgBadge : ''}</div>`;
+        slots += `<div class="product-slot" style="width:${slotPct}%;height:100%" onclick="showProductDetail(this.parentElement)" ${f === 0 ? dataAttrs : ''}>${imgTag}${fallback}${f === 0 ? upcLabel + newBadge + chgBadge : ''}</div>`;
       }
       return `<div class="multi-facing-group" style="width:${pct}%;height:100%;flex-shrink:0" ${dataAttrs}>
         <span class="facing-badge">\u00d7${facings}</span>
@@ -662,7 +730,7 @@ function renderShelfProducts(shelf, bayWidthInches, rowHeight, sec) {
       </div>`;
     }
 
-    return `<div class="product-slot" style="width:${pct}%;height:100%;flex-shrink:0" onclick="showProductDetail(this)" ${dataAttrs}>${imgTag}${fallback}${newBadge}${chgBadge}</div>`;
+    return `<div class="product-slot" style="width:${pct}%;height:100%;flex-shrink:0" onclick="showProductDetail(this)" ${dataAttrs}>${imgTag}${fallback}${upcLabel}${newBadge}${chgBadge}</div>`;
   }).join('');
 }
 
@@ -697,6 +765,181 @@ function showProductDetail(el) {
       </div>
     </div>`;
   document.body.appendChild(overlay);
+}
+
+// ── UPC list view ─────────────────────────────────────────────────────────────
+function toggleUpcList() {
+  showUpcList = !showUpcList;
+  render();
+  switchTab('planograms');
+}
+
+function renderUpcList(bay) {
+  if (!bay || !bay.shelves || !bay.shelves.length) return '';
+  const shelves = [...bay.shelves].sort((a, b) => a.shelf - b.shelf).reverse();
+  return shelves.map(shelf => `
+    <div class="upc-list-shelf">
+      <div class="upc-list-shelf-label">Shelf ${shelf.shelf} — ${shelf.products.length} products</div>
+      ${shelf.products.map(p => `
+        <div class="upc-list-item">
+          <div class="upc-list-pos">${p.position}</div>
+          <div class="upc-list-info">
+            <div class="upc-list-code">${p.upc}</div>
+            <div class="upc-list-name">${p.full_name || p.description} · ${p.size || ''} · ×${p.facings || 1}</div>
+          </div>
+          <div class="upc-list-badges">
+            ${p.is_new ? '<span class="new-badge" style="position:static;font-size:9px;padding:2px 6px">NEW</span>' : ''}
+            ${p.is_changed ? '<span class="changed-badge" style="position:static;font-size:9px;padding:2px 6px">CHG</span>' : ''}
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+// ── Photos tab ────────────────────────────────────────────────────────────────
+function getStorePhotos(storeId) {
+  if (!photoState[storeId]) photoState[storeId] = {};
+  return photoState[storeId];
+}
+
+function renderPhotosTab(s) {
+  const photos = getStorePhotos(s.id);
+  const capturedCount = PHOTO_COOLERS.filter(c => photos[c.id]).length;
+  const total = PHOTO_COOLERS.length;
+  const allCaptured = capturedCount === total;
+  const pct = Math.round(capturedCount / total * 100);
+
+  return `
+    <div class="section">
+      <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Before Photos — FM ${s.id}</h3></div>
+    </div>
+
+    <div class="photo-progress">
+      <div class="photo-progress-bar"><div class="photo-progress-fill" style="width:${pct}%"></div></div>
+      <div class="photo-progress-text">${capturedCount} / ${total}</div>
+    </div>
+
+    <div class="photo-grid">
+      ${PHOTO_COOLERS.map(c => {
+        const hasPhoto = !!photos[c.id];
+        return `
+          <div class="photo-card ${hasPhoto ? 'captured' : ''}">
+            <div class="photo-card-header">
+              <div class="photo-card-icon" style="background:${c.color}22">${c.icon}</div>
+              <div class="photo-card-info">
+                <div class="pc-name">${c.label}</div>
+                <div class="pc-status ${hasPhoto ? 'done' : ''}">${hasPhoto ? '✓ Photo captured' : 'Waiting for photo'}</div>
+              </div>
+            </div>
+            ${hasPhoto ? `
+              <div class="photo-preview">
+                <img src="${photos[c.id]}" alt="${c.label}">
+                <button class="retake-btn" onclick="removePhoto('${s.id}','${c.id}')">✕ Retake</button>
+              </div>
+            ` : `
+              <button class="capture-btn" onclick="triggerCapture('${s.id}','${c.id}')">📷 Take Photo</button>
+              <input type="file" accept="image/*" capture="environment" id="photo-input-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}')">
+            `}
+          </div>`;
+      }).join('')}
+    </div>
+
+    <button class="send-photos-btn ${sendingPhotos ? 'sending' : allCaptured ? 'ready' : 'disabled'}"
+            onclick="${allCaptured && !sendingPhotos ? `sendPhotos('${s.id}')` : ''}"
+            ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
+      ${sendingPhotos ? '⏳ Sending...' : allCaptured ? '📧 Email Photos to April' : `📷 ${total - capturedCount} photo${total - capturedCount === 1 ? '' : 's'} remaining`}
+    </button>
+
+    ${sendResult ? `<div class="send-result ${sendResult.ok ? 'success' : 'error'}">${sendResult.message}</div>` : ''}
+  `;
+}
+
+function triggerCapture(storeId, coolerId) {
+  const input = document.getElementById('photo-input-' + coolerId);
+  if (input) input.click();
+}
+
+function handleCapture(input, storeId, coolerId) {
+  const file = input.files[0];
+  if (!file) return;
+  resizeImage(file, 1920, 0.85).then(dataUrl => {
+    if (!photoState[storeId]) photoState[storeId] = {};
+    photoState[storeId][coolerId] = dataUrl;
+    sendResult = null;
+    render();
+    switchTab('photos');
+  });
+}
+
+function removePhoto(storeId, coolerId) {
+  if (photoState[storeId]) delete photoState[storeId][coolerId];
+  sendResult = null;
+  render();
+  switchTab('photos');
+}
+
+function resizeImage(file, maxDim, quality) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxDim || h > maxDim) {
+          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function sendPhotos(storeId) {
+  const s = STORES.find(x => x.id === storeId);
+  if (!s) return;
+  const photos = getStorePhotos(storeId);
+  sendingPhotos = true;
+  sendResult = null;
+  render();
+  switchTab('photos');
+
+  const coolerPhotos = PHOTO_COOLERS.map(c => ({
+    name: c.label,
+    fileName: `FM${storeId}_before_${c.fileName}.jpg`,
+    base64: photos[c.id].split(',')[1]
+  }));
+
+  try {
+    const res = await fetch('/api/send-photos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        storeId: s.id,
+        city: s.city,
+        state: s.state,
+        address: s.address,
+        energySet: s.energySet,
+        resetDate: s.resetDate,
+        coolerPhotos
+      })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      sendResult = { ok: true, message: '✓ Photos emailed to April successfully!' };
+    } else {
+      sendResult = { ok: false, message: data.error || 'Failed to send email. Please try again.' };
+    }
+  } catch (err) {
+    sendResult = { ok: false, message: 'Network error. Make sure the server is running.' };
+  }
+  sendingPhotos = false;
+  render();
+  switchTab('photos');
 }
 
 // ── Swipe gesture for bay navigation ──────────────────────────────────────────

@@ -1,0 +1,5 @@
+node_modules/
+.env
+Fuel_Center_POG_Products.xlsx
+parse_planograms.py
+requirements.txt
