@@ -23,6 +23,7 @@
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 .container { max-width: 600px; margin: 0 auto; padding: 20px 16px; }
 
+/* ── Header ── */
 .header { background: linear-gradient(135deg, #1a2332 0%, #243447 100%); border-radius: 16px; padding: 24px 20px; margin-bottom: 20px; border: 1px solid var(--card-border); }
 .header .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--green); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
 .header .badge::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px #00d08466; }
@@ -30,10 +31,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .header p { font-size: 13px; color: var(--muted); }
 .header .code { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--dim); margin-top: 4px; }
 
+/* ── Rules box ── */
 .rules-box { background: var(--card); border-radius: 12px; padding: 14px 16px; margin-bottom: 20px; border: 1px solid var(--card-border); }
 .rules-box .label { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: var(--amber); margin-bottom: 6px; }
 .rules-box .items { font-size: 11px; color: #99aabb; line-height: 1.7; }
 
+/* ── Store grid ── */
 .store-grid { display: grid; gap: 10px; margin-bottom: 20px; }
 .store-btn { display: block; width: 100%; text-align: left; background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.15s ease; font-family: inherit; color: var(--text); }
 .store-btn:hover { border-color: #3a5a7a; transform: translateY(-1px); }
@@ -43,19 +46,34 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .store-btn .meta { font-size: 11px; color: var(--dim); margin-top: 2px; }
 .store-btn .swap-badge { font-size: 10px; font-weight: 600; color: var(--orange); background: #e67e2220; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
 
+/* ── Nav ── */
 .back-btn { background: none; border: none; color: #5588aa; font-size: 13px; cursor: pointer; padding: 0; margin-bottom: 16px; font-family: inherit; }
 .back-btn:hover { color: #77aacc; }
 
+/* ── Store header ── */
 .store-header { background: linear-gradient(135deg, #1a2332 0%, #243447 100%); border-radius: 16px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--card-border); }
 .store-header h2 { font-size: 24px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #fff; margin-bottom: 4px; }
 .store-header .addr { font-size: 14px; color: var(--muted); }
 .store-header .detail { font-size: 12px; color: var(--dim); margin-top: 4px; }
 
+/* ── Store nav tabs ── */
+.store-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.store-tabs::-webkit-scrollbar { display: none; }
+.tab-btn { flex-shrink: 0; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--card); color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s ease; }
+.tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tab-btn:hover:not(.active) { border-color: #3a5a7a; color: var(--text); }
+
+/* ── Tab panels ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Section ── */
 .section { margin-bottom: 16px; }
 .section-label { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .section-label .bar { width: 3px; height: 16px; border-radius: 2px; }
 .section-label h3 { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; }
 
+/* ── Card ── */
 .card { background: var(--card); border-radius: 12px; border: 1px solid var(--card-border); overflow: hidden; }
 .card-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid #222d3a; font-size: 13px; }
 .card-row:last-child { border-bottom: none; }
@@ -63,6 +81,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .card-row .value { font-weight: 500; color: var(--text); }
 .card-row .value.highlight { color: var(--red); font-weight: 700; }
 
+/* ── Cooler rows ── */
 .cooler-row { padding: 10px 14px; border-bottom: 1px solid #222d3a; }
 .cooler-row:last-child { border-bottom: none; }
 .cooler-row .name { font-size: 13px; font-weight: 500; }
@@ -70,13 +89,15 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .cooler-row .pog { font-size: 11px; color: var(--dim); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
 .cooler-row .size-badge { font-size: 11px; color: var(--muted); float: right; }
 
+/* ── Warnings ── */
 .warning { background: #fff3cd20; border: 1px solid #ffc10744; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; font-size: 12px; color: #ffc107; line-height: 1.5; }
 .warning.discrepancy { border-color: #e67e2244; color: var(--orange); background: #e67e2210; }
 
+/* ── POG links ── */
 .pog-section { margin-bottom: 16px; }
 .pog-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--card); border: 1px solid var(--card-border); border-radius: 10px; margin-bottom: 8px; text-decoration: none; color: var(--text); transition: all 0.15s ease; }
 .pog-link:hover { border-color: var(--accent); background: #1a233280; }
-.pog-link .icon { width: 36px; height: 36px; border-radius: 8px; background: #e74c3c20; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.pog-link .icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 .pog-link .icon.csd { background: #3a8fd420; }
 .pog-link .icon.bev { background: #00d08420; }
 .pog-link .icon.monster { background: #e67e2220; }
@@ -86,11 +107,38 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .pog-link .info .sub { font-size: 10px; color: var(--dim); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 .pog-link .dl { font-size: 11px; color: var(--accent); font-weight: 600; }
 
+/* ── Checklist ── */
 .checklist { margin-bottom: 16px; }
 .check-group-label { font-size: 12px; font-weight: 600; color: var(--text); margin: 10px 0 6px 0; }
 .check-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 13px; color: #ccd6dd; line-height: 1.4; }
 .check-item .box { width: 18px; height: 18px; border: 2px solid #3a4a5a; border-radius: 4px; flex-shrink: 0; margin-top: 1px; }
 
+/* ── Product accordion ── */
+.pog-accordion { margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 1px solid var(--card-border); }
+.pog-accordion-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; background: var(--card); cursor: pointer; user-select: none; transition: background 0.15s; }
+.pog-accordion-header:hover { background: #1e2c3e; }
+.pog-accordion-header .pog-title { display: flex; align-items: center; gap: 10px; }
+.pog-accordion-header .pog-icon { width: 30px; height: 30px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.pog-accordion-header .pog-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.pog-accordion-header .pog-count { font-size: 11px; color: var(--dim); margin-top: 1px; }
+.pog-accordion-header .chevron { font-size: 12px; color: var(--dim); transition: transform 0.2s; }
+.pog-accordion-header.open .chevron { transform: rotate(180deg); }
+.pog-accordion-body { display: none; background: #131c28; border-top: 1px solid var(--card-border); }
+.pog-accordion-body.open { display: block; }
+
+/* ── Product grid ── */
+.product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #1f2e3e; }
+.product-card { background: #131c28; padding: 12px; display: flex; flex-direction: column; gap: 8px; transition: background 0.1s; }
+.product-card:hover { background: #192433; }
+.product-img-wrap { aspect-ratio: 1; border-radius: 8px; background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.product-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 4px; }
+.product-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 28px; background: #1e2c3e; border-radius: 8px; }
+.product-name { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.35; }
+.product-meta { display: flex; flex-direction: column; gap: 2px; }
+.product-upc { font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--dim); }
+.product-size { font-size: 10px; color: var(--muted); }
+
+/* ── Footer ── */
 .footer { text-align: center; font-size: 11px; color: #445566; margin-top: 24px; padding-top: 16px; border-top: 1px solid #1a2332; }
 </style>
 </head>
@@ -99,31 +147,51 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 <div class="container" id="app"></div>
 
 <script>
+// ── Data ──────────────────────────────────────────────────────────────────────
 const STORES = [
-  { id:"486", city:"Yakima", state:"WA", address:"1206 N 40th Ave", zip:"98908", energySet:"20 FT", resetDate:"Tuesday, April 14, 2026", fike:"Saturday, April 11", coolerDelivery:"Monday, April 13", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"652", city:"Ellensburg", state:"WA", address:"201 S Water St", zip:"98926", energySet:"16 FT", resetDate:"Tuesday, April 14, 2026", fike:"Saturday, April 11", coolerDelivery:"Monday, April 13", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"351", city:"Spokane Valley", state:"WA", address:"15609 E Sprague Ave", zip:"99037", energySet:"24 FT", resetDate:"Tuesday, April 14, 2026", fike:"Sunday, April 12", coolerDelivery:"Monday, April 13", gdm:2, adds:45, deletes:24 },
-  { id:"049", city:"Coeur d'Alene", state:"ID", address:"560 W Kathleen Ave", zip:"83815", energySet:"12 FT", resetDate:"Wednesday, April 15, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 14", gdm:1, adds:33, deletes:61, discrepancy:true },
-  { id:"214", city:"Spokane", state:"WA", address:"12120 N Division St", zip:"99218", energySet:"24 FT", resetDate:"Wednesday, April 15, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 14", gdm:1, adds:0, deletes:0, addNote:"TBD" },
-  { id:"657", city:"Spokane", state:"WA", address:"400 S Thor St", zip:"99202", energySet:"12 FT", resetDate:"Wednesday, April 15, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 14", gdm:1, adds:0, deletes:0, addNote:"TBD" },
-  { id:"163", city:"Kennewick", state:"WA", address:"2811 W 10th Ave", zip:"99336", energySet:"12 FT", resetDate:"Wednesday, April 15, 2026", fike:"Monday, April 13", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
-  { id:"286", city:"Richland", state:"WA", address:"101 Wellsian Way", zip:"99352", energySet:"21 FT", resetDate:"Wednesday, April 15, 2026", fike:"Monday, April 13", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"486", city:"Yakima", state:"WA", address:"1206 N 40th Ave", zip:"98908", energySet:"20 FT", resetDate:"Tuesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Monday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"652", city:"Ellensburg", state:"WA", address:"201 S Water St", zip:"98926", energySet:"16 FT", resetDate:"Tuesday, April 15, 2026", fike:"Saturday, April 11", coolerDelivery:"Monday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"351", city:"Spokane Valley", state:"WA", address:"15609 E Sprague Ave", zip:"99037", energySet:"24 FT", resetDate:"Tuesday, April 15, 2026", fike:"Sunday, April 12", coolerDelivery:"Monday, April 14", gdm:2, adds:45, deletes:24 },
+  { id:"049", city:"Coeur d'Alene", state:"ID", address:"560 W Kathleen Ave", zip:"83815", energySet:"12 FT", resetDate:"Wednesday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 15", gdm:1, adds:33, deletes:61, discrepancy:true },
+  { id:"214", city:"Spokane", state:"WA", address:"12120 N Division St", zip:"99218", energySet:"24 FT", resetDate:"Wednesday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
+  { id:"657", city:"Spokane", state:"WA", address:"400 S Thor St", zip:"99202", energySet:"12 FT", resetDate:"Wednesday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
+  { id:"163", city:"Kennewick", state:"WA", address:"2811 W 10th Ave", zip:"99336", energySet:"12 FT", resetDate:"Wednesday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Tuesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
+  { id:"286", city:"Richland", state:"WA", address:"101 Wellsian Way", zip:"99352", energySet:"21 FT", resetDate:"Wednesday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Tuesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
   { id:"654", city:"East Wenatchee", state:"WA", address:"11 Grant Rd", zip:"98802", energySet:"12 FT", resetDate:"Tuesday, May 12, 2026", swap:true },
 ];
 
 const POGS = {
-  csd:     { file:"D701_L00000_D58_C142_V898_D001_MX - GDM 9- CSD.pdf", label:"GDM 9 — CSD", icon:"csd", sub:"V898_D001 — 9 FT" },
-  bev:     { file:"D701_L00000_D58_C142_V899_D001_MX - GDM 9- ALL BEVERAGE.pdf", label:"GDM 9 — ALL BEVERAGE", icon:"bev", sub:"V899_D001 — 9 FT" },
-  mon12:   { file:"D701_L00000_D58_C142_V670_D002_MX - HABCO MONSTER COOLER 12 FT ASSORTMENT.pdf", label:"HABCO Monster Cooler — 12 FT", icon:"monster", sub:"V670_D002 — 12 FT" },
-  rb12:    { file:"D701_L00000_D58_C142_V664_D002_MX - HABCO- RED BULL COOLER 12 FT ASSORTMENT.pdf", label:"HABCO Red Bull Cooler — 12 FT", icon:"rb", sub:"V664_D002 — 12 FT" },
-  mon8:    { file:"D701_L00000_D58_C142_V671_D002_MX - HABCO MONSTER COOLER 8 FT ASSORTMENT.pdf", label:"HABCO Monster Cooler — 8 FT (Backup)", icon:"monster", sub:"V671_D002 — 8 FT" },
-  rb8:     { file:"D701_L00000_D58_C142_V707_D002_MX - HABCO- RED BULL COOLER 8 FT ASSORTMENT.pdf", label:"HABCO Red Bull Cooler — 8 FT (Backup)", icon:"rb", sub:"V707_D002 — 8 FT" },
+  csd:   { file:"D701_L00000_D58_C142_V898_D001_MX - GDM 9- CSD.pdf", label:"GDM 9 — CSD", icon:"csd", sub:"V898_D001 — 9 FT" },
+  bev:   { file:"D701_L00000_D58_C142_V899_D001_MX - GDM 9- ALL BEVERAGE.pdf", label:"GDM 9 — ALL BEVERAGE", icon:"bev", sub:"V899_D001 — 9 FT" },
+  mon12: { file:"D701_L00000_D58_C142_V670_D002_MX - HABCO MONSTER COOLER 12 FT ASSORTMENT.pdf", label:"HABCO Monster Cooler — 12 FT", icon:"monster", sub:"V670_D002 — 12 FT" },
+  rb12:  { file:"D701_L00000_D58_C142_V664_D002_MX - HABCO- RED BULL COOLER 12 FT ASSORTMENT.pdf", label:"HABCO Red Bull Cooler — 12 FT", icon:"rb", sub:"V664_D002 — 12 FT" },
+  mon8:  { file:"D701_L00000_D58_C142_V671_D002_MX - HABCO MONSTER COOLER 8 FT ASSORTMENT.pdf", label:"HABCO Monster Cooler — 8 FT (Backup)", icon:"monster", sub:"V671_D002 — 8 FT" },
+  rb8:   { file:"D701_L00000_D58_C142_V707_D002_MX - HABCO- RED BULL COOLER 8 FT ASSORTMENT.pdf", label:"HABCO Red Bull Cooler — 8 FT (Backup)", icon:"rb", sub:"V707_D002 — 8 FT" },
 };
+
+const COOLER_SECTIONS = [
+  { key:"GDM 9 - CSD",                 label:"GDM 9 — CSD",                    icon:"🥤", iconClass:"csd",     color:"#3a8fd4" },
+  { key:"GDM 9 - All Beverage",        label:"GDM 9 — All Beverage",           icon:"🧃", iconClass:"bev",     color:"#00d084" },
+  { key:"HABCO Monster Cooler 12 FT",  label:"HABCO Monster — 12 FT",          icon:"⚡", iconClass:"monster", color:"#e67e22" },
+  { key:"HABCO Red Bull Cooler 12 FT", label:"HABCO Red Bull — 12 FT",         icon:"🐂", iconClass:"rb",      color:"#e74c3c" },
+  { key:"HABCO Monster Cooler 8 FT",   label:"HABCO Monster — 8 FT (Backup)",  icon:"⚡", iconClass:"monster", color:"#e67e22", backup:true },
+  { key:"HABCO Red Bull Cooler 8 FT",  label:"HABCO Red Bull — 8 FT (Backup)", icon:"🐂", iconClass:"rb",      color:"#e74c3c", backup:true },
+];
 
 const ICONS = { csd:"🥤", bev:"🧃", monster:"⚡", rb:"🐂" };
 
+// ── State ─────────────────────────────────────────────────────────────────────
 let selectedStore = null;
+let activeTab     = 'info';    // 'info' | 'products' | 'checklist'
+let PRODUCTS      = null;
 
+// Load products.json on start
+fetch('products.json')
+  .then(r => r.json())
+  .then(data => { PRODUCTS = data; })
+  .catch(() => { PRODUCTS = {}; });
+
+// ── Render ────────────────────────────────────────────────────────────────────
 function render() {
   const app = document.getElementById('app');
   if (selectedStore) {
@@ -131,16 +199,29 @@ function render() {
     app.innerHTML = renderStore(s);
   } else {
     app.innerHTML = renderDashboard();
+    activeTab = 'info';
   }
 }
 
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tab));
+}
+
+function toggleAccordion(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
 function renderDashboard() {
   return `
     <div class="header">
       <div class="badge">District 6 — Active Project</div>
       <h1>Fuel Cooler Reset Guide</h1>
       <p>Fred Meyer Energy Drink Remodel — Project #12440</p>
-      <div class="code">Select a store for guide, checklist, and planogram downloads</div>
+      <div class="code">Select a store for guide, checklist &amp; product lists</div>
     </div>
     <div class="rules-box">
       <div class="label">⚠️ Key Rules</div>
@@ -153,7 +234,7 @@ function renderDashboard() {
     </div>
     <div class="store-grid">
       ${STORES.map(s => `
-        <button class="store-btn" onclick="selectedStore='${s.id}';render()">
+        <button class="store-btn" onclick="selectedStore='${s.id}';activeTab='info';render()">
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <div>
               <span class="fm">FM ${s.id}</span>
@@ -170,6 +251,7 @@ function renderDashboard() {
   `;
 }
 
+// ── Store view ────────────────────────────────────────────────────────────────
 function renderStore(s) {
   const isSwap = s.swap;
   const pogKeys = isSwap ? [] : (s.discrepancy ? ['csd','bev','mon12','rb12','mon8','rb8'] : ['csd','bev','mon12','rb12']);
@@ -182,63 +264,84 @@ function renderStore(s) {
       <div class="detail">${s.energySet} energy set — Reset: ${s.resetDate}${isSwap ? ' — ONSITE SWAP' : ''}</div>
     </div>
 
-    ${s.discrepancy ? `
-      <div class="warning discrepancy">
-        ⚠ <strong>FM 049 DISCREPANCY:</strong> Add/Delete data listed 8 FT coolers (V671/V707) for this store, but the P03W3 manifest confirms 12 FT (V670/V664). Both 8 FT and 12 FT POGs are provided below — verify cooler size on-site and use the matching POG.
+    <div class="store-tabs">
+      <button class="tab-btn ${activeTab==='info'?'active':''}" data-tab="info" onclick="switchTab('info')">📋 Info</button>
+      <button class="tab-btn ${activeTab==='products'?'active':''}" data-tab="products" onclick="switchTab('products')">🛒 Products</button>
+      <button class="tab-btn ${activeTab==='checklist'?'active':''}" data-tab="checklist" onclick="switchTab('checklist')">✅ Checklist</button>
+    </div>
+
+    <!-- INFO TAB -->
+    <div class="tab-panel ${activeTab==='info'?'active':''}" data-panel="info">
+      ${s.discrepancy ? `
+        <div class="warning discrepancy">
+          ⚠ <strong>FM 049 DISCREPANCY:</strong> Add/Delete data listed 8 FT coolers for this store, but the P03W3 manifest confirms 12 FT. Both POG sets are included — verify cooler size on-site and use the matching POG.
+        </div>
+      ` : ''}
+      <div class="warning">⚠ No product may be transported to or from the fuel center. Red Bull cooler may not be installed — leave strips and tags at the fuel station.</div>
+
+      ${!isSwap ? `
+      <div class="section">
+        <div class="section-label"><div class="bar" style="background:var(--accent)"></div><h3 style="color:var(--accent)">Installation Timeline</h3></div>
+        <div class="card">
+          <div class="card-row"><span class="label">Habco Shroud Delivery</span><span class="value">Week of April 6</span></div>
+          <div class="card-row"><span class="label">Fike Bolts Shrouds</span><span class="value">${s.fike}</span></div>
+          <div class="card-row"><span class="label">Coolers Delivered</span><span class="value">${s.coolerDelivery}</span></div>
+          <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${s.resetDate}</span></div>
+        </div>
       </div>
-    ` : ''}
+      ` : `
+      <div class="section">
+        <div class="section-label"><div class="bar" style="background:var(--orange)"></div><h3 style="color:var(--orange)">Onsite Swap Timeline</h3></div>
+        <div class="card">
+          <div class="card-row"><span class="label">Kiosk Pre-Conversion Cleaning</span><span class="value">Sunday, May 10, 2026</span></div>
+          <div class="card-row"><span class="label">RB/Monster Shelf Adjustments</span><span class="value">Monday, May 11, 2026</span></div>
+          <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${s.resetDate}</span></div>
+        </div>
+      </div>
+      `}
 
-    <div class="warning">
-      ⚠ No product may be transported to or from the fuel center. Red Bull cooler may not be installed — leave strips and tags at the fuel station.
-    </div>
+      <div class="section">
+        <div class="section-label"><div class="bar" style="background:var(--orange)"></div><h3 style="color:var(--orange)">Cooler Assignments</h3></div>
+        <div class="card">
+          <div class="cooler-row"><span class="name">GDM 9 — CSD</span><span class="size-badge">9 FT — Existing</span><div class="pog">V898_D001</div></div>
+          <div class="cooler-row"><span class="name">GDM 9 — ALL BEVERAGE</span><span class="size-badge">9 FT — Existing</span><div class="pog">V899_D001</div></div>
+          <div class="cooler-row"><span class="name new">HABCO Monster Cooler</span><span class="size-badge">12 FT — NEW</span><div class="pog">V670_D002</div></div>
+          <div class="cooler-row"><span class="name new">HABCO Red Bull Cooler</span><span class="size-badge">12 FT — NEW</span><div class="pog">V664_D002</div></div>
+        </div>
+      </div>
 
-    ${!isSwap ? `
-    <div class="section">
-      <div class="section-label"><div class="bar" style="background:var(--accent)"></div><h3 style="color:var(--accent)">Installation Timeline</h3></div>
-      <div class="card">
-        <div class="card-row"><span class="label">Habco Shroud Delivery</span><span class="value">Week of April 6</span></div>
-        <div class="card-row"><span class="label">Fike Bolts Shrouds</span><span class="value">${s.fike}</span></div>
-        <div class="card-row"><span class="label">Coolers Delivered</span><span class="value">${s.coolerDelivery}</span></div>
-        <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${s.resetDate}</span></div>
+      ${pogKeys.length ? `
+      <div class="pog-section">
+        <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Planogram Downloads</h3></div>
+        ${pogKeys.map(k => {
+          const p = POGS[k];
+          return `<a class="pog-link" href="${encodeURI(p.file)}" target="_blank" download>
+            <div class="icon ${p.icon}">${ICONS[p.icon]}</div>
+            <div class="info"><div class="title">${p.label}</div><div class="sub">${p.sub}</div></div>
+            <span class="dl">PDF ↓</span>
+          </a>`;
+        }).join('')}
+      </div>
+      ` : '<div style="font-size:12px;color:var(--dim);margin-bottom:16px;padding:12px;background:var(--card);border-radius:10px;border:1px solid var(--card-border)">Planograms not yet available for Onsite Swap stores.</div>'}
+
+      <div class="section">
+        <div class="section-label"><div class="bar" style="background:var(--accent)"></div><h3 style="color:var(--accent)">Reporting</h3></div>
+        <div class="card">
+          <div class="card-row"><span class="label">Bill time under</span><span class="value">Project #12440</span></div>
+          <div class="card-row"><span class="label">Photo upload</span><span class="value"><a href="https://advantagesolutionsnet-my.sharepoint.com/:f:/r/personal/tyson_gauthier_advantagesolutions_net/Documents/2026%20Dump%20Bin/Special%20Projects/P02W4%20Fuel%20Cooler%20Project/WA?csf=1&web=1&e=DMaAIpWA" target="_blank" style="color:var(--accent)">Open WA Folder</a></span></div>
+          <div class="card-row"><span class="label">File naming</span><span class="value" style="font-family:'JetBrains Mono',monospace;font-size:11px">FM${s.id}_[before/after]_[cooler].jpg</span></div>
+          <div class="card-row"><span class="label">Issues email</span><span class="value"><a href="mailto:tyson.gauthier@retailodyssey.com" style="color:var(--accent)">tyson.gauthier@retailodyssey.com</a></span></div>
+        </div>
       </div>
     </div>
-    ` : `
-    <div class="section">
-      <div class="section-label"><div class="bar" style="background:var(--orange)"></div><h3 style="color:var(--orange)">Onsite Swap Timeline</h3></div>
-      <div class="card">
-        <div class="card-row"><span class="label">Kiosk Pre-Conversion Cleaning</span><span class="value">Sunday, May 10, 2026</span></div>
-        <div class="card-row"><span class="label">RB/Monster Shelf Adjustments</span><span class="value">Monday, May 11, 2026</span></div>
-        <div class="card-row"><span class="label">Kompass Resets (Our Part)</span><span class="value highlight">${s.resetDate}</span></div>
-      </div>
-    </div>
-    `}
 
-    <div class="section">
-      <div class="section-label"><div class="bar" style="background:var(--orange)"></div><h3 style="color:var(--orange)">Cooler Assignments</h3></div>
-      <div class="card">
-        <div class="cooler-row"><span class="name">GDM 9 — CSD</span><span class="size-badge">9 FT — Existing</span><div class="pog">V898_D001</div></div>
-        <div class="cooler-row"><span class="name">GDM 9 — ALL BEVERAGE</span><span class="size-badge">9 FT — Existing</span><div class="pog">V899_D001</div></div>
-        <div class="cooler-row"><span class="name new">HABCO Monster Cooler</span><span class="size-badge">12 FT — NEW</span><div class="pog">V670_D002</div></div>
-        <div class="cooler-row"><span class="name new">HABCO Red Bull Cooler</span><span class="size-badge">12 FT — NEW</span><div class="pog">V664_D002</div></div>
-      </div>
+    <!-- PRODUCTS TAB -->
+    <div class="tab-panel ${activeTab==='products'?'active':''}" data-panel="products">
+      ${renderProductsTab(s)}
     </div>
 
-    ${pogKeys.length ? `
-    <div class="pog-section">
-      <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Planogram Downloads</h3></div>
-      ${pogKeys.map(k => {
-        const p = POGS[k];
-        return `<a class="pog-link" href="${encodeURI(p.file)}" target="_blank" download>
-          <div class="icon ${p.icon}">${ICONS[p.icon]}</div>
-          <div class="info"><div class="title">${p.label}</div><div class="sub">${p.sub}</div></div>
-          <span class="dl">PDF ↓</span>
-        </a>`;
-      }).join('')}
-    </div>
-    ` : '<div style="font-size:12px;color:var(--dim);margin-bottom:16px;padding:12px;background:var(--card);border-radius:10px;border:1px solid var(--card-border)">Planograms not yet available for Onsite Swap stores.</div>'}
-
-    <div class="section">
-      <div class="section-label"><div class="bar" style="background:#fff"></div><h3 style="color:var(--text)">Field Checklist</h3></div>
+    <!-- CHECKLIST TAB -->
+    <div class="tab-panel ${activeTab==='checklist'?'active':''}" data-panel="checklist">
       <div class="checklist">
         <div class="check-group-label">BEFORE starting:</div>
         <div class="check-item"><div class="box"></div>Confirm all coolers are accessible in the fuel station</div>
@@ -264,18 +367,57 @@ function renderStore(s) {
       </div>
     </div>
 
-    <div class="section">
-      <div class="section-label"><div class="bar" style="background:var(--accent)"></div><h3 style="color:var(--accent)">Reporting</h3></div>
-      <div class="card">
-        <div class="card-row"><span class="label">Bill time under</span><span class="value">Project #12440</span></div>
-        <div class="card-row"><span class="label">Photo upload</span><span class="value"><a href="https://advantagesolutionsnet-my.sharepoint.com/:f:/r/personal/tyson_gauthier_advantagesolutions_net/Documents/2026%20Dump%20Bin/Special%20Projects/P02W4%20Fuel%20Cooler%20Project/WA?csf=1&web=1&e=DMaAIpWA" target="_blank" style="color:var(--accent)">Open WA Folder</a></span></div>
-        <div class="card-row"><span class="label">File naming</span><span class="value" style="font-family:'JetBrains Mono',monospace;font-size:11px">FM${s.id}_[before/after]_[cooler].jpg</span></div>
-        <div class="card-row"><span class="label">Issues email</span><span class="value"><a href="mailto:tyson.gauthier@retailodyssey.com" style="color:var(--accent)">tyson.gauthier@retailodyssey.com</a></span></div>
-      </div>
-    </div>
-
     <div class="footer">Generated by TacTag for Retail Odyssey / Advantage Solutions — District 6</div>
   `;
+}
+
+// ── Products tab ──────────────────────────────────────────────────────────────
+function renderProductsTab(s) {
+  if (!PRODUCTS) {
+    return `<div style="padding:20px;text-align:center;color:var(--dim);font-size:13px">Loading product data...</div>`;
+  }
+
+  // Which sections to show for this store
+  const showBackup = s.discrepancy;
+  const sections = COOLER_SECTIONS.filter(sec => showBackup || !sec.backup);
+
+  return sections.map((sec, i) => {
+    const products = PRODUCTS[sec.key] || [];
+    const accordionId = `acc-${s.id}-${i}`;
+    return `
+      <div class="pog-accordion">
+        <div class="pog-accordion-header" onclick="toggleAccordion(this)" id="${accordionId}">
+          <div class="pog-title">
+            <div class="pog-icon ${sec.iconClass}" style="background:${sec.color}22">${sec.icon}</div>
+            <div>
+              <div class="pog-name">${sec.label}</div>
+              <div class="pog-count">${products.length} products</div>
+            </div>
+          </div>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="pog-accordion-body">
+          <div class="product-grid">
+            ${products.map(p => `
+              <div class="product-card">
+                <div class="product-img-wrap">
+                  ${p.image
+                    ? `<img src="${p.image}" alt="${p.full_name || p.description}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'product-img-placeholder\\'>${sec.icon}</div>'">`
+                    : `<div class="product-img-placeholder">${sec.icon}</div>`
+                  }
+                </div>
+                <div class="product-name">${p.full_name || p.description}</div>
+                <div class="product-meta">
+                  <span class="product-upc">${p.upc}</span>
+                  <span class="product-size">${p.size}</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 render();
