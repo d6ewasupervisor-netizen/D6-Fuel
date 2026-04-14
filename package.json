@@ -6,11 +6,15 @@
     "node": ">=18"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:deletes": "node scripts/build-planogram-deletes.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "resend": "^4.1.2"
+  },
+  "devDependencies": {
+    "pdf-parse": "^1.1.1"
   }
 }
