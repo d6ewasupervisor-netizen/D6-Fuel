@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>D6 Fuel Cooler Reset Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 :root {
   --bg: #0f1419;
@@ -259,6 +260,24 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .send-result { text-align: center; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 500; margin-top: 12px; }
 .send-result.success { background: #00d08420; color: var(--green); border: 1px solid #00d08444; }
 .send-result.error { background: #e74c3c20; color: var(--red); border: 1px solid #e74c3c44; }
+
+/* ── PDF Viewer overlay ── */
+.pdf-viewer-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; }
+.pdf-viewer-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #1a2332; border-bottom: 1px solid var(--card-border); flex-shrink: 0; gap: 8px; }
+.pdf-viewer-toolbar .pdf-title { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+.pdf-viewer-toolbar .pdf-close-btn { background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer; padding: 4px 8px; line-height: 1; flex-shrink: 0; }
+.pdf-viewer-toolbar .pdf-close-btn:hover { color: #fff; }
+.pdf-page-controls { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 8px 16px; background: #131c28; border-bottom: 1px solid var(--card-border); flex-shrink: 0; }
+.pdf-page-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--card); color: var(--muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: inherit; }
+.pdf-page-btn:hover { border-color: var(--accent); color: #fff; }
+.pdf-page-btn:disabled { opacity: 0.3; cursor: default; }
+.pdf-page-info { font-size: 13px; font-weight: 600; color: var(--muted); font-family: 'JetBrains Mono', monospace; min-width: 60px; text-align: center; }
+.pdf-zoom-controls { display: flex; gap: 6px; }
+.pdf-zoom-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid var(--card-border); background: var(--card); color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.pdf-zoom-btn:hover { border-color: var(--accent); color: #fff; }
+.pdf-canvas-wrap { flex: 1; overflow: auto; display: flex; justify-content: center; padding: 12px; -webkit-overflow-scrolling: touch; }
+.pdf-canvas-wrap canvas { max-width: 100%; height: auto; background: #fff; box-shadow: 0 2px 20px rgba(0,0,0,0.4); border-radius: 4px; }
+.pdf-loading { display: flex; align-items: center; justify-content: center; flex: 1; color: var(--dim); font-size: 14px; }
 </style>
 </head>
 <body>
@@ -454,13 +473,13 @@ function renderStore(s) {
 
       ${pogKeys.length ? `
       <div class="pog-section">
-        <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Planogram Downloads</h3></div>
+        <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Planogram PDFs</h3></div>
         ${pogKeys.map(k => {
           const p = POGS[k];
-          return `<a class="pog-link" href="${encodeURI(p.file)}" target="_blank" download>
+          return `<a class="pog-link" href="#" onclick="event.preventDefault();openPdfViewer('${encodeURI(p.file)}','${p.label}')">
             <div class="icon ${p.icon}">${ICONS[p.icon]}</div>
             <div class="info"><div class="title">${p.label}</div><div class="sub">${p.sub}</div></div>
-            <span class="dl">PDF ↓</span>
+            <span class="dl">View PDF</span>
           </a>`;
         }).join('')}
       </div>
@@ -942,6 +961,88 @@ async function sendPhotos(storeId) {
   sendingPhotos = false;
   render();
   switchTab('photos');
+}
+
+// ── PDF Viewer ────────────────────────────────────────────────────────────────
+let pdfDoc = null;
+let pdfPageNum = 1;
+let pdfScale = 1.5;
+
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function openPdfViewer(url, title) {
+  pdfPageNum = 1;
+  pdfScale = 1.5;
+  pdfDoc = null;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'pdf-viewer-overlay';
+  overlay.id = 'pdf-viewer';
+  overlay.innerHTML = `
+    <div class="pdf-viewer-toolbar">
+      <button class="pdf-close-btn" onclick="closePdfViewer()">&times;</button>
+      <span class="pdf-title">${title}</span>
+      <div class="pdf-zoom-controls">
+        <button class="pdf-zoom-btn" onclick="pdfZoom(-0.25)">−</button>
+        <button class="pdf-zoom-btn" onclick="pdfZoom(0.25)">+</button>
+      </div>
+    </div>
+    <div class="pdf-page-controls" id="pdf-page-controls" style="display:none">
+      <button class="pdf-page-btn" id="pdf-prev" onclick="pdfPrev()">‹</button>
+      <span class="pdf-page-info" id="pdf-page-info"></span>
+      <button class="pdf-page-btn" id="pdf-next" onclick="pdfNext()">›</button>
+    </div>
+    <div class="pdf-canvas-wrap" id="pdf-canvas-wrap">
+      <div class="pdf-loading">Loading PDF...</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  pdfjsLib.getDocument(url).promise.then(doc => {
+    pdfDoc = doc;
+    const controls = document.getElementById('pdf-page-controls');
+    if (controls) controls.style.display = 'flex';
+    renderPdfPage();
+  }).catch(err => {
+    const wrap = document.getElementById('pdf-canvas-wrap');
+    if (wrap) wrap.innerHTML = `<div class="pdf-loading" style="color:var(--red)">Failed to load PDF</div>`;
+  });
+}
+
+function closePdfViewer() {
+  const el = document.getElementById('pdf-viewer');
+  if (el) el.remove();
+  pdfDoc = null;
+}
+
+function renderPdfPage() {
+  if (!pdfDoc) return;
+  pdfDoc.getPage(pdfPageNum).then(page => {
+    const viewport = page.getViewport({ scale: pdfScale });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+
+    page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
+      const wrap = document.getElementById('pdf-canvas-wrap');
+      if (wrap) { wrap.innerHTML = ''; wrap.appendChild(canvas); }
+    });
+
+    const info = document.getElementById('pdf-page-info');
+    if (info) info.textContent = `${pdfPageNum} / ${pdfDoc.numPages}`;
+    const prev = document.getElementById('pdf-prev');
+    const next = document.getElementById('pdf-next');
+    if (prev) prev.disabled = pdfPageNum <= 1;
+    if (next) next.disabled = pdfPageNum >= pdfDoc.numPages;
+  });
+}
+
+function pdfPrev() { if (pdfPageNum > 1) { pdfPageNum--; renderPdfPage(); } }
+function pdfNext() { if (pdfDoc && pdfPageNum < pdfDoc.numPages) { pdfPageNum++; renderPdfPage(); } }
+function pdfZoom(delta) {
+  pdfScale = Math.max(0.5, Math.min(4, pdfScale + delta));
+  renderPdfPage();
 }
 
 // ── Swipe gesture for bay navigation ──────────────────────────────────────────
