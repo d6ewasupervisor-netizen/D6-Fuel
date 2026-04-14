@@ -212,7 +212,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .pog-detail-sheet .detail-cell .dv { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
 
 /* ── UPC overlay on product slots ── */
-.slot-upc { position: absolute; bottom: 0; left: 0; right: 0; font-size: 7px; font-family: 'JetBrains Mono', monospace; color: #fff; background: rgba(0,0,0,0.75); text-align: center; padding: 1px 0; line-height: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; pointer-events: none; }
+.slot-upc { position: absolute; top: 0; left: 0; right: 0; font-size: 7px; font-family: 'JetBrains Mono', monospace; color: #fff; background: rgba(0,0,0,0.75); text-align: center; padding: 1px 0; line-height: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; pointer-events: none; z-index: 3; }
+.group-upc { position: absolute; top: 0; left: 0; right: 0; font-size: 8px; font-family: 'JetBrains Mono', monospace; color: #fff; background: rgba(0,0,0,0.75); text-align: center; padding: 2px 0; line-height: 1; white-space: nowrap; pointer-events: none; z-index: 3; letter-spacing: 0.3px; }
 
 /* ── UPC list view toggle ── */
 .upc-toggle-btn { display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--card); color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; margin-bottom: 12px; }
@@ -718,13 +719,14 @@ function renderShelfProducts(shelf, bayWidthInches, rowHeight, sec) {
     const dataAttrs = `data-upc="${p.upc}" data-name="${name.replace(/"/g, '&quot;')}" data-desc="${displayName.replace(/"/g, '&quot;')}" data-size="${p.size || ''}" data-pos="${p.position}" data-fac="${facings}" data-h="${p.height_inches}" data-w="${p.width_inches}" data-img="${imgSrc}" data-shelf="${shelf.shelf}" data-bay="${selectedCooler}" data-new="${p.is_new?1:0}" data-chg="${p.is_changed?1:0}"`;
 
     if (facings > 1) {
-      // Multi-facing: wrap all facings in a group
       const slotPct = (100 / facings).toFixed(2);
+      const groupUpc = `<span class="group-upc">${p.upc}</span>`;
       let slots = '';
       for (let f = 0; f < facings; f++) {
-        slots += `<div class="product-slot" style="width:${slotPct}%;height:100%" onclick="showProductDetail(this.parentElement)" ${f === 0 ? dataAttrs : ''}>${imgTag}${fallback}${f === 0 ? upcLabel + newBadge + chgBadge : ''}</div>`;
+        slots += `<div class="product-slot" style="width:${slotPct}%;height:100%" onclick="showProductDetail(this.parentElement)" ${f === 0 ? dataAttrs : ''}>${imgTag}${fallback}${f === 0 ? newBadge + chgBadge : ''}</div>`;
       }
       return `<div class="multi-facing-group" style="width:${pct}%;height:100%;flex-shrink:0" ${dataAttrs}>
+        ${groupUpc}
         <span class="facing-badge">\u00d7${facings}</span>
         ${slots}
       </div>`;
