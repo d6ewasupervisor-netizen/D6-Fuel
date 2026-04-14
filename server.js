@@ -10,11 +10,13 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/send-photos', async (req, res) => {
-  const { storeId, city, state, address, energySet, resetDate, coolerPhotos } = req.body;
+  const { storeId, city, state, address, energySet, resetDate, phase, coolerPhotos } = req.body;
 
   if (!coolerPhotos || !coolerPhotos.length) {
     return res.status(400).json({ error: 'No photos provided.' });
   }
+
+  const phaseLabel = phase === 'after' ? 'After' : 'Before';
 
   const attachments = coolerPhotos.map(p => ({
     filename: p.fileName,
@@ -28,14 +30,14 @@ app.post('/api/send-photos', async (req, res) => {
     const { data, error } = await resend.emails.send({
       from: fromAddress,
       to: 'april.gauthier@retailodyssey.com',
-      subject: `FM ${storeId} Before Photos — ${city}, ${state}`,
+      subject: `FM ${storeId} ${phaseLabel} Photos — ${city}, ${state}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px">
-          <h2 style="margin:0 0 8px">FM ${storeId} — Before Photos</h2>
+          <h2 style="margin:0 0 8px">FM ${storeId} — ${phaseLabel} Photos</h2>
           <p style="color:#666;margin:0 0 4px">${city}, ${state} — ${address}</p>
           <p style="color:#666;margin:0 0 16px">${energySet} energy set · Reset: ${resetDate}</p>
           <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
-          <p style="margin:0 0 8px"><strong>${coolerPhotos.length} cooler photos attached:</strong></p>
+          <p style="margin:0 0 8px"><strong>${coolerPhotos.length} ${phaseLabel.toLowerCase()} photos attached:</strong></p>
           <ul style="padding-left:20px;margin:0 0 16px">${photoList}</ul>
           <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
           <p style="color:#999;font-size:12px;margin:0">Sent from D6 Fuel Cooler Reset Guide</p>

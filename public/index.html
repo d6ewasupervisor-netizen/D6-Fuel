@@ -261,6 +261,34 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .send-result.success { background: #00d08420; color: var(--green); border: 1px solid #00d08444; }
 .send-result.error { background: #e74c3c20; color: var(--red); border: 1px solid #e74c3c44; }
 
+/* ── Workflow step indicator ── */
+.workflow-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 20px; padding: 0 10px; }
+.wf-step { display: flex; align-items: center; gap: 0; }
+.wf-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border: 2px solid var(--card-border); background: var(--card); color: var(--dim); transition: all 0.2s; flex-shrink: 0; }
+.wf-dot.active { border-color: var(--accent); background: var(--accent); color: #fff; box-shadow: 0 0 12px #3a8fd444; }
+.wf-dot.done { border-color: var(--green); background: var(--green); color: #000; }
+.wf-line { width: 40px; height: 2px; background: var(--card-border); flex-shrink: 0; }
+.wf-line.done { background: var(--green); }
+.wf-label { font-size: 9px; font-weight: 600; color: var(--dim); text-align: center; margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+.wf-label.active { color: var(--accent); }
+.wf-label.done { color: var(--green); }
+.wf-step-col { display: flex; flex-direction: column; align-items: center; }
+.wf-line-wrap { display: flex; align-items: center; padding-bottom: 18px; }
+
+/* ── Workflow cards ── */
+.wf-hero { text-align: center; padding: 20px 16px; margin-bottom: 16px; }
+.wf-hero-icon { font-size: 40px; margin-bottom: 8px; }
+.wf-hero-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.wf-hero-sub { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.wf-next-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.15s; margin-top: 16px; }
+.wf-next-btn.primary { background: var(--accent); color: #fff; }
+.wf-next-btn.primary:hover { background: #4a9fe4; transform: translateY(-1px); }
+.wf-next-btn.success { background: var(--green); color: #000; }
+.wf-next-btn.success:hover { background: #00e090; transform: translateY(-1px); }
+.wf-next-btn:disabled { background: #1e2c3e; color: #445566; cursor: not-allowed; transform: none; }
+.wf-skip { display: block; text-align: center; font-size: 12px; color: var(--dim); margin-top: 12px; cursor: pointer; background: none; border: none; font-family: inherit; text-decoration: underline; }
+.wf-skip:hover { color: var(--muted); }
+
 /* ── PDF Viewer overlay ── */
 .pdf-viewer-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; }
 .pdf-viewer-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #1a2332; border-bottom: 1px solid var(--card-border); flex-shrink: 0; gap: 8px; }
@@ -333,9 +361,10 @@ let PLANOGRAMS     = null;
 let selectedCooler = null;
 let currentBayIdx  = 0;
 let showUpcList    = false;
-let photoState     = {};
+let photoState     = {};     // { storeId: { before: {coolerId: dataUrl}, after: {coolerId: dataUrl} } }
 let sendingPhotos  = false;
 let sendResult     = null;
+let workflowStep   = {};     // { storeId: 'before' | 'reset' | 'after' | 'done' }
 
 // Load data on start
 fetch('products.json')
@@ -393,7 +422,7 @@ function renderDashboard() {
     </div>
     <div class="store-grid">
       ${STORES.map(s => `
-        <button class="store-btn" onclick="selectedStore='${s.id}';activeTab='info';render()">
+        <button class="store-btn" onclick="selectStore('${s.id}')">
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <div>
               <span class="fm">FM ${s.id}</span>
@@ -410,24 +439,184 @@ function renderDashboard() {
   `;
 }
 
+function selectStore(id) {
+  selectedStore = id;
+  selectedCooler = null;
+  currentBayIdx = 0;
+  if (!workflowStep[id]) workflowStep[id] = 'before';
+  activeTab = 'workflow';
+  render();
+}
+
+function getWfStep(storeId) { return workflowStep[storeId] || 'before'; }
+
+function advanceWorkflow(storeId, to) {
+  workflowStep[storeId] = to;
+  activeTab = 'workflow';
+  selectedCooler = null;
+  currentBayIdx = 0;
+  sendResult = null;
+  render();
+}
+
+function skipToFullView(storeId) {
+  workflowStep[storeId] = 'done';
+  activeTab = 'info';
+  render();
+}
+
 // ── Store view ────────────────────────────────────────────────────────────────
 function renderStore(s) {
-  const isSwap = s.swap;
-  const pogKeys = isSwap ? [] : (s.discrepancy ? ['csd','bev','mon12','rb12','mon8','rb8'] : ['csd','bev','mon12','rb12']);
+  const step = getWfStep(s.id);
+  const inWorkflow = step !== 'done';
 
   return `
     <button class="back-btn" onclick="selectedStore=null;selectedCooler=null;currentBayIdx=0;render()">← All Stores</button>
     <div class="store-header">
       <h2>FM ${s.id}</h2>
       <div class="addr">${s.city}, ${s.state} ${s.zip} — ${s.address}</div>
-      <div class="detail">${s.energySet} energy set — Reset: ${s.resetDate}${isSwap ? ' — ONSITE SWAP' : ''}</div>
+      <div class="detail">${s.energySet} energy set — Reset: ${s.resetDate}${s.swap ? ' — ONSITE SWAP' : ''}</div>
     </div>
 
+    ${inWorkflow ? renderWorkflowSteps(s) : renderFullView(s)}
+  `;
+}
+
+function renderWorkflowSteps(s) {
+  const step = getWfStep(s.id);
+  const steps = [
+    { id:'before', num:1, label:'Before Photos' },
+    { id:'reset',  num:2, label:'Reset Coolers' },
+    { id:'after',  num:3, label:'After Photos' },
+  ];
+  const stepOrder = ['before','reset','after'];
+  const currentIdx = stepOrder.indexOf(step);
+
+  const indicator = `
+    <div class="workflow-steps">
+      ${steps.map((st, i) => {
+        const isDone = i < currentIdx;
+        const isActive = i === currentIdx;
+        const dotClass = isDone ? 'done' : isActive ? 'active' : '';
+        const labelClass = isDone ? 'done' : isActive ? 'active' : '';
+        const line = i < steps.length - 1
+          ? `<div class="wf-line-wrap"><div class="wf-line ${i < currentIdx ? 'done' : ''}"></div></div>` : '';
+        return `
+          <div class="wf-step-col">
+            <div class="wf-dot ${dotClass}">${isDone ? '✓' : st.num}</div>
+            <div class="wf-label ${labelClass}">${st.label}</div>
+          </div>${line}`;
+      }).join('')}
+    </div>`;
+
+  let content = '';
+  if (step === 'before') content = renderWorkflowPhotos(s, 'before');
+  else if (step === 'reset') content = renderWorkflowReset(s);
+  else if (step === 'after') content = renderWorkflowPhotos(s, 'after');
+
+  return `
+    ${indicator}
+    ${content}
+    <button class="wf-skip" onclick="skipToFullView('${s.id}')">Skip to full store view</button>
+    <div class="footer">Generated by TacTag for Retail Odyssey / Advantage Solutions — District 6</div>
+  `;
+}
+
+function renderWorkflowPhotos(s, phase) {
+  const photos = getStorePhotos(s.id, phase);
+  const capturedCount = PHOTO_COOLERS.filter(c => photos[c.id]).length;
+  const total = PHOTO_COOLERS.length;
+  const allCaptured = capturedCount === total;
+  const pct = Math.round(capturedCount / total * 100);
+  const isBefore = phase === 'before';
+  const phaseLabel = isBefore ? 'Before' : 'After';
+
+  const heroIcon = isBefore ? '📸' : '📷';
+  const heroTitle = isBefore ? 'Take Before Photos' : 'Take After Photos';
+  const heroSub = isBefore
+    ? 'Photograph each cooler before starting the reset.'
+    : 'Photograph each cooler now that the reset is complete.';
+  const nextStep = isBefore ? 'reset' : 'done';
+  const nextLabel = isBefore ? 'Continue to Planograms →' : 'Finish & Email All Photos →';
+
+  return `
+    <div class="wf-hero">
+      <div class="wf-hero-icon">${heroIcon}</div>
+      <div class="wf-hero-title">${heroTitle}</div>
+      <div class="wf-hero-sub">${heroSub}</div>
+    </div>
+
+    <div class="photo-progress">
+      <div class="photo-progress-bar"><div class="photo-progress-fill" style="width:${pct}%"></div></div>
+      <div class="photo-progress-text">${capturedCount} / ${total}</div>
+    </div>
+
+    <div class="photo-grid">
+      ${PHOTO_COOLERS.map(c => {
+        const hasPhoto = !!photos[c.id];
+        return `
+          <div class="photo-card ${hasPhoto ? 'captured' : ''}">
+            <div class="photo-card-header">
+              <div class="photo-card-icon" style="background:${c.color}22">${c.icon}</div>
+              <div class="photo-card-info">
+                <div class="pc-name">${c.label}</div>
+                <div class="pc-status ${hasPhoto ? 'done' : ''}">${hasPhoto ? '✓ Photo captured' : 'Waiting for photo'}</div>
+              </div>
+            </div>
+            ${hasPhoto ? `
+              <div class="photo-preview">
+                <img src="${photos[c.id]}" alt="${c.label}">
+                <button class="retake-btn" onclick="removePhoto('${s.id}','${c.id}','${phase}')">✕ Retake</button>
+              </div>
+            ` : `
+              <button class="capture-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}')">📷 Take ${phaseLabel} Photo</button>
+              <input type="file" accept="image/*" capture="environment" id="photo-input-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
+            `}
+          </div>`;
+      }).join('')}
+    </div>
+
+    ${isBefore ? `
+      <button class="wf-next-btn ${allCaptured ? 'primary' : ''}" onclick="${allCaptured ? `sendAndAdvance('${s.id}','before','reset')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
+        ${sendingPhotos ? '⏳ Sending before photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} photo${total - capturedCount === 1 ? '' : 's'} remaining`}
+      </button>
+    ` : `
+      <button class="wf-next-btn ${allCaptured ? 'success' : ''}" onclick="${allCaptured ? `sendAndAdvance('${s.id}','after','done')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
+        ${sendingPhotos ? '⏳ Sending after photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} photo${total - capturedCount === 1 ? '' : 's'} remaining`}
+      </button>
+    `}
+
+    ${sendResult ? `<div class="send-result ${sendResult.ok ? 'success' : 'error'}">${sendResult.message}</div>` : ''}
+  `;
+}
+
+function renderWorkflowReset(s) {
+  return `
+    <div class="wf-hero">
+      <div class="wf-hero-icon">📐</div>
+      <div class="wf-hero-title">Reset Coolers</div>
+      <div class="wf-hero-sub">Use the digital planograms below to reset each cooler.</div>
+    </div>
+
+    ${renderPlanogramTab(s)}
+
+    ${!selectedCooler ? `
+      <button class="wf-next-btn primary" onclick="advanceWorkflow('${s.id}','after')">
+        Done Resetting → Take After Photos
+      </button>
+    ` : ''}
+  `;
+}
+
+function renderFullView(s) {
+  const isSwap = s.swap;
+  const pogKeys = isSwap ? [] : (s.discrepancy ? ['csd','bev','mon12','rb12','mon8','rb8'] : ['csd','bev','mon12','rb12']);
+
+  return `
     <div class="store-tabs">
       <button class="tab-btn ${activeTab==='info'?'active':''}" data-tab="info" onclick="switchTab('info')">📋 Info</button>
       <button class="tab-btn ${activeTab==='planograms'?'active':''}" data-tab="planograms" onclick="switchTab('planograms')">📐 Planograms</button>
       <button class="tab-btn ${activeTab==='products'?'active':''}" data-tab="products" onclick="switchTab('products')">🛒 Products</button>
-      <button class="tab-btn ${activeTab==='photos'?'active':''}" data-tab="photos" onclick="switchTab('photos')">📸 Photos</button>
       <button class="tab-btn ${activeTab==='checklist'?'active':''}" data-tab="checklist" onclick="switchTab('checklist')">✅ Checklist</button>
     </div>
 
@@ -461,16 +650,6 @@ function renderStore(s) {
       </div>
       `}
 
-      <div class="section">
-        <div class="section-label"><div class="bar" style="background:var(--orange)"></div><h3 style="color:var(--orange)">Cooler Assignments</h3></div>
-        <div class="card">
-          <div class="cooler-row"><span class="name">GDM 9 — CSD</span><span class="size-badge">9 FT — Existing</span><div class="pog">V898_D001</div></div>
-          <div class="cooler-row"><span class="name">GDM 9 — ALL BEVERAGE</span><span class="size-badge">9 FT — Existing</span><div class="pog">V899_D001</div></div>
-          <div class="cooler-row"><span class="name new">HABCO Monster Cooler</span><span class="size-badge">12 FT — NEW</span><div class="pog">V670_D002</div></div>
-          <div class="cooler-row"><span class="name new">HABCO Red Bull Cooler</span><span class="size-badge">12 FT — NEW</span><div class="pog">V664_D002</div></div>
-        </div>
-      </div>
-
       ${pogKeys.length ? `
       <div class="pog-section">
         <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Planogram PDFs</h3></div>
@@ -483,7 +662,7 @@ function renderStore(s) {
           </a>`;
         }).join('')}
       </div>
-      ` : '<div style="font-size:12px;color:var(--dim);margin-bottom:16px;padding:12px;background:var(--card);border-radius:10px;border:1px solid var(--card-border)">Planograms not yet available for Onsite Swap stores.</div>'}
+      ` : ''}
 
       <div class="section">
         <div class="section-label"><div class="bar" style="background:var(--accent)"></div><h3 style="color:var(--accent)">Contact</h3></div>
@@ -503,35 +682,14 @@ function renderStore(s) {
       ${renderProductsTab(s)}
     </div>
 
-    <!-- PHOTOS TAB -->
-    <div class="tab-panel ${activeTab==='photos'?'active':''}" data-panel="photos">
-      ${renderPhotosTab(s)}
-    </div>
-
     <!-- CHECKLIST TAB -->
     <div class="tab-panel ${activeTab==='checklist'?'active':''}" data-panel="checklist">
       <div class="checklist">
-        <div class="check-group-label">BEFORE starting:</div>
-        <div class="check-item"><div class="box"></div>Confirm all coolers are accessible in the fuel station</div>
-        <div class="check-item"><div class="box"></div>Locate REZ tags (wrapped separately from main tag run)</div>
-        <div class="check-item"><div class="box"></div>Take BEFORE photos of ALL coolers</div>
-
-        <div class="check-group-label">DURING reset:</div>
-        <div class="check-item"><div class="box"></div>Reset product to POG for each cooler</div>
-        <div class="check-item"><div class="box"></div>Apply shelf strips to each cooler</div>
-        <div class="check-item"><div class="box"></div>Apply REZ tags to each cooler</div>
+        <div class="check-group-label">Key reminders:</div>
         <div class="check-item"><div class="box"></div>DO NOT move or transport any product in or out of the fuel station</div>
-
-        <div class="check-group-label">IF Red Bull cooler is NOT installed:</div>
-        <div class="check-item"><div class="box"></div>Leave Red Bull strips and tags at the fuel station</div>
-        <div class="check-item"><div class="box"></div>Do NOT take them back — they stay on-site</div>
-        <div class="check-item"><div class="box"></div>Still photograph the space where it will go</div>
-
-        <div class="check-group-label">AFTER reset:</div>
-        <div class="check-item"><div class="box"></div>Take AFTER photos of ALL coolers (even if RB missing)</div>
-        <div class="check-item"><div class="box"></div>Upload to WA state folder in OneDrive</div>
-        <div class="check-item"><div class="box"></div>Label files with FM store number</div>
-        <div class="check-item"><div class="box"></div>Email any issues/exceptions to April at april.gauthier@retailodyssey.com</div>
+        <div class="check-item"><div class="box"></div>Red Bull cooler may not be installed — leave strips and tags on-site</div>
+        <div class="check-item"><div class="box"></div>Photograph the space where RB cooler will go even if missing</div>
+        <div class="check-item"><div class="box"></div>Email any issues to april.gauthier@retailodyssey.com</div>
       </div>
     </div>
 
@@ -813,86 +971,36 @@ function renderUpcList(bay) {
     </div>`).join('');
 }
 
-// ── Photos tab ────────────────────────────────────────────────────────────────
-function getStorePhotos(storeId) {
-  if (!photoState[storeId]) photoState[storeId] = {};
-  return photoState[storeId];
+// ── Photos (before/after) ─────────────────────────────────────────────────────
+function getStorePhotos(storeId, phase) {
+  if (!photoState[storeId]) photoState[storeId] = { before: {}, after: {} };
+  if (!photoState[storeId][phase]) photoState[storeId][phase] = {};
+  return photoState[storeId][phase];
 }
 
-function renderPhotosTab(s) {
-  const photos = getStorePhotos(s.id);
-  const capturedCount = PHOTO_COOLERS.filter(c => photos[c.id]).length;
-  const total = PHOTO_COOLERS.length;
-  const allCaptured = capturedCount === total;
-  const pct = Math.round(capturedCount / total * 100);
-
-  return `
-    <div class="section">
-      <div class="section-label"><div class="bar" style="background:var(--green)"></div><h3 style="color:var(--green)">Before Photos — FM ${s.id}</h3></div>
-    </div>
-
-    <div class="photo-progress">
-      <div class="photo-progress-bar"><div class="photo-progress-fill" style="width:${pct}%"></div></div>
-      <div class="photo-progress-text">${capturedCount} / ${total}</div>
-    </div>
-
-    <div class="photo-grid">
-      ${PHOTO_COOLERS.map(c => {
-        const hasPhoto = !!photos[c.id];
-        return `
-          <div class="photo-card ${hasPhoto ? 'captured' : ''}">
-            <div class="photo-card-header">
-              <div class="photo-card-icon" style="background:${c.color}22">${c.icon}</div>
-              <div class="photo-card-info">
-                <div class="pc-name">${c.label}</div>
-                <div class="pc-status ${hasPhoto ? 'done' : ''}">${hasPhoto ? '✓ Photo captured' : 'Waiting for photo'}</div>
-              </div>
-            </div>
-            ${hasPhoto ? `
-              <div class="photo-preview">
-                <img src="${photos[c.id]}" alt="${c.label}">
-                <button class="retake-btn" onclick="removePhoto('${s.id}','${c.id}')">✕ Retake</button>
-              </div>
-            ` : `
-              <button class="capture-btn" onclick="triggerCapture('${s.id}','${c.id}')">📷 Take Photo</button>
-              <input type="file" accept="image/*" capture="environment" id="photo-input-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}')">
-            `}
-          </div>`;
-      }).join('')}
-    </div>
-
-    <button class="send-photos-btn ${sendingPhotos ? 'sending' : allCaptured ? 'ready' : 'disabled'}"
-            onclick="${allCaptured && !sendingPhotos ? `sendPhotos('${s.id}')` : ''}"
-            ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
-      ${sendingPhotos ? '⏳ Sending...' : allCaptured ? '📧 Email Photos to April' : `📷 ${total - capturedCount} photo${total - capturedCount === 1 ? '' : 's'} remaining`}
-    </button>
-
-    ${sendResult ? `<div class="send-result ${sendResult.ok ? 'success' : 'error'}">${sendResult.message}</div>` : ''}
-  `;
-}
-
-function triggerCapture(storeId, coolerId) {
-  const input = document.getElementById('photo-input-' + coolerId);
+function triggerCapture(storeId, coolerId, phase) {
+  const input = document.getElementById(`photo-input-${phase}-${coolerId}`);
   if (input) input.click();
 }
 
-function handleCapture(input, storeId, coolerId) {
+function handleCapture(input, storeId, coolerId, phase) {
   const file = input.files[0];
   if (!file) return;
   resizeImage(file, 1920, 0.85).then(dataUrl => {
-    if (!photoState[storeId]) photoState[storeId] = {};
-    photoState[storeId][coolerId] = dataUrl;
+    if (!photoState[storeId]) photoState[storeId] = { before: {}, after: {} };
+    if (!photoState[storeId][phase]) photoState[storeId][phase] = {};
+    photoState[storeId][phase][coolerId] = dataUrl;
     sendResult = null;
     render();
-    switchTab('photos');
   });
 }
 
-function removePhoto(storeId, coolerId) {
-  if (photoState[storeId]) delete photoState[storeId][coolerId];
+function removePhoto(storeId, coolerId, phase) {
+  if (photoState[storeId] && photoState[storeId][phase]) {
+    delete photoState[storeId][phase][coolerId];
+  }
   sendResult = null;
   render();
-  switchTab('photos');
 }
 
 function resizeImage(file, maxDim, quality) {
@@ -917,18 +1025,18 @@ function resizeImage(file, maxDim, quality) {
   });
 }
 
-async function sendPhotos(storeId) {
+async function sendAndAdvance(storeId, phase, nextStep) {
   const s = STORES.find(x => x.id === storeId);
   if (!s) return;
-  const photos = getStorePhotos(storeId);
+  const photos = getStorePhotos(storeId, phase);
   sendingPhotos = true;
   sendResult = null;
   render();
-  switchTab('photos');
 
+  const phaseLabel = phase === 'before' ? 'Before' : 'After';
   const coolerPhotos = PHOTO_COOLERS.map(c => ({
     name: c.label,
-    fileName: `FM${storeId}_before_${c.fileName}.jpg`,
+    fileName: `FM${storeId}_${phase}_${c.fileName}.jpg`,
     base64: photos[c.id].split(',')[1]
   }));
 
@@ -943,12 +1051,20 @@ async function sendPhotos(storeId) {
         address: s.address,
         energySet: s.energySet,
         resetDate: s.resetDate,
+        phase,
         coolerPhotos
       })
     });
     const data = await res.json();
     if (res.ok && data.success) {
-      sendResult = { ok: true, message: '✓ Photos emailed to April successfully!' };
+      sendResult = { ok: true, message: `✓ ${phaseLabel} photos emailed to April!` };
+      sendingPhotos = false;
+      render();
+      setTimeout(() => {
+        sendResult = null;
+        advanceWorkflow(storeId, nextStep);
+      }, 1500);
+      return;
     } else {
       sendResult = { ok: false, message: data.error || 'Failed to send email. Please try again.' };
     }
@@ -957,7 +1073,6 @@ async function sendPhotos(storeId) {
   }
   sendingPhotos = false;
   render();
-  switchTab('photos');
 }
 
 // ── PDF Viewer ────────────────────────────────────────────────────────────────
