@@ -229,6 +229,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--t
 .scan-loc .loc-meta { font-size: 11px; color: var(--muted); }
 .scan-open-btn { margin-top: 6px; padding: 6px 10px; font-size: 11px; border-radius: 6px; border: 1px solid var(--accent); background: transparent; color: var(--accent); cursor: pointer; font-family: inherit; font-weight: 600; }
 .scan-open-btn:hover { background: rgba(58,143,212,0.15); }
+.scan-delete-alert { border-left: 3px solid var(--orange); background: #e67e2218; padding: 12px; border-radius: 8px; margin-top: 8px; }
+.scan-delete-alert .sd-title { font-weight: 700; color: var(--orange); margin-bottom: 6px; font-size: 13px; }
+.scan-delete-alert .sd-row { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+.scan-moved-note { border-left: 3px solid var(--accent); background: rgba(58,143,212,0.12); padding: 10px 12px; border-radius: 8px; margin-top: 8px; font-size: 11px; color: var(--muted); line-height: 1.45; }
 .pog-detail-sheet .detail-name { font-size: 16px; font-weight: 700; color: #fff; text-align: center; margin-bottom: 4px; }
 .pog-detail-sheet .detail-desc { font-size: 12px; color: var(--muted); text-align: center; margin-bottom: 12px; }
 .pog-detail-sheet .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -394,6 +398,8 @@ let sendingPhotos  = false;
 let sendResult     = null;
 let workflowStep   = {};     // { storeId: 'before' | 'reset' | 'after' | 'done' }
 let UPC_INDEX      = null;   // normalized UPC -> location entries (from planograms)
+let PLAN_DELETES   = null;   // from planogram-deletes.json (PDF DELETE sections)
+let ACTIVE_UPC_SET = null;   // cached Set of UPCs on any shelf (recalc when PLANOGRAMS loads)
 let scanStream     = null;
 let scanAnimationId = null;
 
@@ -405,8 +411,13 @@ fetch('products.json')
 
 fetch('planograms.json')
   .then(r => r.json())
-  .then(data => { PLANOGRAMS = data; buildUpcIndex(); })
-  .catch(() => { PLANOGRAMS = {}; UPC_INDEX = {}; });
+  .then(data => { PLANOGRAMS = data; buildUpcIndex(); buildActiveUpcSet(); })
+  .catch(() => { PLANOGRAMS = {}; UPC_INDEX = {}; ACTIVE_UPC_SET = new Set(); });
+
+fetch('planogram-deletes.json')
+  .then(r => r.json())
+  .then(data => { PLAN_DELETES = data; })
+  .catch(() => { PLAN_DELETES = null; });
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function render() {
@@ -1014,6 +1025,24 @@ function showProductDetail(el) {
 }
 
 // ── UPC location index & product scan ─────────────────────────────────────────
+function buildActiveUpcSet() {
+  ACTIVE_UPC_SET = new Set();
+  if (!PLANOGRAMS) return ACTIVE_UPC_SET;
+  Object.keys(PLANOGRAMS).forEach(coolerKey => {
+    const pog = PLANOGRAMS[coolerKey];
+    if (!pog || !pog.bays) return;
+    pog.bays.forEach(bay => {
+      (bay.shelves || []).forEach(sh => {
+        (sh.products || []).forEach(p => {
+          const k = normalizeUpcKey(p.upc);
+          if (k) ACTIVE_UPC_SET.add(k);
+        });
+      });
+    });
+  });
+  return ACTIVE_UPC_SET;
+}
+
 function buildUpcIndex() {
   UPC_INDEX = {};
   if (!PLANOGRAMS) return;
@@ -1117,21 +1146,50 @@ function showUpcLookupResult(raw, container) {
   const upcENote = (rawDigits.length === 8 && rawDigits[0] === '0' && expandUpcEto12(rawDigits) === displayUpc)
     ? ' <span style="color:var(--dim);font-size:11px;font-weight:500">(UPC-E ' + scanEscapeHtml(rawDigits) + ')</span>'
     : '';
-  if (!found || !found.list.length) {
-    container.innerHTML = '<div class="scan-result">No match for <strong>' + scanEscapeHtml(String(raw)) + '</strong>'
-      + (displayUpc && displayUpc !== rawDigits ? ' → ' + scanEscapeHtml(displayUpc) : '')
-      + ' in the fuel cooler planograms. Check the UPC or confirm the item is on this project.</div>';
+
+  if (found && found.list.length) {
+    const rows = found.list.map(loc => {
+      const ck = JSON.stringify(loc.coolerKey);
+      return '<div class="scan-loc"><div class="loc-title">' + scanEscapeHtml(loc.coolerLabel) + '</div>'
+        + '<div class="loc-meta">Bay ' + loc.bayNum + ' · Shelf ' + loc.shelf + ' · Position ' + loc.position + '</div>'
+        + '<div class="loc-meta" style="margin-top:4px">' + scanEscapeHtml(loc.name) + '</div>'
+        + '<button type="button" class="scan-open-btn" onclick="goToPlanogramLocation(' + ck + ', ' + loc.bayNum + ')">Open planogram</button></div>';
+    }).join('');
+    const multi = found.list.length > 1 ? ' (multiple placements)' : '';
+    container.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(displayUpc) + '</strong>' + upcENote + multi + '</div>' + rows;
     return;
   }
-  const rows = found.list.map(loc => {
-    const ck = JSON.stringify(loc.coolerKey);
-    return '<div class="scan-loc"><div class="loc-title">' + scanEscapeHtml(loc.coolerLabel) + '</div>'
-      + '<div class="loc-meta">Bay ' + loc.bayNum + ' · Shelf ' + loc.shelf + ' · Position ' + loc.position + '</div>'
-      + '<div class="loc-meta" style="margin-top:4px">' + scanEscapeHtml(loc.name) + '</div>'
-      + '<button type="button" class="scan-open-btn" onclick="goToPlanogramLocation(' + ck + ', ' + loc.bayNum + ')">Open planogram</button></div>';
-  }).join('');
-  const multi = found.list.length > 1 ? ' (multiple placements)' : '';
-  container.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(displayUpc) + '</strong>' + upcENote + multi + '</div>' + rows;
+
+  const k = displayUpc;
+  const active = ACTIVE_UPC_SET || buildActiveUpcSet();
+  const delList = (PLAN_DELETES && PLAN_DELETES.byUpc && k) ? PLAN_DELETES.byUpc[k] : null;
+
+  if (delList && delList.length) {
+    if (active.has(k)) {
+      const sources = delList.map(d => scanEscapeHtml(d.fromPlanogram)).join('; ');
+      container.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(displayUpc) + '</strong>' + upcENote + '</div>'
+        + '<div class="scan-moved-note">PDF lists this item as removed from: ' + sources
+        + '. It still appears in the <strong>current digital planogram</strong> (often because it moved to another cooler). Use the planogram view to place it — do <strong>not</strong> treat as a pull based on the delete list alone.</div>';
+      return;
+    }
+    let rows = '';
+    for (let i = 0; i < delList.length; i++) {
+      const d = delList[i];
+      rows += '<div class="sd-row">• ' + scanEscapeHtml(d.fromPlanogram)
+        + (d.description ? ' — ' + scanEscapeHtml(d.description) : '')
+        + (d.size ? ' (' + scanEscapeHtml(d.size) + ')' : '')
+        + '</div>';
+    }
+    container.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(displayUpc) + '</strong>' + upcENote + '</div>'
+      + '<div class="scan-delete-alert"><div class="sd-title">Removed from planogram (DELETE)</div>'
+      + '<div class="sd-row">Not on the current digital assortment for any fuel cooler — pull per reset rules.</div>'
+      + rows + '</div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="scan-result">No match for <strong>' + scanEscapeHtml(String(raw)) + '</strong>'
+    + (displayUpc && displayUpc !== rawDigits ? ' → ' + scanEscapeHtml(displayUpc) : '')
+    + ' in the fuel cooler planograms. Check the UPC or confirm the item is on this project.</div>';
 }
 
 function goToPlanogramLocation(coolerKey, bayNum) {
@@ -1155,7 +1213,7 @@ function renderProductScanPanel(s) {
   }
   return '<div class="scan-panel">'
     + '<div class="scan-title">Find product in coolers</div>'
-    + '<div class="scan-desc">Scan a UPC with the camera (Chrome or Edge — use manual entry on Safari/iOS) or type the code below. Short <strong>UPC-E</strong> codes (8 digits on small packs) are converted to full UPC for lookup. Hold the phone so bars are vertical when possible.</div>'
+    + '<div class="scan-desc">Scan a UPC with the camera (Chrome or Edge — use manual entry on Safari/iOS) or type the code below. Short <strong>UPC-E</strong> codes (8 digits on small packs) are converted to full UPC for lookup. Items listed as <strong>DELETE</strong> on the PDFs but still on the digital planogram in another cooler are not flagged as pulls.</div>'
     + '<div class="scan-video-wrap" id="scan-video-wrap"><video id="scan-video" playsinline muted></video></div>'
     + '<div class="scan-controls">'
     + '<button type="button" class="scan-btn primary" id="scan-start-btn" onclick="startBarcodeScan()">Start camera scan</button>'
