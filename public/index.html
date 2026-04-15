@@ -748,12 +748,12 @@ body {
 /* ── PDF Viewer overlay ── */
 .pdf-viewer-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; }
 .pdf-viewer-toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; background: var(--card); border-bottom: 1px solid var(--card-border);
-  flex-shrink: 0; gap: 10px; min-height: 52px;
+  display: flex; align-items: center;
+  padding: 10px 12px; background: var(--card); border-bottom: 1px solid var(--card-border);
+  flex-shrink: 0; gap: 8px; min-height: 52px;
 }
 .pdf-viewer-toolbar .pdf-title {
-  font-size: 14px; font-weight: 700; color: var(--text); white-space: nowrap;
+  font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap;
   overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0;
 }
 .pdf-viewer-toolbar .pdf-close-btn {
@@ -762,13 +762,22 @@ body {
   display: flex; align-items: center; justify-content: center;
 }
 .pdf-viewer-toolbar .pdf-close-btn:active { color: #fff; }
-.pdf-page-controls {
-  display: flex; align-items: center; justify-content: center; gap: 14px;
-  padding: 10px 16px; background: var(--bg-elevated);
+.pdf-toolbar-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.pdf-action-btn {
+  width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--card-border);
+  background: var(--card); color: var(--text-secondary); font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-family: inherit; flex-shrink: 0;
+}
+.pdf-action-btn:active { border-color: var(--accent); background: var(--card-hover); }
+.pdf-action-btn.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+.pdf-controls-row {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 8px 12px; background: var(--bg-elevated);
   border-bottom: 1px solid var(--card-border); flex-shrink: 0;
 }
+.pdf-page-controls { display: flex; align-items: center; gap: 10px; }
 .pdf-page-btn {
-  width: 44px; height: 44px; border-radius: var(--radius-sm);
+  width: 40px; height: 40px; border-radius: var(--radius-sm);
   border: 1px solid var(--card-border); background: var(--card);
   color: var(--text-secondary); font-size: 18px; cursor: pointer;
   display: flex; align-items: center; justify-content: center; font-family: inherit;
@@ -776,22 +785,68 @@ body {
 .pdf-page-btn:active { border-color: var(--accent); }
 .pdf-page-btn:disabled { opacity: 0.3; cursor: default; }
 .pdf-page-info {
-  font-size: 15px; font-weight: 700; color: var(--text-secondary);
-  font-family: 'JetBrains Mono', monospace; min-width: 70px; text-align: center;
+  font-size: 14px; font-weight: 700; color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace; min-width: 60px; text-align: center;
 }
-.pdf-zoom-controls { display: flex; gap: 8px; }
+.pdf-zoom-controls { display: flex; gap: 6px; margin-left: auto; }
 .pdf-zoom-btn {
-  padding: 8px 14px; border-radius: 8px; border: 1px solid var(--card-border);
+  padding: 6px 12px; border-radius: 8px; border: 1px solid var(--card-border);
   background: var(--card); color: var(--text-secondary); font-size: 15px;
-  font-weight: 700; cursor: pointer; font-family: inherit; min-width: 44px; min-height: 44px;
+  font-weight: 700; cursor: pointer; font-family: inherit; min-width: 40px; min-height: 40px;
   display: flex; align-items: center; justify-content: center;
 }
 .pdf-zoom-btn:active { border-color: var(--accent); }
-.pdf-canvas-wrap {
-  flex: 1; overflow: auto; display: flex; justify-content: center;
-  padding: 12px; -webkit-overflow-scrolling: touch;
+.pdf-zoom-pct {
+  font-size: 12px; font-weight: 600; color: var(--dim); min-width: 40px; text-align: center;
+  font-family: 'JetBrains Mono', monospace; display: flex; align-items: center; justify-content: center;
 }
-.pdf-canvas-wrap canvas { max-width: 100%; height: auto; background: #fff; box-shadow: var(--shadow-lg); border-radius: 4px; }
+
+/* ── PDF Search bar ── */
+.pdf-search-bar {
+  display: none; align-items: center; gap: 8px;
+  padding: 8px 12px; background: var(--card); border-bottom: 1px solid var(--card-border); flex-shrink: 0;
+}
+.pdf-search-bar.open { display: flex; }
+.pdf-search-input {
+  flex: 1; background: var(--bg); border: 1px solid var(--card-border); border-radius: 8px;
+  color: var(--text); font-size: 14px; padding: 10px 14px; font-family: inherit; outline: none;
+  min-height: 42px;
+}
+.pdf-search-input:focus { border-color: var(--accent); }
+.pdf-search-input::placeholder { color: var(--dim); }
+.pdf-search-nav { display: flex; gap: 4px; flex-shrink: 0; }
+.pdf-search-nav-btn {
+  width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--card-border);
+  background: var(--card); color: var(--text-secondary); font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.pdf-search-nav-btn:active { border-color: var(--accent); }
+.pdf-search-nav-btn:disabled { opacity: 0.3; }
+.pdf-search-count {
+  font-size: 12px; color: var(--dim); font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap; min-width: 50px; text-align: center; display: flex; align-items: center;
+}
+
+/* ── PDF Canvas + text layer ── */
+.pdf-canvas-wrap {
+  flex: 1; overflow: auto; display: flex; justify-content: center; align-items: flex-start;
+  padding: 12px; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y;
+}
+.pdf-page-container {
+  position: relative; display: inline-block; transform-origin: 0 0;
+  transition: transform 0.05s linear;
+}
+.pdf-page-container canvas { display: block; background: #fff; box-shadow: var(--shadow-lg); border-radius: 4px; }
+.pdf-text-layer {
+  position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden;
+  opacity: 0.25; line-height: 1.0;
+}
+.pdf-text-layer > span {
+  color: transparent; position: absolute; white-space: pre; cursor: text;
+  transform-origin: 0% 0%;
+}
+.pdf-text-layer .highlight { background: rgba(255, 204, 0, 0.6); border-radius: 2px; }
+.pdf-text-layer .highlight.active { background: rgba(255, 140, 0, 0.85); }
 .pdf-loading { display: flex; align-items: center; justify-content: center; flex: 1; color: var(--dim); font-size: 16px; }
 
 /* ── Animations ── */
@@ -2214,6 +2269,13 @@ async function sendAndAdvance(storeId, phase, nextStep) {
 let pdfDoc = null;
 let pdfPageNum = 1;
 let pdfScale = 1.5;
+let pdfTextContent = {};
+let pdfSearchTerm = '';
+let pdfSearchMatches = [];
+let pdfSearchIdx = -1;
+let _pinchStartDist = 0;
+let _pinchStartScale = 1;
+let _pinchVisualScale = 1;
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
@@ -2221,6 +2283,10 @@ function openPdfViewer(url, title) {
   pdfPageNum = 1;
   pdfScale = 1.5;
   pdfDoc = null;
+  pdfTextContent = {};
+  pdfSearchTerm = '';
+  pdfSearchMatches = [];
+  pdfSearchIdx = -1;
 
   const overlay = document.createElement('div');
   overlay.className = 'pdf-viewer-overlay';
@@ -2229,28 +2295,44 @@ function openPdfViewer(url, title) {
     <div class="pdf-viewer-toolbar">
       <button class="pdf-close-btn" onclick="closePdfViewer()">&times;</button>
       <span class="pdf-title">${title}</span>
+      <div class="pdf-toolbar-actions">
+        <button class="pdf-action-btn" id="pdf-search-toggle" onclick="togglePdfSearch()" title="Search">🔍</button>
+      </div>
+    </div>
+    <div class="pdf-search-bar" id="pdf-search-bar">
+      <input class="pdf-search-input" id="pdf-search-input" type="text" placeholder="Search in document…" autocomplete="off" inputmode="search" oninput="onPdfSearchInput(this.value)" onkeydown="if(event.key==='Enter'){event.preventDefault();event.shiftKey?pdfSearchPrev():pdfSearchNext()}">
+      <span class="pdf-search-count" id="pdf-search-count"></span>
+      <div class="pdf-search-nav">
+        <button class="pdf-search-nav-btn" id="pdf-search-prev" onclick="pdfSearchPrev()" disabled>‹</button>
+        <button class="pdf-search-nav-btn" id="pdf-search-next" onclick="pdfSearchNext()" disabled>›</button>
+      </div>
+    </div>
+    <div class="pdf-controls-row" id="pdf-controls-row" style="display:none">
+      <div class="pdf-page-controls">
+        <button class="pdf-page-btn" id="pdf-prev" onclick="pdfPrev()">‹</button>
+        <span class="pdf-page-info" id="pdf-page-info"></span>
+        <button class="pdf-page-btn" id="pdf-next" onclick="pdfNext()">›</button>
+      </div>
       <div class="pdf-zoom-controls">
         <button class="pdf-zoom-btn" onclick="pdfZoom(-0.25)">−</button>
+        <span class="pdf-zoom-pct" id="pdf-zoom-pct"></span>
         <button class="pdf-zoom-btn" onclick="pdfZoom(0.25)">+</button>
       </div>
     </div>
-    <div class="pdf-page-controls" id="pdf-page-controls" style="display:none">
-      <button class="pdf-page-btn" id="pdf-prev" onclick="pdfPrev()">‹</button>
-      <span class="pdf-page-info" id="pdf-page-info"></span>
-      <button class="pdf-page-btn" id="pdf-next" onclick="pdfNext()">›</button>
-    </div>
     <div class="pdf-canvas-wrap" id="pdf-canvas-wrap">
-      <div class="pdf-loading">Loading PDF...</div>
+      <div class="pdf-loading">Loading PDF…</div>
     </div>
   `;
   document.body.appendChild(overlay);
+  initPdfPinchZoom();
 
   pdfjsLib.getDocument(url).promise.then(doc => {
     pdfDoc = doc;
-    const controls = document.getElementById('pdf-page-controls');
-    if (controls) controls.style.display = 'flex';
+    const row = document.getElementById('pdf-controls-row');
+    if (row) row.style.display = 'flex';
     renderPdfPage();
-  }).catch(err => {
+    extractAllPdfText(doc);
+  }).catch(() => {
     const wrap = document.getElementById('pdf-canvas-wrap');
     if (wrap) wrap.innerHTML = `<div class="pdf-loading" style="color:var(--red)">Failed to load PDF</div>`;
   });
@@ -2260,10 +2342,13 @@ function closePdfViewer() {
   const el = document.getElementById('pdf-viewer');
   if (el) el.remove();
   pdfDoc = null;
+  pdfTextContent = {};
+  pdfSearchMatches = [];
 }
 
 function renderPdfPage() {
   if (!pdfDoc) return;
+  _pinchVisualScale = 1;
   pdfDoc.getPage(pdfPageNum).then(page => {
     const viewport = page.getViewport({ scale: pdfScale });
     const canvas = document.createElement('canvas');
@@ -2271,25 +2356,253 @@ function renderPdfPage() {
     canvas.height = viewport.height;
     const ctx = canvas.getContext('2d');
 
-    page.render({ canvasContext: ctx, viewport: viewport }).promise.then(() => {
+    const container = document.createElement('div');
+    container.className = 'pdf-page-container';
+    container.id = 'pdf-page-container';
+    container.style.width = viewport.width + 'px';
+    container.style.height = viewport.height + 'px';
+    container.appendChild(canvas);
+
+    page.render({ canvasContext: ctx, viewport }).promise.then(() => {
       const wrap = document.getElementById('pdf-canvas-wrap');
-      if (wrap) { wrap.innerHTML = ''; wrap.appendChild(canvas); }
+      if (wrap) { wrap.innerHTML = ''; wrap.appendChild(container); }
+      renderPdfTextLayer(page, viewport, container);
     });
 
-    const info = document.getElementById('pdf-page-info');
-    if (info) info.textContent = `${pdfPageNum} / ${pdfDoc.numPages}`;
-    const prev = document.getElementById('pdf-prev');
-    const next = document.getElementById('pdf-next');
-    if (prev) prev.disabled = pdfPageNum <= 1;
-    if (next) next.disabled = pdfPageNum >= pdfDoc.numPages;
+    updatePdfControls();
   });
+}
+
+function renderPdfTextLayer(page, viewport, container) {
+  page.getTextContent().then(textContent => {
+    const textDiv = document.createElement('div');
+    textDiv.className = 'pdf-text-layer';
+    textDiv.style.width = viewport.width + 'px';
+    textDiv.style.height = viewport.height + 'px';
+    container.appendChild(textDiv);
+
+    const textItems = textContent.items;
+    textItems.forEach(item => {
+      const tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
+      const span = document.createElement('span');
+      span.textContent = item.str;
+      const fontHeight = Math.sqrt(tx[2] * tx[2] + tx[3] * tx[3]);
+      span.style.fontSize = fontHeight + 'px';
+      span.style.left = tx[4] + 'px';
+      span.style.top = (tx[5] - fontHeight) + 'px';
+      if (item.width > 0) {
+        const measuredWidth = item.str.length * fontHeight * 0.5;
+        if (measuredWidth > 0) {
+          span.style.transform = `scaleX(${(item.width * pdfScale) / measuredWidth})`;
+        }
+      }
+      textDiv.appendChild(span);
+    });
+
+    if (pdfSearchTerm) highlightPdfSearchOnPage(textDiv);
+  });
+}
+
+function updatePdfControls() {
+  const info = document.getElementById('pdf-page-info');
+  if (info) info.textContent = `${pdfPageNum} / ${pdfDoc.numPages}`;
+  const prev = document.getElementById('pdf-prev');
+  const next = document.getElementById('pdf-next');
+  if (prev) prev.disabled = pdfPageNum <= 1;
+  if (next) next.disabled = pdfPageNum >= pdfDoc.numPages;
+  const pct = document.getElementById('pdf-zoom-pct');
+  if (pct) pct.textContent = Math.round(pdfScale * 100) + '%';
 }
 
 function pdfPrev() { if (pdfPageNum > 1) { pdfPageNum--; renderPdfPage(); } }
 function pdfNext() { if (pdfDoc && pdfPageNum < pdfDoc.numPages) { pdfPageNum++; renderPdfPage(); } }
 function pdfZoom(delta) {
-  pdfScale = Math.max(0.5, Math.min(4, pdfScale + delta));
+  pdfScale = Math.max(0.5, Math.min(5, pdfScale + delta));
   renderPdfPage();
+}
+
+// ── Pinch-to-zoom ────────────────────────────────────────────────────────────
+function getTouchDist(t1, t2) {
+  const dx = t1.clientX - t2.clientX;
+  const dy = t1.clientY - t2.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function initPdfPinchZoom() {
+  const wrap = document.getElementById('pdf-canvas-wrap');
+  if (!wrap) return;
+
+  wrap.addEventListener('touchstart', e => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      _pinchStartDist = getTouchDist(e.touches[0], e.touches[1]);
+      _pinchStartScale = pdfScale;
+      _pinchVisualScale = 1;
+    }
+  }, { passive: false });
+
+  wrap.addEventListener('touchmove', e => {
+    if (e.touches.length === 2 && _pinchStartDist > 0) {
+      e.preventDefault();
+      const dist = getTouchDist(e.touches[0], e.touches[1]);
+      const ratio = dist / _pinchStartDist;
+      const newScale = Math.max(0.5, Math.min(5, _pinchStartScale * ratio));
+      _pinchVisualScale = newScale / pdfScale;
+      const container = document.getElementById('pdf-page-container');
+      if (container) {
+        container.style.transition = 'none';
+        container.style.transform = `scale(${_pinchVisualScale})`;
+      }
+    }
+  }, { passive: false });
+
+  wrap.addEventListener('touchend', e => {
+    if (_pinchStartDist > 0 && e.touches.length < 2) {
+      const finalScale = Math.max(0.5, Math.min(5, pdfScale * _pinchVisualScale));
+      _pinchStartDist = 0;
+      _pinchVisualScale = 1;
+      if (Math.abs(finalScale - pdfScale) > 0.05) {
+        pdfScale = Math.round(finalScale * 20) / 20;
+        renderPdfPage();
+      } else {
+        const container = document.getElementById('pdf-page-container');
+        if (container) { container.style.transition = ''; container.style.transform = ''; }
+      }
+    }
+  }, { passive: true });
+}
+
+// ── PDF Text Search ──────────────────────────────────────────────────────────
+function extractAllPdfText(doc) {
+  const promises = [];
+  for (let i = 1; i <= doc.numPages; i++) {
+    promises.push(
+      doc.getPage(i).then(page => page.getTextContent()).then(tc => {
+        pdfTextContent[i] = tc.items.map(item => item.str).join(' ');
+      })
+    );
+  }
+  Promise.all(promises).catch(() => {});
+}
+
+function togglePdfSearch() {
+  const bar = document.getElementById('pdf-search-bar');
+  const btn = document.getElementById('pdf-search-toggle');
+  if (!bar) return;
+  const isOpen = bar.classList.toggle('open');
+  if (btn) btn.classList.toggle('active', isOpen);
+  if (isOpen) {
+    const input = document.getElementById('pdf-search-input');
+    if (input) { input.focus(); input.select(); }
+  } else {
+    clearPdfSearch();
+  }
+}
+
+function onPdfSearchInput(term) {
+  pdfSearchTerm = term.trim();
+  if (!pdfSearchTerm || pdfSearchTerm.length < 2) {
+    pdfSearchMatches = [];
+    pdfSearchIdx = -1;
+    updateSearchUI();
+    clearPageHighlights();
+    return;
+  }
+  const termLower = pdfSearchTerm.toLowerCase();
+  pdfSearchMatches = [];
+  for (let p = 1; p <= (pdfDoc ? pdfDoc.numPages : 0); p++) {
+    const text = (pdfTextContent[p] || '').toLowerCase();
+    let idx = 0;
+    while ((idx = text.indexOf(termLower, idx)) !== -1) {
+      pdfSearchMatches.push({ page: p, index: idx });
+      idx += termLower.length;
+    }
+  }
+  pdfSearchIdx = pdfSearchMatches.length > 0 ? 0 : -1;
+  updateSearchUI();
+  navigateToCurrentMatch();
+}
+
+function pdfSearchNext() {
+  if (pdfSearchMatches.length === 0) return;
+  pdfSearchIdx = (pdfSearchIdx + 1) % pdfSearchMatches.length;
+  updateSearchUI();
+  navigateToCurrentMatch();
+}
+
+function pdfSearchPrev() {
+  if (pdfSearchMatches.length === 0) return;
+  pdfSearchIdx = (pdfSearchIdx - 1 + pdfSearchMatches.length) % pdfSearchMatches.length;
+  updateSearchUI();
+  navigateToCurrentMatch();
+}
+
+function navigateToCurrentMatch() {
+  if (pdfSearchIdx < 0 || !pdfSearchMatches.length) return;
+  const match = pdfSearchMatches[pdfSearchIdx];
+  if (match.page !== pdfPageNum) {
+    pdfPageNum = match.page;
+    renderPdfPage();
+  } else {
+    const textLayer = document.querySelector('.pdf-text-layer');
+    if (textLayer) highlightPdfSearchOnPage(textLayer);
+  }
+}
+
+function highlightPdfSearchOnPage(textLayer) {
+  if (!pdfSearchTerm || !textLayer) return;
+  const spans = textLayer.querySelectorAll('span');
+  const termLower = pdfSearchTerm.toLowerCase();
+  const pageMatches = pdfSearchMatches.filter(m => m.page === pdfPageNum);
+  let firstActive = null;
+
+  spans.forEach(span => {
+    const original = span.textContent;
+    const lower = original.toLowerCase();
+    if (lower.includes(termLower)) {
+      span.classList.add('highlight');
+      const isActiveMatch = pageMatches.some((m, mi) => {
+        const globalIdx = pdfSearchMatches.indexOf(m);
+        return globalIdx === pdfSearchIdx;
+      });
+      if (isActiveMatch && !firstActive) {
+        span.classList.add('active');
+        firstActive = span;
+      }
+    }
+  });
+
+  if (firstActive) {
+    firstActive.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+function clearPageHighlights() {
+  const spans = document.querySelectorAll('.pdf-text-layer .highlight');
+  spans.forEach(s => { s.classList.remove('highlight', 'active'); });
+}
+
+function clearPdfSearch() {
+  pdfSearchTerm = '';
+  pdfSearchMatches = [];
+  pdfSearchIdx = -1;
+  const input = document.getElementById('pdf-search-input');
+  if (input) input.value = '';
+  updateSearchUI();
+  clearPageHighlights();
+}
+
+function updateSearchUI() {
+  const count = document.getElementById('pdf-search-count');
+  const prevBtn = document.getElementById('pdf-search-prev');
+  const nextBtn = document.getElementById('pdf-search-next');
+  if (count) {
+    if (!pdfSearchTerm || pdfSearchTerm.length < 2) count.textContent = '';
+    else if (pdfSearchMatches.length === 0) count.textContent = '0 / 0';
+    else count.textContent = `${pdfSearchIdx + 1} / ${pdfSearchMatches.length}`;
+  }
+  if (prevBtn) prevBtn.disabled = pdfSearchMatches.length === 0;
+  if (nextBtn) nextBtn.disabled = pdfSearchMatches.length === 0;
 }
 
 // ── Swipe gesture for bay navigation ──────────────────────────────────────────
