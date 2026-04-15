@@ -937,7 +937,7 @@ function renderShelfProducts(shelf, bayWidthInches, rowHeight, sec) {
     const facings = p.facings || 1;
     const rawW = (p.width_inches || 2.5) * facings;
     const pct = (rawW * scale / bayWidthInches * 100).toFixed(2);
-    const imgSrc = p.image || `images/${p.upc}.jpg`;
+    const imgSrc = p.image || `images/${p.upc}.png`;
     const name = p.full_name || p.description || '';
     const displayName = p.description || '';
 
