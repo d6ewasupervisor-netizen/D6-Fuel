@@ -533,14 +533,16 @@ body {
 .photo-card-info .pc-name { font-size: 16px; font-weight: 700; color: var(--text); }
 .photo-card-info .pc-status { font-size: 13px; color: var(--dim); margin-top: 4px; font-weight: 500; }
 .photo-card-info .pc-status.done { color: var(--green); font-weight: 700; }
+.capture-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
 .capture-btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: 100%; padding: 16px; margin-top: 14px; border-radius: var(--radius-sm);
+  width: 100%; padding: 14px 10px; border-radius: var(--radius-sm);
   border: 2px dashed #3a5068; background: var(--bg-elevated);
-  color: var(--accent); font-size: 16px; font-weight: 700;
-  cursor: pointer; font-family: inherit; transition: all 0.15s; min-height: 56px;
+  color: var(--accent); font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: all 0.15s; min-height: 52px;
 }
 .capture-btn:active { border-color: var(--accent); background: var(--accent-bg); }
+.capture-btn.gallery-btn { color: var(--text-secondary); border-color: #2e4054; }
 .photo-preview { position: relative; margin-top: 14px; border-radius: var(--radius-sm); overflow: hidden; }
 .photo-preview img { width: 100%; height: 220px; object-fit: cover; border-radius: var(--radius-sm); }
 .photo-preview .retake-btn {
@@ -1125,8 +1127,12 @@ function renderWorkflowPhotos(s, phase) {
                 <button class="retake-btn" onclick="removePhoto('${s.id}','${c.id}','${phase}')">✕ Retake</button>
               </div>
             ` : `
-              <button class="capture-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}')">📷 Take ${phaseLabel} Photo</button>
-              <input type="file" accept="image/*" capture="environment" id="photo-input-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
+              <div class="capture-options">
+                <button class="capture-btn camera-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}','camera')">📷 Take Photo</button>
+                <button class="capture-btn gallery-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}','gallery')">🖼️ From Gallery</button>
+              </div>
+              <input type="file" accept="image/*" capture="environment" id="photo-input-camera-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
+              <input type="file" accept="image/*" id="photo-input-gallery-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
             `}
           </div>`;
       }).join('')}
@@ -1835,15 +1841,15 @@ function getStorePhotos(storeId, phase) {
   return photoState[storeId][phase];
 }
 
-function triggerCapture(storeId, coolerId, phase) {
-  const input = document.getElementById(`photo-input-${phase}-${coolerId}`);
+function triggerCapture(storeId, coolerId, phase, source) {
+  const input = document.getElementById(`photo-input-${source}-${phase}-${coolerId}`);
   if (input) input.click();
 }
 
 function handleCapture(input, storeId, coolerId, phase) {
   const file = input.files[0];
   if (!file) return;
-  resizeImage(file, 1200, 0.60).then(dataUrl => {
+  resizeImage(file, 1024, 0.50).then(dataUrl => {
     if (!photoState[storeId]) photoState[storeId] = { before: {}, after: {} };
     if (!photoState[storeId][phase]) photoState[storeId][phase] = {};
     photoState[storeId][phase][coolerId] = dataUrl;
