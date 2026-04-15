@@ -10,7 +10,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/send-photos', async (req, res) => {
-  const { storeId, city, state, address, energySet, resetDate, phase, coolerPhotos } = req.body;
+  const { storeId, city, state, address, energySet, resetDate, phase, coolerPhotos, userName, userEmail } = req.body;
 
   if (!coolerPhotos || !coolerPhotos.length) {
     return res.status(400).json({ error: 'No photos provided.' });
@@ -26,19 +26,27 @@ app.post('/api/send-photos', async (req, res) => {
   const photoList = coolerPhotos.map(p => `<li style="margin:4px 0">${p.fileName} — ${p.name}</li>`).join('');
   const fromAddress = `FM${storeId} <FM${storeId}@the-dump-bin.com>`;
 
+  const ccList = ['tyson.gauthier@retailodyssey.com'];
+  if (userEmail) ccList.push(userEmail);
+
+  const submittedBy = userName
+    ? `<p style="margin:0 0 16px"><strong>${coolerPhotos.length} ${phaseLabel.toLowerCase()} photos</strong> from <strong>${userName}</strong> at FM ${storeId} — ${city}, ${state}</p>`
+    : `<p style="margin:0 0 16px"><strong>${coolerPhotos.length} ${phaseLabel.toLowerCase()} photos</strong> from FM ${storeId} — ${city}, ${state}</p>`;
+
   try {
     const { data, error } = await resend.emails.send({
       from: fromAddress,
       to: 'april.gauthier@retailodyssey.com',
-      cc: 'tyson.gauthier@retailodyssey.com',
+      cc: ccList,
       subject: `FM ${storeId} ${phaseLabel} Photos — ${city}, ${state}`,
       html: `
         <div style="font-family:sans-serif;max-width:600px">
           <h2 style="margin:0 0 8px">FM ${storeId} — ${phaseLabel} Photos</h2>
+          ${submittedBy}
           <p style="color:#666;margin:0 0 4px">${city}, ${state} — ${address}</p>
           <p style="color:#666;margin:0 0 16px">${energySet} energy set · Reset: ${resetDate}</p>
           <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
-          <p style="margin:0 0 8px"><strong>${coolerPhotos.length} ${phaseLabel.toLowerCase()} photos attached:</strong></p>
+          <p style="margin:0 0 8px"><strong>Photos attached:</strong></p>
           <ul style="padding-left:20px;margin:0 0 16px">${photoList}</ul>
           <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
           <p style="color:#999;font-size:12px;margin:0">Sent from D6 Fuel Cooler Reset Guide</p>
@@ -52,7 +60,7 @@ app.post('/api/send-photos', async (req, res) => {
       return res.status(400).json({ error: error.message || 'Email send failed.' });
     }
 
-    console.log(`Email sent for FM ${storeId} from ${fromAddress} — ID: ${data.id}`);
+    console.log(`Email sent for FM ${storeId} by ${userName || 'unknown'} (${userEmail || 'no email'}) — ID: ${data.id}`);
     res.json({ success: true, id: data.id });
   } catch (err) {
     console.error('Server error:', err);

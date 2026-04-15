@@ -747,6 +747,59 @@ body {
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .fade-in-up { animation: fadeInUp 0.3s ease; }
 
+/* ── Login overlay ── */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.login-card {
+  width: 100%; max-width: 420px;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 36px 28px 28px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeInUp 0.4s ease;
+}
+.login-card h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.login-card .login-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+.login-card label { display: block; font-size: 13px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+.login-card input {
+  width: 100%; padding: 14px 16px; border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border); background: var(--bg-elevated);
+  color: var(--text); font-size: 16px; font-family: inherit;
+  outline: none; transition: border-color 0.15s;
+  margin-bottom: 18px;
+}
+.login-card input:focus { border-color: var(--accent); }
+.login-card input::placeholder { color: var(--dim); }
+.login-submit {
+  width: 100%; padding: 16px; border: none; border-radius: var(--radius);
+  background: var(--accent); color: #fff; font-size: 16px; font-weight: 800;
+  font-family: inherit; cursor: pointer; transition: all 0.15s;
+  margin-top: 6px;
+}
+.login-submit:hover { background: var(--accent-hover); }
+.login-submit:active { transform: scale(0.98); }
+.login-submit:disabled { background: #1e2c3e; color: #5a7088; cursor: not-allowed; }
+
+/* ── User badge (shown on dashboard) ── */
+.user-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 999px; padding: 6px 14px 6px 10px;
+  font-size: 13px; color: var(--text-secondary); cursor: pointer;
+  transition: all 0.15s;
+}
+.user-badge:hover { background: var(--card-hover); border-color: var(--accent); }
+.user-badge .user-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent-bg); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+}
+.user-badge .user-name { font-weight: 600; }
+
 /* ── Responsive: tablets and wider ── */
 @media (min-width: 500px) {
   .photo-preview img { height: 280px; }
@@ -821,6 +874,70 @@ let ACTIVE_UPC_SET = null;
 let scanStream     = null;
 let scanAnimationId = null;
 
+// ── User identity (persisted in localStorage) ──
+let currentUser = JSON.parse(localStorage.getItem('d6fuel_user') || 'null');
+
+function saveUser(name, email) {
+  currentUser = { name: name.trim(), email: email.trim() };
+  localStorage.setItem('d6fuel_user', JSON.stringify(currentUser));
+}
+
+function clearUser() {
+  currentUser = null;
+  localStorage.removeItem('d6fuel_user');
+  renderLoginOverlay();
+}
+
+function getUserInitials(name) {
+  return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+
+function renderLoginOverlay() {
+  let overlay = document.getElementById('login-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'login-overlay';
+    overlay.className = 'login-overlay';
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+  overlay.innerHTML = `
+    <div class="login-card">
+      <div class="badge" style="margin-bottom:10px">District 6 — Active Project</div>
+      <h1>Welcome</h1>
+      <p class="login-sub">Enter your name and email to get started. You'll be CC'd on all photo submissions.</p>
+      <label for="login-name">Full Name</label>
+      <input type="text" id="login-name" placeholder="Jane Smith" autocomplete="name" />
+      <label for="login-email">Email Address</label>
+      <input type="email" id="login-email" placeholder="jane.smith@retailodyssey.com" autocomplete="email" />
+      <button class="login-submit" id="login-btn" disabled onclick="handleLogin()">Continue</button>
+    </div>
+  `;
+  const nameInput = document.getElementById('login-name');
+  const emailInput = document.getElementById('login-email');
+  const btn = document.getElementById('login-btn');
+
+  function validate() {
+    const nameOk = nameInput.value.trim().length >= 2;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+    btn.disabled = !(nameOk && emailOk);
+  }
+  nameInput.addEventListener('input', validate);
+  emailInput.addEventListener('input', validate);
+  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !btn.disabled) handleLogin(); });
+  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') emailInput.focus(); });
+  setTimeout(() => nameInput.focus(), 100);
+}
+
+function handleLogin() {
+  const name = document.getElementById('login-name').value;
+  const email = document.getElementById('login-email').value;
+  saveUser(name, email);
+  const overlay = document.getElementById('login-overlay');
+  if (overlay) overlay.style.display = 'none';
+  render();
+}
+
 // Load data on start
 fetch('products.json')
   .then(r => r.json())
@@ -874,7 +991,15 @@ function toggleAccordion(el) {
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function renderDashboard() {
+  const userBadge = currentUser ? `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px" class="fade-in-up">
+      <div class="user-badge" onclick="clearUser()" title="Click to sign in as someone else">
+        <div class="user-avatar">${getUserInitials(currentUser.name)}</div>
+        <span class="user-name">${currentUser.name}</span>
+      </div>
+    </div>` : '';
   return `
+    ${userBadge}
     <div class="header fade-in-up">
       <div class="badge">District 6 — Active Project</div>
       <h1>Fuel Cooler Reset Guide</h1>
@@ -1964,7 +2089,9 @@ async function sendAndAdvance(storeId, phase, nextStep) {
         energySet: s.energySet,
         resetDate: kompassDisplay(s),
         phase,
-        coolerPhotos
+        coolerPhotos,
+        userName: currentUser ? currentUser.name : null,
+        userEmail: currentUser ? currentUser.email : null
       })
     });
     const data = await res.json();
@@ -2086,7 +2213,11 @@ document.addEventListener('touchend', e => {
   else if (dx > 0 && currentBayIdx > 0) switchBay(currentBayIdx - 1);
 }, { passive: true });
 
-render();
+if (currentUser) {
+  render();
+} else {
+  renderLoginOverlay();
+}
 </script>
 </body>
 </html>
