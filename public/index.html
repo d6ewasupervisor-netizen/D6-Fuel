@@ -2313,7 +2313,7 @@ function openGlobalScan() {
         <button type="button" class="scan-btn" id="gscan-stop-btn" onclick="stopGlobalScan()" style="display:none">Stop Camera</button>
       </div>
       <div class="gscan-manual">
-        <input type="text" id="gscan-input" placeholder="Last 4 digits or full UPC…" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')lookupGlobalScan()">
+        <input type="text" id="gscan-input" placeholder="Name, UPC, size, or description…" autocomplete="off" onkeydown="if(event.key==='Enter')lookupGlobalScan()">
         <button type="button" class="scan-btn primary" onclick="lookupGlobalScan()">Look Up</button>
       </div>
       <div id="gscan-result"></div>
@@ -2392,11 +2392,17 @@ function lookupGlobalScan() {
   const raw = inp && inp.value.trim();
   if (!raw) return;
   const digits = raw.replace(/\D/g, '');
-  if (digits.length === 4) {
-    processPartialLookup(digits);
-  } else {
-    processGlobalScanResult(raw);
+
+  if (digits === raw && digits.length > 0) {
+    if (digits.length === 4) {
+      processPartialLookup(digits);
+    } else {
+      processGlobalScanResult(raw);
+    }
+    return;
   }
+
+  processTextSearch(raw);
 }
 
 function processPartialLookup(last4) {
@@ -2428,6 +2434,72 @@ function processPartialLookup(last4) {
       + '<div><div class="gscan-match-name">' + scanEscapeHtml(m.name || 'Unknown') + '</div>'
       + '<div class="gscan-match-upc">' + m.upc + '</div></div>'
       + '<div class="gscan-match-loc">' + scanEscapeHtml(m.coolerLabel) + '</div></li>';
+  });
+  html += '</ul>';
+  result.innerHTML = html;
+}
+
+function processTextSearch(term) {
+  if (!UPC_INDEX) buildUpcIndex();
+  const result = document.getElementById('gscan-result');
+  if (!result) return;
+  const termLower = term.toLowerCase();
+
+  const matchedUpcs = new Map();
+  if (PRODUCTS) {
+    Object.keys(PRODUCTS).forEach(function(coolerKey) {
+      (PRODUCTS[coolerKey] || []).forEach(function(p) {
+        if ((p.upc || '').toLowerCase().includes(termLower)
+          || (p.description || '').toLowerCase().includes(termLower)
+          || (p.full_name || '').toLowerCase().includes(termLower)
+          || (p.size || '').toLowerCase().includes(termLower)) {
+          var k = normalizeUpcKey(p.upc);
+          if (k && !matchedUpcs.has(k)) {
+            matchedUpcs.set(k, {
+              upc: k,
+              name: p.full_name || p.description || '',
+              size: p.size || ''
+            });
+          }
+        }
+      });
+    });
+  }
+
+  if (matchedUpcs.size === 0) {
+    result.innerHTML = '<div class="scan-result">No products matching <strong>'
+      + scanEscapeHtml(term) + '</strong> found in the product database.</div>';
+    return;
+  }
+
+  var located = [];
+  matchedUpcs.forEach(function(product, upc) {
+    var locs = UPC_INDEX[upc];
+    if (locs && locs.length) {
+      located.push({ upc: product.upc, name: product.name, size: product.size, locations: locs });
+    }
+  });
+
+  if (located.length === 0) {
+    result.innerHTML = '<div class="scan-result">Products matching <strong>'
+      + scanEscapeHtml(term) + '</strong> were found but are not placed in any current planogram.</div>';
+    return;
+  }
+
+  if (located.length === 1) {
+    closeGlobalScan();
+    showLocationReveal(located[0].locations, located[0].upc);
+    return;
+  }
+
+  var html = '<div class="gscan-match-hint">' + located.length + ' products match "'
+    + scanEscapeHtml(term) + '" — tap one:</div>';
+  html += '<ul class="gscan-match-list">';
+  located.forEach(function(m) {
+    html += '<li class="gscan-match-item" onclick="processGlobalScanResult(\'' + m.upc + '\')">'
+      + '<div><div class="gscan-match-name">' + scanEscapeHtml(m.name || 'Unknown') + '</div>'
+      + '<div class="gscan-match-upc">' + m.upc + (m.size ? ' · ' + scanEscapeHtml(m.size) : '') + '</div></div>'
+      + '<div class="gscan-match-loc">' + m.locations.length + ' loc' + (m.locations.length > 1 ? 's' : '') + '</div></li>';
   });
   html += '</ul>';
   result.innerHTML = html;
@@ -2627,14 +2699,14 @@ function renderProductScanPanel(s) {
   }
   return '<div class="scan-panel">'
     + '<div class="scan-title">Find Product in Coolers</div>'
-    + '<div class="scan-desc">Scan a UPC with the camera (Chrome or Edge) or type the code below. Short <strong>UPC-E</strong> codes (8 digits on small packs) are converted automatically.</div>'
+    + '<div class="scan-desc">Scan a UPC with the camera (Chrome or Edge) or search by product name, description, size, or UPC below. Short <strong>UPC-E</strong> codes (8 digits on small packs) are converted automatically.</div>'
     + '<div class="scan-video-wrap" id="scan-video-wrap"><video id="scan-video" playsinline muted></video></div>'
     + '<div class="scan-controls">'
     + '<button type="button" class="scan-btn primary" id="scan-start-btn" onclick="startBarcodeScan()">📷 Start Camera Scan</button>'
     + '<button type="button" class="scan-btn" id="scan-stop-btn" onclick="stopBarcodeScan()" style="display:none">Stop Camera</button>'
     + '</div>'
     + '<div class="scan-manual">'
-    + '<input type="text" id="scan-manual-input" placeholder="Enter UPC (digits)" inputmode="numeric" autocomplete="off" onkeydown="if(event.key===\'Enter\')lookupManualUpc()">'
+    + '<input type="text" id="scan-manual-input" placeholder="Name, UPC, size, or description…" autocomplete="off" onkeydown="if(event.key===\'Enter\')lookupManualUpc()">'
     + '<button type="button" class="scan-btn primary" onclick="lookupManualUpc()">Look Up</button>'
     + '</div>'
     + '<div id="scan-result-area"></div>'
@@ -2645,7 +2717,77 @@ function lookupManualUpc() {
   const inp = document.getElementById('scan-manual-input');
   const raw = inp && inp.value.trim();
   if (!raw) return;
-  showUpcLookupResult(raw, document.getElementById('scan-result-area'));
+  const container = document.getElementById('scan-result-area');
+  const digits = raw.replace(/\D/g, '');
+
+  if (digits === raw && digits.length > 0) {
+    showUpcLookupResult(raw, container);
+    return;
+  }
+
+  showTextSearchResult(raw, container);
+}
+
+function showTextSearchResult(term, container) {
+  if (!container) return;
+  if (!UPC_INDEX) buildUpcIndex();
+  var termLower = term.toLowerCase();
+
+  var matchedUpcs = new Map();
+  if (PRODUCTS) {
+    Object.keys(PRODUCTS).forEach(function(coolerKey) {
+      (PRODUCTS[coolerKey] || []).forEach(function(p) {
+        if ((p.upc || '').toLowerCase().includes(termLower)
+          || (p.description || '').toLowerCase().includes(termLower)
+          || (p.full_name || '').toLowerCase().includes(termLower)
+          || (p.size || '').toLowerCase().includes(termLower)) {
+          var k = normalizeUpcKey(p.upc);
+          if (k && !matchedUpcs.has(k)) {
+            matchedUpcs.set(k, {
+              upc: k,
+              name: p.full_name || p.description || '',
+              size: p.size || ''
+            });
+          }
+        }
+      });
+    });
+  }
+
+  if (matchedUpcs.size === 0) {
+    container.innerHTML = '<div class="scan-result">No products matching <strong>'
+      + scanEscapeHtml(term) + '</strong> found in the product database.</div>';
+    return;
+  }
+
+  var located = [];
+  matchedUpcs.forEach(function(product, upc) {
+    var locs = UPC_INDEX[upc];
+    if (locs && locs.length) {
+      located.push({ upc: product.upc, name: product.name, size: product.size, locations: locs });
+    }
+  });
+
+  if (located.length === 0) {
+    container.innerHTML = '<div class="scan-result">Products matching <strong>'
+      + scanEscapeHtml(term) + '</strong> were found but are not placed in any current planogram.</div>';
+    return;
+  }
+
+  var rows = located.map(function(m) {
+    var locRows = m.locations.map(function(loc) {
+      var ck = JSON.stringify(loc.coolerKey);
+      return '<div class="scan-loc"><div class="loc-title">' + scanEscapeHtml(loc.coolerLabel) + '</div>'
+        + '<div class="loc-meta">Bay ' + loc.bayNum + ' · Shelf ' + loc.shelf + ' · Position ' + loc.position + '</div>'
+        + '<button type="button" class="scan-open-btn" onclick="goToPlanogramLocation(' + ck + ', ' + loc.bayNum + ')">Open planogram</button></div>';
+    }).join('');
+    return '<div class="scan-result">' + scanEscapeHtml(m.name)
+      + (m.size ? ' (' + scanEscapeHtml(m.size) + ')' : '')
+      + ' — <strong>' + scanEscapeHtml(m.upc) + '</strong></div>' + locRows;
+  }).join('');
+
+  container.innerHTML = '<div class="scan-result">' + located.length + ' product'
+    + (located.length > 1 ? 's' : '') + ' matching <strong>' + scanEscapeHtml(term) + '</strong></div>' + rows;
 }
 
 function stopBarcodeScan() {
