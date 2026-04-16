@@ -33,7 +33,7 @@ app.get('/api/version', (req, res) => {
 });
 
 app.post('/api/send-photos', async (req, res) => {
-  const { storeId, city, state, address, energySet, resetDate, phase, coolerPhotos, userName, userEmail } = req.body;
+  const { storeId, city, state, address, energySet, resetDate, phase, coolerPhotos, comment, userName, userEmail } = req.body;
 
   if (!coolerPhotos || !coolerPhotos.length) {
     return res.status(400).json({ error: 'No photos provided.' });
@@ -68,6 +68,11 @@ app.post('/api/send-photos', async (req, res) => {
           ${submittedBy}
           <p style="color:#666;margin:0 0 4px">${city}, ${state} — ${address}</p>
           <p style="color:#666;margin:0 0 16px">${energySet} energy set · Reset: ${resetDate}</p>
+          ${comment ? `
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
+          <p style="margin:0 0 8px"><strong>Comments:</strong></p>
+          <p style="margin:0 0 16px;white-space:pre-wrap;color:#333;background:#f8f8f8;padding:12px;border-radius:6px;border-left:4px solid #4da6ff">${comment.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
+          ` : ''}
           <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
           <p style="margin:0 0 8px"><strong>Photos attached:</strong></p>
           <ul style="padding-left:20px;margin:0 0 16px">${photoList}</ul>
@@ -83,7 +88,7 @@ app.post('/api/send-photos', async (req, res) => {
       return res.status(400).json({ error: error.message || 'Email send failed.' });
     }
 
-    console.log(`Email sent for FM ${storeId} by ${userName || 'unknown'} (${userEmail || 'no email'}) — ID: ${data.id}`);
+    console.log(`Email sent for FM ${storeId} by ${userName || 'unknown'} (${userEmail || 'no email'})${comment ? ' [with comments]' : ''} — ID: ${data.id}`);
     res.json({ success: true, id: data.id });
   } catch (err) {
     console.error('Server error:', err);

@@ -627,6 +627,25 @@ body {
 .send-result.success { background: var(--green-bg); color: var(--green); border: 1px solid rgba(0,232,122,0.3); }
 .send-result.error { background: var(--red-bg); color: var(--red); border: 1px solid rgba(255,71,87,0.3); }
 
+/* ── Photo comments ── */
+.photo-comment-section {
+  margin-top: 20px; margin-bottom: 4px;
+}
+.photo-comment-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;
+}
+.photo-comment-label .comment-icon { font-size: 16px; }
+.photo-comment-textarea {
+  width: 100%; min-height: 90px; padding: 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border); background: var(--bg-elevated);
+  color: var(--text); font-size: 15px; font-family: inherit; line-height: 1.5;
+  resize: vertical; transition: border-color 0.15s;
+  touch-action: manipulation;
+}
+.photo-comment-textarea:focus { border-color: var(--accent); outline: none; }
+.photo-comment-textarea::placeholder { color: var(--dim); }
+
 /* ── Workflow step indicator ── */
 .workflow-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 24px; padding: 0 8px; }
 .wf-step { display: flex; align-items: center; gap: 0; }
@@ -1197,6 +1216,7 @@ let selectedCooler = null;
 let currentBayIdx  = 0;
 let showUpcList    = false;
 let photoState     = {};
+let photoComments  = {};
 let sendingPhotos  = false;
 let sendResult     = null;
 let workflowStep   = {};
@@ -1675,12 +1695,21 @@ function renderWorkflowPhotos(s, phase) {
       }).join('')}
     </div>
 
+    <div class="photo-comment-section fade-in-up">
+      <label class="photo-comment-label" for="photo-comment-${phase}">
+        <span class="comment-icon">💬</span> ${phaseLabel} Comments (optional)
+      </label>
+      <textarea class="photo-comment-textarea" id="photo-comment-${phase}"
+        placeholder="Any notes, issues, or observations…"
+        oninput="savePhotoComment('${s.id}','${phase}')">${getPhotoComment(s.id, phase).replace(/</g,'&lt;')}</textarea>
+    </div>
+
     ${isBefore ? `
-      <button class="wf-next-btn ${allCaptured ? 'primary' : ''}" onclick="${allCaptured ? `sendAndAdvance('${s.id}','before','reset')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
+      <button class="wf-next-btn ${allCaptured ? 'primary' : ''}" onclick="${allCaptured ? `savePhotoComment('${s.id}','before');sendAndAdvance('${s.id}','before','reset')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
         ${sendingPhotos ? '⏳ Sending before photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} cooler${total - capturedCount === 1 ? '' : 's'} remaining`}
       </button>
     ` : `
-      <button class="wf-next-btn ${allCaptured ? 'success' : ''}" onclick="${allCaptured ? `sendAndAdvance('${s.id}','after','done')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
+      <button class="wf-next-btn ${allCaptured ? 'success' : ''}" onclick="${allCaptured ? `savePhotoComment('${s.id}','after');sendAndAdvance('${s.id}','after','done')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
         ${sendingPhotos ? '⏳ Sending after photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} cooler${total - capturedCount === 1 ? '' : 's'} remaining`}
       </button>
     `}
@@ -2741,6 +2770,7 @@ function triggerCapture(storeId, coolerId, phase, source) {
 function handleCapture(input, storeId, coolerId, phase) {
   const file = input.files[0];
   if (!file) return;
+  savePhotoComment(storeId, phase);
   resizeImage(file, 1024, 0.50).then(dataUrl => {
     if (!photoState[storeId]) photoState[storeId] = { before: {}, after: {} };
     if (!photoState[storeId][phase]) photoState[storeId][phase] = {};
@@ -2753,10 +2783,23 @@ function handleCapture(input, storeId, coolerId, phase) {
 }
 
 function removePhoto(storeId, coolerId, phase, idx) {
+  savePhotoComment(storeId, phase);
   const arr = getCoolerPhotos(storeId, coolerId, phase);
   if (idx >= 0 && idx < arr.length) arr.splice(idx, 1);
   sendResult = null;
   render();
+}
+
+function getPhotoComment(storeId, phase) {
+  if (!photoComments[storeId]) photoComments[storeId] = { before: '', after: '' };
+  return photoComments[storeId][phase] || '';
+}
+
+function savePhotoComment(storeId, phase) {
+  const el = document.getElementById(`photo-comment-${phase}`);
+  if (!el) return;
+  if (!photoComments[storeId]) photoComments[storeId] = { before: '', after: '' };
+  photoComments[storeId][phase] = el.value;
 }
 
 function resizeImage(file, maxDim, quality) {
@@ -2785,6 +2828,7 @@ async function sendAndAdvance(storeId, phase, nextStep) {
   const s = STORES.find(x => x.id === storeId);
   if (!s) return;
   const photos = getStorePhotos(storeId, phase);
+  const comment = getPhotoComment(storeId, phase).trim();
   sendingPhotos = true;
   sendResult = null;
   render();
@@ -2816,6 +2860,7 @@ async function sendAndAdvance(storeId, phase, nextStep) {
         resetDate: kompassDisplay(s),
         phase,
         coolerPhotos,
+        comment: comment || null,
         userName: currentUser ? currentUser.name : null,
         userEmail: currentUser ? currentUser.email : null
       })
@@ -3342,6 +3387,7 @@ function saveAppState() {
   try {
     const state = {
       photoState,
+      photoComments,
       workflowStep,
       selectedStore,
       activeTab,
@@ -3360,6 +3406,7 @@ function restoreAppState() {
     if (!raw) return false;
     const state = JSON.parse(raw);
     if (state.photoState && typeof state.photoState === 'object') photoState = state.photoState;
+    if (state.photoComments && typeof state.photoComments === 'object') photoComments = state.photoComments;
     if (state.workflowStep && typeof state.workflowStep === 'object') workflowStep = state.workflowStep;
     if (state.selectedStore) selectedStore = state.selectedStore;
     if (state.activeTab) activeTab = state.activeTab;
