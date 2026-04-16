@@ -567,15 +567,32 @@ body {
 }
 .capture-btn:active { border-color: var(--accent); background: var(--accent-bg); }
 .capture-btn.gallery-btn { color: var(--text-secondary); border-color: #2e4054; }
-.photo-preview { position: relative; margin-top: 14px; border-radius: var(--radius-sm); overflow: hidden; }
-.photo-preview img { width: 100%; height: 220px; object-fit: cover; border-radius: var(--radius-sm); }
-.photo-preview .retake-btn {
-  position: absolute; top: 10px; right: 10px; padding: 8px 14px;
-  border-radius: 8px; border: none; background: rgba(0,0,0,0.8);
-  color: #fff; font-size: 13px; font-weight: 700; cursor: pointer;
-  font-family: inherit; min-height: 40px;
+.photo-gallery { display: flex; gap: 10px; overflow-x: auto; margin-top: 14px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+.photo-gallery::-webkit-scrollbar { height: 4px; }
+.photo-gallery::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+.photo-thumb {
+  position: relative; flex-shrink: 0; width: 140px; height: 140px;
+  border-radius: var(--radius-sm); overflow: hidden; scroll-snap-align: start;
+  border: 2px solid var(--card-border);
 }
-.photo-preview .retake-btn:active { background: var(--red); }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.photo-thumb .remove-btn {
+  position: absolute; top: 6px; right: 6px; width: 28px; height: 28px;
+  border-radius: 50%; border: none; background: rgba(0,0,0,0.75);
+  color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; line-height: 1;
+}
+.photo-thumb .remove-btn:active { background: var(--red); }
+.photo-thumb .photo-idx {
+  position: absolute; bottom: 6px; left: 6px; font-size: 11px; font-weight: 700;
+  background: rgba(0,0,0,0.7); color: #fff; padding: 2px 7px; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.photo-count-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 22px; height: 22px; border-radius: 11px; background: var(--green);
+  color: #000; font-size: 12px; font-weight: 800; padding: 0 6px; margin-left: 8px;
+}
 .photo-progress {
   display: flex; align-items: center; gap: 12px; padding: 16px 18px;
   background: var(--card); border: 1px solid var(--card-border);
@@ -918,7 +935,7 @@ body {
 
 /* ── Responsive: tablets and wider ── */
 @media (min-width: 500px) {
-  .photo-preview img { height: 280px; }
+  .photo-thumb { width: 160px; height: 160px; }
   .pog-detail-sheet .detail-img { width: 200px; height: 200px; }
 }
 </style>
@@ -1144,8 +1161,8 @@ function renderDashboard() {
     </div>
     <div class="store-grid fade-in-up">
       ${STORES.map(s => {
-        const bPhotos = photoState[s.id] && photoState[s.id].before ? Object.keys(photoState[s.id].before).length : 0;
-        const aPhotos = photoState[s.id] && photoState[s.id].after ? Object.keys(photoState[s.id].after).length : 0;
+        const bPhotos = photoState[s.id] && photoState[s.id].before ? Object.keys(photoState[s.id].before).filter(k => { const v = photoState[s.id].before[k]; return Array.isArray(v) ? v.length > 0 : !!v; }).length : 0;
+        const aPhotos = photoState[s.id] && photoState[s.id].after ? Object.keys(photoState[s.id].after).filter(k => { const v = photoState[s.id].after[k]; return Array.isArray(v) ? v.length > 0 : !!v; }).length : 0;
         const total = PHOTO_COOLERS.length;
         const bLabel = bPhotos === 0 ? '📷 Before' : bPhotos >= total ? '✓ Before' : `📷 Before`;
         const aLabel = aPhotos === 0 ? '📷 After' : aPhotos >= total ? '✓ After' : `📷 After`;
@@ -1403,7 +1420,11 @@ function renderRequirementsBriefing(s) {
 // ── Workflow photos (before/after) ────────────────────────────────────────────
 function renderWorkflowPhotos(s, phase) {
   const photos = getStorePhotos(s.id, phase);
-  const capturedCount = PHOTO_COOLERS.filter(c => photos[c.id]).length;
+  const capturedCount = PHOTO_COOLERS.filter(c => {
+    const arr = getCoolerPhotos(s.id, c.id, phase);
+    return arr.length > 0;
+  }).length;
+  const totalPhotos = PHOTO_COOLERS.reduce((sum, c) => sum + getCoolerPhotos(s.id, c.id, phase).length, 0);
   const total = PHOTO_COOLERS.length;
   const allCaptured = capturedCount === total;
   const pct = Math.round(capturedCount / total * 100);
@@ -1413,10 +1434,10 @@ function renderWorkflowPhotos(s, phase) {
   const heroIcon = isBefore ? '📸' : '📷';
   const heroTitle = isBefore ? 'Take Before Photos' : 'Take After Photos';
   const heroSub = isBefore
-    ? 'Photograph each cooler before starting the reset. These photos document the current state.'
-    : 'Photograph each cooler now that the reset is complete. These photos verify your work.';
+    ? 'Photograph each cooler before starting the reset. Take as many photos as needed per cooler.'
+    : 'Photograph each cooler after the reset is complete. Take as many photos as needed per cooler.';
   const nextStep = isBefore ? 'reset' : 'done';
-  const nextLabel = isBefore ? 'Send & Continue to Planograms →' : 'Send & Finish →';
+  const nextLabel = isBefore ? `Send ${totalPhotos} Photo${totalPhotos !== 1 ? 's' : ''} & Continue →` : `Send ${totalPhotos} Photo${totalPhotos !== 1 ? 's' : ''} & Finish →`;
 
   return `
     <div class="wf-hero fade-in-up">
@@ -1427,45 +1448,50 @@ function renderWorkflowPhotos(s, phase) {
 
     <div class="photo-progress fade-in-up">
       <div class="photo-progress-bar"><div class="photo-progress-fill" style="width:${pct}%"></div></div>
-      <div class="photo-progress-text">${capturedCount} / ${total}</div>
+      <div class="photo-progress-text">${capturedCount} / ${total} coolers · ${totalPhotos} photo${totalPhotos !== 1 ? 's' : ''}</div>
     </div>
 
     <div class="photo-grid fade-in-up">
       ${PHOTO_COOLERS.map(c => {
-        const hasPhoto = !!photos[c.id];
+        const coolerPhotos = getCoolerPhotos(s.id, c.id, phase);
+        const hasPhotos = coolerPhotos.length > 0;
         return `
-          <div class="photo-card ${hasPhoto ? 'captured' : ''}">
+          <div class="photo-card ${hasPhotos ? 'captured' : ''}">
             <div class="photo-card-header">
               <div class="photo-card-icon" style="background:${c.color}20">${c.icon}</div>
               <div class="photo-card-info">
-                <div class="pc-name">${c.label}</div>
-                <div class="pc-status ${hasPhoto ? 'done' : ''}">${hasPhoto ? '✓ Photo captured' : 'Waiting for photo'}</div>
+                <div class="pc-name">${c.label}${hasPhotos ? `<span class="photo-count-badge">${coolerPhotos.length}</span>` : ''}</div>
+                <div class="pc-status ${hasPhotos ? 'done' : ''}">${hasPhotos ? `✓ ${coolerPhotos.length} photo${coolerPhotos.length !== 1 ? 's' : ''} captured` : 'Waiting for photo'}</div>
               </div>
             </div>
-            ${hasPhoto ? `
-              <div class="photo-preview">
-                <img src="${photos[c.id]}" alt="${c.label}">
-                <button class="retake-btn" onclick="removePhoto('${s.id}','${c.id}','${phase}')">✕ Retake</button>
+            ${hasPhotos ? `
+              <div class="photo-gallery">
+                ${coolerPhotos.map((dataUrl, idx) => `
+                  <div class="photo-thumb">
+                    <img src="${dataUrl}" alt="${c.label} #${idx + 1}">
+                    <button class="remove-btn" onclick="removePhoto('${s.id}','${c.id}','${phase}',${idx})">✕</button>
+                    <span class="photo-idx">${idx + 1}</span>
+                  </div>
+                `).join('')}
               </div>
-            ` : `
-              <div class="capture-options">
-                <button class="capture-btn camera-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}','camera')">📷 Take Photo</button>
-                <button class="capture-btn gallery-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}','gallery')">🖼️ From Gallery</button>
-              </div>
-              <input type="file" accept="image/*" capture="environment" id="photo-input-camera-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
-              <input type="file" accept="image/*" id="photo-input-gallery-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
-            `}
+            ` : ''}
+            <div class="capture-options">
+              <button class="capture-btn camera-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}','camera')">📷 ${hasPhotos ? 'Add Photo' : 'Take Photo'}</button>
+              <button class="capture-btn gallery-btn" onclick="triggerCapture('${s.id}','${c.id}','${phase}','gallery')">🖼️ From Gallery</button>
+            </div>
+            <input type="file" accept="image/*" capture="environment" id="photo-input-camera-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
+            <input type="file" accept="image/*" id="photo-input-gallery-${phase}-${c.id}" style="display:none" onchange="handleCapture(this,'${s.id}','${c.id}','${phase}')">
           </div>`;
       }).join('')}
     </div>
 
     ${isBefore ? `
       <button class="wf-next-btn ${allCaptured ? 'primary' : ''}" onclick="${allCaptured ? `sendAndAdvance('${s.id}','before','reset')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
-        ${sendingPhotos ? '⏳ Sending before photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} photo${total - capturedCount === 1 ? '' : 's'} remaining`}
+        ${sendingPhotos ? '⏳ Sending before photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} cooler${total - capturedCount === 1 ? '' : 's'} remaining`}
       </button>
     ` : `
       <button class="wf-next-btn ${allCaptured ? 'success' : ''}" onclick="${allCaptured ? `sendAndAdvance('${s.id}','after','done')` : ''}" ${!allCaptured || sendingPhotos ? 'disabled' : ''}>
-        ${sendingPhotos ? '⏳ Sending after photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} photo${total - capturedCount === 1 ? '' : 's'} remaining`}
+        ${sendingPhotos ? '⏳ Sending after photos...' : allCaptured ? nextLabel : `📷 ${total - capturedCount} cooler${total - capturedCount === 1 ? '' : 's'} remaining`}
       </button>
     `}
 
@@ -2176,9 +2202,16 @@ function getStorePhotos(storeId, phase) {
   return photoState[storeId][phase];
 }
 
+function getCoolerPhotos(storeId, coolerId, phase) {
+  const photos = getStorePhotos(storeId, phase);
+  if (!photos[coolerId]) photos[coolerId] = [];
+  if (!Array.isArray(photos[coolerId])) photos[coolerId] = [photos[coolerId]];
+  return photos[coolerId];
+}
+
 function triggerCapture(storeId, coolerId, phase, source) {
   const input = document.getElementById(`photo-input-${source}-${phase}-${coolerId}`);
-  if (input) input.click();
+  if (input) { input.value = ''; input.click(); }
 }
 
 function handleCapture(input, storeId, coolerId, phase) {
@@ -2187,16 +2220,17 @@ function handleCapture(input, storeId, coolerId, phase) {
   resizeImage(file, 1024, 0.50).then(dataUrl => {
     if (!photoState[storeId]) photoState[storeId] = { before: {}, after: {} };
     if (!photoState[storeId][phase]) photoState[storeId][phase] = {};
-    photoState[storeId][phase][coolerId] = dataUrl;
+    if (!photoState[storeId][phase][coolerId]) photoState[storeId][phase][coolerId] = [];
+    if (!Array.isArray(photoState[storeId][phase][coolerId])) photoState[storeId][phase][coolerId] = [photoState[storeId][phase][coolerId]];
+    photoState[storeId][phase][coolerId].push(dataUrl);
     sendResult = null;
     render();
   });
 }
 
-function removePhoto(storeId, coolerId, phase) {
-  if (photoState[storeId] && photoState[storeId][phase]) {
-    delete photoState[storeId][phase][coolerId];
-  }
+function removePhoto(storeId, coolerId, phase, idx) {
+  const arr = getCoolerPhotos(storeId, coolerId, phase);
+  if (idx >= 0 && idx < arr.length) arr.splice(idx, 1);
   sendResult = null;
   render();
 }
@@ -2232,11 +2266,18 @@ async function sendAndAdvance(storeId, phase, nextStep) {
   render();
 
   const phaseLabel = phase === 'before' ? 'Before' : 'After';
-  const coolerPhotos = PHOTO_COOLERS.map(c => ({
-    name: c.label,
-    fileName: `FM${storeId}_${phase}_${c.fileName}.jpg`,
-    base64: photos[c.id].split(',')[1]
-  }));
+  const coolerPhotos = [];
+  PHOTO_COOLERS.forEach(c => {
+    const arr = getCoolerPhotos(storeId, c.id, phase);
+    arr.forEach((dataUrl, idx) => {
+      const suffix = arr.length > 1 ? `_${idx + 1}` : '';
+      coolerPhotos.push({
+        name: `${c.label}${arr.length > 1 ? ` (#${idx + 1})` : ''}`,
+        fileName: `FM${storeId}_${phase}_${c.fileName}${suffix}.jpg`,
+        base64: dataUrl.split(',')[1]
+      });
+    });
+  });
 
   try {
     const res = await fetch('/api/send-photos', {
