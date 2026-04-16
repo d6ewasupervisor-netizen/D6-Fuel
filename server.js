@@ -8,6 +8,16 @@ const app = express();
 const resend = new Resend(process.env.RESEND_SIGNOFF_API_KEY);
 
 app.use(express.json({ limit: '50mb' }));
+
+app.get('/', (req, res) => {
+  res.set({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const versionFilePath = path.join(__dirname, 'version.json');
