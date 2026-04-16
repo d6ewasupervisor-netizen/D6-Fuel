@@ -923,6 +923,18 @@ body {
 }
 .gscan-manual input:focus { border-color: var(--accent); outline: none; }
 .gscan-manual input::placeholder { color: var(--dim); }
+.gscan-match-list { list-style: none; padding: 0; margin: 0; }
+.gscan-match-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm); margin-bottom: 8px; cursor: pointer;
+  transition: all 0.15s; touch-action: manipulation; min-height: 56px;
+}
+.gscan-match-item:active { border-color: var(--accent); background: var(--card-hover); transform: scale(0.98); }
+.gscan-match-name { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.gscan-match-loc { font-size: 12px; color: var(--muted); white-space: nowrap; font-weight: 500; }
+.gscan-match-upc { font-size: 11px; color: var(--dim); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+.gscan-match-hint { font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; font-weight: 500; }
 .nav-scan-btn {
   display: flex; align-items: center; justify-content: center;
   width: 44px; height: 44px; border-radius: 8px; background: var(--card);
@@ -1189,6 +1201,7 @@ let sendingPhotos  = false;
 let sendResult     = null;
 let workflowStep   = {};
 let UPC_INDEX      = null;
+let UPC_SUFFIX4    = null;
 let PLAN_DELETES   = null;
 let ACTIVE_UPC_SET = null;
 let scanStream     = null;
@@ -1267,7 +1280,7 @@ fetch('products.json')
 fetch('planograms.json')
   .then(r => r.json())
   .then(data => { PLANOGRAMS = data; buildUpcIndex(); buildActiveUpcSet(); })
-  .catch(() => { PLANOGRAMS = {}; UPC_INDEX = {}; ACTIVE_UPC_SET = new Set(); });
+  .catch(() => { PLANOGRAMS = {}; UPC_INDEX = {}; UPC_SUFFIX4 = {}; ACTIVE_UPC_SET = new Set(); });
 
 fetch('planogram-deletes.json')
   .then(r => r.json())
@@ -2088,6 +2101,7 @@ function buildActiveUpcSet() {
 
 function buildUpcIndex() {
   UPC_INDEX = {};
+  UPC_SUFFIX4 = {};
   if (!PLANOGRAMS) return;
   Object.keys(PLANOGRAMS).forEach(coolerKey => {
     const pog = PLANOGRAMS[coolerKey];
@@ -2105,10 +2119,14 @@ function buildUpcIndex() {
             bayNum: bay.bay,
             shelf: sh.shelf,
             position: p.position,
-            name: (p.full_name || p.description || '')
+            name: (p.full_name || p.description || ''),
+            upc: k
           };
           if (!UPC_INDEX[k]) UPC_INDEX[k] = [];
           UPC_INDEX[k].push(entry);
+          const tail = k.slice(7, 11);
+          if (!UPC_SUFFIX4[tail]) UPC_SUFFIX4[tail] = [];
+          UPC_SUFFIX4[tail].push(entry);
         });
       });
     });
@@ -2266,7 +2284,7 @@ function openGlobalScan() {
         <button type="button" class="scan-btn" id="gscan-stop-btn" onclick="stopGlobalScan()" style="display:none">Stop Camera</button>
       </div>
       <div class="gscan-manual">
-        <input type="text" id="gscan-input" placeholder="Enter UPC…" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')lookupGlobalScan()">
+        <input type="text" id="gscan-input" placeholder="Last 4 digits or full UPC…" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')lookupGlobalScan()">
         <button type="button" class="scan-btn primary" onclick="lookupGlobalScan()">Look Up</button>
       </div>
       <div id="gscan-result"></div>
@@ -2344,7 +2362,46 @@ function lookupGlobalScan() {
   const inp = document.getElementById('gscan-input');
   const raw = inp && inp.value.trim();
   if (!raw) return;
-  processGlobalScanResult(raw);
+  const digits = raw.replace(/\D/g, '');
+  if (digits.length === 4) {
+    processPartialLookup(digits);
+  } else {
+    processGlobalScanResult(raw);
+  }
+}
+
+function processPartialLookup(last4) {
+  if (!UPC_INDEX) buildUpcIndex();
+  const matches = UPC_SUFFIX4[last4];
+  const result = document.getElementById('gscan-result');
+  if (!result) return;
+
+  if (!matches || !matches.length) {
+    result.innerHTML = '<div class="scan-result">No products ending in <strong>' + scanEscapeHtml(last4) + '</strong> found in fuel cooler planograms.</div>';
+    return;
+  }
+
+  const seen = new Map();
+  matches.forEach(m => {
+    if (!seen.has(m.upc)) seen.set(m.upc, m);
+  });
+  const unique = Array.from(seen.values());
+
+  if (unique.length === 1) {
+    processGlobalScanResult(unique[0].upc);
+    return;
+  }
+
+  let html = '<div class="gscan-match-hint">' + unique.length + ' products match "…' + scanEscapeHtml(last4) + '" — tap one:</div>';
+  html += '<ul class="gscan-match-list">';
+  unique.forEach(m => {
+    html += '<li class="gscan-match-item" onclick="processGlobalScanResult(\'' + m.upc + '\')">'
+      + '<div><div class="gscan-match-name">' + scanEscapeHtml(m.name || 'Unknown') + '</div>'
+      + '<div class="gscan-match-upc">' + m.upc + '</div></div>'
+      + '<div class="gscan-match-loc">' + scanEscapeHtml(m.coolerLabel) + '</div></li>';
+  });
+  html += '</ul>';
+  result.innerHTML = html;
 }
 
 function processGlobalScanResult(raw) {
