@@ -3243,6 +3243,7 @@ document.addEventListener('touchend', e => {
 // ── Version polling + state persistence + hotfix overlay ──────────────────────
 const _STATE_KEY = 'd6fuel_state';
 const _HOTFIX_KEY = 'd6fuel_hotfix';
+const _SEEN_VER_KEY = 'd6fuel_seen_version';
 let _appVersion = null;
 
 function saveAppState() {
@@ -3279,37 +3280,59 @@ function restoreAppState() {
   }
 }
 
-function showHotfixOverlay() {
+function renderHotfixOverlay(info) {
+  if (!info || !info.hotfix) return;
+  if (document.getElementById('hotfix-overlay')) return;
+
+  const lines = info.hotfix.split(/\.\s+/).filter(s => s.trim()).map(s => s.trim().replace(/\.$/, ''));
+  const listHtml = lines.map(l => '<li>' + l + '</li>').join('');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'hotfix-overlay';
+  overlay.id = 'hotfix-overlay';
+  overlay.innerHTML = `
+    <div class="hotfix-card">
+      <div class="hotfix-icon">&#x1F680;</div>
+      <div class="hotfix-title">${info.hotfixTitle || 'App Updated'}</div>
+      <div class="hotfix-version">v${info.version || '?'}</div>
+      <div class="hotfix-body"><ul style="padding-left:18px;margin:0">${listHtml}</ul></div>
+      <div class="hotfix-safe">&#x2705; All your photos and progress have been preserved.</div>
+      <button class="hotfix-dismiss" onclick="dismissHotfix()">Got it</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function dismissHotfix() {
+  const el = document.getElementById('hotfix-overlay');
+  if (el) el.remove();
+  if (_appVersion) {
+    try { localStorage.setItem(_SEEN_VER_KEY, _appVersion); } catch (e) {}
+  }
+}
+
+function showHotfixFromSession() {
   try {
     const raw = sessionStorage.getItem(_HOTFIX_KEY);
     if (!raw) return;
     const info = JSON.parse(raw);
     sessionStorage.removeItem(_HOTFIX_KEY);
-    if (!info.hotfix) return;
-
-    const lines = info.hotfix.split(/\.\s+/).filter(s => s.trim()).map(s => s.trim().replace(/\.$/, ''));
-    const listHtml = lines.map(l => '<li>' + l + '</li>').join('');
-
-    const overlay = document.createElement('div');
-    overlay.className = 'hotfix-overlay';
-    overlay.id = 'hotfix-overlay';
-    overlay.innerHTML = `
-      <div class="hotfix-card">
-        <div class="hotfix-icon">&#x1F680;</div>
-        <div class="hotfix-title">${info.hotfixTitle || 'App Updated'}</div>
-        <div class="hotfix-version">v${info.version || '?'}</div>
-        <div class="hotfix-body"><ul style="padding-left:18px;margin:0">${listHtml}</ul></div>
-        <div class="hotfix-safe">&#x2705; All your photos and progress have been preserved.</div>
-        <button class="hotfix-dismiss" onclick="document.getElementById('hotfix-overlay').remove()">Got it</button>
-      </div>
-    `;
-    document.body.appendChild(overlay);
+    renderHotfixOverlay(info);
   } catch (e) {}
+}
+
+function checkVersionAndShowHotfix(data) {
+  const serverVersion = data.version || '1.0.0';
+  const seenVersion = localStorage.getItem(_SEEN_VER_KEY);
+  if (serverVersion !== seenVersion && data.hotfix) {
+    renderHotfixOverlay(data);
+  }
 }
 
 function startVersionPolling() {
   fetch('/api/version').then(r => r.json()).then(data => {
     _appVersion = data.version || '1.0.0';
+    checkVersionAndShowHotfix(data);
   }).catch(() => { _appVersion = '1.0.0'; });
 
   setInterval(() => {
@@ -3327,11 +3350,11 @@ function startVersionPolling() {
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
-const _stateRestored = restoreAppState();
+restoreAppState();
 
 if (currentUser) {
   render();
-  showHotfixOverlay();
+  showHotfixFromSession();
 } else {
   renderLoginOverlay();
 }
