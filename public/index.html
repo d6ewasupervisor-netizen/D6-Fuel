@@ -876,6 +876,108 @@ body {
 .pdf-text-layer .highlight.active { background: rgba(255, 140, 0, 0.85); }
 .pdf-loading { display: flex; align-items: center; justify-content: center; flex: 1; color: var(--dim); font-size: 16px; }
 
+/* ── Global scan overlay ── */
+.gscan-overlay {
+  position: fixed; inset: 0; z-index: 3000; background: rgba(10,14,19,0.97);
+  display: flex; flex-direction: column; animation: fadeIn 0.15s ease;
+}
+.gscan-toolbar {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+  background: var(--card); border-bottom: 1px solid var(--card-border); flex-shrink: 0;
+}
+.gscan-close {
+  background: none; border: none; color: var(--muted); font-size: 26px;
+  cursor: pointer; min-width: 44px; min-height: 44px; display: flex;
+  align-items: center; justify-content: center; flex-shrink: 0;
+}
+.gscan-close:active { color: #fff; }
+.gscan-title { font-size: 15px; font-weight: 700; color: var(--text); flex: 1; }
+.gscan-body { flex: 1; overflow-y: auto; padding: 16px; max-width: 640px; width: 100%; margin: 0 auto; }
+.gscan-video-wrap {
+  position: relative; width: 100%; border-radius: var(--radius-sm);
+  overflow: hidden; background: #0a0f14; aspect-ratio: 4/3; margin-bottom: 14px; display: none;
+}
+.gscan-video-wrap.active { display: block; }
+.gscan-video-wrap video { width: 100%; height: 100%; object-fit: cover; }
+.gscan-actions { display: flex; gap: 10px; margin-bottom: 14px; }
+.gscan-manual { display: flex; gap: 10px; margin-bottom: 14px; }
+.gscan-manual input {
+  flex: 1; min-width: 100px; padding: 12px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border); background: var(--bg-elevated);
+  color: var(--text); font-size: 16px; font-family: 'JetBrains Mono', monospace; min-height: 48px;
+}
+.gscan-manual input:focus { border-color: var(--accent); outline: none; }
+.gscan-manual input::placeholder { color: var(--dim); }
+.nav-scan-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 8px; background: var(--card);
+  border: 1px solid var(--card-border); color: var(--text-secondary);
+  font-size: 18px; cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+}
+.nav-scan-btn:active { border-color: var(--accent); background: var(--card-hover); }
+
+/* ── Location reveal overlay ── */
+.loc-reveal-overlay {
+  position: fixed; inset: 0; z-index: 4000; background: rgba(0,0,0,0.95);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0; padding: 32px 24px;
+}
+.loc-reveal-line {
+  font-family: 'JetBrains Mono', monospace; text-align: center;
+  opacity: 0; transform: scale(0.8); transition: opacity 0.2s, transform 0.2s;
+}
+.loc-reveal-line.show { opacity: 1; transform: scale(1); }
+.loc-reveal-line.cooler { font-size: 28px; font-weight: 800; color: #00ff6a; margin-bottom: 16px; }
+.loc-reveal-line.bay { font-size: 22px; font-weight: 700; color: #00e87a; margin-bottom: 12px; }
+.loc-reveal-line.shelf { font-size: 20px; font-weight: 700; color: #00d46a; margin-bottom: 12px; }
+.loc-reveal-line.position { font-size: 20px; font-weight: 700; color: #00c060; margin-bottom: 12px; }
+.loc-reveal-line.flash { animation: revealFlash 0.4s ease; }
+@keyframes revealFlash {
+  0% { opacity: 0; transform: scale(1.3); }
+  50% { opacity: 1; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── Delete / Move overlays ── */
+.loc-reveal-line.delete { font-size: 26px; font-weight: 800; color: #ff4757; }
+.loc-reveal-line.move { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 8px; }
+.loc-reveal-line.move-dest { font-size: 18px; font-weight: 600; color: var(--green); margin-top: 6px; }
+.delete-banner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 3500;
+  background: linear-gradient(180deg, rgba(255,71,87,0.12) 0%, rgba(255,71,87,0.06) 100%);
+  border-top: 3px solid var(--red); padding: 18px 20px; max-height: 50vh; overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+.delete-banner-close {
+  position: absolute; top: 10px; right: 12px; background: none; border: none;
+  color: var(--muted); font-size: 22px; cursor: pointer; min-width: 44px; min-height: 44px;
+  display: flex; align-items: center; justify-content: center;
+}
+.delete-banner-title { font-size: 16px; font-weight: 800; color: var(--red); margin-bottom: 8px; }
+.delete-banner-text { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+.delete-banner-text strong { color: var(--text); }
+.delete-banner-warning {
+  margin-top: 12px; padding: 12px 14px; background: var(--red-bg);
+  border-radius: var(--radius-sm); border-left: 4px solid var(--red);
+  font-size: 13px; font-weight: 600; color: var(--red); line-height: 1.5;
+}
+
+/* ── Product highlight on planogram ── */
+@keyframes highlightPop {
+  0% { transform: translateY(0); box-shadow: 0 0 0 2px #00ff6a; }
+  30% { transform: translateY(-6px); box-shadow: 0 0 16px 4px #00ff6a, 0 0 0 3px #00ff6a; }
+  60% { transform: translateY(-3px); box-shadow: 0 0 8px 2px #00ff6a, 0 0 0 2px #00ff6a; }
+  100% { transform: translateY(0); box-shadow: 0 0 12px 3px #00ff6a, 0 0 0 2px #00ff6a; }
+}
+@keyframes highlightFlash {
+  0%, 100% { box-shadow: 0 0 12px 3px #00ff6a, 0 0 0 2px #00ff6a; }
+  50% { box-shadow: 0 0 24px 6px #00ff6a, 0 0 0 3px #00ff6a; }
+}
+.product-slot.scan-highlight, .multi-facing-group.scan-highlight {
+  animation: highlightPop 0.5s ease forwards, highlightFlash 0.6s ease 0.5s 4;
+  position: relative; z-index: 20; border-radius: 4px;
+}
+
 /* ── Animations ── */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .fade-in-up { animation: fadeInUp 0.3s ease; }
@@ -1242,6 +1344,7 @@ function renderStore(s) {
       <div class="top-nav-inner">
         <button class="nav-back-btn" onclick="selectedStore=null;selectedCooler=null;currentBayIdx=0;render()">← Stores</button>
         <div class="nav-breadcrumb"><strong>FM ${s.id}</strong> · ${s.city}, ${s.state}</div>
+        <button class="nav-scan-btn" onclick="openGlobalScan()" title="Scan barcode">🔎</button>
         <button class="nav-briefing-btn" onclick="openStoreBriefing('${s.id}')"><span class="btn-icon">📄</span> Briefing</button>
       </div>
     </div>`;
@@ -2066,6 +2169,296 @@ function goToPlanogramLocation(coolerKey, bayNum) {
   activeTab = 'planograms';
   render();
   switchTab('planograms');
+}
+
+// ── Global scan (accessible from any screen) ─────────────────────────────────
+let _gscanStream = null;
+let _gscanAnimId = null;
+
+function openGlobalScan() {
+  if (document.getElementById('gscan-overlay')) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'gscan-overlay';
+  overlay.id = 'gscan-overlay';
+  overlay.innerHTML = `
+    <div class="gscan-toolbar">
+      <button class="gscan-close" onclick="closeGlobalScan()">&times;</button>
+      <div class="gscan-title">Scan Barcode</div>
+    </div>
+    <div class="gscan-body">
+      <div class="gscan-video-wrap" id="gscan-video-wrap"><video id="gscan-video" playsinline muted></video></div>
+      <div class="gscan-actions">
+        <button type="button" class="scan-btn primary" id="gscan-start-btn" onclick="startGlobalScan()">📷 Start Camera</button>
+        <button type="button" class="scan-btn" id="gscan-stop-btn" onclick="stopGlobalScan()" style="display:none">Stop Camera</button>
+      </div>
+      <div class="gscan-manual">
+        <input type="text" id="gscan-input" placeholder="Enter UPC…" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')lookupGlobalScan()">
+        <button type="button" class="scan-btn primary" onclick="lookupGlobalScan()">Look Up</button>
+      </div>
+      <div id="gscan-result"></div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  const input = document.getElementById('gscan-input');
+  if (input) setTimeout(() => input.focus(), 100);
+}
+
+function closeGlobalScan() {
+  stopGlobalScan();
+  const el = document.getElementById('gscan-overlay');
+  if (el) el.remove();
+}
+
+function stopGlobalScan() {
+  if (_gscanAnimId != null) { cancelAnimationFrame(_gscanAnimId); _gscanAnimId = null; }
+  const video = document.getElementById('gscan-video');
+  if (video && video.srcObject) { video.srcObject.getTracks().forEach(t => t.stop()); video.srcObject = null; }
+  if (_gscanStream) { _gscanStream.getTracks().forEach(t => t.stop()); }
+  _gscanStream = null;
+  const wrap = document.getElementById('gscan-video-wrap');
+  if (wrap) wrap.classList.remove('active');
+  const startBtn = document.getElementById('gscan-start-btn');
+  const stopBtn = document.getElementById('gscan-stop-btn');
+  if (startBtn) startBtn.style.display = 'inline-block';
+  if (stopBtn) stopBtn.style.display = 'none';
+}
+
+async function startGlobalScan() {
+  const wrap = document.getElementById('gscan-video-wrap');
+  const video = document.getElementById('gscan-video');
+  const startBtn = document.getElementById('gscan-start-btn');
+  const stopBtn = document.getElementById('gscan-stop-btn');
+  const result = document.getElementById('gscan-result');
+  if (!video || !wrap) return;
+
+  if (typeof BarcodeDetector === 'undefined') {
+    if (result) result.innerHTML = '<div class="scan-result">BarcodeDetector not available — use Look Up instead.</div>';
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+    _gscanStream = stream;
+    video.srcObject = stream;
+    await video.play();
+    wrap.classList.add('active');
+    if (startBtn) startBtn.style.display = 'none';
+    if (stopBtn) stopBtn.style.display = 'inline-block';
+
+    const detector = new BarcodeDetector({ formats: ['upc_a','upc_e','ean_13','ean_8','code_128','code_39'] });
+    function loop() {
+      if (!_gscanStream) return;
+      detector.detect(video).then(codes => {
+        if (!_gscanStream) return;
+        if (codes && codes.length) {
+          const raw = codes[0].rawValue;
+          stopGlobalScan();
+          const inp = document.getElementById('gscan-input');
+          if (inp) inp.value = raw;
+          processGlobalScanResult(raw);
+          return;
+        }
+        _gscanAnimId = requestAnimationFrame(loop);
+      }).catch(() => { if (_gscanStream) _gscanAnimId = requestAnimationFrame(loop); });
+    }
+    _gscanAnimId = requestAnimationFrame(loop);
+  } catch (e) {
+    if (result) result.innerHTML = '<div class="scan-result">Camera error: ' + scanEscapeHtml(e.message) + '</div>';
+  }
+}
+
+function lookupGlobalScan() {
+  const inp = document.getElementById('gscan-input');
+  const raw = inp && inp.value.trim();
+  if (!raw) return;
+  processGlobalScanResult(raw);
+}
+
+function processGlobalScanResult(raw) {
+  if (!UPC_INDEX) buildUpcIndex();
+  const k = normalizeUpcKey(raw);
+  const found = findLocationsForUpc(raw);
+  const active = ACTIVE_UPC_SET || buildActiveUpcSet();
+  const delList = (PLAN_DELETES && PLAN_DELETES.byUpc && k) ? PLAN_DELETES.byUpc[k] : null;
+
+  if (found && found.list.length) {
+    closeGlobalScan();
+    const loc = found.list[0];
+    showLocationReveal(found.list, k);
+    return;
+  }
+
+  if (delList && delList.length) {
+    if (active.has(k)) {
+      const result = document.getElementById('gscan-result');
+      if (result) {
+        const sources = delList.map(d => scanEscapeHtml(d.fromPlanogram)).join('; ');
+        result.innerHTML = '<div class="scan-result">UPC <strong>' + scanEscapeHtml(k) + '</strong></div>'
+          + '<div class="scan-moved-note">Removed from: ' + sources
+          + '. Still appears in the current planogram (may have moved). Use the planogram view to verify.</div>';
+      }
+    } else {
+      closeGlobalScan();
+      showDeleteReveal(k, delList);
+    }
+    return;
+  }
+
+  const result = document.getElementById('gscan-result');
+  if (result) {
+    result.innerHTML = '<div class="scan-result">No match for <strong>' + scanEscapeHtml(String(raw))
+      + '</strong> in fuel cooler planograms.</div>';
+  }
+}
+
+// ── Animated location reveal ──────────────────────────────────────────────────
+function showLocationReveal(locations, upc) {
+  const loc = locations[0];
+  const sec = COOLER_SECTIONS.find(c => c.key === loc.coolerKey);
+  const coolerLabel = sec ? sec.label : loc.coolerKey;
+  const pog = PLANOGRAMS[loc.coolerKey];
+  const hasBays = pog && pog.bays && pog.bays.length > 1;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'loc-reveal-overlay';
+  overlay.id = 'loc-reveal';
+  overlay.innerHTML = `
+    <div class="loc-reveal-line cooler" id="reveal-cooler">${sec ? sec.icon + ' ' : ''}${coolerLabel}</div>
+    ${hasBays ? `<div class="loc-reveal-line bay" id="reveal-bay">Bay ${loc.bayNum}</div>` : ''}
+    <div class="loc-reveal-line shelf" id="reveal-shelf">Shelf ${loc.shelf}</div>
+    <div class="loc-reveal-line position" id="reveal-pos">Position ${loc.position}${loc.name ? ' — ' + loc.name : ''}</div>
+  `;
+  document.body.appendChild(overlay);
+
+  const steps = ['reveal-cooler'];
+  if (hasBays) steps.push('reveal-bay');
+  steps.push('reveal-shelf', 'reveal-pos');
+
+  const stepDelay = Math.min(500, 2000 / steps.length);
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.add('show', 'flash'); }
+    }, i * stepDelay);
+  });
+
+  setTimeout(() => {
+    overlay.remove();
+    navigateAndHighlight(locations, upc);
+  }, steps.length * stepDelay + 600);
+}
+
+function navigateAndHighlight(locations, upc) {
+  const loc = locations[0];
+
+  if (!selectedStore) {
+    const storeForCooler = STORES[0];
+    if (storeForCooler) {
+      selectedStore = storeForCooler.id;
+      workflowStep[storeForCooler.id] = 'done';
+    }
+  } else {
+    workflowStep[selectedStore] = 'done';
+  }
+
+  selectedCooler = loc.coolerKey;
+  const pog = PLANOGRAMS[loc.coolerKey];
+  if (pog && pog.bays) {
+    const idx = pog.bays.findIndex(b => b.bay === loc.bayNum);
+    currentBayIdx = idx >= 0 ? idx : 0;
+  }
+  showUpcList = false;
+  activeTab = 'planograms';
+  render();
+  switchTab('planograms');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      highlightProductSlots(upc);
+    });
+  });
+}
+
+function highlightProductSlots(upc) {
+  const normalizedUpc = normalizeUpcKey(upc);
+  const allSlots = document.querySelectorAll('.product-slot, .multi-facing-group');
+  allSlots.forEach(el => {
+    const slotUpc = normalizeUpcKey(el.dataset.upc);
+    if (slotUpc === normalizedUpc) {
+      el.classList.add('scan-highlight');
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  setTimeout(() => {
+    document.querySelectorAll('.scan-highlight').forEach(el => el.classList.remove('scan-highlight'));
+  }, 4000);
+}
+
+// ── Delete / move reveal ──────────────────────────────────────────────────────
+function showDeleteReveal(upc, delList) {
+  const active = ACTIVE_UPC_SET || buildActiveUpcSet();
+  const isMoving = active.has(upc);
+  let newLocations = null;
+  if (isMoving) {
+    newLocations = findLocationsForUpc(upc);
+  }
+
+  const overlay = document.createElement('div');
+  overlay.className = 'loc-reveal-overlay';
+  overlay.id = 'loc-reveal';
+
+  if (isMoving && newLocations && newLocations.list.length) {
+    const nl = newLocations.list[0];
+    const sec = COOLER_SECTIONS.find(c => c.key === nl.coolerKey);
+    overlay.innerHTML = `
+      <div class="loc-reveal-line move" id="reveal-move">MOVED — Not Deleted</div>
+      <div class="loc-reveal-line cooler" id="reveal-dest">${sec ? sec.icon + ' ' : ''}New location: ${sec ? sec.label : nl.coolerKey}</div>
+      <div class="loc-reveal-line shelf" id="reveal-dest2">Bay ${nl.bayNum} · Shelf ${nl.shelf} · Position ${nl.position}</div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => { const el = document.getElementById('reveal-move'); if (el) el.classList.add('show', 'flash'); }, 0);
+    setTimeout(() => { const el = document.getElementById('reveal-dest'); if (el) el.classList.add('show', 'flash'); }, 500);
+    setTimeout(() => { const el = document.getElementById('reveal-dest2'); if (el) el.classList.add('show', 'flash'); }, 900);
+    setTimeout(() => {
+      overlay.remove();
+      navigateAndHighlight(newLocations.list, upc);
+    }, 2200);
+  } else {
+    const sources = delList.map(d => d.fromPlanogram).join(', ');
+    overlay.innerHTML = `
+      <div class="loc-reveal-line delete" id="reveal-del">⛔ DELETE</div>
+      <div class="loc-reveal-line shelf" id="reveal-del-src" style="color:var(--red)">${scanEscapeHtml(delList[0].description || 'This product')}${delList[0].size ? ' (' + scanEscapeHtml(delList[0].size) + ')' : ''}</div>
+      <div class="loc-reveal-line position" id="reveal-del-from" style="color:var(--muted);font-size:15px">Removed from: ${scanEscapeHtml(sources)}</div>
+    `;
+    document.body.appendChild(overlay);
+    setTimeout(() => { const el = document.getElementById('reveal-del'); if (el) el.classList.add('show', 'flash'); }, 0);
+    setTimeout(() => { const el = document.getElementById('reveal-del-src'); if (el) el.classList.add('show', 'flash'); }, 500);
+    setTimeout(() => { const el = document.getElementById('reveal-del-from'); if (el) el.classList.add('show', 'flash'); }, 900);
+    setTimeout(() => {
+      overlay.remove();
+      showDeleteBanner();
+    }, 2200);
+  }
+}
+
+function showDeleteBanner() {
+  let existing = document.getElementById('delete-banner');
+  if (existing) existing.remove();
+  const banner = document.createElement('div');
+  banner.className = 'delete-banner';
+  banner.id = 'delete-banner';
+  banner.innerHTML = `
+    <button class="delete-banner-close" onclick="this.parentElement.remove()">&times;</button>
+    <div class="delete-banner-title">⛔ Deleted Product — Pull Instructions</div>
+    <div class="delete-banner-text">
+      Please <strong>clearly label</strong> this product and place it in an appropriate container such as a <strong>banana box or crate</strong>.
+      Give the container to the <strong>fuel center representative</strong>.
+    </div>
+    <div class="delete-banner-warning">
+      ⚠ No product should be transported by Retail Odyssey team members at any time between the store and the fuel center. All pulled product must be handed off to the fuel center representative on-site.
+    </div>
+  `;
+  document.body.appendChild(banner);
 }
 
 function renderProductScanPanel(s) {
