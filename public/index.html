@@ -408,14 +408,24 @@ body {
   position: fixed; inset: 0; background: rgba(0,0,0,0.75);
   z-index: 1000; display: flex; align-items: flex-end;
   justify-content: center; animation: fadeIn 0.15s ease;
+  overscroll-behavior: contain; touch-action: none;
 }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .pog-detail-sheet {
   width: 100%; max-width: 640px; background: #151d2b;
   border-radius: 24px 24px 0 0; padding: 24px 20px;
   max-height: 85vh; overflow-y: auto; animation: slideUp 0.2s ease;
+  position: relative; overscroll-behavior: contain; touch-action: pan-y;
 }
 @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.pog-detail-sheet .detail-close-btn {
+  position: absolute; top: 12px; right: 12px; width: 36px; height: 36px;
+  border-radius: 50%; border: none; background: rgba(255,255,255,0.1);
+  color: var(--muted); font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1; -webkit-tap-highlight-color: transparent;
+}
+.pog-detail-sheet .detail-close-btn:active { background: rgba(255,255,255,0.2); color: #fff; }
 .pog-detail-sheet .handle { width: 40px; height: 5px; border-radius: 3px; background: #3a4a5a; margin: 0 auto 20px; }
 .pog-detail-sheet .detail-img {
   width: 160px; height: 160px; margin: 0 auto 16px;
@@ -2084,6 +2094,7 @@ function showProductDetail(el) {
   overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
   overlay.innerHTML = `
     <div class="pog-detail-sheet" onclick="event.stopPropagation()">
+      <button class="detail-close-btn" onclick="this.closest('.pog-detail-overlay').remove()">&times;</button>
       <div class="handle"></div>
       <div class="detail-img">
         <img src="${d.img}" alt="" onerror="this.parentElement.innerHTML='<div style=\\'font-size:48px\\'>📦</div>'">
