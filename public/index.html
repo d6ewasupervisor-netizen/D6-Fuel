@@ -1018,6 +1018,45 @@ body {
 .login-submit:active { transform: scale(0.98); }
 .login-submit:disabled { background: #1e2c3e; color: #5a7088; cursor: not-allowed; }
 
+/* ── Hotfix overlay ── */
+.hotfix-overlay {
+  position: fixed; inset: 0; z-index: 8000;
+  background: rgba(10,14,19,0.96);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.hotfix-card {
+  width: 100%; max-width: 480px;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 32px 24px 24px;
+  box-shadow: var(--shadow-lg); animation: fadeInUp 0.4s ease;
+  text-align: center; position: relative; overflow: hidden;
+}
+.hotfix-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+}
+.hotfix-icon { font-size: 48px; margin-bottom: 16px; }
+.hotfix-title { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.hotfix-version { font-size: 13px; color: var(--dim); font-family: 'JetBrains Mono', monospace; margin-bottom: 20px; }
+.hotfix-body {
+  text-align: left; font-size: 14px; color: var(--text-secondary); line-height: 1.7;
+  background: var(--bg-elevated); border-radius: var(--radius-sm);
+  padding: 16px 18px; margin-bottom: 20px; border: 1px solid var(--card-border);
+}
+.hotfix-body li { margin-bottom: 6px; }
+.hotfix-safe {
+  font-size: 13px; color: var(--green); font-weight: 600; margin-bottom: 20px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.hotfix-dismiss {
+  width: 100%; padding: 16px; border: none; border-radius: var(--radius);
+  background: var(--accent); color: #fff; font-size: 16px; font-weight: 800;
+  font-family: inherit; cursor: pointer; transition: all 0.15s;
+}
+.hotfix-dismiss:active { background: var(--accent-hover); transform: scale(0.98); }
+
 /* ── User badge (shown on dashboard) ── */
 .user-badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -3201,11 +3240,103 @@ document.addEventListener('touchend', e => {
   else if (dx > 0 && currentBayIdx > 0) switchBay(currentBayIdx - 1);
 }, { passive: true });
 
+// ── Version polling + state persistence + hotfix overlay ──────────────────────
+const _STATE_KEY = 'd6fuel_state';
+const _HOTFIX_KEY = 'd6fuel_hotfix';
+let _appVersion = null;
+
+function saveAppState() {
+  try {
+    const state = {
+      photoState,
+      workflowStep,
+      selectedStore,
+      activeTab,
+      selectedCooler,
+      currentBayIdx
+    };
+    sessionStorage.setItem(_STATE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.warn('Could not save state to sessionStorage:', e.message);
+  }
+}
+
+function restoreAppState() {
+  try {
+    const raw = sessionStorage.getItem(_STATE_KEY);
+    if (!raw) return false;
+    const state = JSON.parse(raw);
+    if (state.photoState && typeof state.photoState === 'object') photoState = state.photoState;
+    if (state.workflowStep && typeof state.workflowStep === 'object') workflowStep = state.workflowStep;
+    if (state.selectedStore) selectedStore = state.selectedStore;
+    if (state.activeTab) activeTab = state.activeTab;
+    if (state.selectedCooler) selectedCooler = state.selectedCooler;
+    if (typeof state.currentBayIdx === 'number') currentBayIdx = state.currentBayIdx;
+    sessionStorage.removeItem(_STATE_KEY);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function showHotfixOverlay() {
+  try {
+    const raw = sessionStorage.getItem(_HOTFIX_KEY);
+    if (!raw) return;
+    const info = JSON.parse(raw);
+    sessionStorage.removeItem(_HOTFIX_KEY);
+    if (!info.hotfix) return;
+
+    const lines = info.hotfix.split(/\.\s+/).filter(s => s.trim()).map(s => s.trim().replace(/\.$/, ''));
+    const listHtml = lines.map(l => '<li>' + l + '</li>').join('');
+
+    const overlay = document.createElement('div');
+    overlay.className = 'hotfix-overlay';
+    overlay.id = 'hotfix-overlay';
+    overlay.innerHTML = `
+      <div class="hotfix-card">
+        <div class="hotfix-icon">&#x1F680;</div>
+        <div class="hotfix-title">${info.hotfixTitle || 'App Updated'}</div>
+        <div class="hotfix-version">v${info.version || '?'}</div>
+        <div class="hotfix-body"><ul style="padding-left:18px;margin:0">${listHtml}</ul></div>
+        <div class="hotfix-safe">&#x2705; All your photos and progress have been preserved.</div>
+        <button class="hotfix-dismiss" onclick="document.getElementById('hotfix-overlay').remove()">Got it</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  } catch (e) {}
+}
+
+function startVersionPolling() {
+  fetch('/api/version').then(r => r.json()).then(data => {
+    _appVersion = data.version || '1.0.0';
+  }).catch(() => { _appVersion = '1.0.0'; });
+
+  setInterval(() => {
+    fetch('/api/version').then(r => r.json()).then(data => {
+      const serverVersion = data.version || '1.0.0';
+      if (_appVersion && serverVersion !== _appVersion) {
+        saveAppState();
+        try {
+          sessionStorage.setItem(_HOTFIX_KEY, JSON.stringify(data));
+        } catch (e) {}
+        location.reload();
+      }
+    }).catch(() => {});
+  }, 30000);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+const _stateRestored = restoreAppState();
+
 if (currentUser) {
   render();
+  showHotfixOverlay();
 } else {
   renderLoginOverlay();
 }
+
+startVersionPolling();
 </script>
 </body>
 </html>
