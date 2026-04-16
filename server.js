@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const { Resend } = require('resend');
 
 const app = express();
@@ -8,6 +9,18 @@ const resend = new Resend(process.env.RESEND_SIGNOFF_API_KEY);
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+const versionFilePath = path.join(__dirname, 'version.json');
+
+app.get('/api/version', (req, res) => {
+  try {
+    const raw = fs.readFileSync(versionFilePath, 'utf8');
+    const data = JSON.parse(raw);
+    res.json(data);
+  } catch (err) {
+    res.json({ version: '1.0.0', hotfixTitle: '', hotfix: '' });
+  }
+});
 
 app.post('/api/send-photos', async (req, res) => {
   const { storeId, city, state, address, energySet, resetDate, phase, coolerPhotos, userName, userEmail } = req.body;
