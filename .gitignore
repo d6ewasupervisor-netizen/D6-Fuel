@@ -9,3 +9,7 @@ build/
 certs/
 *.db-wal
 *.db-shm
+node_modules/
+Fuel_Center_POG_Products.xlsx
+parse_planograms.py
+requirements.txt

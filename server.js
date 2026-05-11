@@ -1,0 +1,102 @@
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
+const fs = require('fs');
+const { Resend } = require('resend');
+
+const app = express();
+const resend = new Resend(process.env.RESEND_SIGNOFF_API_KEY);
+
+app.use(express.json({ limit: '50mb' }));
+
+app.get('/', (req, res) => {
+  res.set({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+const versionFilePath = path.join(__dirname, 'version.json');
+
+app.get('/api/version', (req, res) => {
+  try {
+    const raw = fs.readFileSync(versionFilePath, 'utf8');
+    const data = JSON.parse(raw);
+    res.json(data);
+  } catch (err) {
+    res.json({ version: '1.0.0', hotfixTitle: '', hotfix: '' });
+  }
+});
+
+app.post('/api/send-photos', async (req, res) => {
+  const { storeId, city, state, address, energySet, resetDate, phase, coolerPhotos, comment, userName, userEmail } = req.body;
+
+  if (!coolerPhotos || !coolerPhotos.length) {
+    return res.status(400).json({ error: 'No photos provided.' });
+  }
+
+  const phaseLabel = phase === 'after' ? 'After' : 'Before';
+
+  const attachments = coolerPhotos.map(p => ({
+    filename: p.fileName,
+    content: Buffer.from(p.base64, 'base64')
+  }));
+
+  const photoList = coolerPhotos.map(p => `<li style="margin:4px 0">${p.fileName} — ${p.name}</li>`).join('');
+  const fromAddress = `FM${storeId} <FM${storeId}@the-dump-bin.com>`;
+
+  const ccList = ['tyson.gauthier@retailodyssey.com'];
+  if (userEmail) ccList.push(userEmail);
+
+  const submittedBy = userName
+    ? `<p style="margin:0 0 16px"><strong>${coolerPhotos.length} ${phaseLabel.toLowerCase()} photos</strong> from <strong>${userName}</strong> at FM ${storeId} — ${city}, ${state}</p>`
+    : `<p style="margin:0 0 16px"><strong>${coolerPhotos.length} ${phaseLabel.toLowerCase()} photos</strong> from FM ${storeId} — ${city}, ${state}</p>`;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: fromAddress,
+      to: 'april.gauthier@retailodyssey.com',
+      cc: ccList,
+      subject: `FM ${storeId} ${phaseLabel} Photos — ${city}, ${state}`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px">
+          <h2 style="margin:0 0 8px">FM ${storeId} — ${phaseLabel} Photos</h2>
+          ${submittedBy}
+          <p style="color:#666;margin:0 0 4px">${city}, ${state} — ${address}</p>
+          <p style="color:#666;margin:0 0 16px">${energySet} energy set · Reset: ${resetDate}</p>
+          ${comment ? `
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
+          <p style="margin:0 0 8px"><strong>Comments:</strong></p>
+          <p style="margin:0 0 16px;white-space:pre-wrap;color:#333;background:#f8f8f8;padding:12px;border-radius:6px;border-left:4px solid #4da6ff">${comment.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p>
+          ` : ''}
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
+          <p style="margin:0 0 8px"><strong>Photos attached:</strong></p>
+          <ul style="padding-left:20px;margin:0 0 16px">${photoList}</ul>
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
+          <p style="color:#999;font-size:12px;margin:0">Sent from D6 Fuel Cooler Reset Guide</p>
+        </div>
+      `,
+      attachments
+    });
+
+    if (error) {
+      console.error('Resend error:', error);
+      return res.status(400).json({ error: error.message || 'Email send failed.' });
+    }
+
+    console.log(`Email sent for FM ${storeId} by ${userName || 'unknown'} (${userEmail || 'no email'})${comment ? ' [with comments]' : ''} — ID: ${data.id}`);
+    res.json({ success: true, id: data.id });
+  } catch (err) {
+    console.error('Server error:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`D6 Fuel server running on port ${PORT}`);
+});
