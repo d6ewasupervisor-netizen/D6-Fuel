@@ -1593,15 +1593,41 @@ let selectedAuditStore = null;
 let sendingAudit      = false;
 let auditConfirm      = null; // { ok, storeId, photoCount } | null
 
-// Auditor sign-in: store + name + email (audit mode only; CC on submit)
+// Audit mode: last-selected store only (name/email in d6fuel_user)
 let auditSession = JSON.parse(localStorage.getItem('d6fuel_audit_session') || 'null');
 
-function saveAuditSession(storeId, name, email) {
-  auditSession = {
-    storeId: String(storeId).padStart(3, '0'),
-    name: name.trim(),
-    email: email.trim(),
-  };
+// ── User identity (persisted in localStorage; shared by setup + audit) ──
+let currentUser = JSON.parse(localStorage.getItem('d6fuel_user') || 'null');
+
+function migrateUserAndAuditSession() {
+  try {
+    const raw = localStorage.getItem('d6fuel_audit_session');
+    if (!raw) return;
+    const old = JSON.parse(raw);
+    if (!old || typeof old !== 'object') return;
+    if (old.name && old.email && !currentUser) {
+      currentUser = { name: String(old.name).trim(), email: String(old.email).trim() };
+      localStorage.setItem('d6fuel_user', JSON.stringify(currentUser));
+    }
+    if (old.storeId) {
+      auditSession = { storeId: String(old.storeId).padStart(3, '0') };
+      localStorage.setItem('d6fuel_audit_session', JSON.stringify(auditSession));
+    } else if (old.name || old.email) {
+      auditSession = null;
+      localStorage.removeItem('d6fuel_audit_session');
+    }
+  } catch (e) {}
+}
+
+migrateUserAndAuditSession();
+
+function saveUser(name, email) {
+  currentUser = { name: name.trim(), email: email.trim() };
+  localStorage.setItem('d6fuel_user', JSON.stringify(currentUser));
+}
+
+function saveAuditSession(storeId) {
+  auditSession = { storeId: String(storeId).padStart(3, '0') };
   localStorage.setItem('d6fuel_audit_session', JSON.stringify(auditSession));
 }
 
@@ -1613,36 +1639,27 @@ function clearAuditSession() {
 }
 
 function getAuditSubmitter() {
-  if (auditSession) return { name: auditSession.name, email: auditSession.email };
   if (currentUser) return { name: currentUser.name, email: currentUser.email };
   return { name: null, email: null };
 }
 
 function renderAuditUserBadge(extraAction) {
-  const sub = getAuditSubmitter();
-  if (!sub.name) return '';
+  if (!currentUser) return '';
   const storeLabel = auditSession ? `FM ${auditSession.storeId}` : '';
   return `
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px" class="fade-in-up">
-      <button class="mode-pill audit" onclick="${extraAction || 'clearAuditSession();renderAuditIntake()'}" title="Change store or auditor">
+      <button class="mode-pill audit" onclick="${extraAction || 'clearAuditSession();renderAuditIntake()'}" title="Change store">
         <span class="dot"></span>
-        <span>${storeLabel ? storeLabel + ' · ' : ''}${sub.name}</span>
-        <span class="switch-link">Change</span>
+        <span>${storeLabel ? storeLabel + ' · ' : ''}${currentUser.name}</span>
+        <span class="switch-link">Change store</span>
       </button>
     </div>`;
-}
-
-// ── User identity (persisted in localStorage) ──
-let currentUser = JSON.parse(localStorage.getItem('d6fuel_user') || 'null');
-
-function saveUser(name, email) {
-  currentUser = { name: name.trim(), email: email.trim() };
-  localStorage.setItem('d6fuel_user', JSON.stringify(currentUser));
 }
 
 function clearUser() {
   currentUser = null;
   localStorage.removeItem('d6fuel_user');
+  clearAuditSession();
   renderLoginOverlay();
 }
 
@@ -1665,9 +1682,9 @@ function renderLoginOverlay() {
       <h1>Welcome</h1>
       <p class="login-sub">Enter your name and email to get started. Photos you submit are sent to your coordinator.</p>
       <label for="login-name">Full Name</label>
-      <input type="text" id="login-name" placeholder="Jane Smith" autocomplete="name" />
+      <input type="text" id="login-name" placeholder="Jane Smith" autocomplete="name" value="${currentUser ? currentUser.name.replace(/"/g, '&quot;') : ''}" />
       <label for="login-email">Email Address</label>
-      <input type="email" id="login-email" placeholder="jane.smith@retailodyssey.com" autocomplete="email" />
+      <input type="email" id="login-email" placeholder="jane.smith@retailodyssey.com" autocomplete="email" value="${currentUser ? currentUser.email.replace(/"/g, '&quot;') : ''}" />
       <button class="login-submit" id="login-btn" disabled onclick="handleLogin()">Continue</button>
     </div>
   `;
@@ -1727,6 +1744,11 @@ function render() {
 
   // No mode picked yet → show the selector overlay.
   if (!appMode) {
+    if (!currentUser) {
+      app.innerHTML = '';
+      renderLoginOverlay();
+      return;
+    }
     app.innerHTML = '';
     renderModeSelector();
     return;
@@ -1737,7 +1759,12 @@ function render() {
   }
 
   if (appMode === 'audit') {
-    if (!auditSession) {
+    if (!currentUser) {
+      app.innerHTML = '';
+      renderLoginOverlay();
+      return;
+    }
+    if (!auditSession || !auditSession.storeId) {
       app.innerHTML = '';
       renderAuditIntake();
       return;
@@ -1754,6 +1781,11 @@ function render() {
   }
 
   // Default = setup mode (existing flow).
+  if (!currentUser) {
+    app.innerHTML = '';
+    renderLoginOverlay();
+    return;
+  }
   if (selectedStore) {
     const s = STORES.find(x => x.id === selectedStore);
     app.innerHTML = renderStore(s);
@@ -1816,6 +1848,10 @@ function pickMode(mode) {
 }
 
 function renderAuditIntake() {
+  if (!currentUser) {
+    renderLoginOverlay();
+    return;
+  }
   let overlay = document.getElementById('audit-intake-overlay');
   if (!overlay) {
     overlay = document.createElement('div');
@@ -1833,44 +1869,31 @@ function renderAuditIntake() {
   overlay.innerHTML = `
     <div class="login-card" style="max-width:440px">
       <div class="badge" style="margin-bottom:10px;color:var(--orange)">Follow-Up Audit</div>
-      <h1>Auditor sign-in</h1>
-      <p class="login-sub">Choose your store and enter your details. Photos you submit are sent to your coordinator.</p>
-      <label for="audit-store">Store you're auditing</label>
+      <h1>Select your store</h1>
+      <p class="login-sub">Signed in as <strong>${currentUser.name.replace(/</g, '&lt;')}</strong>. Pick the store you're auditing today.</p>
+      <label for="audit-store">Store number</label>
       <select id="audit-store" autocomplete="off">${storeOptions}</select>
-      <label for="audit-name">Full name</label>
-      <input type="text" id="audit-name" placeholder="Jane Smith" autocomplete="name" value="${auditSession ? auditSession.name.replace(/"/g, '&quot;') : ''}" />
-      <label for="audit-email">Email address</label>
-      <input type="email" id="audit-email" placeholder="jane.smith@retailodyssey.com" autocomplete="email" value="${auditSession ? auditSession.email.replace(/"/g, '&quot;') : ''}" />
-      <button class="login-submit" id="audit-intake-btn" disabled onclick="handleAuditIntake()">Start audit</button>
+      <button class="login-submit" id="audit-intake-btn" disabled onclick="handleAuditIntake()">Continue</button>
       <button class="switch-back" style="margin-top:12px;width:100%;padding:12px;background:transparent;border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--muted);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer" onclick="openModeSelector()">← Back to task selection</button>
     </div>
   `;
 
   const storeSel = document.getElementById('audit-store');
-  const nameInput = document.getElementById('audit-name');
-  const emailInput = document.getElementById('audit-email');
   const btn = document.getElementById('audit-intake-btn');
 
   function validate() {
-    const nameOk = nameInput.value.trim().length >= 2;
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-    btn.disabled = !(nameOk && emailOk && storeSel.value);
+    btn.disabled = !storeSel.value;
   }
   storeSel.addEventListener('change', validate);
-  nameInput.addEventListener('input', validate);
-  emailInput.addEventListener('input', validate);
-  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !btn.disabled) handleAuditIntake(); });
-  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') emailInput.focus(); });
-  if (auditSession) storeSel.value = auditSession.storeId;
+  storeSel.addEventListener('keydown', e => { if (e.key === 'Enter' && !btn.disabled) handleAuditIntake(); });
+  if (auditSession && auditSession.storeId) storeSel.value = auditSession.storeId;
   validate();
-  setTimeout(() => nameInput.focus(), 100);
+  setTimeout(() => storeSel.focus(), 100);
 }
 
 function handleAuditIntake() {
   const storeId = document.getElementById('audit-store').value;
-  const name = document.getElementById('audit-name').value;
-  const email = document.getElementById('audit-email').value;
-  saveAuditSession(storeId, name, email);
+  saveAuditSession(storeId);
   selectedAuditStore = auditSession.storeId;
   const overlay = document.getElementById('audit-intake-overlay');
   if (overlay) overlay.style.display = 'none';
@@ -4510,14 +4533,14 @@ function startVersionPolling() {
 // ── Boot ──────────────────────────────────────────────────────────────────────
 restoreAppState();
 
-const _loginOverlay = document.getElementById('login-overlay');
-if (appMode === 'audit') {
-  if (_loginOverlay) _loginOverlay.style.display = 'none';
-  render();
-} else if (currentUser) {
-  render();
-} else {
+if (!currentUser) {
   renderLoginOverlay();
+} else {
+  const _loginOverlay = document.getElementById('login-overlay');
+  if (_loginOverlay) _loginOverlay.style.display = 'none';
+  const _auditIntake = document.getElementById('audit-intake-overlay');
+  if (_auditIntake) _auditIntake.style.display = 'none';
+  render();
 }
 
 startVersionPolling();
