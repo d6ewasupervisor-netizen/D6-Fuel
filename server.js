@@ -77,7 +77,7 @@ app.get('/api/version', (req, res) => {
     const data = JSON.parse(raw);
     res.json(data);
   } catch (err) {
-    res.json({ version: '1.0.0', hotfixTitle: '', hotfix: '' });
+    res.json({ version: '1.0.0' });
   }
 });
 
