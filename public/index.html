@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0e13">
-<title>D6 Fuel Cooler Reset Guide</title>
+<title>Fuel Cooler Reset Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -1065,6 +1065,13 @@ body {
 }
 .login-card input:focus { border-color: var(--accent); }
 .login-card input::placeholder { color: var(--dim); }
+.login-card select {
+  width: 100%; padding: 14px 16px; border-radius: var(--radius-sm);
+  background: var(--bg-elevated); border: 1px solid var(--card-border);
+  color: var(--text); font-size: 16px; font-family: inherit; margin-bottom: 16px;
+  min-height: 48px; cursor: pointer;
+}
+.login-card select:focus { border-color: var(--accent); outline: none; }
 .login-submit {
   width: 100%; padding: 16px; border: none; border-radius: var(--radius);
   background: var(--accent); color: #fff; font-size: 16px; font-weight: 800;
@@ -1155,6 +1162,326 @@ body {
   .photo-thumb { width: 160px; height: 160px; }
   .pog-detail-sheet .detail-img { width: 200px; height: 200px; }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Audit mode
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Mode selector (shown after login on first visit, or when switching modes) */
+.mode-overlay {
+  position: fixed; inset: 0; z-index: 4500;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(10,14,19,0.96);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  padding: 20px; padding-top: calc(20px + var(--safe-top)); padding-bottom: calc(20px + var(--safe-bottom));
+  overflow-y: auto;
+}
+.mode-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 28px 22px;
+  box-shadow: var(--shadow-lg); width: 100%; max-width: 480px;
+}
+.mode-card .badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; color: var(--green);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;
+}
+.mode-card .badge::before {
+  content: ''; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 10px rgba(0,232,122,0.5);
+}
+.mode-card h1 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px; line-height: 1.2; }
+.mode-card .mode-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 22px; line-height: 1.5; }
+.mode-btn-grid { display: grid; gap: 12px; }
+.mode-btn {
+  display: flex; align-items: flex-start; gap: 14px; text-align: left;
+  background: var(--bg-elevated); border: 2px solid var(--card-border);
+  border-radius: var(--radius); padding: 18px 16px;
+  font-family: inherit; cursor: pointer; color: var(--text);
+  transition: all 0.15s; min-height: 90px;
+  -webkit-tap-highlight-color: rgba(77,166,255,0.15); touch-action: manipulation;
+}
+.mode-btn:active { transform: scale(0.98); }
+.mode-btn.setup:hover, .mode-btn.setup:focus-visible { border-color: var(--accent); background: var(--accent-bg); }
+.mode-btn.audit:hover, .mode-btn.audit:focus-visible { border-color: var(--orange); background: var(--orange-bg); }
+.mode-btn-icon {
+  flex-shrink: 0; width: 52px; height: 52px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 26px;
+}
+.mode-btn.setup .mode-btn-icon { background: var(--accent-bg); }
+.mode-btn.audit .mode-btn-icon { background: var(--orange-bg); }
+.mode-btn-text { flex: 1; min-width: 0; }
+.mode-btn-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.mode-btn-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+.mode-card .switch-back {
+  display: block; width: 100%; margin-top: 14px; padding: 12px;
+  background: transparent; border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm); color: var(--muted);
+  font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer;
+}
+
+/* Mode pill (shown in dashboard) */
+.mode-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 999px;
+  background: var(--bg-elevated); border: 1px solid var(--card-border);
+  font-size: 12px; font-weight: 600; color: var(--text-secondary);
+  cursor: pointer; font-family: inherit; min-height: 34px;
+  -webkit-tap-highlight-color: rgba(77,166,255,0.15); touch-action: manipulation;
+}
+.mode-pill .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.mode-pill.setup .dot { background: var(--accent); box-shadow: 0 0 8px rgba(77,166,255,0.6); }
+.mode-pill.audit .dot { background: var(--orange); box-shadow: 0 0 8px rgba(255,140,66,0.6); }
+.mode-pill:active { background: var(--card-hover); }
+.mode-pill .switch-link { color: var(--muted); font-weight: 500; text-decoration: underline; }
+
+/* Audit dashboard header */
+.audit-header {
+  background: linear-gradient(135deg, #2a1a08 0%, #3a2410 50%, #1f1409 100%);
+  border-radius: var(--radius); padding: 24px 22px; margin-bottom: 18px;
+  border: 1px solid #4a2e10; box-shadow: var(--shadow);
+}
+.audit-header .badge { color: var(--orange); }
+.audit-header .badge::before { background: var(--orange); box-shadow: 0 0 12px rgba(255,140,66,0.5); }
+.audit-header h1 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 6px; line-height: 1.2; }
+.audit-header p { font-size: 14px; color: var(--text-secondary); }
+
+.audit-purpose {
+  background: var(--card); border: 1px solid #4a3a00; border-left: 4px solid var(--amber);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 18px;
+  font-size: 13px; color: var(--text-secondary); line-height: 1.55;
+}
+.audit-purpose strong { color: var(--amber); }
+
+/* Audit store grid */
+.audit-store-btn {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 16px 18px; min-height: 76px;
+  font-family: inherit; color: var(--text); text-align: left; cursor: pointer;
+  transition: all 0.15s; -webkit-tap-highlight-color: rgba(255,140,66,0.15); touch-action: manipulation;
+}
+.audit-store-btn:active { background: var(--card-hover); transform: scale(0.98); border-color: var(--orange); }
+.audit-store-btn .ast-num {
+  flex-shrink: 0; font-family: 'JetBrains Mono', monospace;
+  font-size: 20px; font-weight: 800; color: #fff;
+  background: rgba(255,140,66,0.15); border: 1px solid rgba(255,140,66,0.35);
+  border-radius: 12px; padding: 8px 12px; min-width: 70px; text-align: center;
+}
+.audit-store-btn .ast-text { flex: 1; min-width: 0; }
+.audit-store-btn .ast-city { font-size: 15px; font-weight: 600; color: var(--text); }
+.audit-store-btn .ast-status {
+  font-size: 12px; color: var(--muted); margin-top: 3px;
+  display: flex; align-items: center; gap: 6px;
+}
+.audit-store-btn .ast-status.done { color: var(--green); }
+.audit-store-btn .ast-status.partial { color: var(--amber); }
+.audit-store-btn .ast-status .scount {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700;
+}
+.audit-store-btn .chev { color: var(--dim); font-size: 22px; flex-shrink: 0; }
+
+/* Audit store screen */
+.audit-store-header {
+  background: linear-gradient(135deg, #2a1a08 0%, #3a2410 50%, #1f1409 100%);
+  border-radius: var(--radius); padding: 22px 22px; margin-bottom: 18px;
+  border: 1px solid #4a2e10; box-shadow: var(--shadow);
+}
+.audit-store-header h2 {
+  font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+  color: #fff; margin-bottom: 4px;
+}
+.audit-store-header .addr { font-size: 14px; color: var(--text-secondary); }
+.audit-store-header .detail { font-size: 12px; color: var(--orange); margin-top: 6px; font-weight: 600; }
+
+.audit-progress {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 18px;
+}
+.audit-progress-bar {
+  height: 8px; border-radius: 4px; background: var(--bg-elevated);
+  overflow: hidden; margin-bottom: 8px;
+}
+.audit-progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--orange), var(--amber));
+  border-radius: 4px; transition: width 0.3s ease;
+}
+.audit-progress-text { font-size: 13px; color: var(--text-secondary); font-weight: 600; }
+
+/* Audit fixture card */
+.audit-fixture-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 16px; margin-bottom: 14px;
+  transition: all 0.2s;
+}
+.audit-fixture-card.captured { border-color: rgba(0,232,122,0.4); box-shadow: 0 0 0 1px rgba(0,232,122,0.2); }
+.audit-fixture-card-head {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+}
+.audit-fixture-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.audit-fixture-info { flex: 1; min-width: 0; }
+.audit-fixture-name {
+  font-size: 15px; font-weight: 700; color: #fff;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.audit-fixture-count {
+  font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 10px;
+  background: var(--accent-bg); color: var(--accent);
+}
+.audit-fixture-count.done { background: rgba(0,232,122,0.15); color: var(--green); }
+.audit-fixture-status { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.audit-fixture-status.done { color: var(--green); }
+
+.audit-ref-wrap {
+  position: relative; background: #fff; border-radius: var(--radius-sm);
+  overflow: hidden; margin-bottom: 12px; cursor: zoom-in;
+  border: 1px solid var(--card-border);
+}
+.audit-ref-wrap::after {
+  content: '🔍 Tap to enlarge'; position: absolute; bottom: 6px; right: 8px;
+  background: rgba(0,0,0,0.65); color: #fff; padding: 4px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 600; pointer-events: none;
+}
+.audit-ref-wrap img {
+  display: block; width: 100%; height: auto; max-height: 220px; object-fit: contain;
+}
+.audit-ref-label {
+  position: absolute; top: 6px; left: 8px;
+  background: rgba(0,0,0,0.7); color: #fff; padding: 4px 8px; border-radius: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+}
+
+.audit-gallery {
+  display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 8px;
+  margin-bottom: 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.audit-gallery::-webkit-scrollbar { display: none; }
+.audit-thumb {
+  position: relative; width: 92px; height: 92px; flex-shrink: 0;
+  border-radius: var(--radius-sm); overflow: hidden;
+  border: 1px solid var(--card-border); background: var(--bg-elevated);
+}
+.audit-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.audit-thumb .audit-thumb-letter {
+  position: absolute; top: 4px; left: 4px;
+  background: rgba(0,0,0,0.7); color: #fff; padding: 2px 6px; border-radius: 6px;
+  font-size: 11px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+}
+.audit-thumb .audit-thumb-rm {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: rgba(255,71,87,0.95); color: #fff;
+  border: none; cursor: pointer; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.audit-capture-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.audit-capture-btn {
+  padding: 12px 8px; border-radius: var(--radius-sm);
+  background: var(--bg-elevated); border: 1px solid var(--card-border);
+  color: var(--text); font-size: 13px; font-weight: 700; font-family: inherit;
+  cursor: pointer; min-height: 46px; transition: all 0.15s;
+  -webkit-tap-highlight-color: rgba(77,166,255,0.15); touch-action: manipulation;
+}
+.audit-capture-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.audit-capture-btn:active { transform: scale(0.97); }
+
+/* Send / submit area */
+.audit-comment-section { margin: 18px 0 14px; }
+.audit-comment-section label {
+  display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.audit-comment-section textarea {
+  width: 100%; min-height: 80px; padding: 12px 14px; border-radius: var(--radius-sm);
+  background: var(--bg-elevated); border: 1px solid var(--card-border);
+  color: var(--text); font-family: inherit; font-size: 14px;
+  resize: vertical; line-height: 1.5;
+}
+.audit-comment-section textarea:focus { outline: none; border-color: var(--accent); }
+
+.audit-send-btn {
+  width: 100%; padding: 16px; border-radius: var(--radius);
+  background: var(--card); border: 1px solid var(--card-border);
+  color: var(--muted); font-size: 15px; font-weight: 700; font-family: inherit;
+  cursor: not-allowed; min-height: 56px; transition: all 0.15s;
+}
+.audit-send-btn.ready {
+  background: linear-gradient(135deg, var(--orange), #ff9f5a);
+  border-color: var(--orange); color: #fff; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255,140,66,0.3);
+}
+.audit-send-btn.ready:active { transform: scale(0.98); }
+.audit-send-btn.sending {
+  background: var(--bg-elevated); color: var(--accent); cursor: progress;
+}
+
+/* Audit confirmation modal */
+.audit-confirm-overlay {
+  position: fixed; inset: 0; z-index: 5000;
+  background: rgba(0,0,0,0.78); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; padding-top: calc(20px + var(--safe-top)); padding-bottom: calc(20px + var(--safe-bottom));
+  animation: audit-fade-in 0.2s ease;
+}
+@keyframes audit-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.audit-confirm-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 28px 22px;
+  box-shadow: var(--shadow-lg); width: 100%; max-width: 440px;
+  text-align: center; animation: audit-pop-in 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+@keyframes audit-pop-in { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.audit-confirm-card.error { border-color: var(--red); }
+.audit-confirm-icon {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: rgba(0,232,122,0.15); border: 2px solid var(--green);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; margin: 0 auto 16px;
+  animation: audit-check-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.4);
+}
+@keyframes audit-check-pop { 0% { transform: scale(0); } 60% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.audit-confirm-card.error .audit-confirm-icon { background: rgba(255,71,87,0.15); border-color: var(--red); }
+.audit-confirm-card h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.audit-confirm-card .desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.5; }
+.audit-confirm-detail {
+  background: var(--bg-elevated); border-radius: var(--radius-sm);
+  padding: 12px 14px; margin: 0 0 18px; font-size: 13px;
+  text-align: left; border: 1px solid var(--card-border);
+}
+.audit-confirm-detail .row {
+  display: flex; justify-content: space-between; gap: 10px; padding: 4px 0;
+  border-bottom: 1px dashed var(--card-border);
+}
+.audit-confirm-detail .row:last-child { border-bottom: none; }
+.audit-confirm-detail .row .k { color: var(--muted); font-size: 12px; }
+.audit-confirm-detail .row .v { color: var(--text); font-weight: 600; font-size: 12px; text-align: right; word-break: break-word; }
+.audit-confirm-detail .row .v.path { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+.audit-confirm-btn {
+  width: 100%; padding: 14px; border-radius: var(--radius-sm);
+  background: var(--accent); border: none; color: #fff;
+  font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+  min-height: 50px;
+}
+.audit-confirm-btn:active { transform: scale(0.98); }
+.audit-confirm-btn.secondary {
+  background: var(--bg-elevated); border: 1px solid var(--card-border);
+  color: var(--text-secondary); margin-top: 8px;
+}
+
+@media (max-width: 480px) {
+  .mode-card { padding: 22px 18px; }
+  .mode-card h1 { font-size: 20px; }
+  .audit-header h1 { font-size: 20px; }
+  .audit-fixture-card { padding: 14px; }
+  .audit-thumb { width: 80px; height: 80px; }
+  .audit-store-btn .ast-num { font-size: 18px; min-width: 60px; padding: 6px 10px; }
+}
 </style>
 </head>
 <body>
@@ -1168,6 +1495,7 @@ const STORES = [
   { id:"652", city:"Ellensburg", state:"WA", address:"201 S Water St", zip:"98926", energySet:"16 FT", resetDate:"Wednesday, April 15, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Saturday, April 11", coolerDelivery:"Tuesday, April 14", gdm:2, adds:0, deletes:0, addNote:"TBD" },
   { id:"351", city:"Spokane Valley", state:"WA", address:"15609 E Sprague Ave", zip:"99037", energySet:"24 FT", resetDate:"Wednesday, April 15, 2026", kompassDate:"Friday, April 17, 2026", fike:"Sunday, April 12", coolerDelivery:"Tuesday, April 14", gdm:2, adds:45, deletes:24 },
   { id:"049", city:"Coeur d'Alene", state:"ID", address:"560 W Kathleen Ave", zip:"83815", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:33, deletes:61, discrepancy:true },
+  { id:"053", city:"Covington", state:"WA", address:"", zip:"", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:33, deletes:61, discrepancy:true, addNote:"Mirrors FM 049" },
   { id:"214", city:"Spokane", state:"WA", address:"12120 N Division St", zip:"99218", energySet:"24 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Friday, April 17, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
   { id:"657", city:"Spokane", state:"WA", address:"400 S Thor St", zip:"99202", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Sunday, April 12", coolerDelivery:"Wednesday, April 15", gdm:1, adds:0, deletes:0, addNote:"TBD" },
   { id:"163", city:"Kennewick", state:"WA", address:"2811 W 10th Ave", zip:"99336", energySet:"12 FT", resetDate:"Thursday, April 16, 2026", kompassDate:"Thursday, April 16, 2026", fike:"Monday, April 13", coolerDelivery:"Wednesday, April 15", gdm:2, adds:0, deletes:0, addNote:"TBD" },
@@ -1217,6 +1545,64 @@ const PHOTO_COOLERS = [
   { id:'redbull',   label:'HABCO Red Bull Cooler',     icon:'🐂', color:'#ff4757', fileName:'RedBull' },
 ];
 
+// ── Audit follow-up ─────────────────────────────────────────────────────────
+// Stores flagged by corporate as needing extra visual confirmation after
+// the initial reset. (Source: store list provided by the user.)
+const AUDIT_STORE_IDS = ['049', '053', '214', '286', '351', '486', '652', '657'];
+
+// The 4 fixtures the team member must photograph for an audit. The `ref`
+// field is the pre-rendered first-page image extracted from the matching
+// POG PDF (see scripts/extract_pog_reference_images.py).
+const AUDIT_FIXTURES = [
+  {
+    id: 'csd',
+    label: 'GDM 9 — CSD',
+    short: 'CSD',
+    icon: '🥤',
+    color: '#4da6ff',
+    fileName: 'GDM9-CSD',
+    ref: 'fixture_refs/csd.png',
+    hint: 'The 9 FT GDM with sodas (Coke, Pepsi, Dr Pepper, Sprite, etc.).'
+  },
+  {
+    id: 'bev',
+    label: 'GDM 9 — All Beverage',
+    short: 'All Bev',
+    icon: '🧃',
+    color: '#00e87a',
+    fileName: 'GDM9-AllBev',
+    ref: 'fixture_refs/bev.png',
+    hint: 'The 9 FT GDM with water, juices, teas, sports drinks (no energy).'
+  },
+  {
+    id: 'monster',
+    label: 'HABCO Monster Cooler — 12 FT',
+    short: 'Monster 12 FT',
+    icon: '⚡',
+    color: '#ff8c42',
+    fileName: 'Monster12FT',
+    ref: 'fixture_refs/monster.png',
+    hint: 'Tall HABCO upright with Monster Energy across all shelves.'
+  },
+  {
+    id: 'redbull',
+    label: 'HABCO Red Bull Cooler — 12 FT',
+    short: 'Red Bull 12 FT',
+    icon: '🐂',
+    color: '#ff4757',
+    fileName: 'RedBull12FT',
+    ref: 'fixture_refs/redbull.png',
+    hint: 'Tall HABCO upright with Red Bull across all shelves.'
+  },
+];
+
+// City/state lookup for the audit dashboard (falls back to STORES when present).
+function getAuditStore(id) {
+  const fromMain = STORES.find(x => x.id === id);
+  if (fromMain) return fromMain;
+  return { id, city: 'Unknown', state: '', address: '', energySet: '', resetDate: '' };
+}
+
 // ── State ─────────────────────────────────────────────────────────────────────
 let selectedStore  = null;
 let activeTab      = 'info';
@@ -1236,6 +1622,54 @@ let PLAN_DELETES   = null;
 let ACTIVE_UPC_SET = null;
 let scanStream     = null;
 let scanAnimationId = null;
+
+// ── Audit state ──────────────────────────────────────────────────────────────
+// appMode: 'setup' (first-time install) | 'audit' (follow-up audit) | null
+let appMode           = localStorage.getItem('d6fuel_mode') || null;
+let auditState        = {};   // { storeId: { csd:[b64], bev:[], monster:[], redbull:[] } }
+let auditComments     = {};   // { storeId: '...' }
+let selectedAuditStore = null;
+let sendingAudit      = false;
+let auditConfirm      = null; // { ok, storeId, photoCount, recipients } | null
+
+// Auditor sign-in: store + name + email (audit mode only; CC on submit)
+let auditSession = JSON.parse(localStorage.getItem('d6fuel_audit_session') || 'null');
+
+function saveAuditSession(storeId, name, email) {
+  auditSession = {
+    storeId: String(storeId).padStart(3, '0'),
+    name: name.trim(),
+    email: email.trim(),
+  };
+  localStorage.setItem('d6fuel_audit_session', JSON.stringify(auditSession));
+}
+
+function clearAuditSession() {
+  auditSession = null;
+  localStorage.removeItem('d6fuel_audit_session');
+  selectedAuditStore = null;
+  saveAppState();
+}
+
+function getAuditSubmitter() {
+  if (auditSession) return { name: auditSession.name, email: auditSession.email };
+  if (currentUser) return { name: currentUser.name, email: currentUser.email };
+  return { name: null, email: null };
+}
+
+function renderAuditUserBadge(extraAction) {
+  const sub = getAuditSubmitter();
+  if (!sub.name) return '';
+  const storeLabel = auditSession ? `FM ${auditSession.storeId}` : '';
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px" class="fade-in-up">
+      <button class="mode-pill audit" onclick="${extraAction || 'clearAuditSession();renderAuditIntake()'}" title="Change store or auditor">
+        <span class="dot"></span>
+        <span>${storeLabel ? storeLabel + ' · ' : ''}${sub.name}</span>
+        <span class="switch-link">Change</span>
+      </button>
+    </div>`;
+}
 
 // ── User identity (persisted in localStorage) ──
 let currentUser = JSON.parse(localStorage.getItem('d6fuel_user') || 'null');
@@ -1266,7 +1700,7 @@ function renderLoginOverlay() {
   overlay.style.display = 'flex';
   overlay.innerHTML = `
     <div class="login-card">
-      <div class="badge" style="margin-bottom:10px">District 6 — Active Project</div>
+      <div class="badge" style="margin-bottom:10px">Active Project</div>
       <h1>Welcome</h1>
       <p class="login-sub">Enter your name and email to get started. You'll be CC'd on all photo submissions.</p>
       <label for="login-name">Full Name</label>
@@ -1329,6 +1763,36 @@ function render() {
   }
 
   const app = document.getElementById('app');
+
+  // No mode picked yet → show the selector overlay.
+  if (!appMode) {
+    app.innerHTML = '';
+    renderModeSelector();
+    return;
+  } else {
+    // Ensure any previously-rendered mode overlay is dismissed.
+    const existing = document.getElementById('mode-overlay');
+    if (existing) existing.remove();
+  }
+
+  if (appMode === 'audit') {
+    if (!auditSession) {
+      app.innerHTML = '';
+      renderAuditIntake();
+      return;
+    }
+    if (!selectedAuditStore) {
+      selectedAuditStore = auditSession.storeId;
+    }
+    if (selectedAuditStore === 'list') {
+      app.innerHTML = renderAuditDashboard();
+    } else {
+      app.innerHTML = renderAuditStore(selectedAuditStore);
+    }
+    return;
+  }
+
+  // Default = setup mode (existing flow).
   if (selectedStore) {
     const s = STORES.find(x => x.id === selectedStore);
     app.innerHTML = renderStore(s);
@@ -1338,6 +1802,134 @@ function render() {
     selectedCooler = null;
     currentBayIdx = 0;
   }
+}
+
+// ── Mode selector ────────────────────────────────────────────────────────────
+function renderModeSelector() {
+  let overlay = document.getElementById('mode-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'mode-overlay';
+    overlay.className = 'mode-overlay';
+    document.body.appendChild(overlay);
+  }
+  const showBack = !!appMode;
+  overlay.innerHTML = `
+    <div class="mode-card">
+      <div class="badge">Choose Your Task</div>
+      <h1>What are you doing today?</h1>
+      <p class="mode-sub">This decides which workflow the app gives you. You can switch later from the dashboard.</p>
+      <div class="mode-btn-grid">
+        <button class="mode-btn setup" onclick="pickMode('setup')">
+          <div class="mode-btn-icon">🛠</div>
+          <div class="mode-btn-text">
+            <div class="mode-btn-title">Setting the coolers for the first time</div>
+            <div class="mode-btn-desc">Full reset workflow — review briefing, take Before photos, reset the coolers using the digital planograms, take After photos.</div>
+          </div>
+        </button>
+        <button class="mode-btn audit" onclick="pickMode('audit')">
+          <div class="mode-btn-icon">✅</div>
+          <div class="mode-btn-text">
+            <div class="mode-btn-title">Auditing existing coolers (follow-up)</div>
+            <div class="mode-btn-desc">Visit a flagged store, identify each of the 4 fixtures using the reference photos, and capture quality images for documentation.</div>
+          </div>
+        </button>
+      </div>
+      ${showBack ? `<button class="switch-back" onclick="dismissModeSelector()">← Cancel</button>` : ''}
+    </div>
+  `;
+}
+
+function pickMode(mode) {
+  appMode = mode;
+  localStorage.setItem('d6fuel_mode', mode);
+  selectedStore = null;
+  selectedAuditStore = null;
+  auditConfirm = null;
+  const overlay = document.getElementById('mode-overlay');
+  if (overlay) overlay.remove();
+  const loginOverlay = document.getElementById('login-overlay');
+  if (loginOverlay && mode === 'audit') loginOverlay.style.display = 'none';
+  render();
+  window.scrollTo(0, 0);
+}
+
+function renderAuditIntake() {
+  let overlay = document.getElementById('audit-intake-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'audit-intake-overlay';
+    overlay.className = 'login-overlay';
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+  const storeOptions = AUDIT_STORE_IDS.map(id => {
+    const s = getAuditStore(id);
+    const label = `FM ${id} — ${s.city}${s.state ? ', ' + s.state : ''}`;
+    return `<option value="${id}">${label}</option>`;
+  }).join('');
+
+  overlay.innerHTML = `
+    <div class="login-card" style="max-width:440px">
+      <div class="badge" style="margin-bottom:10px;color:var(--orange)">Follow-Up Audit</div>
+      <h1>Auditor sign-in</h1>
+      <p class="login-sub">Choose your store and enter your details. You'll be copied on the audit email when you submit photos.</p>
+      <label for="audit-store">Store you're auditing</label>
+      <select id="audit-store" autocomplete="off">${storeOptions}</select>
+      <label for="audit-name">Full name</label>
+      <input type="text" id="audit-name" placeholder="Jane Smith" autocomplete="name" value="${auditSession ? auditSession.name.replace(/"/g, '&quot;') : ''}" />
+      <label for="audit-email">Email address</label>
+      <input type="email" id="audit-email" placeholder="jane.smith@retailodyssey.com" autocomplete="email" value="${auditSession ? auditSession.email.replace(/"/g, '&quot;') : ''}" />
+      <p id="audit-053-hint" style="display:none;font-size:12px;color:var(--amber);margin:-8px 0 14px;line-height:1.45">
+        FM 053 submissions are emailed to Tyson as the primary reviewer (not April). You and the automation inbox are still copied.
+      </p>
+      <button class="login-submit" id="audit-intake-btn" disabled onclick="handleAuditIntake()">Start audit</button>
+      <button class="switch-back" style="margin-top:12px;width:100%;padding:12px;background:transparent;border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--muted);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer" onclick="openModeSelector()">← Back to task selection</button>
+    </div>
+  `;
+
+  const storeSel = document.getElementById('audit-store');
+  const nameInput = document.getElementById('audit-name');
+  const emailInput = document.getElementById('audit-email');
+  const hint053 = document.getElementById('audit-053-hint');
+  const btn = document.getElementById('audit-intake-btn');
+
+  function validate() {
+    const nameOk = nameInput.value.trim().length >= 2;
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+    btn.disabled = !(nameOk && emailOk && storeSel.value);
+    if (hint053) hint053.style.display = storeSel.value === '053' ? 'block' : 'none';
+  }
+  storeSel.addEventListener('change', validate);
+  nameInput.addEventListener('input', validate);
+  emailInput.addEventListener('input', validate);
+  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !btn.disabled) handleAuditIntake(); });
+  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') emailInput.focus(); });
+  if (auditSession) storeSel.value = auditSession.storeId;
+  validate();
+  setTimeout(() => nameInput.focus(), 100);
+}
+
+function handleAuditIntake() {
+  const storeId = document.getElementById('audit-store').value;
+  const name = document.getElementById('audit-name').value;
+  const email = document.getElementById('audit-email').value;
+  saveAuditSession(storeId, name, email);
+  selectedAuditStore = auditSession.storeId;
+  const overlay = document.getElementById('audit-intake-overlay');
+  if (overlay) overlay.style.display = 'none';
+  render();
+  window.scrollTo(0, 0);
+}
+
+function openModeSelector() {
+  // Don't clear mode immediately — let user cancel out.
+  renderModeSelector();
+}
+
+function dismissModeSelector() {
+  const overlay = document.getElementById('mode-overlay');
+  if (overlay) overlay.remove();
 }
 
 function switchTab(tab) {
@@ -1355,7 +1947,10 @@ function toggleAccordion(el) {
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 function renderDashboard() {
   const userBadge = currentUser ? `
-    <div style="display:flex;justify-content:flex-end;margin-bottom:12px" class="fade-in-up">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px" class="fade-in-up">
+      <button class="mode-pill setup" onclick="openModeSelector()" title="Switch task">
+        <span class="dot"></span><span>Setup Mode</span><span class="switch-link">Switch</span>
+      </button>
       <div class="user-badge" onclick="clearUser()" title="Click to sign in as someone else">
         <div class="user-avatar">${getUserInitials(currentUser.name)}</div>
         <span class="user-name">${currentUser.name}</span>
@@ -1364,7 +1959,7 @@ function renderDashboard() {
   return `
     ${userBadge}
     <div class="header fade-in-up">
-      <div class="badge">District 6 — Active Project</div>
+      <div class="badge">Active Project</div>
       <h1>Fuel Cooler Reset Guide</h1>
       <p>Fred Meyer Energy Drink Remodel — Project #12440</p>
       <div class="code">Select a store to review requirements &amp; begin</div>
@@ -2921,6 +3516,357 @@ function renderUpcList(bay) {
     </div>`).join('');
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// AUDIT FOLLOW-UP — dashboard, capture, and submit
+// ─────────────────────────────────────────────────────────────────────────────
+
+function getAuditFixturePhotos(storeId, fixtureId) {
+  if (!auditState[storeId]) auditState[storeId] = {};
+  if (!Array.isArray(auditState[storeId][fixtureId])) auditState[storeId][fixtureId] = [];
+  return auditState[storeId][fixtureId];
+}
+
+function getAuditComment(storeId) {
+  return auditComments[storeId] || '';
+}
+
+function saveAuditComment(storeId) {
+  const el = document.getElementById(`audit-comment-${storeId}`);
+  if (!el) return;
+  auditComments[storeId] = el.value;
+  saveAppState();
+}
+
+function auditCapturedCount(storeId) {
+  return AUDIT_FIXTURES.filter(fx => getAuditFixturePhotos(storeId, fx.id).length > 0).length;
+}
+
+function auditTotalPhotos(storeId) {
+  return AUDIT_FIXTURES.reduce((sum, fx) => sum + getAuditFixturePhotos(storeId, fx.id).length, 0);
+}
+
+function renderAuditDashboard() {
+  const userBadge = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap" class="fade-in-up">
+      ${renderAuditUserBadge('clearAuditSession();renderAuditIntake()')}
+      <button class="mode-pill audit" onclick="openModeSelector()" title="Switch task">
+        <span class="dot"></span><span>Audit Mode</span><span class="switch-link">Switch</span>
+      </button>
+    </div>`;
+
+  const tiles = AUDIT_STORE_IDS.map(id => {
+    const s = getAuditStore(id);
+    const captured = auditCapturedCount(id);
+    const total = AUDIT_FIXTURES.length;
+    const photos = auditTotalPhotos(id);
+    let statusCls = '';
+    let statusText = 'Not started';
+    if (captured > 0 && captured < total) {
+      statusCls = 'partial';
+      statusText = `<span class="scount">${captured}/${total}</span> fixtures · ${photos} photo${photos === 1 ? '' : 's'}`;
+    } else if (captured >= total) {
+      statusCls = 'done';
+      statusText = `✓ All ${total} fixtures · ${photos} photo${photos === 1 ? '' : 's'} ready`;
+    }
+    return `
+      <button class="audit-store-btn fade-in-up" onclick="openAuditStore('${id}')">
+        <div class="ast-num">FM ${id}</div>
+        <div class="ast-text">
+          <div class="ast-city">${s.city}${s.state ? ', ' + s.state : ''}</div>
+          <div class="ast-status ${statusCls}">${statusText}</div>
+        </div>
+        <div class="chev">›</div>
+      </button>`;
+  }).join('');
+
+  return `
+    ${userBadge}
+    <div class="audit-header fade-in-up">
+      <div class="badge">Follow-Up Audit</div>
+      <h1>Cooler Visual Audit</h1>
+      <p>These stores were flagged by corporate as needing additional documentation after the initial reset. Pick a store to capture follow-up photos.</p>
+    </div>
+    <div class="audit-purpose fade-in-up">
+      <strong>Why this matters:</strong> Each of these locations had an issue during the initial set or has otherwise been flagged. Take <em>quality</em> photos of all four fixtures for review in OneDrive.
+    </div>
+    <div style="display:grid;gap:10px;margin-bottom:24px">
+      ${tiles}
+    </div>
+    <div class="footer">Created in collaboration with TacTag for Retail Odyssey.</div>
+  `;
+}
+
+function openAuditStore(id) {
+  selectedAuditStore = id;
+  auditConfirm = null;
+  saveAppState();
+  render();
+  window.scrollTo(0, 0);
+}
+
+function backToAuditDashboard() {
+  selectedAuditStore = 'list';
+  auditConfirm = null;
+  saveAppState();
+  render();
+  window.scrollTo(0, 0);
+}
+
+function renderAuditStore(id) {
+  const s = getAuditStore(id);
+  const captured = auditCapturedCount(id);
+  const total = AUDIT_FIXTURES.length;
+  const totalPhotos = auditTotalPhotos(id);
+  const pct = Math.round((captured / total) * 100);
+  const allDone = captured >= total;
+
+  const navHtml = `
+    <div class="top-nav">
+      <div class="top-nav-inner">
+        <button class="nav-back-btn" onclick="backToAuditDashboard()">← All stores</button>
+        <div class="nav-breadcrumb"><strong>FM ${id}</strong> · ${s.city}${s.state ? ', ' + s.state : ''} · Audit</div>
+      </div>
+    </div>`;
+
+  const fixturesHtml = AUDIT_FIXTURES.map(fx => {
+    const photos = getAuditFixturePhotos(id, fx.id);
+    const hasPhotos = photos.length > 0;
+    const cls = hasPhotos ? 'captured' : '';
+    const statusTxt = hasPhotos ? `✓ ${photos.length} photo${photos.length === 1 ? '' : 's'} captured` : 'Tap a button below to take a photo';
+    const thumbs = photos.map((dataUrl, idx) => {
+      const letter = String.fromCharCode(65 + idx);
+      return `
+        <div class="audit-thumb">
+          <img src="${dataUrl}" alt="${fx.label} #${idx + 1}">
+          <span class="audit-thumb-letter">${letter}</span>
+          <button class="audit-thumb-rm" onclick="removeAuditPhoto('${id}','${fx.id}',${idx})" title="Remove">✕</button>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="audit-fixture-card ${cls}">
+        <div class="audit-fixture-card-head">
+          <div class="audit-fixture-icon" style="background:${fx.color}20">${fx.icon}</div>
+          <div class="audit-fixture-info">
+            <div class="audit-fixture-name">${fx.label}${hasPhotos ? `<span class="audit-fixture-count ${hasPhotos ? 'done' : ''}">${photos.length}</span>` : ''}</div>
+            <div class="audit-fixture-status ${hasPhotos ? 'done' : ''}">${statusTxt}</div>
+          </div>
+        </div>
+        <div class="audit-ref-wrap" onclick="showPogFullImage('${fx.ref}')">
+          <span class="audit-ref-label">REFERENCE — ${fx.short.toUpperCase()}</span>
+          <img src="${fx.ref}" alt="${fx.label} reference">
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.45">
+          <strong style="color:var(--text-secondary)">Look for:</strong> ${fx.hint}
+        </div>
+        ${hasPhotos ? `<div class="audit-gallery">${thumbs}</div>` : ''}
+        <div class="audit-capture-row">
+          <button class="audit-capture-btn primary" onclick="triggerAuditCapture('${id}','${fx.id}','camera')">📷 ${hasPhotos ? 'Add Photo' : 'Take Photo'}</button>
+          <button class="audit-capture-btn" onclick="triggerAuditCapture('${id}','${fx.id}','gallery')">🖼️ From Gallery</button>
+        </div>
+        <input type="file" accept="image/*" capture="environment" id="audit-input-camera-${id}-${fx.id}" style="display:none" onchange="handleAuditCapture(this,'${id}','${fx.id}')">
+        <input type="file" accept="image/*" id="audit-input-gallery-${id}-${fx.id}" style="display:none" onchange="handleAuditCapture(this,'${id}','${fx.id}')">
+      </div>`;
+  }).join('');
+
+  const sendCls = sendingAudit ? 'sending' : (allDone ? 'ready' : '');
+  const sendDisabled = sendingAudit || !allDone;
+  const sendLabel = sendingAudit
+    ? '⏳ Sending audit…'
+    : allDone
+      ? `✉ Submit ${totalPhotos} photo${totalPhotos === 1 ? '' : 's'} for FM ${id}`
+      : `📷 ${total - captured} fixture${total - captured === 1 ? '' : 's'} still needed`;
+
+  const paddedId = String(id).padStart(3, '0');
+  const reviewerName = paddedId === '053' ? 'Tyson' : 'April';
+  const submitFooter = paddedId === '053'
+    ? 'Submissions for FM 053 go to Tyson as the primary reviewer (not April). You and the flow-automation inbox are still copied.'
+    : `Audit photos go to ${reviewerName} and are CC'd to the flow-automation Gmail inbox (d6ewa.supervisor@gmail.com) so attachments save to the matching OneDrive folder.`;
+
+  return `
+    ${navHtml}
+    ${renderAuditUserBadge()}
+    <div class="audit-store-header fade-in-up">
+      <h2>FM ${id}</h2>
+      <div class="addr">${s.city}${s.state ? ', ' + s.state : ''}${s.address ? ' — ' + s.address : ''}</div>
+      <div class="detail">FOLLOW-UP AUDIT · 4 FIXTURES TO PHOTOGRAPH</div>
+    </div>
+
+    <div class="audit-progress fade-in-up">
+      <div class="audit-progress-bar"><div class="audit-progress-fill" style="width:${pct}%"></div></div>
+      <div class="audit-progress-text">${captured} / ${total} fixtures · ${totalPhotos} photo${totalPhotos === 1 ? '' : 's'}</div>
+    </div>
+
+    <div class="audit-purpose fade-in-up">
+      Match each fixture in the store to the <strong>reference image</strong> shown below it before taking the photo. Hold the phone steady, fill the frame with the cooler, and add a second/third shot if any shelf is hard to see.
+    </div>
+
+    <div class="fade-in-up">${fixturesHtml}</div>
+
+    <div class="audit-comment-section fade-in-up">
+      <label for="audit-comment-${id}">💬 Field notes for ${reviewerName} (optional)</label>
+      <textarea id="audit-comment-${id}"
+        placeholder="Anything the reviewer should know — missing fixtures, damage, off-planogram products, etc."
+        oninput="saveAuditComment('${id}')">${getAuditComment(id).replace(/</g,'&lt;')}</textarea>
+    </div>
+
+    <button class="audit-send-btn ${sendCls}" ${sendDisabled ? 'disabled' : ''} onclick="${sendDisabled ? '' : `submitAudit('${id}')`}">
+      ${sendLabel}
+    </button>
+    <div class="footer">${submitFooter}</div>
+  `;
+}
+
+function triggerAuditCapture(storeId, fixtureId, source) {
+  const input = document.getElementById(`audit-input-${source}-${storeId}-${fixtureId}`);
+  if (input) { input.value = ''; input.click(); }
+}
+
+function handleAuditCapture(input, storeId, fixtureId) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  saveAuditComment(storeId);
+  // Use a higher resolution for audit photos since these are the deliverable.
+  resizeImage(file, 1600, 0.78).then(dataUrl => {
+    if (!auditState[storeId]) auditState[storeId] = {};
+    if (!Array.isArray(auditState[storeId][fixtureId])) auditState[storeId][fixtureId] = [];
+    auditState[storeId][fixtureId].push(dataUrl);
+    saveAppState();
+    render();
+  });
+}
+
+function removeAuditPhoto(storeId, fixtureId, idx) {
+  saveAuditComment(storeId);
+  const arr = getAuditFixturePhotos(storeId, fixtureId);
+  if (idx >= 0 && idx < arr.length) arr.splice(idx, 1);
+  saveAppState();
+  render();
+}
+
+async function submitAudit(storeId) {
+  if (sendingAudit) return;
+  const s = getAuditStore(storeId);
+  saveAuditComment(storeId);
+
+  const fixturePhotos = AUDIT_FIXTURES.map(fx => {
+    const arr = getAuditFixturePhotos(storeId, fx.id);
+    return {
+      id: fx.id,
+      label: fx.label,
+      fileName: fx.fileName,
+      photos: arr.map(d => d.split(',')[1]).filter(Boolean),
+    };
+  }).filter(fx => fx.photos.length > 0);
+
+  sendingAudit = true;
+  auditConfirm = null;
+  render();
+
+  const sub = getAuditSubmitter();
+
+  try {
+    const res = await fetch('/api/audit/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        storeId,
+        city: s.city,
+        state: s.state,
+        address: s.address || '',
+        fixturePhotos,
+        comment: getAuditComment(storeId).trim() || null,
+        userName: sub.name,
+        userEmail: sub.email,
+      }),
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      auditConfirm = {
+        ok: true,
+        storeId: data.storeId || storeId,
+        photoCount: data.photoCount,
+        primaryReviewer: data.primaryReviewer,
+        recipients: data.recipients || { to: [], cc: [] },
+      };
+    } else {
+      auditConfirm = { ok: false, storeId, error: (data && data.error) || 'Audit send failed.' };
+    }
+  } catch (err) {
+    auditConfirm = { ok: false, storeId, error: 'Network error. Make sure the server is running.' };
+  }
+  sendingAudit = false;
+  render();
+  renderAuditConfirm();
+}
+
+function renderAuditConfirm() {
+  if (!auditConfirm) return;
+  // Remove any previous overlay first.
+  const existing = document.getElementById('audit-confirm-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'audit-confirm-overlay';
+  overlay.id = 'audit-confirm-overlay';
+
+  const isOk = auditConfirm.ok;
+  const storeId = auditConfirm.storeId;
+  const folder = `…\\Follow Up Fuel\\${String(storeId).padStart(3, '0')}`;
+  const recips = auditConfirm.recipients || { to: [], cc: [] };
+  const recipText = [...(recips.to || []), ...(recips.cc || [])].join(', ');
+
+  overlay.innerHTML = isOk ? `
+    <div class="audit-confirm-card">
+      <div class="audit-confirm-icon">✓</div>
+      <h2>Audit Submitted</h2>
+      <div class="desc">FM ${storeId} photos were sent to the primary reviewer with you and flow-automation copied. Files will land in OneDrive when the Gmail parser runs.</div>
+      <div class="audit-confirm-detail">
+        <div class="row"><span class="k">Store</span><span class="v">FM ${storeId}</span></div>
+        <div class="row"><span class="k">Photos sent</span><span class="v">${auditConfirm.photoCount}</span></div>
+        <div class="row"><span class="k">OneDrive folder</span><span class="v path">${folder}</span></div>
+        <div class="row"><span class="k">Email recipients</span><span class="v" style="font-size:11px">${recipText || '—'}</span></div>
+      </div>
+      <button class="audit-confirm-btn" onclick="closeAuditConfirmAndReset(true)">Done — back to audit list</button>
+      <button class="audit-confirm-btn secondary" onclick="closeAuditConfirmAndReset(false)">Stay on FM ${storeId}</button>
+    </div>
+  ` : `
+    <div class="audit-confirm-card error">
+      <div class="audit-confirm-icon" style="background:rgba(255,71,87,0.15);border-color:var(--red);color:var(--red)">!</div>
+      <h2>Send Failed</h2>
+      <div class="desc">${auditConfirm.error || 'Something went wrong sending the audit.'}</div>
+      <div class="audit-confirm-detail">
+        <div class="row"><span class="k">Store</span><span class="v">FM ${storeId}</span></div>
+        <div class="row"><span class="k">What to do</span><span class="v">Your photos are still saved on this device. Tap Submit again when you have signal.</span></div>
+      </div>
+      <button class="audit-confirm-btn" onclick="closeAuditConfirmAndReset(false)">Try Again</button>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+}
+
+function closeAuditConfirmAndReset(clearStoreAndGoBack) {
+  const successAndClear = !!(auditConfirm && auditConfirm.ok && clearStoreAndGoBack);
+  const sid = auditConfirm ? auditConfirm.storeId : null;
+  const ov = document.getElementById('audit-confirm-overlay');
+  if (ov) ov.remove();
+  auditConfirm = null;
+
+  if (successAndClear && sid) {
+    // After a successful send, wipe the captured photos for that store so
+    // they don't sit on the device, and bounce the user back to the list.
+    delete auditState[sid];
+    delete auditComments[sid];
+    selectedAuditStore = 'list';
+    saveAppState();
+    render();
+    window.scrollTo(0, 0);
+  } else {
+    render();
+  }
+}
+
 // ── Photos (before/after) ─────────────────────────────────────────────────────
 function getStorePhotos(storeId, phase) {
   if (!photoState[storeId]) photoState[storeId] = { before: {}, after: {} };
@@ -3559,23 +4505,32 @@ let _appVersion = null;
 function saveAppState() {
   try {
     const state = {
+      // Setup mode
       photoState,
       photoComments,
       workflowStep,
       selectedStore,
       activeTab,
       selectedCooler,
-      currentBayIdx
+      currentBayIdx,
+      // Audit mode
+      auditState,
+      auditComments,
+      selectedAuditStore,
     };
-    sessionStorage.setItem(_STATE_KEY, JSON.stringify(state));
+    // Use localStorage so progress survives accidental refresh, back-button,
+    // tab close, or even a phone reboot. Audit photos in particular are the
+    // deliverable, so we never want to silently lose them.
+    localStorage.setItem(_STATE_KEY, JSON.stringify(state));
   } catch (e) {
-    console.warn('Could not save state to sessionStorage:', e.message);
+    console.warn('Could not save state to localStorage:', e.message);
   }
 }
 
 function restoreAppState() {
   try {
-    const raw = sessionStorage.getItem(_STATE_KEY);
+    // Prefer localStorage; fall back to legacy sessionStorage entries.
+    const raw = localStorage.getItem(_STATE_KEY) || sessionStorage.getItem(_STATE_KEY);
     if (!raw) return false;
     const state = JSON.parse(raw);
     if (state.photoState && typeof state.photoState === 'object') photoState = state.photoState;
@@ -3585,6 +4540,10 @@ function restoreAppState() {
     if (state.activeTab) activeTab = state.activeTab;
     if (state.selectedCooler) selectedCooler = state.selectedCooler;
     if (typeof state.currentBayIdx === 'number') currentBayIdx = state.currentBayIdx;
+    if (state.auditState && typeof state.auditState === 'object') auditState = state.auditState;
+    if (state.auditComments && typeof state.auditComments === 'object') auditComments = state.auditComments;
+    if (state.selectedAuditStore) selectedAuditStore = state.selectedAuditStore;
+    // Migrate any leftover sessionStorage entry.
     sessionStorage.removeItem(_STATE_KEY);
     return true;
   } catch (e) {
@@ -3664,7 +4623,12 @@ function startVersionPolling() {
 // ── Boot ──────────────────────────────────────────────────────────────────────
 restoreAppState();
 
-if (currentUser) {
+const _loginOverlay = document.getElementById('login-overlay');
+if (appMode === 'audit') {
+  if (_loginOverlay) _loginOverlay.style.display = 'none';
+  render();
+  showHotfixFromSession();
+} else if (currentUser) {
   render();
   showHotfixFromSession();
 } else {

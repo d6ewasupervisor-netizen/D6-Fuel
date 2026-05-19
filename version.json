@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
-  "hotfixTitle": "",
-  "hotfix": ""
+  "version": "1.2.1",
+  "hotfixTitle": "Audit sign-in & FM 053 routing",
+  "hotfix": "Audit mode now has its own sign-in: pick your store, name, and email (you are CC'd on submit). FM 053 audits email Tyson as the primary reviewer instead of April; all other audit stores still go to April. Flow-automation parsing is unchanged."
 }
