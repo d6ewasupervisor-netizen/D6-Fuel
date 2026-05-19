@@ -4,6 +4,12 @@ const path = require('path');
 const fs = require('fs');
 const { Resend } = require('resend');
 const tracker = require('./lib/tracker');
+const trackerNotify = require('./lib/tracker-notify');
+
+function trackerDashboardUrl(req) {
+  const base = process.env.PUBLIC_APP_URL || `${req.protocol}://${req.get('host')}`;
+  return `${base.replace(/\/$/, '')}/dashboard`;
+}
 
 const app = express();
 const resendApiKey = process.env.RESEND_API_KEY || process.env.RESEND_SIGNOFF_API_KEY;
@@ -103,13 +109,40 @@ app.get('/api/tracker/events', (req, res) => {
   tracker.subscribe(res);
 });
 
-app.post('/api/tracker/pledge', (req, res) => {
+app.post('/api/tracker/pledge', async (req, res) => {
   try {
-    const snapshot = tracker.addPledge(req.body || {});
-    const store = tracker.padStoreId(req.body.storeId);
+    const { snapshot, pledge } = tracker.addPledge(req.body || {});
+    const meta = tracker.getStoreMeta(pledge.storeId);
+    trackerNotify.sendPledgeSignedUp(resend, {
+      pledge,
+      meta,
+      deadline: snapshot.deadline,
+      dashboardUrl: trackerDashboardUrl(req),
+    }).catch(err => console.error('Tracker pledge notify:', err.message));
+
     res.json({
       success: true,
-      message: `You are signed up for FM ${store}. Complete the audit in the field app and submit photos before the deadline.`,
+      message: `You are signed up for FM ${pledge.storeId}. Complete the audit in the field app and submit photos before the deadline.`,
+      snapshot,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/tracker/unclaim', async (req, res) => {
+  try {
+    const { snapshot, pledge } = tracker.removePledge(req.body || {});
+    const meta = tracker.getStoreMeta(pledge.storeId);
+    trackerNotify.sendPledgeReleased(resend, {
+      pledge,
+      meta,
+      dashboardUrl: trackerDashboardUrl(req),
+    }).catch(err => console.error('Tracker unclaim notify:', err.message));
+
+    res.json({
+      success: true,
+      message: `You released FM ${pledge.storeId}. The project administrator has been notified.`,
       snapshot,
     });
   } catch (err) {

@@ -139,6 +139,15 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 }
 .pledge-list li:last-child { border-bottom: none; }
 .pledge-list .store { font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.pledge-list .pledge-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.unclaim-btn {
+  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--card-border);
+  background: var(--bg-elevated); color: var(--text-secondary);
+  font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer;
+}
+.unclaim-btn:active { border-color: var(--red); color: var(--red); }
+.my-pledges { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border); }
+.my-pledges h3 { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
 .back-link {
   display: inline-block; margin-bottom: 16px; color: var(--accent);
   font-size: 14px; font-weight: 600; text-decoration: none;
@@ -186,7 +195,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
   <div class="panels">
     <div class="panel">
       <h2>Claim a store</h2>
-      <p class="sub">Sign up to complete the follow-up audit for one store before the deadline. Each open store can only be claimed once until it's submitted.</p>
+      <p class="sub">Sign up to complete the follow-up audit for one store before the deadline. Each open store can only be claimed once until it's submitted. The project administrator is notified when you sign up or release a claim.</p>
       <form id="pledge-form">
         <label for="pledge-name">Your name</label>
         <input type="text" id="pledge-name" autocomplete="name" placeholder="Jane Smith" required />
@@ -197,6 +206,12 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         <button type="submit" class="btn" id="pledge-btn">I commit to finish by deadline</button>
         <div class="msg" id="pledge-msg"></div>
       </form>
+      <div class="my-pledges" id="my-pledges-wrap" style="display:none">
+        <h3>Your commitments</h3>
+        <p class="sub" style="margin-bottom:10px">Can't make it? Release a store so someone else can claim it.</p>
+        <ul class="pledge-list" id="my-pledge-list"></ul>
+        <div class="msg" id="unclaim-msg"></div>
+      </div>
     </div>
     <div class="panel">
       <h2>Commitments</h2>
@@ -296,6 +311,26 @@ function render(data) {
         </li>`).join('')
     : '<li style="color:var(--muted)">No active claims yet.</li>';
 
+  const myEmail = normalizeEmail($('pledge-email').value);
+  const myPledges = myEmail
+    ? activePledges.filter(p => normalizeEmail(p.email) === myEmail)
+    : [];
+  const myWrap = $('my-pledges-wrap');
+  if (myPledges.length) {
+    myWrap.style.display = 'block';
+    $('my-pledge-list').innerHTML = myPledges.map(p => `
+      <li>
+        <span><span class="store">FM ${p.storeId}</span></span>
+        <div class="pledge-actions">
+          <span style="color:var(--muted);font-size:12px">Claimed ${fmtDeadline(p.pledgedAt).split(',')[0]}</span>
+          <button type="button" class="unclaim-btn" data-pledge-id="${esc(p.id)}">Release claim</button>
+        </div>
+      </li>`).join('');
+  } else {
+    myWrap.style.display = 'none';
+    $('my-pledge-list').innerHTML = '';
+  }
+
   if (countdownTimer) clearInterval(countdownTimer);
   countdownTimer = setInterval(() => {
     if (!snapshot || snapshot.deadlineMs == null) return;
@@ -305,6 +340,10 @@ function render(data) {
 
 function esc(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
 }
 
 function showMsg(el, text, ok) {
@@ -336,6 +375,41 @@ function connectSSE() {
 
   return es;
 }
+
+async function unclaimPledge(pledgeId) {
+  const msg = $('unclaim-msg');
+  const email = $('pledge-email').value.trim();
+  if (!email) {
+    showMsg(msg, 'Enter your email above to release a claim.', false);
+    return;
+  }
+  if (!confirm('Release this store? The project administrator will be notified that you cannot complete it.')) {
+    return;
+  }
+  msg.className = 'msg';
+  try {
+    const res = await fetch('/api/tracker/unclaim', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pledgeId, email }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not release commitment');
+    showMsg(msg, data.message || 'Store released.', true);
+    if (data.snapshot) render(data.snapshot);
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+}
+
+$('my-pledge-list').addEventListener('click', e => {
+  const btn = e.target.closest('.unclaim-btn');
+  if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId);
+});
+
+$('pledge-email').addEventListener('input', () => {
+  if (snapshot) render(snapshot);
+});
 
 $('pledge-form').addEventListener('submit', async e => {
   e.preventDefault();
