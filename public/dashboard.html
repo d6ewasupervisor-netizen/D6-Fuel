@@ -7,6 +7,7 @@
 <title>Audit Progress — Live Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/auth.css">
 <style>
 :root {
   --bg: #0a0e13;
@@ -174,7 +175,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" id="dashboard-root" hidden>
   <nav class="app-nav" aria-label="App navigation">
     <a href="/?mode=audit" class="primary">📷 Open field app (audit photos)</a>
     <a href="/">🛠 Field app home</a>
@@ -221,11 +222,11 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <div class="panel">
       <h2>Claim a store</h2>
       <p class="sub">Sign up to complete the follow-up audit for one store before the deadline. Each open store can only be claimed once until it's submitted. The project administrator is notified when you sign up or release a claim.</p>
+      <div class="signed-in-bar" id="signed-in-bar">
+        <span>Signed in as <strong id="signed-in-name"></strong> · <span id="signed-in-email"></span></span>
+        <button type="button" class="sign-out-btn" id="sign-out-btn">Sign out</button>
+      </div>
       <form id="pledge-form">
-        <label for="pledge-name">Your name</label>
-        <input type="text" id="pledge-name" autocomplete="name" placeholder="Jane Smith" required />
-        <label for="pledge-email">Your email</label>
-        <input type="email" id="pledge-email" autocomplete="email" placeholder="jane.smith@retailodyssey.com" required />
         <label for="pledge-store">Store</label>
         <select id="pledge-store" required><option value="">Select a store…</option></select>
         <button type="submit" class="btn" id="pledge-btn">I commit to finish by deadline</button>
@@ -246,6 +247,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
   </div>
 </div>
 
+<script src="/auth.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 let snapshot = null;
@@ -336,7 +338,8 @@ function render(data) {
         </li>`).join('')
     : '<li style="color:var(--muted)">No active claims yet.</li>';
 
-  const myEmail = normalizeEmail($('pledge-email').value);
+  const sessionUser = D6Auth.getUser();
+  const myEmail = sessionUser ? normalizeEmail(sessionUser.email) : '';
   const myPledges = myEmail
     ? activePledges.filter(p => normalizeEmail(p.email) === myEmail)
     : [];
@@ -403,11 +406,9 @@ function connectSSE() {
 
 async function unclaimPledge(pledgeId) {
   const msg = $('unclaim-msg');
-  const email = $('pledge-email').value.trim();
-  if (!email) {
-    showMsg(msg, 'Enter your email above to release a claim.', false);
-    return;
-  }
+  const user = D6Auth.getUser();
+  if (!user) return;
+  const email = user.email;
   if (!confirm('Release this store? The project administrator will be notified that you cannot complete it.')) {
     return;
   }
@@ -432,12 +433,17 @@ $('my-pledge-list').addEventListener('click', e => {
   if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId);
 });
 
-$('pledge-email').addEventListener('input', () => {
-  if (snapshot) render(snapshot);
-});
+function syncSignedInBar() {
+  const user = D6Auth.getUser();
+  if (!user) return;
+  $('signed-in-name').textContent = user.name;
+  $('signed-in-email').textContent = user.email;
+}
 
 $('pledge-form').addEventListener('submit', async e => {
   e.preventDefault();
+  const user = D6Auth.getUser();
+  if (!user) return;
   const btn = $('pledge-btn');
   const msg = $('pledge-msg');
   btn.disabled = true;
@@ -448,15 +454,15 @@ $('pledge-form').addEventListener('submit', async e => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: $('pledge-name').value,
-        email: $('pledge-email').value,
+        name: user.name,
+        email: user.email,
         storeId: $('pledge-store').value,
       }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Could not save commitment');
     showMsg(msg, data.message || 'You are signed up. Complete the audit in the field app and submit photos.', true);
-    $('pledge-form').reset();
+    $('pledge-store').value = '';
     if (data.snapshot) render(data.snapshot);
   } catch (err) {
     showMsg(msg, err.message, false);
@@ -464,24 +470,30 @@ $('pledge-form').addEventListener('submit', async e => {
   btn.disabled = false;
 });
 
-(async () => {
+async function initDashboard() {
+  $('dashboard-root').hidden = false;
+  syncSignedInBar();
   try {
     const data = await loadSnapshot();
     render(data);
     connectSSE();
-    const saved = localStorage.getItem('d6fuel_user');
-    if (saved) {
-      try {
-        const u = JSON.parse(saved);
-        if (u.name) $('pledge-name').value = u.name;
-        if (u.email) $('pledge-email').value = u.email;
-      } catch (_) {}
-    }
   } catch (err) {
     $('live-label').textContent = 'Offline';
     showMsg($('pledge-msg'), err.message, false);
   }
-})();
+}
+
+$('sign-out-btn').addEventListener('click', () => {
+  D6Auth.clearUser();
+  $('dashboard-root').hidden = true;
+  D6Auth.showLogin({ onSuccess: () => initDashboard() });
+});
+
+D6Auth.requireLogin({
+  title: 'Sign in',
+  subtitle: 'Use the same name and email as the field app — you stay signed in on both.',
+  onSuccess: () => initDashboard(),
+});
 </script>
 </body>
 </html>

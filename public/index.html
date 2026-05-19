@@ -1449,6 +1449,7 @@ body {
 
 <div class="container" id="app"></div>
 
+<script src="/auth.js"></script>
 <script>
 // ── Data ──────────────────────────────────────────────────────────────────────
 const STORES = [
@@ -1596,8 +1597,8 @@ let auditConfirm      = null; // { ok, storeId, photoCount } | null
 // Audit mode: last-selected store only (name/email in d6fuel_user)
 let auditSession = JSON.parse(localStorage.getItem('d6fuel_audit_session') || 'null');
 
-// ── User identity (persisted in localStorage; shared by setup + audit) ──
-let currentUser = JSON.parse(localStorage.getItem('d6fuel_user') || 'null');
+// ── User identity (shared via auth.js → localStorage d6fuel_user) ──
+let currentUser = D6Auth.getUser();
 
 function migrateUserAndAuditSession() {
   try {
@@ -1622,8 +1623,7 @@ function migrateUserAndAuditSession() {
 migrateUserAndAuditSession();
 
 function saveUser(name, email) {
-  currentUser = { name: name.trim(), email: email.trim() };
-  localStorage.setItem('d6fuel_user', JSON.stringify(currentUser));
+  currentUser = D6Auth.saveUser(name, email);
 }
 
 function saveAuditSession(storeId) {
@@ -1657,59 +1657,31 @@ function renderAuditUserBadge(extraAction) {
 }
 
 function clearUser() {
+  D6Auth.clearUser();
   currentUser = null;
-  localStorage.removeItem('d6fuel_user');
   clearAuditSession();
-  renderLoginOverlay();
+  D6Auth.showLogin({ onSuccess: startApp });
 }
 
 function getUserInitials(name) {
-  return name.split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  return D6Auth.getInitials(name);
 }
 
 function renderLoginOverlay() {
-  let overlay = document.getElementById('login-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'login-overlay';
-    overlay.className = 'login-overlay';
-    document.body.appendChild(overlay);
-  }
-  overlay.style.display = 'flex';
-  overlay.innerHTML = `
-    <div class="login-card">
-      <div class="badge" style="margin-bottom:10px">Active Project</div>
-      <h1>Welcome</h1>
-      <p class="login-sub">Enter your name and email to get started. Photos you submit are sent to the project administrator.</p>
-      <label for="login-name">Full Name</label>
-      <input type="text" id="login-name" placeholder="Jane Smith" autocomplete="name" value="${currentUser ? currentUser.name.replace(/"/g, '&quot;') : ''}" />
-      <label for="login-email">Email Address</label>
-      <input type="email" id="login-email" placeholder="jane.smith@retailodyssey.com" autocomplete="email" value="${currentUser ? currentUser.email.replace(/"/g, '&quot;') : ''}" />
-      <button class="login-submit" id="login-btn" disabled onclick="handleLogin()">Continue</button>
-    </div>
-  `;
-  const nameInput = document.getElementById('login-name');
-  const emailInput = document.getElementById('login-email');
-  const btn = document.getElementById('login-btn');
-
-  function validate() {
-    const nameOk = nameInput.value.trim().length >= 2;
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-    btn.disabled = !(nameOk && emailOk);
-  }
-  nameInput.addEventListener('input', validate);
-  emailInput.addEventListener('input', validate);
-  emailInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !btn.disabled) handleLogin(); });
-  nameInput.addEventListener('keydown', e => { if (e.key === 'Enter') emailInput.focus(); });
-  setTimeout(() => nameInput.focus(), 100);
+  D6Auth.showLogin({
+    subtitle: 'Enter your name and email to get started. Photos you submit are sent to the project administrator.',
+    onSuccess: (user) => {
+      currentUser = user;
+      startApp();
+    },
+  });
 }
 
-function handleLogin() {
-  const name = document.getElementById('login-name').value;
-  const email = document.getElementById('login-email').value;
-  saveUser(name, email);
-  const overlay = document.getElementById('login-overlay');
-  if (overlay) overlay.style.display = 'none';
+function startApp() {
+  currentUser = D6Auth.getUser();
+  D6Auth.hideLogin();
+  const _auditIntake = document.getElementById('audit-intake-overlay');
+  if (_auditIntake) _auditIntake.style.display = 'none';
   render();
 }
 
@@ -1845,8 +1817,7 @@ function pickMode(mode) {
   auditConfirm = null;
   const overlay = document.getElementById('mode-overlay');
   if (overlay) overlay.remove();
-  const loginOverlay = document.getElementById('login-overlay');
-  if (loginOverlay && mode === 'audit') loginOverlay.style.display = 'none';
+  if (mode === 'audit') D6Auth.hideLogin();
   render();
   window.scrollTo(0, 0);
 }
@@ -4552,15 +4523,7 @@ restoreAppState();
   }
 })();
 
-if (!currentUser) {
-  renderLoginOverlay();
-} else {
-  const _loginOverlay = document.getElementById('login-overlay');
-  if (_loginOverlay) _loginOverlay.style.display = 'none';
-  const _auditIntake = document.getElementById('audit-intake-overlay');
-  if (_auditIntake) _auditIntake.style.display = 'none';
-  render();
-}
+D6Auth.requireLogin({ onSuccess: startApp });
 
 startVersionPolling();
 </script>

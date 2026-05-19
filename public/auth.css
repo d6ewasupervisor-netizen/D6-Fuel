@@ -1,0 +1,57 @@
+/* Shared sign-in overlay (field app + dashboard) */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(10, 14, 19, 0.96);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.login-card {
+  width: 100%; max-width: 420px;
+  background: #151d28;
+  border: 1px solid #243044;
+  border-radius: 14px;
+  padding: 36px 28px 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+.login-card .badge {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: #4da6ff;
+  margin-bottom: 10px;
+}
+.login-card h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: #f0f4f8; }
+.login-card .login-sub { color: #6b7d94; font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
+.login-card label {
+  display: block; font-size: 13px; font-weight: 700; color: #a8b8cc;
+  margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase;
+}
+.login-card input {
+  width: 100%; padding: 14px 16px; border-radius: 10px;
+  border: 1px solid #243044; background: #111820;
+  color: #f0f4f8; font-size: 16px; font-family: inherit;
+  outline: none; margin-bottom: 18px;
+}
+.login-card input:focus { border-color: #4da6ff; }
+.login-submit {
+  width: 100%; padding: 16px; border: none; border-radius: 14px;
+  background: #4da6ff; color: #fff; font-size: 16px; font-weight: 800;
+  font-family: inherit; cursor: pointer; margin-top: 6px;
+}
+.login-submit:disabled { background: #1e2c3e; color: #5a7088; cursor: not-allowed; }
+.login-submit:active:not(:disabled) { transform: scale(0.98); }
+
+.signed-in-bar {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 14px; margin-bottom: 16px;
+  background: #111820; border: 1px solid #243044; border-radius: 10px;
+  font-size: 14px; color: #a8b8cc;
+}
+.signed-in-bar strong { color: #f0f4f8; }
+.sign-out-btn {
+  padding: 8px 12px; border-radius: 8px; border: 1px solid #243044;
+  background: transparent; color: #a8b8cc; font-size: 12px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+}
+.sign-out-btn:active { border-color: #ff4757; color: #ff4757; }
