@@ -61,7 +61,7 @@ window.D6Auth = (function () {
     const existing = getUser();
     const title = opts.title || 'Welcome';
     const subtitle = opts.subtitle
-      || 'Enter your name and email once — it stays signed in as you move between the field app and the progress dashboard.';
+      || 'Enter your name and email to get started.';
 
     overlay.style.display = 'flex';
     overlay.innerHTML = `

@@ -181,7 +181,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <a href="/">🛠 Field app home</a>
   </nav>
   <div class="field-app-banner">
-    <p>After you claim a store here, use the field app to capture and submit the four fixture photos. Your login carries over if you already signed in.</p>
+    <p>After you claim a store here, open the field app to capture and submit the four fixture photos.</p>
     <a href="/?mode=audit">Go to field app →</a>
   </div>
   <div class="top-bar">
@@ -491,7 +491,7 @@ $('sign-out-btn').addEventListener('click', () => {
 
 D6Auth.requireLogin({
   title: 'Sign in',
-  subtitle: 'Use the same name and email as the field app — you stay signed in on both.',
+  subtitle: 'Enter your name and email to continue.',
   onSuccess: () => initDashboard(),
 });
 </script>
