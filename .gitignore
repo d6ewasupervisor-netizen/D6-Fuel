@@ -1,6 +1,7 @@
 node_modules/
 .env
 .railway/
+data/tracker-state.json
 Fuel_Center_POG_Products.xlsx
 parse_planograms.py
 requirements.txt

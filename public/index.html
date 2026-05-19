@@ -1829,6 +1829,10 @@ function renderModeSelector() {
         </button>
       </div>
       ${showBack ? `<button class="switch-back" onclick="dismissModeSelector()">← Cancel</button>` : ''}
+      <p style="text-align:center;margin-top:18px;font-size:13px;color:var(--muted)">
+        Coordinating the team?
+        <a href="/dashboard" style="color:var(--accent);font-weight:700;text-decoration:none">Open live progress dashboard →</a>
+      </p>
     </div>
   `;
 }
@@ -3568,9 +3572,12 @@ function renderAuditDashboard() {
     <div class="audit-purpose fade-in-up">
       <strong>Why this matters:</strong> Each of these locations had an issue during the initial set or has otherwise been flagged. Take <em>quality</em> photos of all four fixtures for the project administrator to review.
     </div>
-    <div style="display:grid;gap:10px;margin-bottom:24px">
+    <div style="display:grid;gap:10px;margin-bottom:16px">
       ${tiles}
     </div>
+    <a href="/dashboard" class="fade-in-up" style="display:block;text-align:center;padding:14px;margin-bottom:20px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--accent);font-size:14px;font-weight:700;text-decoration:none">
+      📊 Claim a store &amp; view team progress (live dashboard)
+    </a>
     <div class="footer">Created in collaboration with TacTag for Retail Odyssey.</div>
   `;
 }
@@ -3794,6 +3801,7 @@ function renderAuditConfirm() {
       </div>
       <button class="audit-confirm-btn" onclick="closeAuditConfirmAndReset(true)">Done — back to audit list</button>
       <button class="audit-confirm-btn secondary" onclick="closeAuditConfirmAndReset(false)">Stay on FM ${storeId}</button>
+      <p style="margin-top:14px;font-size:13px"><a href="/dashboard" style="color:var(--accent);font-weight:600">View live team progress →</a></p>
     </div>
   ` : `
     <div class="audit-confirm-card error">

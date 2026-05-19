@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0e13">
+<title>Audit Progress — Live Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e13;
+  --bg-elevated: #111820;
+  --card: #151d28;
+  --card-border: #243044;
+  --text: #f0f4f8;
+  --text-secondary: #a8b8cc;
+  --muted: #6b7d94;
+  --accent: #4da6ff;
+  --green: #00e87a;
+  --green-bg: rgba(0,232,122,0.12);
+  --amber: #ffcc00;
+  --amber-bg: rgba(255,204,0,0.12);
+  --orange: #ff8c42;
+  --red: #ff4757;
+  --radius: 14px;
+  --radius-sm: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+.wrap { max-width: 1100px; margin: 0 auto; padding: 20px 16px 48px; }
+.top-bar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
+}
+.top-bar h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+.top-bar p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+.live-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 600;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--muted);
+}
+.live-pill.connected .live-dot {
+  background: var(--green);
+  box-shadow: 0 0 10px rgba(0,232,122,0.7);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.deadline-banner {
+  background: linear-gradient(135deg, rgba(77,166,255,0.15), rgba(0,232,122,0.08));
+  border: 1px solid rgba(77,166,255,0.35);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+}
+.deadline-banner .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 700; }
+.deadline-banner .time { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+.deadline-banner.urgent { border-color: var(--amber); background: var(--amber-bg); }
+.stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
+}
+@media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm); padding: 14px; text-align: center;
+}
+.stat .num { font-size: 28px; font-weight: 800; line-height: 1.1; }
+.stat .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; font-weight: 700; }
+.stat.done .num { color: var(--green); }
+.stat.left .num { color: var(--amber); }
+.progress-wrap { margin-bottom: 24px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+.progress-bar { height: 10px; background: var(--bg-elevated); border-radius: 999px; overflow: hidden; border: 1px solid var(--card-border); }
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--accent), var(--green));
+  border-radius: 999px; transition: width 0.4s ease;
+}
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px; margin-bottom: 28px;
+}
+.store-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 16px; transition: border-color 0.2s;
+}
+.store-card.complete { border-color: rgba(0,232,122,0.45); background: var(--green-bg); }
+.store-card.pledged { border-color: rgba(77,166,255,0.4); }
+.store-card.open { border-style: dashed; }
+.store-card .fm { font-size: 20px; font-weight: 800; }
+.store-card .loc { font-size: 13px; color: var(--muted); margin: 2px 0 10px; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 4px 8px; border-radius: 6px;
+}
+.badge.complete { background: var(--green-bg); color: var(--green); }
+.badge.pledged { background: rgba(77,166,255,0.15); color: var(--accent); }
+.badge.open { background: var(--bg-elevated); color: var(--muted); }
+.store-card .who { font-size: 13px; color: var(--text-secondary); margin-top: 10px; line-height: 1.45; }
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 800px) { .panels { grid-template-columns: 1fr; } }
+.panel {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 20px;
+}
+.panel h2 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+.panel .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+label { display: block; font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+input, select {
+  width: 100%; padding: 12px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border); background: var(--bg-elevated);
+  color: var(--text); font-size: 15px; font-family: inherit; margin-bottom: 12px;
+}
+input:focus, select:focus { outline: none; border-color: var(--accent); }
+.btn {
+  width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm);
+  background: var(--accent); color: #fff; font-size: 15px; font-weight: 800;
+  font-family: inherit; cursor: pointer;
+}
+.btn:disabled { background: #1e2c3e; color: #5a7088; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: scale(0.98); }
+.msg { font-size: 13px; margin-top: 10px; padding: 10px 12px; border-radius: var(--radius-sm); display: none; }
+.msg.show { display: block; }
+.msg.ok { background: var(--green-bg); color: var(--green); border: 1px solid rgba(0,232,122,0.3); }
+.msg.err { background: rgba(255,71,87,0.12); color: var(--red); border: 1px solid rgba(255,71,87,0.3); }
+.pledge-list { list-style: none; max-height: 280px; overflow-y: auto; }
+.pledge-list li {
+  padding: 10px 0; border-bottom: 1px solid var(--card-border);
+  font-size: 14px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+}
+.pledge-list li:last-child { border-bottom: none; }
+.pledge-list .store { font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.back-link {
+  display: inline-block; margin-bottom: 16px; color: var(--accent);
+  font-size: 14px; font-weight: 600; text-decoration: none;
+}
+.back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="/">← Back to field app</a>
+  <div class="top-bar">
+    <div>
+      <h1>Follow-up audit tracker</h1>
+      <p>Live status for all flagged stores · updates when someone pledges or submits photos</p>
+    </div>
+    <div class="live-pill" id="live-pill">
+      <span class="live-dot"></span>
+      <span id="live-label">Connecting…</span>
+    </div>
+  </div>
+
+  <div class="deadline-banner" id="deadline-banner">
+    <div>
+      <div class="label">Commit by</div>
+      <div class="time" id="deadline-text">—</div>
+    </div>
+    <div style="text-align:right">
+      <div class="label">Time remaining</div>
+      <div class="time" id="countdown-text">—</div>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Overall progress</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="grid" id="store-grid"></div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>Claim a store</h2>
+      <p class="sub">Sign up to complete the follow-up audit for one store before the deadline. Each open store can only be claimed once until it's submitted.</p>
+      <form id="pledge-form">
+        <label for="pledge-name">Your name</label>
+        <input type="text" id="pledge-name" autocomplete="name" placeholder="Jane Smith" required />
+        <label for="pledge-email">Your email</label>
+        <input type="email" id="pledge-email" autocomplete="email" placeholder="jane.smith@retailodyssey.com" required />
+        <label for="pledge-store">Store</label>
+        <select id="pledge-store" required><option value="">Select a store…</option></select>
+        <button type="submit" class="btn" id="pledge-btn">I commit to finish by deadline</button>
+        <div class="msg" id="pledge-msg"></div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>Commitments</h2>
+      <p class="sub">Who has claimed which store</p>
+      <ul class="pledge-list" id="pledge-list"></ul>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+let snapshot = null;
+let countdownTimer = null;
+
+function fmtDeadline(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleString('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
+
+function fmtCountdown(ms) {
+  if (ms == null || !Number.isFinite(ms)) return '—';
+  if (ms <= 0) return 'Past deadline';
+  const s = Math.floor(ms / 1000);
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  if (d > 0) return `${d}d ${h}h ${m}m`;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m ${s % 60}s`;
+}
+
+function statusLabel(status) {
+  if (status === 'complete') return 'Done';
+  if (status === 'pledged') return 'Claimed';
+  return 'Open';
+}
+
+function render(data) {
+  snapshot = data;
+  const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
+
+  $('deadline-text').textContent = fmtDeadline(deadline);
+  const remain = deadlineMs != null ? deadlineMs - nowMs : null;
+  $('countdown-text').textContent = fmtCountdown(remain);
+  $('deadline-banner').classList.toggle('urgent', remain != null && remain < 24 * 3600 * 1000);
+
+  $('stats').innerHTML = `
+    <div class="stat done"><div class="num">${stats.complete}</div><div class="lbl">Done</div></div>
+    <div class="stat"><div class="num">${stats.pledged}</div><div class="lbl">Claimed</div></div>
+    <div class="stat left"><div class="num">${stats.remaining}</div><div class="lbl">Left</div></div>
+    <div class="stat"><div class="num">${stats.total}</div><div class="lbl">Stores</div></div>
+  `;
+
+  const pct = stats.total ? Math.round((stats.complete / stats.total) * 100) : 0;
+  $('progress-pct').textContent = `${pct}% (${stats.complete} of ${stats.total})`;
+  $('progress-fill').style.width = `${pct}%`;
+
+  $('store-grid').innerHTML = stores.map(s => {
+    let who = '';
+    if (s.status === 'complete' && s.completion) {
+      who = `Submitted by <strong>${esc(s.completion.name)}</strong> · ${s.completion.photoCount} photo${s.completion.photoCount === 1 ? '' : 's'}`;
+    } else if (s.status === 'pledged' && s.pledge) {
+      who = `Claimed by <strong>${esc(s.pledge.name)}</strong>`;
+    } else {
+      who = 'Available to claim';
+    }
+    return `
+      <div class="store-card ${s.status}">
+        <div class="fm">${s.label}</div>
+        <div class="loc">${esc(s.city)}${s.state ? ', ' + esc(s.state) : ''}</div>
+        <span class="badge ${s.status}">${statusLabel(s.status)}</span>
+        <div class="who">${who}</div>
+      </div>`;
+  }).join('');
+
+  const openStores = stores.filter(s => s.status === 'open');
+  const sel = $('pledge-store');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Select a store…</option>' +
+    openStores.map(s => `<option value="${s.id}">FM ${s.id} — ${esc(s.city)}</option>`).join('');
+  if (prev && openStores.some(s => s.id === prev)) sel.value = prev;
+
+  const activePledges = pledges.filter(p => {
+    const st = stores.find(x => x.id === p.storeId);
+    return st && st.status === 'pledged';
+  });
+
+  $('pledge-list').innerHTML = activePledges.length
+    ? activePledges.map(p => `
+        <li>
+          <span><span class="store">FM ${p.storeId}</span> — ${esc(p.name)}</span>
+          <span style="color:var(--muted);font-size:12px">${fmtDeadline(p.pledgedAt).split(',')[0]}</span>
+        </li>`).join('')
+    : '<li style="color:var(--muted)">No active claims yet.</li>';
+
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    if (!snapshot || snapshot.deadlineMs == null) return;
+    $('countdown-text').textContent = fmtCountdown(snapshot.deadlineMs - Date.now());
+  }, 1000);
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function showMsg(el, text, ok) {
+  el.textContent = text;
+  el.className = 'msg show ' + (ok ? 'ok' : 'err');
+}
+
+async function loadSnapshot() {
+  const res = await fetch('/api/tracker');
+  if (!res.ok) throw new Error('Could not load tracker');
+  return res.json();
+}
+
+function connectSSE() {
+  const pill = $('live-pill');
+  const label = $('live-label');
+  const es = new EventSource('/api/tracker/events');
+
+  es.addEventListener('snapshot', e => {
+    pill.classList.add('connected');
+    label.textContent = 'Live';
+    render(JSON.parse(e.data));
+  });
+
+  es.onerror = () => {
+    pill.classList.remove('connected');
+    label.textContent = 'Reconnecting…';
+  };
+
+  return es;
+}
+
+$('pledge-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('pledge-btn');
+  const msg = $('pledge-msg');
+  btn.disabled = true;
+  msg.className = 'msg';
+
+  try {
+    const res = await fetch('/api/tracker/pledge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: $('pledge-name').value,
+        email: $('pledge-email').value,
+        storeId: $('pledge-store').value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not save commitment');
+    showMsg(msg, data.message || 'You are signed up. Complete the audit in the field app and submit photos.', true);
+    $('pledge-form').reset();
+    if (data.snapshot) render(data.snapshot);
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+  btn.disabled = false;
+});
+
+(async () => {
+  try {
+    const data = await loadSnapshot();
+    render(data);
+    connectSSE();
+    const saved = localStorage.getItem('d6fuel_user');
+    if (saved) {
+      try {
+        const u = JSON.parse(saved);
+        if (u.name) $('pledge-name').value = u.name;
+        if (u.email) $('pledge-email').value = u.email;
+      } catch (_) {}
+    }
+  } catch (err) {
+    $('live-label').textContent = 'Offline';
+    showMsg($('pledge-msg'), err.message, false);
+  }
+})();
+</script>
+</body>
+</html>

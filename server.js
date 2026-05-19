@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const { Resend } = require('resend');
+const tracker = require('./lib/tracker');
 
 const app = express();
 const resendApiKey = process.env.RESEND_API_KEY || process.env.RESEND_SIGNOFF_API_KEY;
@@ -78,6 +79,41 @@ app.get('/api/version', (req, res) => {
     res.json(data);
   } catch (err) {
     res.json({ version: '1.0.0' });
+  }
+});
+
+app.get('/dashboard', (req, res) => {
+  res.set({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    Pragma: 'no-cache',
+    Expires: '0',
+  });
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
+
+const trackerDataPath = process.env.TRACKER_DATA_PATH
+  || path.join(__dirname, 'data', 'tracker-state.json');
+tracker.init({ dataPath: trackerDataPath });
+
+app.get('/api/tracker', (req, res) => {
+  res.json(tracker.getSnapshot());
+});
+
+app.get('/api/tracker/events', (req, res) => {
+  tracker.subscribe(res);
+});
+
+app.post('/api/tracker/pledge', (req, res) => {
+  try {
+    const snapshot = tracker.addPledge(req.body || {});
+    const store = tracker.padStoreId(req.body.storeId);
+    res.json({
+      success: true,
+      message: `You are signed up for FM ${store}. Complete the audit in the field app and submit photos before the deadline.`,
+      snapshot,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 
@@ -177,6 +213,16 @@ app.post('/api/audit/send', async (req, res) => {
     }
 
     console.log(`Audit email sent for FM ${store} by ${userName || 'unknown'} (${userEmail || 'no email'}) — ${totalPhotos} photo(s) — ID: ${data.id}`);
+    try {
+      tracker.recordCompletion({
+        storeId: store,
+        name: userName,
+        email: userEmail,
+        photoCount: totalPhotos,
+      });
+    } catch (trackErr) {
+      console.warn('Tracker: could not record completion:', trackErr.message);
+    }
     res.json({
       success: true,
       id: data.id,
