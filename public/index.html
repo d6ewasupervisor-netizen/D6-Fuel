@@ -1680,7 +1680,7 @@ function renderLoginOverlay() {
     <div class="login-card">
       <div class="badge" style="margin-bottom:10px">Active Project</div>
       <h1>Welcome</h1>
-      <p class="login-sub">Enter your name and email to get started. Photos you submit are sent to your coordinator.</p>
+      <p class="login-sub">Enter your name and email to get started. Photos you submit are sent to the project administrator.</p>
       <label for="login-name">Full Name</label>
       <input type="text" id="login-name" placeholder="Jane Smith" autocomplete="name" value="${currentUser ? currentUser.name.replace(/"/g, '&quot;') : ''}" />
       <label for="login-email">Email Address</label>
@@ -2168,7 +2168,7 @@ function renderRequirementsBriefing(s) {
           <li><span class="bullet"></span>REZ tags wrapped separately from main tag run</li>
           <li><span class="bullet"></span>Before + after photos of ALL coolers, even if RB missing</li>
           <li><span class="bullet"></span>Photograph the space where RB cooler will go even if not installed</li>
-          <li><span class="bullet"></span>Report any issues to your coordinator</li>
+          <li><span class="bullet"></span>Report any issues to the project administrator</li>
         </ul>
       </div>
 
@@ -2394,7 +2394,7 @@ function renderFullView(s) {
       <div class="section">
         <div class="section-label"><div class="bar" style="background:var(--accent)"></div><h3 style="color:var(--accent)">Contact</h3></div>
         <div class="card">
-          <div class="card-row"><span class="label">Issues</span><span class="value">Contact your coordinator</span></div>
+          <div class="card-row"><span class="label">Issues</span><span class="value">Contact the project administrator</span></div>
         </div>
       </div>
     </div>
@@ -2416,7 +2416,7 @@ function renderFullView(s) {
         <div class="check-item"><div class="box"></div>DO NOT move or transport any product in or out of the fuel station</div>
         <div class="check-item"><div class="box"></div>Red Bull cooler may not be installed — leave strips and tags on-site</div>
         <div class="check-item"><div class="box"></div>Photograph the space where RB cooler will go even if missing</div>
-        <div class="check-item"><div class="box"></div>Report any issues to your coordinator</div>
+        <div class="check-item"><div class="box"></div>Report any issues to the project administrator</div>
       </div>
     </div>
 
@@ -3566,7 +3566,7 @@ function renderAuditDashboard() {
       <p>These stores were flagged by corporate as needing additional documentation after the initial reset. Pick a store to capture follow-up photos.</p>
     </div>
     <div class="audit-purpose fade-in-up">
-      <strong>Why this matters:</strong> Each of these locations had an issue during the initial set or has otherwise been flagged. Take <em>quality</em> photos of all four fixtures for your coordinator to review.
+      <strong>Why this matters:</strong> Each of these locations had an issue during the initial set or has otherwise been flagged. Take <em>quality</em> photos of all four fixtures for the project administrator to review.
     </div>
     <div style="display:grid;gap:10px;margin-bottom:24px">
       ${tiles}
@@ -3677,16 +3677,16 @@ function renderAuditStore(id) {
     <div class="fade-in-up">${fixturesHtml}</div>
 
     <div class="audit-comment-section fade-in-up">
-      <label for="audit-comment-${id}">💬 Notes for your coordinator (optional)</label>
+      <label for="audit-comment-${id}">💬 Notes for the project administrator (optional)</label>
       <textarea id="audit-comment-${id}"
-        placeholder="Anything your coordinator should know — missing fixtures, damage, off-planogram products, etc."
+        placeholder="Anything the project administrator should know — missing fixtures, damage, off-planogram products, etc."
         oninput="saveAuditComment('${id}')">${getAuditComment(id).replace(/</g,'&lt;')}</textarea>
     </div>
 
     <button class="audit-send-btn ${sendCls}" ${sendDisabled ? 'disabled' : ''} onclick="${sendDisabled ? '' : `submitAudit('${id}')`}">
       ${sendLabel}
     </button>
-    <div class="footer">Submitted photos are sent to your coordinator.</div>
+    <div class="footer">Submitted photos are sent to the project administrator.</div>
   `;
 }
 
@@ -3787,7 +3787,7 @@ function renderAuditConfirm() {
     <div class="audit-confirm-card">
       <div class="audit-confirm-icon">✓</div>
       <h2>Audit Submitted</h2>
-      <div class="desc">FM ${storeId} — ${auditConfirm.photoCount} photo${auditConfirm.photoCount === 1 ? '' : 's'} sent to your coordinator.</div>
+      <div class="desc">FM ${storeId} — ${auditConfirm.photoCount} photo${auditConfirm.photoCount === 1 ? '' : 's'} sent to the project administrator.</div>
       <div class="audit-confirm-detail">
         <div class="row"><span class="k">Store</span><span class="v">FM ${storeId}</span></div>
         <div class="row"><span class="k">Photos sent</span><span class="v">${auditConfirm.photoCount}</span></div>
@@ -3951,7 +3951,7 @@ async function sendAndAdvance(storeId, phase, nextStep) {
     });
     const data = await res.json();
     if (res.ok && data.success) {
-      sendResult = { ok: true, message: `✓ ${phaseLabel} photos sent to your coordinator!` };
+      sendResult = { ok: true, message: `✓ ${phaseLabel} photos sent to the project administrator!` };
       sendingPhotos = false;
       render();
       setTimeout(() => {
