@@ -1630,7 +1630,7 @@ let auditState        = {};   // { storeId: { csd:[b64], bev:[], monster:[], red
 let auditComments     = {};   // { storeId: '...' }
 let selectedAuditStore = null;
 let sendingAudit      = false;
-let auditConfirm      = null; // { ok, storeId, photoCount, recipients } | null
+let auditConfirm      = null; // { ok, storeId, photoCount } | null
 
 // Auditor sign-in: store + name + email (audit mode only; CC on submit)
 let auditSession = JSON.parse(localStorage.getItem('d6fuel_audit_session') || 'null');
@@ -1702,7 +1702,7 @@ function renderLoginOverlay() {
     <div class="login-card">
       <div class="badge" style="margin-bottom:10px">Active Project</div>
       <h1>Welcome</h1>
-      <p class="login-sub">Enter your name and email to get started. You'll be CC'd on all photo submissions.</p>
+      <p class="login-sub">Enter your name and email to get started. Photos you submit are sent to your coordinator.</p>
       <label for="login-name">Full Name</label>
       <input type="text" id="login-name" placeholder="Jane Smith" autocomplete="name" />
       <label for="login-email">Email Address</label>
@@ -1873,16 +1873,13 @@ function renderAuditIntake() {
     <div class="login-card" style="max-width:440px">
       <div class="badge" style="margin-bottom:10px;color:var(--orange)">Follow-Up Audit</div>
       <h1>Auditor sign-in</h1>
-      <p class="login-sub">Choose your store and enter your details. You'll be copied on the audit email when you submit photos.</p>
+      <p class="login-sub">Choose your store and enter your details. Photos you submit are sent to your coordinator.</p>
       <label for="audit-store">Store you're auditing</label>
       <select id="audit-store" autocomplete="off">${storeOptions}</select>
       <label for="audit-name">Full name</label>
       <input type="text" id="audit-name" placeholder="Jane Smith" autocomplete="name" value="${auditSession ? auditSession.name.replace(/"/g, '&quot;') : ''}" />
       <label for="audit-email">Email address</label>
       <input type="email" id="audit-email" placeholder="jane.smith@retailodyssey.com" autocomplete="email" value="${auditSession ? auditSession.email.replace(/"/g, '&quot;') : ''}" />
-      <p id="audit-053-hint" style="display:none;font-size:12px;color:var(--amber);margin:-8px 0 14px;line-height:1.45">
-        FM 053 submissions are emailed to Tyson as the primary reviewer (not April). You and the automation inbox are still copied.
-      </p>
       <button class="login-submit" id="audit-intake-btn" disabled onclick="handleAuditIntake()">Start audit</button>
       <button class="switch-back" style="margin-top:12px;width:100%;padding:12px;background:transparent;border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--muted);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer" onclick="openModeSelector()">← Back to task selection</button>
     </div>
@@ -1891,14 +1888,12 @@ function renderAuditIntake() {
   const storeSel = document.getElementById('audit-store');
   const nameInput = document.getElementById('audit-name');
   const emailInput = document.getElementById('audit-email');
-  const hint053 = document.getElementById('audit-053-hint');
   const btn = document.getElementById('audit-intake-btn');
 
   function validate() {
     const nameOk = nameInput.value.trim().length >= 2;
     const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
     btn.disabled = !(nameOk && emailOk && storeSel.value);
-    if (hint053) hint053.style.display = storeSel.value === '053' ? 'block' : 'none';
   }
   storeSel.addEventListener('change', validate);
   nameInput.addEventListener('input', validate);
@@ -2189,7 +2184,7 @@ function renderRequirementsBriefing(s) {
           <li><span class="bullet"></span>REZ tags wrapped separately from main tag run</li>
           <li><span class="bullet"></span>Before + after photos of ALL coolers, even if RB missing</li>
           <li><span class="bullet"></span>Photograph the space where RB cooler will go even if not installed</li>
-          <li><span class="bullet"></span>Email any issues to april.gauthier@retailodyssey.com</li>
+          <li><span class="bullet"></span>Report any issues to your coordinator</li>
         </ul>
       </div>
 
@@ -2415,7 +2410,7 @@ function renderFullView(s) {
       <div class="section">
         <div class="section-label"><div class="bar" style="background:var(--accent)"></div><h3 style="color:var(--accent)">Contact</h3></div>
         <div class="card">
-          <div class="card-row"><span class="label">Issues email</span><span class="value"><a href="mailto:april.gauthier@retailodyssey.com" style="color:var(--accent);font-weight:600">april.gauthier@retailodyssey.com</a></span></div>
+          <div class="card-row"><span class="label">Issues</span><span class="value">Contact your coordinator</span></div>
         </div>
       </div>
     </div>
@@ -2437,7 +2432,7 @@ function renderFullView(s) {
         <div class="check-item"><div class="box"></div>DO NOT move or transport any product in or out of the fuel station</div>
         <div class="check-item"><div class="box"></div>Red Bull cooler may not be installed — leave strips and tags on-site</div>
         <div class="check-item"><div class="box"></div>Photograph the space where RB cooler will go even if missing</div>
-        <div class="check-item"><div class="box"></div>Email any issues to april.gauthier@retailodyssey.com</div>
+        <div class="check-item"><div class="box"></div>Report any issues to your coordinator</div>
       </div>
     </div>
 
@@ -3587,7 +3582,7 @@ function renderAuditDashboard() {
       <p>These stores were flagged by corporate as needing additional documentation after the initial reset. Pick a store to capture follow-up photos.</p>
     </div>
     <div class="audit-purpose fade-in-up">
-      <strong>Why this matters:</strong> Each of these locations had an issue during the initial set or has otherwise been flagged. Take <em>quality</em> photos of all four fixtures for review in OneDrive.
+      <strong>Why this matters:</strong> Each of these locations had an issue during the initial set or has otherwise been flagged. Take <em>quality</em> photos of all four fixtures for your coordinator to review.
     </div>
     <div style="display:grid;gap:10px;margin-bottom:24px">
       ${tiles}
@@ -3677,12 +3672,6 @@ function renderAuditStore(id) {
       ? `✉ Submit ${totalPhotos} photo${totalPhotos === 1 ? '' : 's'} for FM ${id}`
       : `📷 ${total - captured} fixture${total - captured === 1 ? '' : 's'} still needed`;
 
-  const paddedId = String(id).padStart(3, '0');
-  const reviewerName = paddedId === '053' ? 'Tyson' : 'April';
-  const submitFooter = paddedId === '053'
-    ? 'Submissions for FM 053 go to Tyson as the primary reviewer (not April). You and the flow-automation inbox are still copied.'
-    : `Audit photos go to ${reviewerName} and are CC'd to the flow-automation Gmail inbox (d6ewa.supervisor@gmail.com) so attachments save to the matching OneDrive folder.`;
-
   return `
     ${navHtml}
     ${renderAuditUserBadge()}
@@ -3704,16 +3693,16 @@ function renderAuditStore(id) {
     <div class="fade-in-up">${fixturesHtml}</div>
 
     <div class="audit-comment-section fade-in-up">
-      <label for="audit-comment-${id}">💬 Field notes for ${reviewerName} (optional)</label>
+      <label for="audit-comment-${id}">💬 Notes for your coordinator (optional)</label>
       <textarea id="audit-comment-${id}"
-        placeholder="Anything the reviewer should know — missing fixtures, damage, off-planogram products, etc."
+        placeholder="Anything your coordinator should know — missing fixtures, damage, off-planogram products, etc."
         oninput="saveAuditComment('${id}')">${getAuditComment(id).replace(/</g,'&lt;')}</textarea>
     </div>
 
     <button class="audit-send-btn ${sendCls}" ${sendDisabled ? 'disabled' : ''} onclick="${sendDisabled ? '' : `submitAudit('${id}')`}">
       ${sendLabel}
     </button>
-    <div class="footer">${submitFooter}</div>
+    <div class="footer">Submitted photos are sent to your coordinator.</div>
   `;
 }
 
@@ -3786,8 +3775,6 @@ async function submitAudit(storeId) {
         ok: true,
         storeId: data.storeId || storeId,
         photoCount: data.photoCount,
-        primaryReviewer: data.primaryReviewer,
-        recipients: data.recipients || { to: [], cc: [] },
       };
     } else {
       auditConfirm = { ok: false, storeId, error: (data && data.error) || 'Audit send failed.' };
@@ -3812,20 +3799,14 @@ function renderAuditConfirm() {
 
   const isOk = auditConfirm.ok;
   const storeId = auditConfirm.storeId;
-  const folder = `…\\Follow Up Fuel\\${String(storeId).padStart(3, '0')}`;
-  const recips = auditConfirm.recipients || { to: [], cc: [] };
-  const recipText = [...(recips.to || []), ...(recips.cc || [])].join(', ');
-
   overlay.innerHTML = isOk ? `
     <div class="audit-confirm-card">
       <div class="audit-confirm-icon">✓</div>
       <h2>Audit Submitted</h2>
-      <div class="desc">FM ${storeId} photos were sent to the primary reviewer with you and flow-automation copied. Files will land in OneDrive when the Gmail parser runs.</div>
+      <div class="desc">FM ${storeId} — ${auditConfirm.photoCount} photo${auditConfirm.photoCount === 1 ? '' : 's'} sent to your coordinator.</div>
       <div class="audit-confirm-detail">
         <div class="row"><span class="k">Store</span><span class="v">FM ${storeId}</span></div>
         <div class="row"><span class="k">Photos sent</span><span class="v">${auditConfirm.photoCount}</span></div>
-        <div class="row"><span class="k">OneDrive folder</span><span class="v path">${folder}</span></div>
-        <div class="row"><span class="k">Email recipients</span><span class="v" style="font-size:11px">${recipText || '—'}</span></div>
       </div>
       <button class="audit-confirm-btn" onclick="closeAuditConfirmAndReset(true)">Done — back to audit list</button>
       <button class="audit-confirm-btn secondary" onclick="closeAuditConfirmAndReset(false)">Stay on FM ${storeId}</button>
@@ -3986,7 +3967,7 @@ async function sendAndAdvance(storeId, phase, nextStep) {
     });
     const data = await res.json();
     if (res.ok && data.success) {
-      sendResult = { ok: true, message: `✓ ${phaseLabel} photos emailed to April!` };
+      sendResult = { ok: true, message: `✓ ${phaseLabel} photos sent to your coordinator!` };
       sendingPhotos = false;
       render();
       setTimeout(() => {
