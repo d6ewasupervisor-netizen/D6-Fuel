@@ -1947,6 +1947,9 @@ function renderDashboard() {
       <p>Fred Meyer Energy Drink Remodel — Project #12440</p>
       <div class="code">Select a store to review requirements &amp; begin</div>
     </div>
+    <a href="/dashboard" class="fade-in-up" style="display:block;text-align:center;padding:14px;margin-bottom:16px;background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius-sm);color:var(--accent);font-size:14px;font-weight:700;text-decoration:none">
+      📊 Live audit progress dashboard
+    </a>
     <div class="rules-box fade-in-up">
       <div class="label">⚠️ Key Project Rules</div>
       <div class="items">
@@ -4540,6 +4543,14 @@ function startVersionPolling() {
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 restoreAppState();
+
+(function applyModeFromUrl() {
+  const mode = new URLSearchParams(window.location.search).get('mode');
+  if (mode === 'audit' || mode === 'setup') {
+    appMode = mode;
+    localStorage.setItem('d6fuel_mode', mode);
+  }
+})();
 
 if (!currentUser) {
   renderLoginOverlay();

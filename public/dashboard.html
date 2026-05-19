@@ -148,16 +148,41 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 .unclaim-btn:active { border-color: var(--red); color: var(--red); }
 .my-pledges { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border); }
 .my-pledges h3 { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
-.back-link {
-  display: inline-block; margin-bottom: 16px; color: var(--accent);
-  font-size: 14px; font-weight: 600; text-decoration: none;
+.app-nav {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
 }
-.back-link:hover { text-decoration: underline; }
+.app-nav a {
+  flex: 1; min-width: 140px; text-align: center; text-decoration: none;
+  padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700;
+  border: 1px solid var(--card-border); background: var(--card); color: var(--text);
+}
+.app-nav a.primary {
+  background: var(--accent); border-color: var(--accent); color: #fff;
+}
+.app-nav a:active { transform: scale(0.98); }
+.field-app-banner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+  padding: 16px 18px; margin-bottom: 20px;
+}
+.field-app-banner p { font-size: 14px; color: var(--text-secondary); max-width: 520px; }
+.field-app-banner a {
+  text-decoration: none; padding: 12px 18px; border-radius: var(--radius-sm);
+  background: var(--green); color: #000; font-size: 14px; font-weight: 800; white-space: nowrap;
+}
+.field-app-banner a:active { transform: scale(0.98); }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <a class="back-link" href="/">← Back to field app</a>
+  <nav class="app-nav" aria-label="App navigation">
+    <a href="/?mode=audit" class="primary">📷 Open field app (audit photos)</a>
+    <a href="/">🛠 Field app home</a>
+  </nav>
+  <div class="field-app-banner">
+    <p>After you claim a store here, use the field app to capture and submit the four fixture photos. Your login carries over if you already signed in.</p>
+    <a href="/?mode=audit">Go to field app →</a>
+  </div>
   <div class="top-bar">
     <div>
       <h1>Follow-up audit tracker</h1>
