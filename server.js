@@ -5,6 +5,7 @@ const fs = require('fs');
 const { Resend } = require('resend');
 const tracker = require('./lib/tracker');
 const trackerNotify = require('./lib/tracker-notify');
+const fruitAuditManifest = require('./data/fruit-audit-manifest.json');
 
 function trackerDashboardUrl(req) {
   const base = process.env.PUBLIC_APP_URL || `${req.protocol}://${req.get('host')}`;
@@ -37,6 +38,46 @@ const AUDIT_ALLOWED_STORES = new Set(['049', '053', '214', '286', '351', '486', 
 const DEFAULT_AUDIT_INBOX = 'd6ewa.supervisor@gmail.com';
 const AUDIT_REVIEWER_APRIL = 'april.gauthier@retailodyssey.com';
 const AUDIT_REVIEWER_TYSON = 'tyson.gauthier@retailodyssey.com';
+const DEFAULT_FRUIT_AUDIT_RECIPIENT = AUDIT_REVIEWER_TYSON;
+const fruitAuditStores = new Map((fruitAuditManifest.stores || []).map(store => [store.id, store]));
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function splitEmailList(value) {
+  return String(value || '')
+    .split(',')
+    .map(email => email.trim())
+    .filter(Boolean);
+}
+
+function addUniqueEmail(list, email) {
+  const trimmed = String(email || '').trim();
+  if (!trimmed) return;
+  const exists = list.some(existing => existing.toLowerCase() === trimmed.toLowerCase());
+  if (!exists) list.push(trimmed);
+}
+
+function fruitSetLabel(set) {
+  return `${set.commodityGroup} ${set.aisleDesc} bays ${set.bayRange}`;
+}
+
+function fruitAttachmentName(store, set, photoIndex) {
+  const safeGroup = String(set.commodityGroup || 'Fruit')
+    .replace(/[^A-Za-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 40);
+  const bays = String(set.bayRange || '')
+    .replace(/[^0-9A-Za-z]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  const sequence = String(photoIndex + 1).padStart(2, '0');
+  return `D8_Fruit_FM${store.id}_C${set.commodity}_POG${set.pogDbKey}_Bays${bays}_${safeGroup}_${sequence}.jpg`;
+}
 
 /** FM 053 audits go to Tyson as primary reviewer; all other audit stores go to April. */
 function auditEmailRecipients(store, submitterEmail) {
@@ -74,6 +115,15 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/fruit-audit', (req, res) => {
+  res.set({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+  res.sendFile(path.join(__dirname, 'public', 'fruit-audit.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const versionFilePath = path.join(__dirname, 'version.json');
@@ -86,6 +136,10 @@ app.get('/api/version', (req, res) => {
   } catch (err) {
     res.json({ version: '1.0.0' });
   }
+});
+
+app.get('/api/fruit-audit/manifest', (req, res) => {
+  res.json(fruitAuditManifest);
 });
 
 app.get('/dashboard', (req, res) => {
@@ -147,6 +201,106 @@ app.post('/api/tracker/unclaim', async (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/fruit-audit/send', async (req, res) => {
+  const { storeId, setPhotos, comment, userName, userEmail } = req.body || {};
+  const store = fruitAuditStores.get(padStoreId(storeId));
+
+  if (!store) {
+    return res.status(400).json({ error: 'Store is not on the District 8 fruit audit list.' });
+  }
+  if (!Array.isArray(setPhotos) || !setPhotos.length) {
+    return res.status(400).json({ error: 'No photos provided.' });
+  }
+
+  const submittedBySet = new Map(setPhotos.map(entry => [String(entry.setId || ''), entry]));
+  const allowedSetIds = new Set(store.sets.map(set => set.id));
+  const unknownSet = setPhotos.find(entry => !allowedSetIds.has(String(entry.setId || '')));
+  if (unknownSet) {
+    return res.status(400).json({ error: 'Submitted set is not on this store audit list.' });
+  }
+
+  const attachments = [];
+  const photoListItems = [];
+  const submittedSetIds = new Set();
+  store.sets.forEach(set => {
+    const entry = submittedBySet.get(set.id);
+    if (!entry || !Array.isArray(entry.photos)) return;
+    if (entry.photos.length) submittedSetIds.add(set.id);
+    entry.photos.forEach((photo, idx) => {
+      const base64 = String(photo || '').includes(',')
+        ? String(photo).split(',').pop()
+        : String(photo || '');
+      const filename = fruitAttachmentName(store, set, idx);
+      attachments.push({ filename, content: Buffer.from(base64, 'base64') });
+      photoListItems.push(
+        `<li style="margin:4px 0"><code>${escapeHtml(filename)}</code> - ${escapeHtml(fruitSetLabel(set))}</li>`
+      );
+    });
+  });
+
+  if (!attachments.length) {
+    return res.status(400).json({ error: 'No valid photos provided.' });
+  }
+
+  const toList = splitEmailList(process.env.FRUIT_AUDIT_RECIPIENT_EMAIL || DEFAULT_FRUIT_AUDIT_RECIPIENT);
+  const ccList = splitEmailList(process.env.FRUIT_AUDIT_CC_EMAIL);
+  addUniqueEmail(ccList, userEmail);
+  const submittedBy = userName
+    ? `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from <strong>${escapeHtml(userName)}</strong> at FM ${store.id}</p>`
+    : `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from FM ${store.id}</p>`;
+
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'D8 Fruit Audit <fruitaudit@the-dump-bin.com>',
+      to: toList,
+      cc: ccList,
+      subject: `[D8 Fruit Audit] FM ${store.id} - ${submittedSetIds.size} sets / ${attachments.length} photos`,
+      headers: {
+        'X-Fruit-Audit-District': fruitAuditManifest.district || '8',
+        'X-Fruit-Audit-Store': store.id,
+        'X-Fruit-Audit-Set-Count': String(store.sets.length),
+        'X-Fruit-Audit-Photo-Count': String(attachments.length),
+      },
+      html: `
+        <div style="font-family:sans-serif;max-width:680px">
+          <h2 style="margin:0 0 8px">FM ${store.id} - District 8 Fruit Audit</h2>
+          ${submittedBy}
+          <p style="color:#666;margin:0 0 16px">Source store ${escapeHtml(store.sourceStore)} - ${submittedSetIds.size} of ${store.sets.length} set${store.sets.length === 1 ? '' : 's'} from Fruit Mapping.csv.</p>
+          ${comment ? `
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
+          <p style="margin:0 0 8px"><strong>Field notes:</strong></p>
+          <p style="margin:0 0 16px;white-space:pre-wrap;color:#333;background:#f8f8f8;padding:12px;border-radius:6px;border-left:4px solid #53d86a">${escapeHtml(comment)}</p>
+          ` : ''}
+          <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
+          <p style="margin:0 0 8px"><strong>Attached (${attachments.length}):</strong></p>
+          <ul style="padding-left:20px;margin:0 0 16px;font-family:'JetBrains Mono',monospace;font-size:12px">${photoListItems.join('')}</ul>
+          <p style="color:#888;font-size:12px;margin:0">Files are named by district, store, commodity, POG, bay range, and photo number.</p>
+        </div>
+      `,
+      attachments
+    });
+
+    if (error) {
+      console.error('Fruit audit resend error:', error);
+      return res.status(400).json({ error: error.message || 'Fruit audit email send failed.' });
+    }
+
+    console.log(`Fruit audit email sent for FM ${store.id} by ${userName || 'unknown'} (${userEmail || 'no email'}) - ${attachments.length} photo(s) - ID: ${data.id}`);
+    res.json({
+      success: true,
+      id: data.id,
+      storeId: store.id,
+      setCount: submittedSetIds.size,
+      totalSetCount: store.sets.length,
+      photoCount: attachments.length,
+      recipients: { to: toList, cc: ccList }
+    });
+  } catch (err) {
+    console.error('Fruit audit server error:', err);
+    res.status(500).json({ error: err.message });
   }
 });
 

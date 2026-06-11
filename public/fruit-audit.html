@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#07110b">
+<title>District 8 Fruit Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="/auth.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<style>
+:root {
+  --bg: #07110b;
+  --panel: #0e1a12;
+  --card: #14231a;
+  --card-2: #192b20;
+  --border: #294434;
+  --text: #f4fff7;
+  --sub: #bfd8c6;
+  --muted: #7f9b89;
+  --dim: #536b5c;
+  --green: #53d86a;
+  --green-2: #88f06f;
+  --amber: #ffd166;
+  --red: #ff5d6c;
+  --blue: #68b7ff;
+  --radius: 16px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: radial-gradient(circle at 20% -10%, rgba(83,216,106,0.20), transparent 34%), var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+  padding: calc(12px + var(--safe-top)) 12px calc(18px + var(--safe-bottom));
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: contain;
+}
+button, input, textarea, select { font: inherit; }
+button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manipulation; }
+.app { width: 100%; max-width: 680px; margin: 0 auto; }
+.hero {
+  background: linear-gradient(135deg, #12351f, #172a1c 58%, #0c1a10);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.32);
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green-2);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.badge::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 14px rgba(83,216,106,0.7); }
+.hero h1 { font-size: 27px; line-height: 1.1; margin-bottom: 8px; }
+.hero p { color: var(--sub); }
+.user-row, .top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.pill, .back-btn, .secondary-btn {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--sub);
+  border-radius: 999px;
+  padding: 9px 13px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pill strong { color: var(--text); }
+.back-btn { border-radius: 12px; color: var(--green-2); min-height: 44px; }
+.store-grid { display: grid; gap: 10px; margin: 14px 0 22px; }
+.store-btn {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+}
+.store-btn:active, .set-card:active { transform: scale(0.99); }
+.store-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 19px;
+  font-weight: 800;
+  background: rgba(83,216,106,0.13);
+  border: 1px solid rgba(83,216,106,0.35);
+  border-radius: 12px;
+  padding: 8px 10px;
+  min-width: 78px;
+  text-align: center;
+}
+.store-meta { color: var(--sub); font-weight: 700; }
+.store-status { color: var(--muted); font-size: 12px; margin-top: 3px; }
+.chev { color: var(--dim); font-size: 24px; }
+.store-header {
+  background: linear-gradient(135deg, #12351f, #102017);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 12px;
+}
+.store-header h1 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+.detail { color: var(--sub); font-size: 14px; }
+.progress {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.progress-bar { height: 9px; border-radius: 99px; background: #09140d; overflow: hidden; margin-bottom: 8px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--green-2)); border-radius: inherit; transition: width 0.2s; }
+.progress-text { color: var(--sub); font-size: 13px; font-weight: 700; }
+.notice {
+  background: rgba(255,209,102,0.10);
+  border: 1px solid rgba(255,209,102,0.35);
+  border-left: 4px solid var(--amber);
+  border-radius: var(--radius);
+  color: var(--sub);
+  padding: 13px 14px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+.notice strong { color: var(--amber); }
+.set-list { display: grid; gap: 12px; }
+.set-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 15px;
+  transition: transform 0.12s, border-color 0.12s;
+}
+.set-card.captured { border-color: rgba(255,209,102,0.60); }
+.set-card.sent { border-color: rgba(83,216,106,0.60); }
+.set-head {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 10px;
+}
+.set-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(83,216,106,0.13);
+  color: var(--green-2);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+}
+.set-title { font-size: 16px; font-weight: 800; line-height: 1.25; margin-bottom: 4px; }
+.set-sub { color: var(--muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; overflow-wrap: anywhere; }
+.status {
+  border-radius: 99px;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  background: #0b160f;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.status.captured { color: var(--amber); border-color: rgba(255,209,102,0.45); background: rgba(255,209,102,0.10); }
+.status.sent { color: var(--green-2); border-color: rgba(83,216,106,0.45); background: rgba(83,216,106,0.10); }
+.facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 12px;
+}
+.fact {
+  background: var(--panel);
+  border: 1px solid #21382b;
+  border-radius: 12px;
+  padding: 9px 10px;
+  min-width: 0;
+}
+.fact .k { color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; }
+.fact .v { color: var(--text); font-size: 13px; font-weight: 700; margin-top: 2px; overflow-wrap: anywhere; }
+.desc { color: var(--sub); font-size: 13px; margin-bottom: 12px; }
+.gallery {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 10px;
+  margin-bottom: 2px;
+  scrollbar-width: none;
+}
+.gallery::-webkit-scrollbar { display: none; }
+.thumb {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex: 0 0 auto;
+  background: #09140d;
+  border: 1px solid var(--border);
+}
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb span {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: rgba(0,0,0,0.68);
+  color: #fff;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 800;
+}
+.remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.action-btn {
+  min-height: 48px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--panel);
+  color: var(--text);
+  font-weight: 800;
+  cursor: pointer;
+}
+.action-btn.primary { background: var(--green); border-color: var(--green); color: #061008; }
+.action-btn:active, .submit-btn:active, .login-submit:active { transform: scale(0.98); }
+.notes { margin: 16px 0 12px; }
+.notes label { display: block; color: var(--sub); font-weight: 800; font-size: 13px; margin-bottom: 6px; }
+.notes textarea {
+  width: 100%;
+  min-height: 82px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 12px;
+  resize: vertical;
+  outline: none;
+}
+.notes textarea:focus { border-color: var(--green); }
+.submit-btn {
+  width: 100%;
+  min-height: 58px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card-2);
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 800;
+  cursor: not-allowed;
+  margin-bottom: 18px;
+}
+.submit-btn.ready { cursor: pointer; background: linear-gradient(135deg, var(--green), var(--green-2)); border-color: var(--green); color: #061008; }
+.submit-btn.sending { color: var(--blue); cursor: progress; }
+.footer { color: var(--dim); text-align: center; font-size: 12px; margin: 18px 0 6px; }
+.login-overlay, .confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(7,17,11,0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(20px + var(--safe-top)) 20px calc(20px + var(--safe-bottom));
+}
+.login-card, .confirm-card {
+  width: 100%;
+  max-width: 430px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+  box-shadow: 0 14px 44px rgba(0,0,0,0.42);
+}
+.login-card h1, .confirm-card h1 { font-size: 24px; margin-bottom: 6px; }
+.login-sub, .confirm-sub { color: var(--sub); margin-bottom: 18px; }
+.login-card label { display: block; color: var(--sub); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
+.login-card input {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 12px;
+  margin-bottom: 14px;
+  outline: none;
+}
+.login-card input:focus { border-color: var(--green); }
+.login-submit, .confirm-btn {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--green);
+  color: #061008;
+  font-weight: 900;
+  cursor: pointer;
+}
+.login-submit:disabled { background: #223629; color: var(--dim); cursor: not-allowed; }
+.confirm-detail {
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--panel);
+  padding: 12px;
+  margin-bottom: 14px;
+}
+.confirm-detail .row { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; color: var(--sub); font-size: 13px; }
+.confirm-detail .row strong { color: var(--text); }
+.loading, .error {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  color: var(--sub);
+}
+.error { border-color: rgba(255,93,108,0.55); color: #ffd8dc; }
+.toast {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: calc(14px + var(--safe-bottom));
+  z-index: 900;
+  max-width: 640px;
+  margin: 0 auto;
+  background: #061008;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 13px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.42);
+  display: none;
+}
+.toast.show { display: block; }
+@media (max-width: 430px) {
+  body { padding-left: 10px; padding-right: 10px; }
+  .hero h1 { font-size: 23px; }
+  .facts { grid-template-columns: 1fr; }
+  .set-head { grid-template-columns: 42px 1fr; }
+  .set-head .status { grid-column: 2; justify-self: start; }
+}
+</style>
+</head>
+<body>
+<main id="app" class="app">
+  <div class="loading">Loading District 8 fruit audit...</div>
+</main>
+<div id="toast" class="toast"></div>
+
+<script>
+const STATE_KEY = 'd8_fruit_audit_state_v1';
+const SELECTED_STORE_KEY = 'd8_fruit_audit_selected_store';
+const PHOTO_ACCEPT = 'image/*,.heic,.heif,image/heic,image/heif';
+
+let manifest = null;
+let currentUser = null;
+let selectedStoreId = localStorage.getItem(SELECTED_STORE_KEY) || null;
+let sending = false;
+let statusMessage = '';
+let state = {
+  photos: {},
+  sent: {},
+  comments: {},
+};
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STATE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      state.photos = parsed.photos && typeof parsed.photos === 'object' ? parsed.photos : {};
+      state.sent = parsed.sent && typeof parsed.sent === 'object' ? parsed.sent : {};
+      state.comments = parsed.comments && typeof parsed.comments === 'object' ? parsed.comments : {};
+    }
+  } catch (err) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  } catch (err) {
+    showToast('Could not save photos on this device. Try sending now if possible.');
+  }
+}
+
+function getStore(storeId) {
+  return (manifest && manifest.stores || []).find(store => store.id === storeId) || null;
+}
+
+function ensureStoreState(storeId) {
+  if (!state.photos[storeId]) state.photos[storeId] = {};
+  if (!state.sent[storeId]) state.sent[storeId] = {};
+}
+
+function getSetPhotos(storeId, setId) {
+  ensureStoreState(storeId);
+  if (!Array.isArray(state.photos[storeId][setId])) state.photos[storeId][setId] = [];
+  return state.photos[storeId][setId];
+}
+
+function isSetSent(storeId, setId) {
+  return !!(state.sent[storeId] && state.sent[storeId][setId]);
+}
+
+function markSetUnsent(storeId, setId) {
+  ensureStoreState(storeId);
+  delete state.sent[storeId][setId];
+}
+
+function setStatus(storeId, setId) {
+  const count = getSetPhotos(storeId, setId).length;
+  if (count > 0) return { key: 'captured', label: `Captured (${count})` };
+  if (isSetSent(storeId, setId)) return { key: 'sent', label: 'Sent' };
+  return { key: 'needed', label: 'Needed' };
+}
+
+function storeCounts(store) {
+  let captured = 0;
+  let sent = 0;
+  store.sets.forEach(set => {
+    const photos = getSetPhotos(store.id, set.id).length;
+    if (photos > 0) captured += 1;
+    else if (isSetSent(store.id, set.id)) sent += 1;
+  });
+  return {
+    captured,
+    sent,
+    needed: Math.max(0, store.sets.length - captured - sent),
+    total: store.sets.length,
+  };
+}
+
+function hasAllRequiredSets(store) {
+  return store.sets.every(set => getSetPhotos(store.id, set.id).length > 0 || isSetSent(store.id, set.id));
+}
+
+function unsentSetCount(store) {
+  return store.sets.filter(set => getSetPhotos(store.id, set.id).length > 0).length;
+}
+
+function unsentPhotoCount(store) {
+  return store.sets.reduce((sum, set) => sum + getSetPhotos(store.id, set.id).length, 0);
+}
+
+function categoryShort(set) {
+  if (set.commodity === '600') return 'APL';
+  if (set.commodity === '602') return 'CIT';
+  if (set.commodity === '604') return 'BER';
+  return set.commodity || 'SET';
+}
+
+function displaySetName(set) {
+  return `${set.commodityGroup} - ${set.aisleDesc}`;
+}
+
+function renderUserRow() {
+  if (!currentUser) return '';
+  return `
+    <div class="user-row">
+      <button class="pill" onclick="showStorePicker()"><strong>${escapeHtml(currentUser.name)}</strong></button>
+      <button class="pill" onclick="signOut()">Switch user</button>
+    </div>`;
+}
+
+function renderStorePicker() {
+  const stores = manifest.stores || [];
+  const totalSets = stores.reduce((sum, store) => sum + store.sets.length, 0);
+  return `
+    ${renderUserRow()}
+    <section class="hero">
+      <div class="badge">District 8 Fruit Audit</div>
+      <h1>Select a store</h1>
+      <p>${stores.length} stores and ${totalSets} fruit sets loaded from Fruit Mapping.csv. Capture at least one image for each listed set.</p>
+    </section>
+    <div class="notice">
+      <strong>Field workflow:</strong> Pick your store, capture the listed fruit tables/sets, then submit when every set is marked Captured or Sent.
+    </div>
+    <div class="store-grid">
+      ${stores.map(store => {
+        const counts = storeCounts(store);
+        const status = counts.sent === counts.total
+          ? `Sent ${counts.sent}/${counts.total}`
+          : `Captured ${counts.captured} | Needed ${counts.needed} | Sent ${counts.sent}`;
+        return `
+          <button class="store-btn" onclick="openStore('${store.id}')">
+            <div class="store-num">FM ${store.id}</div>
+            <div>
+              <div class="store-meta">${store.sets.length} fruit set${store.sets.length === 1 ? '' : 's'}</div>
+              <div class="store-status">${status}</div>
+            </div>
+            <div class="chev">&gt;</div>
+          </button>`;
+      }).join('')}
+    </div>
+    <div class="footer">District 8 fruit audit photo capture</div>
+  `;
+}
+
+function renderStore(store) {
+  const counts = storeCounts(store);
+  const pct = Math.round(((counts.captured + counts.sent) / counts.total) * 100);
+  const canSubmit = hasAllRequiredSets(store) && unsentPhotoCount(store) > 0 && !sending;
+  const submitLabel = sending
+    ? (statusMessage || 'Sending photos...')
+    : !hasAllRequiredSets(store)
+      ? `${counts.needed} set${counts.needed === 1 ? '' : 's'} still needed`
+      : unsentPhotoCount(store) === 0
+        ? `Sent ${counts.sent}. No unsent photos.`
+        : `Submit ${unsentPhotoCount(store)} photo${unsentPhotoCount(store) === 1 ? '' : 's'}`;
+
+  return `
+    <div class="top-nav">
+      <button class="back-btn" onclick="showStorePicker()">&lt; Stores</button>
+      <button class="pill" onclick="signOut()">${escapeHtml(currentUser.name)}</button>
+    </div>
+    <section class="store-header">
+      <div class="badge">Fruit Audit</div>
+      <h1>FM ${store.id}</h1>
+      <div class="detail">District 8 - source store ${escapeHtml(store.sourceStore)} - ${store.sets.length} listed set${store.sets.length === 1 ? '' : 's'}</div>
+    </section>
+    <section class="progress">
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-text">Captured ${counts.captured} | Needed ${counts.needed} | Sent ${counts.sent}</div>
+    </section>
+    <div class="notice">
+      <strong>Photo target:</strong> Take a clear overview image for each fruit set below. Add extra images when the bay range is wide or product detail is hard to see.
+    </div>
+    <div class="set-list">
+      ${store.sets.map((set, idx) => renderSetCard(store, set, idx)).join('')}
+    </div>
+    <div class="notes">
+      <label for="notes-${store.id}">Notes for the project administrator (optional)</label>
+      <textarea id="notes-${store.id}" oninput="saveComment('${store.id}')" placeholder="Missing table, wrong POG, blocked view, extra photos, etc.">${escapeHtml(state.comments[store.id] || '')}</textarea>
+    </div>
+    <button class="submit-btn ${canSubmit ? 'ready' : ''} ${sending ? 'sending' : ''}" ${canSubmit ? `onclick="submitStore('${store.id}')"` : 'disabled'}>
+      ${submitLabel}
+    </button>
+    <div class="footer">Photos are saved on this device until they send successfully.</div>
+  `;
+}
+
+function renderSetCard(store, set, idx) {
+  const photos = getSetPhotos(store.id, set.id);
+  const status = setStatus(store.id, set.id);
+  const thumbs = photos.map((src, photoIdx) => `
+    <div class="thumb">
+      <img src="${src}" alt="${escapeHtml(displaySetName(set))} ${photoIdx + 1}">
+      <span>${photoIdx + 1}</span>
+      <button class="remove" onclick="removePhoto('${store.id}','${set.id}',${photoIdx})" title="Remove">x</button>
+    </div>`).join('');
+
+  return `
+    <article class="set-card ${status.key}" id="set-${set.id}" data-set-id="${set.id}">
+      <div class="set-head">
+        <div class="set-icon">${categoryShort(set)}</div>
+        <div>
+          <div class="set-title">${escapeHtml(displaySetName(set))}</div>
+          <div class="set-sub">POG ${escapeHtml(set.pogDbKey)} - ${escapeHtml(set.pogName)}</div>
+        </div>
+        <div class="status ${status.key}">${status.label}</div>
+      </div>
+      <div class="facts">
+        <div class="fact"><div class="k">Aisle/Table</div><div class="v">${escapeHtml(set.aisle)} - ${escapeHtml(set.aisleDesc)}</div></div>
+        <div class="fact"><div class="k">Bays</div><div class="v">${escapeHtml(set.bayRange)}</div></div>
+        <div class="fact"><div class="k">Set Type</div><div class="v">${escapeHtml(set.pogType)}</div></div>
+        <div class="fact"><div class="k">Items</div><div class="v">${set.items}</div></div>
+      </div>
+      <div class="desc">${escapeHtml(set.description)}</div>
+      ${photos.length ? `<div class="gallery">${thumbs}</div>` : ''}
+      <div class="actions">
+        <button class="action-btn primary" onclick="triggerPhoto('${store.id}','${set.id}','camera')">Take</button>
+        <button class="action-btn" onclick="triggerPhoto('${store.id}','${set.id}','gallery')">Load</button>
+      </div>
+      <input type="file" id="input-camera-${set.id}" accept="${PHOTO_ACCEPT}" capture="environment" style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}',${idx})">
+      <input type="file" id="input-gallery-${set.id}" accept="${PHOTO_ACCEPT}" multiple style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}',${idx})">
+    </article>
+  `;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (!manifest) {
+    app.innerHTML = '<div class="loading">Loading District 8 fruit audit...</div>';
+    return;
+  }
+  if (!currentUser) {
+    app.innerHTML = '';
+    renderLogin();
+    return;
+  }
+  const store = selectedStoreId ? getStore(selectedStoreId) : null;
+  app.innerHTML = store ? renderStore(store) : renderStorePicker();
+}
+
+function renderLogin() {
+  let overlay = document.getElementById('fruit-login-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'fruit-login-overlay';
+    overlay.className = 'login-overlay';
+    document.body.appendChild(overlay);
+  }
+  overlay.style.display = 'flex';
+  const existing = window.D6Auth ? D6Auth.getUser() : null;
+  overlay.innerHTML = `
+    <div class="login-card">
+      <div class="badge">District 8 Fruit Audit</div>
+      <h1>Sign in</h1>
+      <p class="login-sub">Enter your name and email so photo submissions show who captured them.</p>
+      <label for="login-name">Full name</label>
+      <input id="login-name" autocomplete="name" placeholder="Jane Smith" value="${existing ? escapeHtml(existing.name) : ''}">
+      <label for="login-email">Email address</label>
+      <input id="login-email" type="email" autocomplete="email" placeholder="jane.smith@retailodyssey.com" value="${existing ? escapeHtml(existing.email) : ''}">
+      <button class="login-submit" id="login-submit" disabled onclick="submitLogin()">Continue</button>
+    </div>`;
+  const nameInput = document.getElementById('login-name');
+  const emailInput = document.getElementById('login-email');
+  const btn = document.getElementById('login-submit');
+  const validate = () => {
+    btn.disabled = !(nameInput.value.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim()));
+  };
+  nameInput.addEventListener('input', validate);
+  emailInput.addEventListener('input', validate);
+  nameInput.addEventListener('keydown', event => { if (event.key === 'Enter') emailInput.focus(); });
+  emailInput.addEventListener('keydown', event => { if (event.key === 'Enter' && !btn.disabled) submitLogin(); });
+  validate();
+  setTimeout(() => nameInput.focus(), 100);
+}
+
+function submitLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  const email = document.getElementById('login-email').value.trim();
+  currentUser = D6Auth.saveUser(name, email);
+  const overlay = document.getElementById('fruit-login-overlay');
+  if (overlay) overlay.style.display = 'none';
+  render();
+}
+
+function signOut() {
+  D6Auth.clearUser();
+  currentUser = null;
+  selectedStoreId = null;
+  localStorage.removeItem(SELECTED_STORE_KEY);
+  render();
+}
+
+function openStore(storeId) {
+  selectedStoreId = storeId;
+  localStorage.setItem(SELECTED_STORE_KEY, storeId);
+  render();
+  window.scrollTo(0, 0);
+}
+
+function showStorePicker() {
+  selectedStoreId = null;
+  localStorage.removeItem(SELECTED_STORE_KEY);
+  render();
+  window.scrollTo(0, 0);
+}
+
+function saveComment(storeId) {
+  const el = document.getElementById(`notes-${storeId}`);
+  if (!el) return;
+  state.comments[storeId] = el.value;
+  saveState();
+}
+
+function triggerPhoto(storeId, setId, source) {
+  const input = document.getElementById(`input-${source}-${setId}`);
+  if (input) {
+    input.value = '';
+    input.click();
+  }
+}
+
+async function handleFiles(input, storeId, setId, setIndex) {
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  saveComment(storeId);
+  showToast(`Saving ${files.length} photo${files.length === 1 ? '' : 's'}...`);
+  try {
+    const dataUrls = [];
+    for (const file of files) {
+      dataUrls.push(await imageFileToJpegDataUrl(file));
+    }
+    const photos = getSetPhotos(storeId, setId);
+    dataUrls.forEach(dataUrl => photos.push(dataUrl));
+    markSetUnsent(storeId, setId);
+    saveState();
+    render();
+    showToast(`Captured ${dataUrls.length} photo${dataUrls.length === 1 ? '' : 's'}.`);
+    scrollToNextNeeded(storeId, setIndex);
+  } catch (err) {
+    showToast(err.message || 'Could not read image. Try another photo.');
+  }
+}
+
+function removePhoto(storeId, setId, photoIndex) {
+  saveComment(storeId);
+  const photos = getSetPhotos(storeId, setId);
+  if (photoIndex >= 0 && photoIndex < photos.length) photos.splice(photoIndex, 1);
+  saveState();
+  render();
+}
+
+function scrollToNextNeeded(storeId, setIndex) {
+  const store = getStore(storeId);
+  if (!store) return;
+  const later = store.sets.slice(setIndex + 1).find(set => getSetPhotos(storeId, set.id).length === 0 && !isSetSent(storeId, set.id));
+  const target = later || store.sets.find(set => getSetPhotos(storeId, set.id).length === 0 && !isSetSent(storeId, set.id));
+  if (!target) return;
+  setTimeout(() => {
+    const el = document.getElementById(`set-${target.id}`);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 80);
+}
+
+function imageFileToJpegDataUrl(file) {
+  return resizeImage(file, 1600, 0.78).catch(async err => {
+    const isHeic = /\.hei[cf]$/i.test(file.name || '') || /hei[cf]/i.test(file.type || '');
+    if (!isHeic || !window.heic2any) throw err;
+    const converted = await window.heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
+    const jpegBlob = Array.isArray(converted) ? converted[0] : converted;
+    return resizeImage(jpegBlob, 1600, 0.78);
+  });
+}
+
+function resizeImage(fileOrBlob, maxDim, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Could not read image file.'));
+    reader.onload = event => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Could not decode image. If this is HEIC, try loading again with signal.'));
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round(height * maxDim / width);
+            width = maxDim;
+          } else {
+            width = Math.round(width * maxDim / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(fileOrBlob);
+  });
+}
+
+async function submitStore(storeId) {
+  if (sending) return;
+  const store = getStore(storeId);
+  if (!store) return;
+  saveComment(storeId);
+  if (!hasAllRequiredSets(store)) {
+    showToast('Capture every listed set before submitting.');
+    return;
+  }
+  const setPhotos = store.sets.map(set => ({
+    setId: set.id,
+    photos: getSetPhotos(storeId, set.id).map(dataUrl => dataUrl.split(',')[1]).filter(Boolean),
+  })).filter(entry => entry.photos.length > 0);
+  if (!setPhotos.length) {
+    showToast('No unsent photos.');
+    return;
+  }
+
+  sending = true;
+  statusMessage = `Sending ${setPhotos.length} set${setPhotos.length === 1 ? '' : 's'}...`;
+  render();
+
+  try {
+    const res = await fetch('/api/fruit-audit/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        storeId,
+        setPhotos,
+        comment: (state.comments[storeId] || '').trim() || null,
+        userName: currentUser.name,
+        userEmail: currentUser.email,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      throw new Error((data && data.error) || 'Photo send failed.');
+    }
+    ensureStoreState(storeId);
+    setPhotos.forEach(entry => {
+      state.sent[storeId][entry.setId] = true;
+      delete state.photos[storeId][entry.setId];
+    });
+    saveState();
+    sending = false;
+    statusMessage = '';
+    render();
+    showConfirm(data);
+  } catch (err) {
+    sending = false;
+    statusMessage = '';
+    render();
+    showToast(err.message || 'Send failed. Photos are still saved here.');
+  }
+}
+
+function showConfirm(data) {
+  let overlay = document.getElementById('fruit-confirm-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'fruit-confirm-overlay';
+    overlay.className = 'confirm-overlay';
+    document.body.appendChild(overlay);
+  }
+  overlay.innerHTML = `
+    <div class="confirm-card">
+      <div class="badge">Submitted</div>
+      <h1>Photos sent</h1>
+      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} fruit audit photos were sent successfully.</p>
+      <div class="confirm-detail">
+        <div class="row"><span>Store</span><strong>FM ${escapeHtml(data.storeId)}</strong></div>
+        <div class="row"><span>Sets included</span><strong>${data.setCount}</strong></div>
+        <div class="row"><span>Photos sent</span><strong>${data.photoCount}</strong></div>
+      </div>
+      <button class="confirm-btn" onclick="closeConfirm()">Done</button>
+    </div>`;
+}
+
+function closeConfirm() {
+  const overlay = document.getElementById('fruit-confirm-overlay');
+  if (overlay) overlay.remove();
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+async function boot() {
+  loadState();
+  currentUser = D6Auth.getUser();
+  try {
+    const res = await fetch('/api/fruit-audit/manifest', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Could not load manifest.');
+    manifest = await res.json();
+    if (selectedStoreId && !getStore(selectedStoreId)) selectedStoreId = null;
+    render();
+  } catch (err) {
+    document.getElementById('app').innerHTML = `<div class="error">${escapeHtml(err.message || 'Could not load District 8 fruit audit.')}</div>`;
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
