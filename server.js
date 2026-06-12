@@ -658,6 +658,7 @@ app.post('/api/fruit-audit/send', async (req, res) => {
 
     console.log(`Fruit audit email sent for D${storeDistrict} FM ${store.id} by ${userName || 'unknown'} (${userEmail || 'no email'}) - ${attachments.length} photo(s) - ID: ${data.id}`);
     let trackerSnapshot = null;
+    let submissionEarnedHours = 1;
     if (storeDistrict === '1') {
       try {
         trackerSnapshot = fruitAuditTracker.recordCompletion({
@@ -670,13 +671,15 @@ app.post('/api/fruit-audit/send', async (req, res) => {
         const completion = trackerSnapshot && trackerSnapshot.completions
           ? trackerSnapshot.completions[store.id]
           : null;
+        submissionEarnedHours = Number(completion && completion.earnedHours) || 1;
         const hourEntry = trackerSnapshot && Array.isArray(trackerSnapshot.hours)
           ? trackerSnapshot.hours.find(item => normalizeEmail(item.email) === normalizeEmail(userEmail))
           : null;
         fruitAuditTrackerNotify.sendCompletionHoursEarned(resend, {
           completion,
           meta: fruitAuditTracker.getStoreMeta(store.id),
-          totalHours: hourEntry ? hourEntry.hours : 1,
+          submissionHours: submissionEarnedHours,
+          totalHours: hourEntry ? hourEntry.hours : submissionEarnedHours,
           completedStores: hourEntry ? hourEntry.stores : [store.id],
           dashboardUrl: fruitAuditDashboardUrl(req),
           cc: fruitAuditTrackerNotify.notifyRecipients(),
@@ -696,7 +699,7 @@ app.post('/api/fruit-audit/send', async (req, res) => {
       recipients: { to: toList, cc: ccList }
     };
     if (storeDistrict === '1') {
-      response.earnedHours = 1;
+      response.earnedHours = submissionEarnedHours;
       if (trackerSnapshot) response.trackerSnapshot = trackerSnapshot;
     }
     res.json(response);

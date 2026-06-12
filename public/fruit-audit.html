@@ -1800,18 +1800,19 @@ function showConfirm(data) {
     document.body.appendChild(overlay);
   }
   const earnedHours = Number(data && data.earnedHours) || 0;
+  const earnedHoursLabel = earnedHours % 1 === 0 ? String(earnedHours) : earnedHours.toFixed(1);
   overlay.innerHTML = `
     <div class="confirm-card success">
       <div class="confidence-emitter" aria-hidden="true">✓</div>
       <div class="badge">Submission Complete</div>
       <h1>Your photos have been successfully submitted</h1>
-      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} is complete.${earnedHours ? ' One hour has been recorded for this District 1 store.' : ''} You can close this screen after reviewing the confirmation below.</p>
+      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} is complete.${earnedHours ? ` ${earnedHoursLabel} hour${earnedHours === 1 ? '' : 's'} recorded for this District 1 store.` : ''} Friday stores earn 1 hour; Saturday stores earn 0.5 hours. You can close this screen after reviewing the confirmation below.</p>
       <div class="confirm-detail">
         <div class="row"><span>Store</span><strong>FM ${escapeHtml(data.storeId)}</strong></div>
         <div class="row"><span>District</span><strong>${escapeHtml(data.district ? `District ${data.district}` : getDistrictLabel(selectedDistrictId))}</strong></div>
         <div class="row"><span>Sets included</span><strong>${data.setCount}</strong></div>
         <div class="row"><span>Photos submitted</span><strong>${data.photoCount}</strong></div>
-        ${earnedHours ? `<div class="row"><span>Hours earned</span><strong>${earnedHours}</strong></div>` : ''}
+        ${earnedHours ? `<div class="row"><span>Hours earned</span><strong>${earnedHoursLabel}</strong></div>` : ''}
       </div>
       <button class="confirm-btn" onclick="closeConfirm()">Done</button>
     </div>`;
