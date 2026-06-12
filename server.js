@@ -39,8 +39,18 @@ const DEFAULT_AUDIT_INBOX = 'd6ewa.supervisor@gmail.com';
 const AUDIT_REVIEWER_APRIL = 'april.gauthier@retailodyssey.com';
 const AUDIT_REVIEWER_TYSON = 'tyson.gauthier@retailodyssey.com';
 const DEFAULT_FRUIT_AUDIT_RECIPIENT = DEFAULT_AUDIT_INBOX;
-const FRUIT_AUDIT_SUBJECT_PREFIX = '[P5W3 D8 Fruit Photos]';
-const FRUIT_AUDIT_SAVE_ROOT = String.raw`C:\Users\tgaut\OneDrive - Advantage Solutions\Auston Nix's files - Trackers\P5W3 Audit C600, C602, C604, C517\Fruit Photos\D8`;
+const FRUIT_AUDIT_CONFIG_BY_DISTRICT = {
+  '1': {
+    subjectPrefix: '[P5W3 D1 Fruit Photos]',
+    saveRoot: String.raw`C:\Users\tgaut\OneDrive - Advantage Solutions\Auston Nix's files - Trackers\P5W3 Audit C600, C602, C604, C517\Fruit Photos\D1`,
+    from: 'D1 Fruit Audit <fruitaudit@the-dump-bin.com>',
+  },
+  '8': {
+    subjectPrefix: '[P5W3 D8 Fruit Photos]',
+    saveRoot: String.raw`C:\Users\tgaut\OneDrive - Advantage Solutions\Auston Nix's files - Trackers\P5W3 Audit C600, C602, C604, C517\Fruit Photos\D8`,
+    from: 'D8 Fruit Audit <fruitaudit@the-dump-bin.com>',
+  },
+};
 const DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS = [
   DEFAULT_AUDIT_INBOX,
   'ruth.northcutt@sasretailservices.com',
@@ -54,6 +64,14 @@ const REQUIRED_FRUIT_AUDIT_SIDES = [
   { id: 'left', label: 'Left Side' },
 ];
 const fruitAuditStores = new Map((fruitAuditManifest.stores || []).map(store => [store.id, store]));
+
+function fruitAuditDistrict(store) {
+  return String((store && store.district) || fruitAuditManifest.district || '8');
+}
+
+function fruitAuditConfig(district) {
+  return FRUIT_AUDIT_CONFIG_BY_DISTRICT[String(district || '')] || FRUIT_AUDIT_CONFIG_BY_DISTRICT['8'];
+}
 
 function escapeHtml(value) {
   return String(value || '')
@@ -113,13 +131,14 @@ function fruitSetFolderName(set) {
 }
 
 function fruitAttachmentName(store, set, side, photoIndex) {
+  const district = fruitAuditDistrict(store);
   const bays = String(set.bayRange || '')
     .replace(/[^0-9A-Za-z]+/g, '-')
     .replace(/^-+|-+$/g, '');
   const sequence = String(photoIndex + 1).padStart(2, '0');
   const sideLabel = fileSafe(side.label, side.id, 20);
   const group = fileSafe(set.commodityGroup, `C${set.commodity}`, 35);
-  return `D8_Fruit_FM${store.id}_${group}_POG${set.pogDbKey}_${fileSafe(set.aisleDesc, 'Produce_Table', 35)}_Bays${bays}_${sideLabel}_${sequence}.jpg`;
+  return `D${district}_Fruit_FM${store.id}_${group}_POG${set.pogDbKey}_${fileSafe(set.aisleDesc, 'Produce_Table', 35)}_Bays${bays}_${sideLabel}_${sequence}.jpg`;
 }
 
 /** FM 053 audits go to Tyson as primary reviewer; all other audit stores go to April. */
@@ -263,14 +282,19 @@ app.post('/api/tracker/unclaim', async (req, res) => {
 });
 
 app.post('/api/fruit-audit/send', async (req, res) => {
-  const { storeId, setPhotos, comment, userName, userEmail } = req.body || {};
+  const { storeId, setPhotos, comment, userName, userEmail, district } = req.body || {};
   const store = fruitAuditStores.get(padStoreId(storeId));
+  const storeDistrict = store ? fruitAuditDistrict(store) : null;
+  const requestedDistrict = String(district || '').trim();
 
   if (!isFruitAuditApprovedUser(userEmail)) {
-    return res.status(403).json({ error: 'This email is not approved for the District 8 fruit audit app.' });
+    return res.status(403).json({ error: 'This email is not approved for the fruit audit app.' });
   }
   if (!store) {
-    return res.status(400).json({ error: 'Store is not on the District 8 fruit audit list.' });
+    return res.status(400).json({ error: 'Store is not on the fruit audit list.' });
+  }
+  if (requestedDistrict && requestedDistrict !== storeDistrict) {
+    return res.status(400).json({ error: `FM ${store.id} is assigned to District ${storeDistrict}, not District ${requestedDistrict}.` });
   }
   if (!Array.isArray(setPhotos) || !setPhotos.length) {
     return res.status(400).json({ error: 'No photos provided.' });
@@ -336,6 +360,7 @@ app.post('/api/fruit-audit/send', async (req, res) => {
 
   const toList = splitEmailList(process.env.FRUIT_AUDIT_RECIPIENT_EMAIL || DEFAULT_FRUIT_AUDIT_RECIPIENT);
   const ccList = splitEmailList(process.env.FRUIT_AUDIT_CC_EMAIL);
+  const auditConfig = fruitAuditConfig(storeDistrict);
   addUniqueEmail(ccList, userEmail);
   const submittedBy = userName
     ? `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from <strong>${escapeHtml(userName)}</strong> at FM ${store.id}</p>`
@@ -343,27 +368,27 @@ app.post('/api/fruit-audit/send', async (req, res) => {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: 'D8 Fruit Audit <fruitaudit@the-dump-bin.com>',
+      from: auditConfig.from,
       to: toList,
       cc: ccList,
-      subject: `${FRUIT_AUDIT_SUBJECT_PREFIX} FM ${store.id} - ${submittedSetIds.size} sets / ${attachments.length} photos`,
+      subject: `${auditConfig.subjectPrefix} FM ${store.id} - ${submittedSetIds.size} sets / ${attachments.length} photos`,
       headers: {
-        'X-Fruit-Audit-Subject-Trigger': FRUIT_AUDIT_SUBJECT_PREFIX,
-        'X-Fruit-Audit-District': fruitAuditManifest.district || '8',
+        'X-Fruit-Audit-Subject-Trigger': auditConfig.subjectPrefix,
+        'X-Fruit-Audit-District': storeDistrict,
         'X-Fruit-Audit-Store': store.id,
         'X-Fruit-Audit-Set-Count': String(store.sets.length),
         'X-Fruit-Audit-Photo-Count': String(attachments.length),
-        'X-Fruit-Audit-Save-Root': FRUIT_AUDIT_SAVE_ROOT,
+        'X-Fruit-Audit-Save-Root': auditConfig.saveRoot,
       },
       html: `
         <div style="font-family:sans-serif;max-width:680px">
-          <h2 style="margin:0 0 8px">FM ${store.id} - District 8 Fruit Audit</h2>
+          <h2 style="margin:0 0 8px">FM ${store.id} - District ${storeDistrict} Fruit Audit</h2>
           ${submittedBy}
-          <p style="color:#666;margin:0 0 16px">Source store ${escapeHtml(store.sourceStore)} - ${submittedSetIds.size} of ${store.sets.length} set${store.sets.length === 1 ? '' : 's'} from Fruit Mapping.csv. Each set has a required 360-degree view: front, right side, back, and left side.</p>
+          <p style="color:#666;margin:0 0 16px">Source store ${escapeHtml(store.sourceStore)} - ${submittedSetIds.size} of ${store.sets.length} set${store.sets.length === 1 ? '' : 's'} from ${escapeHtml(fruitAuditManifest.source || 'Fruit Mapping')}. Each set has a required 360-degree view: front, right side, back, and left side.</p>
           <div style="margin:0 0 16px;background:#eefbf0;border-left:4px solid #53d86a;padding:12px;border-radius:6px;color:#1b3a24;font-size:13px">
             <p style="margin:0 0 8px"><strong>Gmail poller routing prompt:</strong></p>
-            <p style="margin:0 0 6px">Match subject prefix <code>${escapeHtml(FRUIT_AUDIT_SUBJECT_PREFIX)}</code>.</p>
-            <p style="margin:0 0 6px">Save raster attachments under <code>${escapeHtml(FRUIT_AUDIT_SAVE_ROOT)}</code>.</p>
+            <p style="margin:0 0 6px">Match subject prefix <code>${escapeHtml(auditConfig.subjectPrefix)}</code>.</p>
+            <p style="margin:0 0 6px">Save raster attachments under <code>${escapeHtml(auditConfig.saveRoot)}</code>.</p>
             <p style="margin:0 0 6px">Create/use store folder <code>${store.id}</code>.</p>
             <p style="margin:0">Create/use one set folder per attachment using the filename fields: commodity, POG, produce table, and bay range. Preserve side labels in filenames.</p>
           </div>
@@ -386,11 +411,12 @@ app.post('/api/fruit-audit/send', async (req, res) => {
       return res.status(400).json({ error: error.message || 'Fruit audit email send failed.' });
     }
 
-    console.log(`Fruit audit email sent for FM ${store.id} by ${userName || 'unknown'} (${userEmail || 'no email'}) - ${attachments.length} photo(s) - ID: ${data.id}`);
+    console.log(`Fruit audit email sent for D${storeDistrict} FM ${store.id} by ${userName || 'unknown'} (${userEmail || 'no email'}) - ${attachments.length} photo(s) - ID: ${data.id}`);
     res.json({
       success: true,
       id: data.id,
       storeId: store.id,
+      district: storeDistrict,
       setCount: submittedSetIds.size,
       totalSetCount: store.sets.length,
       photoCount: attachments.length,

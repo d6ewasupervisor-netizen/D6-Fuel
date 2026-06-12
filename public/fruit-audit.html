@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#07110b">
-<title>District 8 Fruit Audit</title>
+<title>Fruit Audit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -512,7 +512,7 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
   margin-bottom: 10px;
 }
 .login-card label { display: block; color: var(--sub); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
-.login-card input {
+.login-card input, .login-card select {
   width: 100%;
   min-height: 50px;
   border: 1px solid var(--border);
@@ -523,7 +523,8 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
   margin-bottom: 14px;
   outline: none;
 }
-.login-card input:focus { border-color: var(--green); }
+.login-card select { appearance: none; }
+.login-card input:focus, .login-card select:focus { border-color: var(--green); }
 .login-submit, .confirm-btn {
   width: 100%;
   min-height: 52px;
@@ -694,13 +695,14 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 </head>
 <body>
 <main id="app" class="app">
-  <div class="loading">Loading District 8 fruit audit...</div>
+  <div class="loading">Loading fruit audit...</div>
 </main>
 <div id="toast" class="toast"></div>
 
 <script>
 const STATE_KEY = 'd8_fruit_audit_state_v2';
 const SELECTED_STORE_KEY = 'd8_fruit_audit_selected_store';
+const SELECTED_DISTRICT_KEY = 'fruit_audit_selected_district';
 const PHOTO_ACCEPT = 'image/*,.heic,.heif,image/heic,image/heif';
 const REQUIRED_SIDES = [
   { id: 'front', label: 'Front', hint: 'Stand on the main customer-facing side and capture the full side.' },
@@ -716,6 +718,7 @@ let manifest = null;
 let currentUser = null;
 let approvedEmails = new Set();
 let selectedStoreId = localStorage.getItem(SELECTED_STORE_KEY) || null;
+let selectedDistrictId = localStorage.getItem(SELECTED_DISTRICT_KEY) || null;
 let sending = false;
 let statusMessage = '';
 let photoDb = null;
@@ -833,6 +836,31 @@ async function clearSetPhotoRecords(storeId, setId) {
 
 function getStore(storeId) {
   return (manifest && manifest.stores || []).find(store => store.id === storeId) || null;
+}
+
+function getStoreDistrict(store) {
+  return String((store && store.district) || (manifest && manifest.district) || '8');
+}
+
+function getDistricts() {
+  const configured = manifest && Array.isArray(manifest.districts) ? manifest.districts : [];
+  if (configured.length) return configured;
+  const ids = Array.from(new Set((manifest && manifest.stores || []).map(store => getStoreDistrict(store)))).sort();
+  return ids.map(id => ({ id, label: `District ${id}` }));
+}
+
+function getDistrictLabel(districtId) {
+  const district = getDistricts().find(item => item.id === String(districtId || ''));
+  return district ? district.label : `District ${districtId || ''}`.trim();
+}
+
+function getVisibleStores() {
+  if (!selectedDistrictId) return [];
+  return (manifest && manifest.stores || []).filter(store => getStoreDistrict(store) === selectedDistrictId);
+}
+
+function isValidDistrict(districtId) {
+  return getDistricts().some(district => district.id === String(districtId || ''));
 }
 
 function ensureStoreState(storeId) {
@@ -962,19 +990,21 @@ function renderUserRow() {
   return `
     <div class="user-row">
       <button class="pill" onclick="showStorePicker()"><strong>${escapeHtml(currentUser.name)}</strong></button>
+      <button class="pill" onclick="switchDistrict()">${escapeHtml(getDistrictLabel(selectedDistrictId))}</button>
       <button class="pill" onclick="signOut()">Switch user</button>
     </div>`;
 }
 
 function renderStorePicker() {
-  const stores = manifest.stores || [];
+  const stores = getVisibleStores();
   const totalSets = stores.reduce((sum, store) => sum + store.sets.length, 0);
+  const districtLabel = getDistrictLabel(selectedDistrictId);
   return `
     ${renderUserRow()}
     <section class="hero">
-      <div class="badge">District 8 Fruit Audit</div>
+      <div class="badge">${escapeHtml(districtLabel)} Fruit Audit</div>
       <h1>Select a store</h1>
-      <p>Pick the FM store you are auditing today. The app will show only the fruit sets that need photos for that store.</p>
+      <p>Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.</p>
     </section>
     <a class="guide-link" href="/fruit-audit-guide">Open User Guide</a>
     <div class="quick-steps">
@@ -983,7 +1013,7 @@ function renderStorePicker() {
       <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Submit once.</strong> Use the green Submit button after all required side views are captured.</div></div>
     </div>
     <div class="store-grid">
-      ${stores.map(store => {
+      ${stores.length ? stores.map(store => {
         const counts = storeCounts(store);
         const status = counts.sent === counts.total
           ? `Sent ${counts.sent}/${counts.total} side views`
@@ -997,14 +1027,15 @@ function renderStorePicker() {
             </div>
             <div class="chev">&gt;</div>
           </button>`;
-      }).join('')}
+      }).join('') : '<div class="notice"><strong>No stores found.</strong> Switch districts or contact the project supervisor.</div>'}
     </div>
-    <div class="footer">District 8 fruit audit photo capture</div>
+    <div class="footer">${escapeHtml(districtLabel)} fruit audit photo capture</div>
   `;
 }
 
 function renderStore(store) {
   const counts = storeCounts(store);
+  const districtLabel = getDistrictLabel(getStoreDistrict(store));
   const pct = Math.round(((counts.captured + counts.sent) / counts.total) * 100);
   const canSubmit = hasAllRequiredSets(store) && unsentPhotoCount(store) > 0 && !sending;
   const submitLabel = sending
@@ -1024,7 +1055,7 @@ function renderStore(store) {
     <section class="store-header">
       <div class="badge">Fruit Audit</div>
       <h1>FM ${store.id}</h1>
-      <div class="detail">District 8 - source store ${escapeHtml(store.sourceStore)} - ${store.sets.length} listed set${store.sets.length === 1 ? '' : 's'}</div>
+      <div class="detail">${escapeHtml(districtLabel)} - source store ${escapeHtml(store.sourceStore)} - ${store.sets.length} listed set${store.sets.length === 1 ? '' : 's'}</div>
     </section>
     <section class="progress">
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
@@ -1123,8 +1154,12 @@ function renderSideCard(store, set, side, setIndex) {
 function render() {
   const app = document.getElementById('app');
   if (!manifest) {
-    app.innerHTML = '<div class="loading">Loading District 8 fruit audit...</div>';
+    app.innerHTML = '<div class="loading">Loading fruit audit...</div>';
     return;
+  }
+  if (selectedDistrictId && !isValidDistrict(selectedDistrictId)) {
+    selectedDistrictId = null;
+    localStorage.removeItem(SELECTED_DISTRICT_KEY);
   }
   if (!currentUser) {
     app.innerHTML = '';
@@ -1133,11 +1168,16 @@ function render() {
   }
   if (!isApprovedUser(currentUser)) {
     app.innerHTML = '';
-    renderLogin('That email is not approved for the District 8 fruit audit app.');
+    renderLogin('That email is not approved for the fruit audit app.');
+    return;
+  }
+  if (!selectedDistrictId) {
+    app.innerHTML = '';
+    renderLogin();
     return;
   }
   const store = selectedStoreId ? getStore(selectedStoreId) : null;
-  app.innerHTML = store ? renderStore(store) : renderStorePicker();
+  app.innerHTML = store && getStoreDistrict(store) === selectedDistrictId ? renderStore(store) : renderStorePicker();
 }
 
 function renderLogin(errorMessage) {
@@ -1150,24 +1190,32 @@ function renderLogin(errorMessage) {
   }
   overlay.style.display = 'flex';
   const existing = window.D6Auth ? D6Auth.getUser() : null;
+  const districts = getDistricts();
   overlay.innerHTML = `
     <div class="login-card">
-      <div class="badge">District 8 Fruit Audit</div>
+      <div class="badge">Fruit Audit</div>
       <h1>Sign in</h1>
-      <p class="login-sub">Enter your approved name and email so photo submissions show who captured them.</p>
+      <p class="login-sub">Choose your district, then enter your approved name and email so photo submissions show who captured them.</p>
       ${errorMessage ? `<div class="error" style="margin-bottom:14px;padding:12px;font-size:13px">${escapeHtml(errorMessage)}</div>` : ''}
+      <label for="login-district">District</label>
+      <select id="login-district">
+        <option value="">Choose district...</option>
+        ${districts.map(district => `<option value="${escapeHtml(district.id)}" ${selectedDistrictId === String(district.id) ? 'selected' : ''}>${escapeHtml(district.label)}</option>`).join('')}
+      </select>
       <label for="login-name">Full name</label>
       <input id="login-name" autocomplete="name" placeholder="Jane Smith" value="${existing ? escapeHtml(existing.name) : ''}">
       <label for="login-email">Email address</label>
       <input id="login-email" type="email" autocomplete="email" placeholder="jane.smith@retailodyssey.com" value="${existing ? escapeHtml(existing.email) : ''}">
       <button class="login-submit" id="login-submit" disabled onclick="submitLogin()">Continue</button>
     </div>`;
+  const districtInput = document.getElementById('login-district');
   const nameInput = document.getElementById('login-name');
   const emailInput = document.getElementById('login-email');
   const btn = document.getElementById('login-submit');
   const validate = () => {
-    btn.disabled = !(nameInput.value.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim()));
+    btn.disabled = !(isValidDistrict(districtInput.value) && nameInput.value.trim().length >= 2 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim()));
   };
+  districtInput.addEventListener('change', validate);
   nameInput.addEventListener('input', validate);
   emailInput.addEventListener('input', validate);
   nameInput.addEventListener('keydown', event => { if (event.key === 'Enter') emailInput.focus(); });
@@ -1177,13 +1225,22 @@ function renderLogin(errorMessage) {
 }
 
 function submitLogin() {
+  const districtId = document.getElementById('login-district').value;
   const name = document.getElementById('login-name').value.trim();
   const email = document.getElementById('login-email').value.trim();
+  if (!isValidDistrict(districtId)) {
+    renderLogin('Choose your district before continuing.');
+    return;
+  }
   if (!approvedEmails.has(normalizeEmail(email))) {
-    renderLogin('That email is not approved for the District 8 fruit audit app.');
+    renderLogin('That email is not approved for the fruit audit app.');
     return;
   }
   currentUser = D6Auth.saveUser(name, email);
+  selectedDistrictId = districtId;
+  selectedStoreId = null;
+  localStorage.setItem(SELECTED_DISTRICT_KEY, selectedDistrictId);
+  localStorage.removeItem(SELECTED_STORE_KEY);
   const overlay = document.getElementById('fruit-login-overlay');
   if (overlay) overlay.style.display = 'none';
   render();
@@ -1193,11 +1250,21 @@ function signOut() {
   D6Auth.clearUser();
   currentUser = null;
   selectedStoreId = null;
+  selectedDistrictId = null;
   localStorage.removeItem(SELECTED_STORE_KEY);
+  localStorage.removeItem(SELECTED_DISTRICT_KEY);
   render();
 }
 
+function switchDistrict() {
+  selectedStoreId = null;
+  localStorage.removeItem(SELECTED_STORE_KEY);
+  renderLogin();
+}
+
 function openStore(storeId) {
+  const store = getStore(storeId);
+  if (!store || getStoreDistrict(store) !== selectedDistrictId) return;
   selectedStoreId = storeId;
   localStorage.setItem(SELECTED_STORE_KEY, storeId);
   render();
@@ -1614,13 +1681,14 @@ async function submitStore(storeId) {
         comment: (state.comments[storeId] || '').trim() || null,
         userName: currentUser.name,
         userEmail: currentUser.email,
+        district: getStoreDistrict(store),
       }),
     });
     const data = await res.json();
     if (res.status === 403) {
       D6Auth.clearUser();
       currentUser = null;
-      throw new Error((data && data.error) || 'This email is not approved for the District 8 fruit audit app.');
+      throw new Error((data && data.error) || 'This email is not approved for the fruit audit app.');
     }
     if (!res.ok || !data.success) {
       throw new Error((data && data.error) || 'Photo send failed.');
@@ -1660,6 +1728,7 @@ function showConfirm(data) {
       <p class="confirm-sub">FM ${escapeHtml(data.storeId)} is complete. You can close this screen after reviewing the confirmation below.</p>
       <div class="confirm-detail">
         <div class="row"><span>Store</span><strong>FM ${escapeHtml(data.storeId)}</strong></div>
+        <div class="row"><span>District</span><strong>${escapeHtml(data.district ? `District ${data.district}` : getDistrictLabel(selectedDistrictId))}</strong></div>
         <div class="row"><span>Sets included</span><strong>${data.setCount}</strong></div>
         <div class="row"><span>Photos submitted</span><strong>${data.photoCount}</strong></div>
       </div>
@@ -1694,10 +1763,20 @@ async function boot() {
     const res = manifestRes;
     if (!res.ok) throw new Error('Could not load manifest.');
     manifest = await res.json();
-    if (selectedStoreId && !getStore(selectedStoreId)) selectedStoreId = null;
+    if (selectedDistrictId && !isValidDistrict(selectedDistrictId)) {
+      selectedDistrictId = null;
+      localStorage.removeItem(SELECTED_DISTRICT_KEY);
+    }
+    if (selectedStoreId) {
+      const selectedStore = getStore(selectedStoreId);
+      if (!selectedStore || (selectedDistrictId && getStoreDistrict(selectedStore) !== selectedDistrictId)) {
+        selectedStoreId = null;
+        localStorage.removeItem(SELECTED_STORE_KEY);
+      }
+    }
     render();
   } catch (err) {
-    document.getElementById('app').innerHTML = `<div class="error">${escapeHtml(err.message || 'Could not load District 8 fruit audit.')}</div>`;
+    document.getElementById('app').innerHTML = `<div class="error">${escapeHtml(err.message || 'Could not load fruit audit.')}</div>`;
   }
 }
 
