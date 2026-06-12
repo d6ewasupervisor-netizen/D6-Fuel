@@ -5,11 +5,18 @@ const fs = require('fs');
 const { Resend } = require('resend');
 const tracker = require('./lib/tracker');
 const trackerNotify = require('./lib/tracker-notify');
+const fruitAuditTracker = require('./lib/fruit-audit-tracker');
+const fruitAuditTrackerNotify = require('./lib/fruit-audit-tracker-notify');
 const fruitAuditManifest = require('./data/fruit-audit-manifest.json');
 
 function trackerDashboardUrl(req) {
   const base = process.env.PUBLIC_APP_URL || `${req.protocol}://${req.get('host')}`;
   return `${base.replace(/\/$/, '')}/dashboard`;
+}
+
+function fruitAuditDashboardUrl(req) {
+  const base = process.env.PUBLIC_APP_URL || `${req.protocol}://${req.get('host')}`;
+  return `${base.replace(/\/$/, '')}/fruit-audit-dashboard`;
 }
 
 const app = express();
@@ -195,6 +202,15 @@ app.get('/fruit-audit-guide', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'fruit-audit-guide.html'));
 });
 
+app.get('/fruit-audit-dashboard', (req, res) => {
+  res.set({
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    Pragma: 'no-cache',
+    Expires: '0',
+  });
+  res.sendFile(path.join(__dirname, 'public', 'fruit-audit-dashboard.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 const versionFilePath = path.join(__dirname, 'version.json');
@@ -231,6 +247,10 @@ app.get('/dashboard', (req, res) => {
 const trackerDataPath = process.env.TRACKER_DATA_PATH
   || path.join(__dirname, 'data', 'tracker-state.json');
 tracker.init({ dataPath: trackerDataPath });
+
+const fruitAuditTrackerDataPath = process.env.FRUIT_AUDIT_TRACKER_DATA_PATH
+  || path.join(__dirname, 'data', 'fruit-audit-tracker-state.json');
+fruitAuditTracker.init({ dataPath: fruitAuditTrackerDataPath });
 
 app.get('/api/tracker', (req, res) => {
   res.json(tracker.getSnapshot());
@@ -274,6 +294,55 @@ app.post('/api/tracker/unclaim', async (req, res) => {
     res.json({
       success: true,
       message: `You released FM ${pledge.storeId}. The project administrator has been notified.`,
+      snapshot,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/fruit-audit-tracker', (req, res) => {
+  res.json(fruitAuditTracker.getSnapshot());
+});
+
+app.get('/api/fruit-audit-tracker/events', (req, res) => {
+  fruitAuditTracker.subscribe(res);
+});
+
+app.post('/api/fruit-audit-tracker/pledge', async (req, res) => {
+  try {
+    const { snapshot, pledge } = fruitAuditTracker.addPledge(req.body || {});
+    const meta = fruitAuditTracker.getStoreMeta(pledge.storeId);
+    fruitAuditTrackerNotify.sendPledgeSignedUp(resend, {
+      pledge,
+      meta,
+      deadline: snapshot.deadline,
+      dashboardUrl: fruitAuditDashboardUrl(req),
+    }).catch(err => console.error('Fruit audit tracker pledge notify:', err.message));
+
+    res.json({
+      success: true,
+      message: `You are signed up for FM ${pledge.storeId}. Complete the District 1 fruit audit and submit photos from the field app.`,
+      snapshot,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/fruit-audit-tracker/unclaim', async (req, res) => {
+  try {
+    const { snapshot, pledge } = fruitAuditTracker.removePledge(req.body || {});
+    const meta = fruitAuditTracker.getStoreMeta(pledge.storeId);
+    fruitAuditTrackerNotify.sendPledgeReleased(resend, {
+      pledge,
+      meta,
+      dashboardUrl: fruitAuditDashboardUrl(req),
+    }).catch(err => console.error('Fruit audit tracker release notify:', err.message));
+
+    res.json({
+      success: true,
+      message: `You released FM ${pledge.storeId}. Tyson has been notified.`,
       snapshot,
     });
   } catch (err) {
@@ -412,6 +481,19 @@ app.post('/api/fruit-audit/send', async (req, res) => {
     }
 
     console.log(`Fruit audit email sent for D${storeDistrict} FM ${store.id} by ${userName || 'unknown'} (${userEmail || 'no email'}) - ${attachments.length} photo(s) - ID: ${data.id}`);
+    if (storeDistrict === '1') {
+      try {
+        fruitAuditTracker.recordCompletion({
+          storeId: store.id,
+          name: userName,
+          email: userEmail,
+          photoCount: attachments.length,
+          setCount: submittedSetIds.size,
+        });
+      } catch (trackErr) {
+        console.warn('Fruit audit tracker: could not record completion:', trackErr.message);
+      }
+    }
     res.json({
       success: true,
       id: data.id,

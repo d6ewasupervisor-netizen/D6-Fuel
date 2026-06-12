@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#07110b">
+<title>District 1 Fruit Audit - Live Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/auth.css">
+<style>
+:root {
+  --bg: #07110b;
+  --bg-elevated: #0e1a12;
+  --card: #14231a;
+  --card-border: #294434;
+  --text: #f4fff7;
+  --text-secondary: #bfd8c6;
+  --muted: #7f9b89;
+  --accent: #53d86a;
+  --accent-2: #88f06f;
+  --green: #53d86a;
+  --green-bg: rgba(83,216,106,0.12);
+  --amber: #ffd166;
+  --amber-bg: rgba(255,209,102,0.12);
+  --red: #ff5d6c;
+  --radius: 14px;
+  --radius-sm: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: radial-gradient(circle at 20% -10%, rgba(83,216,106,0.18), transparent 34%), var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 20px 16px 48px; }
+.top-bar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
+}
+.top-bar h1 { font-size: 27px; font-weight: 800; letter-spacing: -0.02em; }
+.top-bar p { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
+.live-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 999px; padding: 8px 14px; font-size: 13px; font-weight: 700;
+}
+.live-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--muted);
+}
+.live-pill.connected .live-dot {
+  background: var(--green);
+  box-shadow: 0 0 10px rgba(83,216,106,0.7);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+.app-nav {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+}
+.app-nav a {
+  flex: 1; min-width: 150px; text-align: center; text-decoration: none;
+  padding: 12px 16px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 800;
+  border: 1px solid var(--card-border); background: var(--card); color: var(--text);
+}
+.app-nav a.primary {
+  background: var(--accent); border-color: var(--accent); color: #061008;
+}
+.field-app-banner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+  background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius);
+  padding: 16px 18px; margin-bottom: 20px;
+}
+.field-app-banner p { font-size: 14px; color: var(--text-secondary); max-width: 620px; }
+.field-app-banner a {
+  text-decoration: none; padding: 12px 18px; border-radius: var(--radius-sm);
+  background: var(--green); color: #061008; font-size: 14px; font-weight: 900; white-space: nowrap;
+}
+.deadline-banner {
+  background: linear-gradient(135deg, rgba(83,216,106,0.16), rgba(255,209,102,0.08));
+  border: 1px solid rgba(83,216,106,0.35);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+}
+.deadline-banner .label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 800; }
+.deadline-banner .time { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+.deadline-banner.urgent { border-color: var(--amber); background: var(--amber-bg); }
+.stats {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;
+}
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm); padding: 14px; text-align: center;
+}
+.stat .num { font-size: 28px; font-weight: 800; line-height: 1.1; }
+.stat .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; font-weight: 800; }
+.stat.done .num { color: var(--green); }
+.stat.left .num { color: var(--amber); }
+.progress-wrap { margin-bottom: 24px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+.progress-bar { height: 10px; background: var(--bg-elevated); border-radius: 999px; overflow: hidden; border: 1px solid var(--card-border); }
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 999px; transition: width 0.4s ease;
+}
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px; margin-bottom: 28px;
+}
+.store-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 16px; transition: border-color 0.2s;
+}
+.store-card.complete { border-color: rgba(83,216,106,0.48); background: var(--green-bg); }
+.store-card.pledged { border-color: rgba(255,209,102,0.45); }
+.store-card.open { border-style: dashed; }
+.store-card .fm { font-size: 20px; font-weight: 900; font-family: 'JetBrains Mono', monospace; }
+.store-card .loc { font-size: 13px; color: var(--muted); margin: 2px 0 10px; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 0.05em; padding: 4px 8px; border-radius: 6px;
+}
+.badge.complete { background: var(--green-bg); color: var(--green); }
+.badge.pledged { background: var(--amber-bg); color: var(--amber); }
+.badge.open { background: var(--bg-elevated); color: var(--muted); }
+.store-card .who { font-size: 13px; color: var(--text-secondary); margin-top: 10px; line-height: 1.45; }
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 840px) { .panels { grid-template-columns: 1fr; } }
+.panel {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 20px;
+}
+.panel h2 { font-size: 17px; font-weight: 900; margin-bottom: 6px; }
+.panel .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+label { display: block; font-size: 12px; font-weight: 800; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+input, select {
+  width: 100%; padding: 12px 14px; border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border); background: var(--bg-elevated);
+  color: var(--text); font-size: 15px; font-family: inherit; margin-bottom: 12px;
+}
+input:focus, select:focus { outline: none; border-color: var(--accent); }
+.btn {
+  width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm);
+  background: var(--accent); color: #061008; font-size: 15px; font-weight: 900;
+  font-family: inherit; cursor: pointer;
+}
+.btn:disabled { background: #223629; color: #536b5c; cursor: not-allowed; }
+.btn:active:not(:disabled), .app-nav a:active, .field-app-banner a:active { transform: scale(0.98); }
+.msg { font-size: 13px; margin-top: 10px; padding: 10px 12px; border-radius: var(--radius-sm); display: none; }
+.msg.show { display: block; }
+.msg.ok { background: var(--green-bg); color: var(--green); border: 1px solid rgba(83,216,106,0.3); }
+.msg.err { background: rgba(255,93,108,0.12); color: var(--red); border: 1px solid rgba(255,93,108,0.3); }
+.pledge-list { list-style: none; max-height: 300px; overflow-y: auto; }
+.pledge-list li {
+  padding: 10px 0; border-bottom: 1px solid var(--card-border);
+  font-size: 14px; display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap;
+}
+.pledge-list li:last-child { border-bottom: none; }
+.pledge-list .store { font-weight: 800; color: var(--accent-2); font-family: 'JetBrains Mono', monospace; }
+.pledge-list .pledge-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.unclaim-btn {
+  padding: 6px 10px; border-radius: 8px; border: 1px solid var(--card-border);
+  background: var(--bg-elevated); color: var(--text-secondary);
+  font-size: 12px; font-weight: 800; font-family: inherit; cursor: pointer;
+}
+.unclaim-btn:active { border-color: var(--red); color: var(--red); }
+.my-pledges { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border); }
+.my-pledges h3 { font-size: 14px; font-weight: 900; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap" id="dashboard-root" hidden>
+  <nav class="app-nav" aria-label="App navigation">
+    <a href="/fruit-audit?district=1" class="primary">Open fruit photo app</a>
+    <a href="/fruit-audit-guide">Fruit audit guide</a>
+  </nav>
+  <div class="field-app-banner">
+    <p>After you claim a District 1 store here, open the fruit photo app, choose District 1, capture all required 360-degree fruit set photos, and submit the store.</p>
+    <a href="/fruit-audit?district=1">Go to fruit app</a>
+  </div>
+  <div class="top-bar">
+    <div>
+      <h1>District 1 fruit audit tracker</h1>
+      <p>Live signup and completion status for the District 1 fruit audit stores.</p>
+    </div>
+    <div class="live-pill" id="live-pill">
+      <span class="live-dot"></span>
+      <span id="live-label">Connecting...</span>
+    </div>
+  </div>
+
+  <div class="deadline-banner" id="deadline-banner">
+    <div>
+      <div class="label">Commit by</div>
+      <div class="time" id="deadline-text">-</div>
+    </div>
+    <div style="text-align:right">
+      <div class="label">Time remaining</div>
+      <div class="time" id="countdown-text">-</div>
+    </div>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Overall progress</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  </div>
+
+  <div class="grid" id="store-grid"></div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>Claim a District 1 store</h2>
+      <p class="sub">Each open store can only be claimed once until it is submitted. Tyson is notified when you claim or release a store.</p>
+      <div class="signed-in-bar" id="signed-in-bar">
+        <span>Signed in as <strong id="signed-in-name"></strong> - <span id="signed-in-email"></span></span>
+        <button type="button" class="sign-out-btn" id="sign-out-btn">Sign out</button>
+      </div>
+      <form id="pledge-form">
+        <label for="pledge-store">Store</label>
+        <select id="pledge-store" required><option value="">Select a store...</option></select>
+        <button type="submit" class="btn" id="pledge-btn">I commit to audit this store</button>
+        <div class="msg" id="pledge-msg"></div>
+      </form>
+      <div class="my-pledges" id="my-pledges-wrap" style="display:none">
+        <h3>Your commitments</h3>
+        <p class="sub" style="margin-bottom:10px">Cannot make it? Release the store so someone else can claim it.</p>
+        <ul class="pledge-list" id="my-pledge-list"></ul>
+        <div class="msg" id="unclaim-msg"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Commitments</h2>
+      <p class="sub">Who has claimed which District 1 fruit store.</p>
+      <ul class="pledge-list" id="pledge-list"></ul>
+    </div>
+  </div>
+</div>
+
+<script src="/auth.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+let snapshot = null;
+let countdownTimer = null;
+
+function fmtDeadline(iso) {
+  if (!iso) return '-';
+  return new Date(iso).toLocaleString('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
+
+function fmtCountdown(ms) {
+  if (ms == null || !Number.isFinite(ms)) return '-';
+  if (ms <= 0) return 'Past deadline';
+  const s = Math.floor(ms / 1000);
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  if (d > 0) return `${d}d ${h}h ${m}m`;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m ${s % 60}s`;
+}
+
+function statusLabel(status) {
+  if (status === 'complete') return 'Done';
+  if (status === 'pledged') return 'Claimed';
+  return 'Open';
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function showMsg(el, text, ok) {
+  el.textContent = text;
+  el.className = 'msg show ' + (ok ? 'ok' : 'err');
+}
+
+function storeOptionLabel(store) {
+  return `FM ${store.id} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}`;
+}
+
+function render(data) {
+  snapshot = data;
+  const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
+
+  $('deadline-text').textContent = fmtDeadline(deadline);
+  const remain = deadlineMs != null ? deadlineMs - nowMs : null;
+  $('countdown-text').textContent = fmtCountdown(remain);
+  $('deadline-banner').classList.toggle('urgent', remain != null && remain < 24 * 3600 * 1000);
+
+  $('stats').innerHTML = `
+    <div class="stat done"><div class="num">${stats.complete}</div><div class="lbl">Done</div></div>
+    <div class="stat"><div class="num">${stats.pledged}</div><div class="lbl">Claimed</div></div>
+    <div class="stat left"><div class="num">${stats.remaining}</div><div class="lbl">Left</div></div>
+    <div class="stat"><div class="num">${stats.total}</div><div class="lbl">Stores</div></div>
+    <div class="stat"><div class="num">${stats.totalSets}</div><div class="lbl">Fruit Sets</div></div>
+  `;
+
+  const pct = stats.total ? Math.round((stats.complete / stats.total) * 100) : 0;
+  $('progress-pct').textContent = `${pct}% (${stats.complete} of ${stats.total})`;
+  $('progress-fill').style.width = `${pct}%`;
+
+  $('store-grid').innerHTML = stores.map(store => {
+    let who = '';
+    if (store.status === 'complete' && store.completion) {
+      who = `Submitted by <strong>${esc(store.completion.name)}</strong> - ${store.completion.photoCount} photo${store.completion.photoCount === 1 ? '' : 's'}`;
+    } else if (store.status === 'pledged' && store.pledge) {
+      who = `Claimed by <strong>${esc(store.pledge.name)}</strong>`;
+    } else {
+      who = 'Available to claim';
+    }
+    return `
+      <div class="store-card ${store.status}">
+        <div class="fm">${store.label}</div>
+        <div class="loc">District 1 - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
+        <span class="badge ${store.status}">${statusLabel(store.status)}</span>
+        <div class="who">${who}</div>
+      </div>`;
+  }).join('');
+
+  const openStores = stores.filter(store => store.status === 'open');
+  const sel = $('pledge-store');
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Select a store...</option>' +
+    openStores.map(store => `<option value="${store.id}">${esc(storeOptionLabel(store))}</option>`).join('');
+  if (prev && openStores.some(store => store.id === prev)) sel.value = prev;
+
+  const activePledges = pledges.filter(pledge => {
+    const st = stores.find(store => store.id === pledge.storeId);
+    return st && st.status === 'pledged';
+  });
+
+  $('pledge-list').innerHTML = activePledges.length
+    ? activePledges.map(pledge => `
+        <li>
+          <span><span class="store">FM ${pledge.storeId}</span> - ${esc(pledge.name)}</span>
+          <span style="color:var(--muted);font-size:12px">${fmtDeadline(pledge.pledgedAt).split(',')[0]}</span>
+        </li>`).join('')
+    : '<li style="color:var(--muted)">No active claims yet.</li>';
+
+  const sessionUser = D6Auth.getUser();
+  const myEmail = sessionUser ? normalizeEmail(sessionUser.email) : '';
+  const myPledges = myEmail
+    ? activePledges.filter(pledge => normalizeEmail(pledge.email) === myEmail)
+    : [];
+  const myWrap = $('my-pledges-wrap');
+  if (myPledges.length) {
+    myWrap.style.display = 'block';
+    $('my-pledge-list').innerHTML = myPledges.map(pledge => `
+      <li>
+        <span><span class="store">FM ${pledge.storeId}</span></span>
+        <div class="pledge-actions">
+          <span style="color:var(--muted);font-size:12px">Claimed ${fmtDeadline(pledge.pledgedAt).split(',')[0]}</span>
+          <button type="button" class="unclaim-btn" data-pledge-id="${esc(pledge.id)}">Release claim</button>
+        </div>
+      </li>`).join('');
+  } else {
+    myWrap.style.display = 'none';
+    $('my-pledge-list').innerHTML = '';
+  }
+
+  if (countdownTimer) clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    if (!snapshot || snapshot.deadlineMs == null) return;
+    $('countdown-text').textContent = fmtCountdown(snapshot.deadlineMs - Date.now());
+  }, 1000);
+}
+
+async function loadSnapshot() {
+  const res = await fetch('/api/fruit-audit-tracker');
+  if (!res.ok) throw new Error('Could not load fruit tracker');
+  return res.json();
+}
+
+function connectSSE() {
+  const pill = $('live-pill');
+  const label = $('live-label');
+  const es = new EventSource('/api/fruit-audit-tracker/events');
+
+  es.addEventListener('snapshot', e => {
+    pill.classList.add('connected');
+    label.textContent = 'Live';
+    render(JSON.parse(e.data));
+  });
+
+  es.onerror = () => {
+    pill.classList.remove('connected');
+    label.textContent = 'Reconnecting...';
+  };
+
+  return es;
+}
+
+async function unclaimPledge(pledgeId) {
+  const msg = $('unclaim-msg');
+  const user = D6Auth.getUser();
+  if (!user) return;
+  const email = user.email;
+  if (!confirm('Release this store? Tyson will be notified that it is open again.')) {
+    return;
+  }
+  msg.className = 'msg';
+  try {
+    const res = await fetch('/api/fruit-audit-tracker/unclaim', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pledgeId, email }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not release commitment');
+    showMsg(msg, data.message || 'Store released.', true);
+    if (data.snapshot) render(data.snapshot);
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+}
+
+$('my-pledge-list').addEventListener('click', e => {
+  const btn = e.target.closest('.unclaim-btn');
+  if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId);
+});
+
+function syncSignedInBar() {
+  const user = D6Auth.getUser();
+  if (!user) return;
+  $('signed-in-name').textContent = user.name;
+  $('signed-in-email').textContent = user.email;
+}
+
+$('pledge-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const user = D6Auth.getUser();
+  if (!user) return;
+  const btn = $('pledge-btn');
+  const msg = $('pledge-msg');
+  btn.disabled = true;
+  msg.className = 'msg';
+
+  try {
+    const res = await fetch('/api/fruit-audit-tracker/pledge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: user.name,
+        email: user.email,
+        storeId: $('pledge-store').value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not save commitment');
+    showMsg(msg, data.message || 'You are signed up. Complete the fruit audit in the field app and submit photos.', true);
+    $('pledge-store').value = '';
+    if (data.snapshot) render(data.snapshot);
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+  btn.disabled = false;
+});
+
+async function initDashboard() {
+  $('dashboard-root').hidden = false;
+  syncSignedInBar();
+  try {
+    const data = await loadSnapshot();
+    render(data);
+    connectSSE();
+  } catch (err) {
+    $('live-label').textContent = 'Offline';
+    showMsg($('pledge-msg'), err.message, false);
+  }
+}
+
+$('sign-out-btn').addEventListener('click', () => {
+  D6Auth.clearUser();
+  $('dashboard-root').hidden = true;
+  D6Auth.showLogin({ onSuccess: () => initDashboard() });
+});
+
+D6Auth.requireLogin({
+  title: 'District 1 fruit audit',
+  subtitle: 'Enter your name and email to claim a District 1 fruit audit store.',
+  onSuccess: () => initDashboard(),
+});
+</script>
+</body>
+</html>

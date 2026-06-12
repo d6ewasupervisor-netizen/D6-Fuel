@@ -1007,6 +1007,7 @@ function renderStorePicker() {
       <p>Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.</p>
     </section>
     <a class="guide-link" href="/fruit-audit-guide">Open User Guide</a>
+    ${selectedDistrictId === '1' ? '<a class="guide-link" href="/fruit-audit-dashboard">Open District 1 Signup Dashboard</a>' : ''}
     <div class="quick-steps">
       <div class="quick-step"><div class="num">1</div><div class="txt"><strong>Select your store.</strong> Make sure the FM number matches where you are working.</div></div>
       <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Complete every set.</strong> Each set needs Front, Right Side, Back, and Left Side photos.</div></div>
@@ -1050,6 +1051,7 @@ function renderStore(store) {
     <div class="top-nav">
       <button class="back-btn" onclick="showStorePicker()">&lt; Stores</button>
       <a class="pill" href="/fruit-audit-guide">Guide</a>
+      ${getStoreDistrict(store) === '1' ? '<a class="pill" href="/fruit-audit-dashboard">Dashboard</a>' : ''}
       <button class="pill" onclick="signOut()">${escapeHtml(currentUser.name)}</button>
     </div>
     <section class="store-header">
@@ -1763,6 +1765,13 @@ async function boot() {
     const res = manifestRes;
     if (!res.ok) throw new Error('Could not load manifest.');
     manifest = await res.json();
+    const requestedDistrict = new URLSearchParams(window.location.search).get('district');
+    if (requestedDistrict && isValidDistrict(requestedDistrict)) {
+      selectedDistrictId = requestedDistrict;
+      selectedStoreId = null;
+      localStorage.setItem(SELECTED_DISTRICT_KEY, selectedDistrictId);
+      localStorage.removeItem(SELECTED_STORE_KEY);
+    }
     if (selectedDistrictId && !isValidDistrict(selectedDistrictId)) {
       selectedDistrictId = null;
       localStorage.removeItem(SELECTED_DISTRICT_KEY);
