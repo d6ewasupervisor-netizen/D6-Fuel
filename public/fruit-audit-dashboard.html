@@ -185,6 +185,16 @@ body {
   display: block; margin-top: 6px; border: 0; background: transparent; color: var(--red);
   font-size: 12px; font-weight: 900; font-family: inherit; cursor: pointer;
 }
+.route-drive {
+  border: 1px solid rgba(83,216,106,0.35); background: rgba(83,216,106,0.08);
+  border-radius: var(--radius-sm); padding: 12px; margin: 10px 0 12px;
+}
+.route-drive h3 { font-size: 15px; font-weight: 900; margin-bottom: 4px; }
+.route-drive .current { color: var(--text); font-size: 14px; font-weight: 800; margin: 8px 0; }
+.route-drive .hint { color: var(--text-secondary); font-size: 12px; margin-bottom: 10px; }
+.route-drive-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.route-drive-actions .btn { min-height: 44px; padding: 10px; font-size: 13px; }
+.route-drive-actions .secondary { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--card-border); }
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 980px) { .panels { grid-template-columns: 1fr; } }
 .panel {
@@ -255,6 +265,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
   .route-controls .route-origin-wrap { grid-column: auto; }
   .route-help { grid-template-columns: 1fr; }
   .route-stop-list { grid-template-columns: 1fr; }
+  .route-drive-actions { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -323,6 +334,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <div class="route-summary" id="route-summary"></div>
     <div class="route-selected-list" id="route-selected-list"></div>
     <div class="route-stop-list" id="route-stop-list"></div>
+    <div class="route-drive" id="route-drive-panel"></div>
     <button type="button" class="unclaim-btn danger" id="clear-route-btn">Clear saved route</button>
     <div class="msg" id="route-msg"></div>
   </section>
@@ -371,9 +383,11 @@ const DASHBOARD_SNAPSHOT_CACHE_KEY = 'd1_fruit_audit_dashboard_snapshot_v1';
 const DASHBOARD_APPROVED_CACHE_KEY = 'd1_fruit_audit_dashboard_approved_v1';
 const ROUTE_STOPS_CACHE_KEY = 'd1_fruit_audit_route_stops_v1';
 const ROUTE_ORIGIN_CACHE_KEY = 'd1_fruit_audit_route_origin_v1';
+const ROUTE_ACTIVE_INDEX_CACHE_KEY = 'd1_fruit_audit_route_active_index_v1';
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
+let activeRouteIndex = 0;
 const selectedRouteStoreIds = new Set();
 
 function fmtDeadline(iso) {
@@ -448,6 +462,12 @@ function routeStoreQuery(store) {
   return `Fred Meyer FM ${store.id} Oregon`;
 }
 
+function routeOriginForLeg() {
+  const manual = $('route-origin').value.trim();
+  if (manual) return manual;
+  return 'Current Location';
+}
+
 function selectedRouteStores() {
   if (!snapshot) return [];
   const stores = snapshot.stores || [];
@@ -459,6 +479,7 @@ function selectedRouteStores() {
 function isRouteSelectableStore(store) {
   if (!store) return false;
   if (store.status === 'open') return true;
+  if (store.status === 'complete') return selectedRouteStoreIds.has(store.id);
   return store.status === 'pledged'
     && store.pledge
     && normalizeEmail(store.pledge.email) === currentUserEmail();
@@ -468,6 +489,7 @@ function saveRouteState() {
   cacheJson(ROUTE_STOPS_CACHE_KEY, Array.from(selectedRouteStoreIds));
   try {
     localStorage.setItem(ROUTE_ORIGIN_CACHE_KEY, $('route-origin').value.trim());
+    localStorage.setItem(ROUTE_ACTIVE_INDEX_CACHE_KEY, String(activeRouteIndex));
   } catch (err) {}
 }
 
@@ -481,6 +503,7 @@ function loadRouteState() {
   }
   try {
     $('route-origin').value = localStorage.getItem(ROUTE_ORIGIN_CACHE_KEY) || '';
+    activeRouteIndex = Math.max(0, Number(localStorage.getItem(ROUTE_ACTIVE_INDEX_CACHE_KEY)) || 0);
   } catch (err) {}
 }
 
@@ -499,8 +522,12 @@ function syncRouteSelection(stores) {
 function renderRoutePlanner() {
   const selected = selectedRouteStores();
   const list = $('route-selected-list');
+  if (selected.length && activeRouteIndex > selected.length - 1) {
+    activeRouteIndex = selected.length - 1;
+    saveRouteState();
+  }
   $('route-summary').textContent = selected.length
-    ? `${selected.length} saved route stop${selected.length === 1 ? '' : 's'}${$('route-origin').value.trim() ? ' with a start location saved' : ''}.`
+    ? `${selected.length} saved route stop${selected.length === 1 ? '' : 's'}${$('route-origin').value.trim() ? ' with a start location saved' : ''}. Drive mode is on stop ${activeRouteIndex + 1} of ${selected.length}.`
     : 'No saved route yet. Tap store cards below to build one.';
   list.innerHTML = selected.length
     ? selected.map(store => `<span class="route-chip">FM ${store.id}<button type="button" data-remove-route="${store.id}" title="Remove">x</button></span>`).join('')
@@ -509,17 +536,26 @@ function renderRoutePlanner() {
     ? selected.map((store, idx) => `
         <div class="route-stop">
           <div><span class="step">${idx + 1}.</span><strong>FM ${store.id}</strong></div>
-          <div>${store.status === 'pledged' ? 'Your claimed store' : 'Open to claim'} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}</div>
+          <div>${routeStopStatus(store)} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}</div>
+          <button type="button" data-set-active-route="${idx}">Use as current stop</button>
           <button type="button" data-remove-route="${store.id}">Remove from route</button>
         </div>`).join('')
     : '';
+  renderDrivePanel(selected);
 }
 
 function selectStoreForRoute(storeId) {
   if (selectedRouteStoreIds.has(storeId)) selectedRouteStoreIds.delete(storeId);
   else selectedRouteStoreIds.add(storeId);
+  if (activeRouteIndex > selectedRouteStoreIds.size - 1) activeRouteIndex = Math.max(0, selectedRouteStoreIds.size - 1);
   saveRouteState();
   render(snapshot);
+}
+
+function routeStopStatus(store) {
+  if (store.status === 'complete') return 'Completed';
+  if (store.status === 'pledged') return 'Your claimed store';
+  return 'Open to claim';
 }
 
 function addClaimedStoresToRoute() {
@@ -538,9 +574,55 @@ function addClaimedStoresToRoute() {
 
 function clearRoute() {
   selectedRouteStoreIds.clear();
+  activeRouteIndex = 0;
   $('route-origin').value = '';
   saveRouteState();
   render(snapshot);
+}
+
+function setActiveRouteIndex(idx) {
+  const selected = selectedRouteStores();
+  if (!selected.length) return;
+  activeRouteIndex = Math.max(0, Math.min(Number(idx) || 0, selected.length - 1));
+  saveRouteState();
+  renderRoutePlanner();
+}
+
+function advanceRouteStop(delta) {
+  setActiveRouteIndex(activeRouteIndex + delta);
+}
+
+function directionsUrlForStop(store) {
+  if (!store) throw new Error('No current route stop selected.');
+  const selected = selectedRouteStores();
+  const priorStop = activeRouteIndex > 0 ? selected[activeRouteIndex - 1] : null;
+  const params = new URLSearchParams({
+    api: '1',
+    origin: priorStop ? routeStoreQuery(priorStop) : routeOriginForLeg(),
+    destination: routeStoreQuery(store),
+    travelmode: 'driving',
+  });
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+}
+
+function renderDrivePanel(selected) {
+  const panel = $('route-drive-panel');
+  if (!selected.length) {
+    panel.innerHTML = `
+      <h3>Drive mode</h3>
+      <div class="hint">Add stops to your route, then use Drive mode to move store by store.</div>`;
+    return;
+  }
+  const current = selected[Math.min(activeRouteIndex, selected.length - 1)];
+  panel.innerHTML = `
+    <h3>Drive mode</h3>
+    <div class="hint">Keep this dashboard open. Use Google Maps for the live turn-by-turn leg, then come back here and tap "Arrived / next" after the store is done.</div>
+    <div class="current">Current stop: ${activeRouteIndex + 1} of ${selected.length} - FM ${current.id} (${routeStopStatus(current)})</div>
+    <div class="route-drive-actions">
+      <button type="button" class="btn secondary" id="prev-stop-btn" ${activeRouteIndex === 0 ? 'disabled' : ''}>Previous stop</button>
+      <button type="button" class="btn" id="next-directions-btn">Live directions</button>
+      <button type="button" class="btn secondary" id="arrived-next-btn">${activeRouteIndex >= selected.length - 1 ? 'Route complete' : 'Arrived / next'}</button>
+    </div>`;
 }
 
 function routeUrlForSelectedStores() {
@@ -808,8 +890,43 @@ $('route-selected-list').addEventListener('click', e => {
 });
 
 $('route-stop-list').addEventListener('click', e => {
+  const activeBtn = e.target.closest('[data-set-active-route]');
+  if (activeBtn) {
+    setActiveRouteIndex(activeBtn.dataset.setActiveRoute);
+    return;
+  }
   const btn = e.target.closest('[data-remove-route]');
   if (btn) selectStoreForRoute(btn.dataset.removeRoute);
+});
+
+$('route-drive-panel').addEventListener('click', e => {
+  const selected = selectedRouteStores();
+  const current = selected[Math.min(activeRouteIndex, selected.length - 1)];
+  const msg = $('route-msg');
+  if (e.target.closest('#prev-stop-btn')) {
+    advanceRouteStop(-1);
+    return;
+  }
+  if (e.target.closest('#arrived-next-btn')) {
+    if (!selected.length) return;
+    if (activeRouteIndex >= selected.length - 1) {
+      showMsg(msg, 'Route complete. Clear the saved route when you are done for the day.', true);
+      return;
+    }
+    advanceRouteStop(1);
+    showMsg(msg, `Advanced to stop ${activeRouteIndex + 1}.`, true);
+    return;
+  }
+  if (e.target.closest('#next-directions-btn')) {
+    try {
+      saveRouteState();
+      const url = directionsUrlForStop(current);
+      showMsg(msg, `Opening live directions to FM ${current.id}. Return here after the store is done.`, true);
+      window.open(url, '_blank', 'noopener');
+    } catch (err) {
+      showMsg(msg, err.message, false);
+    }
+  }
 });
 
 $('store-grid').addEventListener('click', e => {
