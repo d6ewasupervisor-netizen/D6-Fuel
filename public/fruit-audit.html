@@ -213,6 +213,39 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 .fact .k { color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; }
 .fact .v { color: var(--text); font-size: 13px; font-weight: 700; margin-top: 2px; overflow-wrap: anywhere; }
 .desc { color: var(--sub); font-size: 13px; margin-bottom: 12px; }
+.side-grid {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+.side-card {
+  background: var(--panel);
+  border: 1px solid #21382b;
+  border-radius: 13px;
+  padding: 11px;
+}
+.side-card.ready { border-color: rgba(255,209,102,0.50); }
+.side-card.sent { border-color: rgba(83,216,106,0.50); }
+.side-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.side-title { font-weight: 900; color: var(--text); font-size: 14px; }
+.side-hint { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+.side-status {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.side-status.ready { color: var(--amber); border-color: rgba(255,209,102,0.45); }
+.side-status.sent { color: var(--green-2); border-color: rgba(83,216,106,0.45); }
 .gallery {
   display: flex;
   gap: 8px;
@@ -399,15 +432,26 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 <div id="toast" class="toast"></div>
 
 <script>
-const STATE_KEY = 'd8_fruit_audit_state_v1';
+const STATE_KEY = 'd8_fruit_audit_state_v2';
 const SELECTED_STORE_KEY = 'd8_fruit_audit_selected_store';
 const PHOTO_ACCEPT = 'image/*,.heic,.heif,image/heic,image/heif';
+const REQUIRED_SIDES = [
+  { id: 'front', label: 'Front', hint: 'Stand at the main customer-facing side.' },
+  { id: 'right', label: 'Right Side', hint: 'Move clockwise and capture the right side.' },
+  { id: 'back', label: 'Back', hint: 'Capture the opposite side of the fixture.' },
+  { id: 'left', label: 'Left Side', hint: 'Complete the 360 view from the left side.' },
+];
+const PHOTO_DB_NAME = 'd8_fruit_audit_photos_v1';
+const PHOTO_DB_STORE = 'photos';
+const MAX_PHOTO_BYTES = 190 * 1024;
 
 let manifest = null;
 let currentUser = null;
+let approvedEmails = new Set();
 let selectedStoreId = localStorage.getItem(SELECTED_STORE_KEY) || null;
 let sending = false;
 let statusMessage = '';
+let photoDb = null;
 let state = {
   photos: {},
   sent: {},
@@ -420,6 +464,14 @@ function escapeHtml(value) {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function isApprovedUser(user) {
+  return !!(user && approvedEmails.has(normalizeEmail(user.email)));
 }
 
 function loadState() {
@@ -437,10 +489,76 @@ function loadState() {
 
 function saveState() {
   try {
-    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+    localStorage.setItem(STATE_KEY, JSON.stringify({
+      sent: state.sent,
+      comments: state.comments,
+    }));
   } catch (err) {
     showToast('Could not save photos on this device. Try sending now if possible.');
   }
+}
+
+function openPhotoDb() {
+  if (photoDb) return Promise.resolve(photoDb);
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(PHOTO_DB_NAME, 1);
+    request.onupgradeneeded = event => {
+      const db = event.target.result;
+      const store = db.createObjectStore(PHOTO_DB_STORE, { keyPath: 'id' });
+      store.createIndex('storeId', 'storeId', { unique: false });
+    };
+    request.onsuccess = event => {
+      photoDb = event.target.result;
+      resolve(photoDb);
+    };
+    request.onerror = () => reject(new Error('Could not open local photo storage.'));
+  });
+}
+
+function dbRequest(request) {
+  return new Promise((resolve, reject) => {
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error('Local photo storage failed.'));
+  });
+}
+
+async function loadPhotosFromDb() {
+  const db = await openPhotoDb();
+  const tx = db.transaction(PHOTO_DB_STORE, 'readonly');
+  const records = await dbRequest(tx.objectStore(PHOTO_DB_STORE).getAll());
+  state.photos = {};
+  records.forEach(record => {
+    if (!record || !record.storeId || !record.setId || !record.sideId || !record.dataUrl) return;
+    ensureStoreState(record.storeId);
+    if (!state.photos[record.storeId][record.setId]) state.photos[record.storeId][record.setId] = {};
+    if (!Array.isArray(state.photos[record.storeId][record.setId][record.sideId])) {
+      state.photos[record.storeId][record.setId][record.sideId] = [];
+    }
+    state.photos[record.storeId][record.setId][record.sideId].push(record);
+  });
+}
+
+async function savePhotoRecord(record) {
+  const db = await openPhotoDb();
+  const tx = db.transaction(PHOTO_DB_STORE, 'readwrite');
+  await dbRequest(tx.objectStore(PHOTO_DB_STORE).put(record));
+}
+
+async function deletePhotoRecord(id) {
+  const db = await openPhotoDb();
+  const tx = db.transaction(PHOTO_DB_STORE, 'readwrite');
+  await dbRequest(tx.objectStore(PHOTO_DB_STORE).delete(id));
+}
+
+async function clearSetPhotoRecords(storeId, setId) {
+  const db = await openPhotoDb();
+  const readTx = db.transaction(PHOTO_DB_STORE, 'readonly');
+  const records = await dbRequest(readTx.objectStore(PHOTO_DB_STORE).getAll());
+  const writeTx = db.transaction(PHOTO_DB_STORE, 'readwrite');
+  const store = writeTx.objectStore(PHOTO_DB_STORE);
+  await Promise.all(records
+    .filter(record => record.storeId === storeId && record.setId === setId)
+    .map(record => dbRequest(store.delete(record.id))));
 }
 
 function getStore(storeId) {
@@ -454,8 +572,16 @@ function ensureStoreState(storeId) {
 
 function getSetPhotos(storeId, setId) {
   ensureStoreState(storeId);
-  if (!Array.isArray(state.photos[storeId][setId])) state.photos[storeId][setId] = [];
+  if (!state.photos[storeId][setId] || typeof state.photos[storeId][setId] !== 'object' || Array.isArray(state.photos[storeId][setId])) {
+    state.photos[storeId][setId] = {};
+  }
   return state.photos[storeId][setId];
+}
+
+function getSidePhotos(storeId, setId, sideId) {
+  const setPhotos = getSetPhotos(storeId, setId);
+  if (!Array.isArray(setPhotos[sideId])) setPhotos[sideId] = [];
+  return setPhotos[sideId];
 }
 
 function isSetSent(storeId, setId) {
@@ -468,38 +594,54 @@ function markSetUnsent(storeId, setId) {
 }
 
 function setStatus(storeId, setId) {
-  const count = getSetPhotos(storeId, setId).length;
-  if (count > 0) return { key: 'captured', label: `Captured (${count})` };
   if (isSetSent(storeId, setId)) return { key: 'sent', label: 'Sent' };
+  const missing = REQUIRED_SIDES.filter(side => getSidePhotos(storeId, setId, side.id).length === 0).length;
+  if (missing === 0) return { key: 'captured', label: '360 Captured' };
+  if (missing < REQUIRED_SIDES.length) return { key: 'captured', label: `${missing} side${missing === 1 ? '' : 's'} needed` };
   return { key: 'needed', label: 'Needed' };
 }
 
 function storeCounts(store) {
   let captured = 0;
   let sent = 0;
+  let needed = 0;
+  let setsComplete = 0;
   store.sets.forEach(set => {
-    const photos = getSetPhotos(store.id, set.id).length;
-    if (photos > 0) captured += 1;
-    else if (isSetSent(store.id, set.id)) sent += 1;
+    if (isSetSent(store.id, set.id)) {
+      sent += REQUIRED_SIDES.length;
+      setsComplete += 1;
+      return;
+    }
+    const capturedSides = REQUIRED_SIDES.filter(side => getSidePhotos(store.id, set.id, side.id).length > 0).length;
+    captured += capturedSides;
+    needed += REQUIRED_SIDES.length - capturedSides;
+    if (capturedSides === REQUIRED_SIDES.length) setsComplete += 1;
   });
   return {
     captured,
     sent,
-    needed: Math.max(0, store.sets.length - captured - sent),
-    total: store.sets.length,
+    needed,
+    setsComplete,
+    total: store.sets.length * REQUIRED_SIDES.length,
+    totalSets: store.sets.length,
   };
 }
 
 function hasAllRequiredSets(store) {
-  return store.sets.every(set => getSetPhotos(store.id, set.id).length > 0 || isSetSent(store.id, set.id));
+  return store.sets.every(set => (
+    isSetSent(store.id, set.id)
+    || REQUIRED_SIDES.every(side => getSidePhotos(store.id, set.id, side.id).length > 0)
+  ));
 }
 
 function unsentSetCount(store) {
-  return store.sets.filter(set => getSetPhotos(store.id, set.id).length > 0).length;
+  return store.sets.filter(set => REQUIRED_SIDES.some(side => getSidePhotos(store.id, set.id, side.id).length > 0)).length;
 }
 
 function unsentPhotoCount(store) {
-  return store.sets.reduce((sum, set) => sum + getSetPhotos(store.id, set.id).length, 0);
+  return store.sets.reduce((sum, set) => {
+    return sum + REQUIRED_SIDES.reduce((sideSum, side) => sideSum + getSidePhotos(store.id, set.id, side.id).length, 0);
+  }, 0);
 }
 
 function categoryShort(set) {
@@ -530,16 +672,16 @@ function renderStorePicker() {
     <section class="hero">
       <div class="badge">District 8 Fruit Audit</div>
       <h1>Select a store</h1>
-      <p>${stores.length} stores and ${totalSets} fruit sets loaded from Fruit Mapping.csv. Capture at least one image for each listed set.</p>
+      <p>${stores.length} stores and ${totalSets} fruit sets loaded from Fruit Mapping.csv. Capture a full 360-degree view of each set: front, right side, back, and left side.</p>
     </section>
     <div class="notice">
-      <strong>Field workflow:</strong> Pick your store, capture the listed fruit tables/sets, then submit when every set is marked Captured or Sent.
+      <strong>Field workflow:</strong> Pick your store, capture all four sides of every listed fruit table/set, then tap the store-level Submit button once.
     </div>
     <div class="store-grid">
       ${stores.map(store => {
         const counts = storeCounts(store);
         const status = counts.sent === counts.total
-          ? `Sent ${counts.sent}/${counts.total}`
+          ? `Sent ${counts.sent}/${counts.total} side views`
           : `Captured ${counts.captured} | Needed ${counts.needed} | Sent ${counts.sent}`;
         return `
           <button class="store-btn" onclick="openStore('${store.id}')">
@@ -561,11 +703,11 @@ function renderStore(store) {
   const pct = Math.round(((counts.captured + counts.sent) / counts.total) * 100);
   const canSubmit = hasAllRequiredSets(store) && unsentPhotoCount(store) > 0 && !sending;
   const submitLabel = sending
-    ? (statusMessage || 'Sending photos...')
+    ? (statusMessage || 'Submitting photos...')
     : !hasAllRequiredSets(store)
-      ? `${counts.needed} set${counts.needed === 1 ? '' : 's'} still needed`
+      ? `${counts.needed} side view${counts.needed === 1 ? '' : 's'} still needed`
       : unsentPhotoCount(store) === 0
-        ? `Sent ${counts.sent}. No unsent photos.`
+        ? `Submitted ${counts.sent}. No unsent photos.`
         : `Submit ${unsentPhotoCount(store)} photo${unsentPhotoCount(store) === 1 ? '' : 's'}`;
 
   return `
@@ -583,7 +725,7 @@ function renderStore(store) {
       <div class="progress-text">Captured ${counts.captured} | Needed ${counts.needed} | Sent ${counts.sent}</div>
     </section>
     <div class="notice">
-      <strong>Photo target:</strong> Take a clear overview image for each fruit set below. Add extra images when the bay range is wide or product detail is hard to see.
+      <strong>360-degree requirement:</strong> Take at least four pictures of each set: one from the front, right side, back, and left side. Add extra images when a side is wide, blocked, or hard to see.
     </div>
     <div class="set-list">
       ${store.sets.map((set, idx) => renderSetCard(store, set, idx)).join('')}
@@ -600,14 +742,8 @@ function renderStore(store) {
 }
 
 function renderSetCard(store, set, idx) {
-  const photos = getSetPhotos(store.id, set.id);
   const status = setStatus(store.id, set.id);
-  const thumbs = photos.map((src, photoIdx) => `
-    <div class="thumb">
-      <img src="${src}" alt="${escapeHtml(displaySetName(set))} ${photoIdx + 1}">
-      <span>${photoIdx + 1}</span>
-      <button class="remove" onclick="removePhoto('${store.id}','${set.id}',${photoIdx})" title="Remove">x</button>
-    </div>`).join('');
+  const sideCards = REQUIRED_SIDES.map(side => renderSideCard(store, set, side, idx)).join('');
 
   return `
     <article class="set-card ${status.key}" id="set-${set.id}" data-set-id="${set.id}">
@@ -626,14 +762,38 @@ function renderSetCard(store, set, idx) {
         <div class="fact"><div class="k">Items</div><div class="v">${set.items}</div></div>
       </div>
       <div class="desc">${escapeHtml(set.description)}</div>
+      <div class="side-grid">${sideCards}</div>
+    </article>
+  `;
+}
+
+function renderSideCard(store, set, side, setIndex) {
+  const photos = getSidePhotos(store.id, set.id, side.id);
+  const sent = isSetSent(store.id, set.id);
+  const statusKey = sent ? 'sent' : photos.length ? 'ready' : 'needed';
+  const statusLabel = sent ? 'Sent' : photos.length ? `Captured (${photos.length})` : 'Needed';
+  const thumbs = photos.map((photo, photoIdx) => `
+    <div class="thumb">
+      <img src="${photo.dataUrl}" alt="${escapeHtml(displaySetName(set))} ${escapeHtml(side.label)} ${photoIdx + 1}">
+      <span>${escapeHtml(side.label)} ${photoIdx + 1}</span>
+      <button class="remove" onclick="removePhoto('${store.id}','${set.id}','${side.id}',${photoIdx})" title="Remove">x</button>
+    </div>`).join('');
+
+  return `
+    <section class="side-card ${statusKey}" id="set-${set.id}-${side.id}">
+      <div class="side-head">
+        <div class="side-title">${escapeHtml(side.label)}</div>
+        <div class="side-status ${statusKey}">${statusLabel}</div>
+      </div>
+      <div class="side-hint">${escapeHtml(side.hint)}</div>
       ${photos.length ? `<div class="gallery">${thumbs}</div>` : ''}
       <div class="actions">
-        <button class="action-btn primary" onclick="triggerPhoto('${store.id}','${set.id}','camera')">Take</button>
-        <button class="action-btn" onclick="triggerPhoto('${store.id}','${set.id}','gallery')">Load</button>
+        <button class="action-btn primary" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','camera')">Take ${escapeHtml(side.label)}</button>
+        <button class="action-btn" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','gallery')">Load ${escapeHtml(side.label)}</button>
       </div>
-      <input type="file" id="input-camera-${set.id}" accept="${PHOTO_ACCEPT}" capture="environment" style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}',${idx})">
-      <input type="file" id="input-gallery-${set.id}" accept="${PHOTO_ACCEPT}" multiple style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}',${idx})">
-    </article>
+      <input type="file" id="input-camera-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" capture="environment" style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex})">
+      <input type="file" id="input-gallery-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" multiple style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex})">
+    </section>
   `;
 }
 
@@ -648,11 +808,16 @@ function render() {
     renderLogin();
     return;
   }
+  if (!isApprovedUser(currentUser)) {
+    app.innerHTML = '';
+    renderLogin('That email is not approved for the District 8 fruit audit app.');
+    return;
+  }
   const store = selectedStoreId ? getStore(selectedStoreId) : null;
   app.innerHTML = store ? renderStore(store) : renderStorePicker();
 }
 
-function renderLogin() {
+function renderLogin(errorMessage) {
   let overlay = document.getElementById('fruit-login-overlay');
   if (!overlay) {
     overlay = document.createElement('div');
@@ -666,7 +831,8 @@ function renderLogin() {
     <div class="login-card">
       <div class="badge">District 8 Fruit Audit</div>
       <h1>Sign in</h1>
-      <p class="login-sub">Enter your name and email so photo submissions show who captured them.</p>
+      <p class="login-sub">Enter your approved name and email so photo submissions show who captured them.</p>
+      ${errorMessage ? `<div class="error" style="margin-bottom:14px;padding:12px;font-size:13px">${escapeHtml(errorMessage)}</div>` : ''}
       <label for="login-name">Full name</label>
       <input id="login-name" autocomplete="name" placeholder="Jane Smith" value="${existing ? escapeHtml(existing.name) : ''}">
       <label for="login-email">Email address</label>
@@ -690,6 +856,10 @@ function renderLogin() {
 function submitLogin() {
   const name = document.getElementById('login-name').value.trim();
   const email = document.getElementById('login-email').value.trim();
+  if (!approvedEmails.has(normalizeEmail(email))) {
+    renderLogin('That email is not approved for the District 8 fruit audit app.');
+    return;
+  }
   currentUser = D6Auth.saveUser(name, email);
   const overlay = document.getElementById('fruit-login-overlay');
   if (overlay) overlay.style.display = 'none';
@@ -725,67 +895,112 @@ function saveComment(storeId) {
   saveState();
 }
 
-function triggerPhoto(storeId, setId, source) {
-  const input = document.getElementById(`input-${source}-${setId}`);
+function triggerPhoto(storeId, setId, sideId, source) {
+  const input = document.getElementById(`input-${source}-${setId}-${sideId}`);
   if (input) {
     input.value = '';
     input.click();
   }
 }
 
-async function handleFiles(input, storeId, setId, setIndex) {
+async function handleFiles(input, storeId, setId, sideId, setIndex) {
   const files = Array.from(input.files || []);
   if (!files.length) return;
   saveComment(storeId);
   showToast(`Saving ${files.length} photo${files.length === 1 ? '' : 's'}...`);
   try {
-    const dataUrls = [];
+    const records = [];
     for (const file of files) {
-      dataUrls.push(await imageFileToJpegDataUrl(file));
+      const dataUrl = await imageFileToJpegDataUrl(file);
+      const record = {
+        id: `${storeId}-${setId}-${sideId}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        storeId,
+        setId,
+        sideId,
+        dataUrl,
+        createdAt: new Date().toISOString(),
+      };
+      await savePhotoRecord(record);
+      records.push(record);
     }
-    const photos = getSetPhotos(storeId, setId);
-    dataUrls.forEach(dataUrl => photos.push(dataUrl));
+    const photos = getSidePhotos(storeId, setId, sideId);
+    records.forEach(record => photos.push(record));
     markSetUnsent(storeId, setId);
     saveState();
     render();
-    showToast(`Captured ${dataUrls.length} photo${dataUrls.length === 1 ? '' : 's'}.`);
-    scrollToNextNeeded(storeId, setIndex);
+    showToast(`Captured ${records.length} photo${records.length === 1 ? '' : 's'}.`);
+    scrollToNextNeeded(storeId, setIndex, sideId);
   } catch (err) {
     showToast(err.message || 'Could not read image. Try another photo.');
   }
 }
 
-function removePhoto(storeId, setId, photoIndex) {
+async function removePhoto(storeId, setId, sideId, photoIndex) {
   saveComment(storeId);
-  const photos = getSetPhotos(storeId, setId);
-  if (photoIndex >= 0 && photoIndex < photos.length) photos.splice(photoIndex, 1);
+  const photos = getSidePhotos(storeId, setId, sideId);
+  if (photoIndex >= 0 && photoIndex < photos.length) {
+    const [removed] = photos.splice(photoIndex, 1);
+    if (removed && removed.id) {
+      try { await deletePhotoRecord(removed.id); } catch (err) {}
+    }
+  }
   saveState();
   render();
 }
 
-function scrollToNextNeeded(storeId, setIndex) {
+function scrollToNextNeeded(storeId, setIndex, sideId) {
   const store = getStore(storeId);
   if (!store) return;
-  const later = store.sets.slice(setIndex + 1).find(set => getSetPhotos(storeId, set.id).length === 0 && !isSetSent(storeId, set.id));
-  const target = later || store.sets.find(set => getSetPhotos(storeId, set.id).length === 0 && !isSetSent(storeId, set.id));
-  if (!target) return;
+  const currentSideIdx = REQUIRED_SIDES.findIndex(side => side.id === sideId);
+  let targetSet = null;
+  let targetSide = null;
+
+  for (let s = setIndex; s < store.sets.length && !targetSet; s++) {
+    const startSide = s === setIndex ? currentSideIdx + 1 : 0;
+    for (let i = startSide; i < REQUIRED_SIDES.length; i++) {
+      const side = REQUIRED_SIDES[i];
+      if (!isSetSent(storeId, store.sets[s].id) && getSidePhotos(storeId, store.sets[s].id, side.id).length === 0) {
+        targetSet = store.sets[s];
+        targetSide = side;
+        break;
+      }
+    }
+  }
+  if (!targetSet) {
+    for (const set of store.sets) {
+      for (const side of REQUIRED_SIDES) {
+        if (!isSetSent(storeId, set.id) && getSidePhotos(storeId, set.id, side.id).length === 0) {
+          targetSet = set;
+          targetSide = side;
+          break;
+        }
+      }
+      if (targetSet) break;
+    }
+  }
+  if (!targetSet || !targetSide) return;
   setTimeout(() => {
-    const el = document.getElementById(`set-${target.id}`);
+    const el = document.getElementById(`set-${targetSet.id}-${targetSide.id}`);
     if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 80);
 }
 
 function imageFileToJpegDataUrl(file) {
-  return resizeImage(file, 1600, 0.78).catch(async err => {
+  return resizeImage(file, 1280, 0.62, MAX_PHOTO_BYTES).catch(async err => {
     const isHeic = /\.hei[cf]$/i.test(file.name || '') || /hei[cf]/i.test(file.type || '');
     if (!isHeic || !window.heic2any) throw err;
     const converted = await window.heic2any({ blob: file, toType: 'image/jpeg', quality: 0.9 });
     const jpegBlob = Array.isArray(converted) ? converted[0] : converted;
-    return resizeImage(jpegBlob, 1600, 0.78);
+    return resizeImage(jpegBlob, 1280, 0.62, MAX_PHOTO_BYTES);
   });
 }
 
-function resizeImage(fileOrBlob, maxDim, quality) {
+function dataUrlBytes(dataUrl) {
+  const base64 = String(dataUrl || '').split(',').pop() || '';
+  return Math.ceil(base64.length * 3 / 4);
+}
+
+function resizeImage(fileOrBlob, maxDim, quality, maxBytes) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('Could not read image file.'));
@@ -809,7 +1024,24 @@ function resizeImage(fileOrBlob, maxDim, quality) {
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
+        let output = canvas.toDataURL('image/jpeg', quality);
+        let nextWidth = width;
+        let nextHeight = height;
+        let nextQuality = quality;
+
+        while (maxBytes && dataUrlBytes(output) > maxBytes && (nextWidth > 720 || nextQuality > 0.42)) {
+          if (nextQuality > 0.42) {
+            nextQuality = Math.max(0.42, nextQuality - 0.08);
+          } else {
+            nextWidth = Math.round(nextWidth * 0.86);
+            nextHeight = Math.round(nextHeight * 0.86);
+            canvas.width = nextWidth;
+            canvas.height = nextHeight;
+            ctx.drawImage(img, 0, 0, nextWidth, nextHeight);
+          }
+          output = canvas.toDataURL('image/jpeg', nextQuality);
+        }
+        resolve(output);
       };
       img.src = event.target.result;
     };
@@ -823,12 +1055,16 @@ async function submitStore(storeId) {
   if (!store) return;
   saveComment(storeId);
   if (!hasAllRequiredSets(store)) {
-    showToast('Capture every listed set before submitting.');
+    showToast('Capture front, right, back, and left for every set before submitting.');
     return;
   }
   const setPhotos = store.sets.map(set => ({
     setId: set.id,
-    photos: getSetPhotos(storeId, set.id).map(dataUrl => dataUrl.split(',')[1]).filter(Boolean),
+    photos: REQUIRED_SIDES.flatMap(side => getSidePhotos(storeId, set.id, side.id).map(photo => ({
+      sideId: side.id,
+      sideLabel: side.label,
+      base64: photo.dataUrl.split(',')[1],
+    }))).filter(photo => photo.base64),
   })).filter(entry => entry.photos.length > 0);
   if (!setPhotos.length) {
     showToast('No unsent photos.');
@@ -836,7 +1072,7 @@ async function submitStore(storeId) {
   }
 
   sending = true;
-  statusMessage = `Sending ${setPhotos.length} set${setPhotos.length === 1 ? '' : 's'}...`;
+  statusMessage = `Submitting ${setPhotos.length} set${setPhotos.length === 1 ? '' : 's'}...`;
   render();
 
   try {
@@ -852,10 +1088,16 @@ async function submitStore(storeId) {
       }),
     });
     const data = await res.json();
+    if (res.status === 403) {
+      D6Auth.clearUser();
+      currentUser = null;
+      throw new Error((data && data.error) || 'This email is not approved for the District 8 fruit audit app.');
+    }
     if (!res.ok || !data.success) {
       throw new Error((data && data.error) || 'Photo send failed.');
     }
     ensureStoreState(storeId);
+    await Promise.all(setPhotos.map(entry => clearSetPhotoRecords(storeId, entry.setId)));
     setPhotos.forEach(entry => {
       state.sent[storeId][entry.setId] = true;
       delete state.photos[storeId][entry.setId];
@@ -884,8 +1126,8 @@ function showConfirm(data) {
   overlay.innerHTML = `
     <div class="confirm-card">
       <div class="badge">Submitted</div>
-      <h1>Photos sent</h1>
-      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} fruit audit photos were sent successfully.</p>
+      <h1>Store submitted</h1>
+      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} fruit audit photos were submitted successfully.</p>
       <div class="confirm-detail">
         <div class="row"><span>Store</span><strong>FM ${escapeHtml(data.storeId)}</strong></div>
         <div class="row"><span>Sets included</span><strong>${data.setCount}</strong></div>
@@ -912,7 +1154,14 @@ async function boot() {
   loadState();
   currentUser = D6Auth.getUser();
   try {
-    const res = await fetch('/api/fruit-audit/manifest', { cache: 'no-store' });
+    await loadPhotosFromDb();
+    const [manifestRes, approvedRes] = await Promise.all([
+      fetch('/api/fruit-audit/manifest', { cache: 'no-store' }),
+      fetch('/api/fruit-audit/approved-users', { cache: 'no-store' }),
+    ]);
+    const approvedData = approvedRes.ok ? await approvedRes.json() : { approvedEmails: [] };
+    approvedEmails = new Set((approvedData.approvedEmails || []).map(normalizeEmail));
+    const res = manifestRes;
     if (!res.ok) throw new Error('Could not load manifest.');
     manifest = await res.json();
     if (selectedStoreId && !getStore(selectedStoreId)) selectedStoreId = null;

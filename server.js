@@ -38,7 +38,21 @@ const AUDIT_ALLOWED_STORES = new Set(['049', '053', '214', '286', '351', '486', 
 const DEFAULT_AUDIT_INBOX = 'd6ewa.supervisor@gmail.com';
 const AUDIT_REVIEWER_APRIL = 'april.gauthier@retailodyssey.com';
 const AUDIT_REVIEWER_TYSON = 'tyson.gauthier@retailodyssey.com';
-const DEFAULT_FRUIT_AUDIT_RECIPIENT = AUDIT_REVIEWER_TYSON;
+const DEFAULT_FRUIT_AUDIT_RECIPIENT = DEFAULT_AUDIT_INBOX;
+const FRUIT_AUDIT_SUBJECT_PREFIX = '[P5W3 D8 Fruit Photos]';
+const FRUIT_AUDIT_SAVE_ROOT = String.raw`C:\Users\tgaut\OneDrive - Advantage Solutions\Auston Nix's files - Trackers\P5W3 Audit C600, C602, C604, C517\Fruit Photos\D8`;
+const DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS = [
+  DEFAULT_AUDIT_INBOX,
+  'ruth.northcutt@sasretailservices.com',
+  'tyson.gauthier@retailodyssey.com',
+  'tyson.a.gauthier@gmail.com',
+];
+const REQUIRED_FRUIT_AUDIT_SIDES = [
+  { id: 'front', label: 'Front' },
+  { id: 'right', label: 'Right Side' },
+  { id: 'back', label: 'Back' },
+  { id: 'left', label: 'Left Side' },
+];
 const fruitAuditStores = new Map((fruitAuditManifest.stores || []).map(store => [store.id, store]));
 
 function escapeHtml(value) {
@@ -51,9 +65,22 @@ function escapeHtml(value) {
 
 function splitEmailList(value) {
   return String(value || '')
-    .split(',')
+    .split(/[,\s]+/)
     .map(email => email.trim())
     .filter(Boolean);
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function fruitAuditApprovedEmails() {
+  const configured = splitEmailList(process.env.FRUIT_AUDIT_APPROVED_EMAILS);
+  return new Set((configured.length ? configured : DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS).map(normalizeEmail));
+}
+
+function isFruitAuditApprovedUser(email) {
+  return fruitAuditApprovedEmails().has(normalizeEmail(email));
 }
 
 function addUniqueEmail(list, email) {
@@ -67,16 +94,32 @@ function fruitSetLabel(set) {
   return `${set.commodityGroup} ${set.aisleDesc} bays ${set.bayRange}`;
 }
 
-function fruitAttachmentName(store, set, photoIndex) {
-  const safeGroup = String(set.commodityGroup || 'Fruit')
+function fileSafe(value, fallback = 'Item', maxLength = 60) {
+  const safe = String(value || fallback)
     .replace(/[^A-Za-z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '')
-    .slice(0, 40);
+    .slice(0, maxLength);
+  return safe || fallback;
+}
+
+function fruitSetFolderName(set) {
+  return [
+    `C${set.commodity}`,
+    fileSafe(set.commodityGroup, 'Fruit', 30),
+    `POG${set.pogDbKey}`,
+    fileSafe(set.aisleDesc, 'Produce_Table', 35),
+    `Bays${fileSafe(set.bayRange, 'Bay', 20)}`,
+  ].join(' - ');
+}
+
+function fruitAttachmentName(store, set, side, photoIndex) {
   const bays = String(set.bayRange || '')
     .replace(/[^0-9A-Za-z]+/g, '-')
     .replace(/^-+|-+$/g, '');
   const sequence = String(photoIndex + 1).padStart(2, '0');
-  return `D8_Fruit_FM${store.id}_C${set.commodity}_POG${set.pogDbKey}_Bays${bays}_${safeGroup}_${sequence}.jpg`;
+  const sideLabel = fileSafe(side.label, side.id, 20);
+  const group = fileSafe(set.commodityGroup, `C${set.commodity}`, 35);
+  return `D8_Fruit_FM${store.id}_${group}_POG${set.pogDbKey}_${fileSafe(set.aisleDesc, 'Produce_Table', 35)}_Bays${bays}_${sideLabel}_${sequence}.jpg`;
 }
 
 /** FM 053 audits go to Tyson as primary reviewer; all other audit stores go to April. */
@@ -140,6 +183,12 @@ app.get('/api/version', (req, res) => {
 
 app.get('/api/fruit-audit/manifest', (req, res) => {
   res.json(fruitAuditManifest);
+});
+
+app.get('/api/fruit-audit/approved-users', (req, res) => {
+  res.json({
+    approvedEmails: Array.from(fruitAuditApprovedEmails()).sort(),
+  });
 });
 
 app.get('/dashboard', (req, res) => {
@@ -208,6 +257,9 @@ app.post('/api/fruit-audit/send', async (req, res) => {
   const { storeId, setPhotos, comment, userName, userEmail } = req.body || {};
   const store = fruitAuditStores.get(padStoreId(storeId));
 
+  if (!isFruitAuditApprovedUser(userEmail)) {
+    return res.status(403).json({ error: 'This email is not approved for the District 8 fruit audit app.' });
+  }
   if (!store) {
     return res.status(400).json({ error: 'Store is not on the District 8 fruit audit list.' });
   }
@@ -222,25 +274,53 @@ app.post('/api/fruit-audit/send', async (req, res) => {
     return res.status(400).json({ error: 'Submitted set is not on this store audit list.' });
   }
 
+  const missingShots = [];
   const attachments = [];
   const photoListItems = [];
   const submittedSetIds = new Set();
   store.sets.forEach(set => {
     const entry = submittedBySet.get(set.id);
-    if (!entry || !Array.isArray(entry.photos)) return;
-    if (entry.photos.length) submittedSetIds.add(set.id);
-    entry.photos.forEach((photo, idx) => {
-      const base64 = String(photo || '').includes(',')
-        ? String(photo).split(',').pop()
-        : String(photo || '');
-      const filename = fruitAttachmentName(store, set, idx);
-      attachments.push({ filename, content: Buffer.from(base64, 'base64') });
-      photoListItems.push(
-        `<li style="margin:4px 0"><code>${escapeHtml(filename)}</code> - ${escapeHtml(fruitSetLabel(set))}</li>`
-      );
+    const photos = entry && Array.isArray(entry.photos) ? entry.photos : [];
+    const sidePhotos = new Map(REQUIRED_FRUIT_AUDIT_SIDES.map(side => [side.id, []]));
+
+    photos.forEach(photo => {
+      if (photo && typeof photo === 'object') {
+        const sideId = String(photo.sideId || '').trim();
+        if (sidePhotos.has(sideId)) sidePhotos.get(sideId).push(photo);
+      }
+    });
+
+    REQUIRED_FRUIT_AUDIT_SIDES.forEach(side => {
+      if (!sidePhotos.get(side.id).length) {
+        missingShots.push(`${store.id} ${fruitSetLabel(set)} ${side.label}`);
+      }
+    });
+
+    const hasCompleteSet = REQUIRED_FRUIT_AUDIT_SIDES.every(side => sidePhotos.get(side.id).length > 0);
+    if (!hasCompleteSet) return;
+
+    submittedSetIds.add(set.id);
+    REQUIRED_FRUIT_AUDIT_SIDES.forEach(side => {
+      sidePhotos.get(side.id).forEach((photo, idx) => {
+        const raw = photo.base64 || photo.dataUrl || photo.photo || '';
+        const base64 = String(raw || '').includes(',')
+          ? String(raw).split(',').pop()
+          : String(raw || '');
+        const filename = fruitAttachmentName(store, set, side, idx);
+        attachments.push({ filename, content: Buffer.from(base64, 'base64') });
+        photoListItems.push(
+          `<li style="margin:4px 0"><code>${escapeHtml(filename)}</code> - FM ${store.id}\\${escapeHtml(fruitSetFolderName(set))}\\${escapeHtml(side.label)}</li>`
+        );
+      });
     });
   });
 
+  if (missingShots.length) {
+    return res.status(400).json({
+      error: `Missing ${missingShots.length} required 360-degree view${missingShots.length === 1 ? '' : 's'}.`,
+      missingShots,
+    });
+  }
   if (!attachments.length) {
     return res.status(400).json({ error: 'No valid photos provided.' });
   }
@@ -257,18 +337,27 @@ app.post('/api/fruit-audit/send', async (req, res) => {
       from: 'D8 Fruit Audit <fruitaudit@the-dump-bin.com>',
       to: toList,
       cc: ccList,
-      subject: `[D8 Fruit Audit] FM ${store.id} - ${submittedSetIds.size} sets / ${attachments.length} photos`,
+      subject: `${FRUIT_AUDIT_SUBJECT_PREFIX} FM ${store.id} - ${submittedSetIds.size} sets / ${attachments.length} photos`,
       headers: {
+        'X-Fruit-Audit-Subject-Trigger': FRUIT_AUDIT_SUBJECT_PREFIX,
         'X-Fruit-Audit-District': fruitAuditManifest.district || '8',
         'X-Fruit-Audit-Store': store.id,
         'X-Fruit-Audit-Set-Count': String(store.sets.length),
         'X-Fruit-Audit-Photo-Count': String(attachments.length),
+        'X-Fruit-Audit-Save-Root': FRUIT_AUDIT_SAVE_ROOT,
       },
       html: `
         <div style="font-family:sans-serif;max-width:680px">
           <h2 style="margin:0 0 8px">FM ${store.id} - District 8 Fruit Audit</h2>
           ${submittedBy}
-          <p style="color:#666;margin:0 0 16px">Source store ${escapeHtml(store.sourceStore)} - ${submittedSetIds.size} of ${store.sets.length} set${store.sets.length === 1 ? '' : 's'} from Fruit Mapping.csv.</p>
+          <p style="color:#666;margin:0 0 16px">Source store ${escapeHtml(store.sourceStore)} - ${submittedSetIds.size} of ${store.sets.length} set${store.sets.length === 1 ? '' : 's'} from Fruit Mapping.csv. Each set has a required 360-degree view: front, right side, back, and left side.</p>
+          <div style="margin:0 0 16px;background:#eefbf0;border-left:4px solid #53d86a;padding:12px;border-radius:6px;color:#1b3a24;font-size:13px">
+            <p style="margin:0 0 8px"><strong>Gmail poller routing prompt:</strong></p>
+            <p style="margin:0 0 6px">Match subject prefix <code>${escapeHtml(FRUIT_AUDIT_SUBJECT_PREFIX)}</code>.</p>
+            <p style="margin:0 0 6px">Save raster attachments under <code>${escapeHtml(FRUIT_AUDIT_SAVE_ROOT)}</code>.</p>
+            <p style="margin:0 0 6px">Create/use store folder <code>${store.id}</code>.</p>
+            <p style="margin:0">Create/use one set folder per attachment using the filename fields: commodity, POG, produce table, and bay range. Preserve side labels in filenames.</p>
+          </div>
           ${comment ? `
           <hr style="border:none;border-top:1px solid #ddd;margin:16px 0">
           <p style="margin:0 0 8px"><strong>Field notes:</strong></p>
