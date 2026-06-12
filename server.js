@@ -48,6 +48,7 @@ const DEFAULT_AUDIT_INBOX = 'd6ewa.supervisor@gmail.com';
 const AUDIT_REVIEWER_APRIL = 'april.gauthier@retailodyssey.com';
 const AUDIT_REVIEWER_TYSON = 'tyson.gauthier@retailodyssey.com';
 const DEFAULT_FRUIT_AUDIT_RECIPIENT = DEFAULT_AUDIT_INBOX;
+const D1_FRUIT_AUDIT_QUIET_TEST_EMAILS = new Set([DEFAULT_AUDIT_INBOX].map(normalizeEmail));
 const FRUIT_AUDIT_CONFIG_BY_DISTRICT = {
   '1': {
     subjectPrefix: '[P5W3 D1 Fruit Photos]',
@@ -179,6 +180,10 @@ function isD1FruitAuditSignupUser(email) {
   return d1FruitAuditSignupEmails().has(normalizeEmail(email));
 }
 
+function isD1FruitAuditQuietTestEmail(email) {
+  return D1_FRUIT_AUDIT_QUIET_TEST_EMAILS.has(normalizeEmail(email));
+}
+
 function addUniqueEmail(list, email) {
   const trimmed = String(email || '').trim();
   if (!trimmed) return;
@@ -215,6 +220,7 @@ function fruitAuditMetaByStore(pledges) {
 function notifyFruitAuditOpenings(req, snapshot, releasedPledges) {
   const pledges = Array.isArray(releasedPledges) ? releasedPledges : [];
   if (!pledges.length) return false;
+  if (pledges.some(pledge => isD1FruitAuditQuietTestEmail(pledge.email))) return false;
   const recipients = fruitAuditInvolvedEmails(snapshot, pledges.map(pledge => pledge.email));
   if (!recipients.length) return false;
   fruitAuditTrackerNotify.sendOpeningsAvailable(resend, {
@@ -439,6 +445,7 @@ app.post('/api/fruit-audit-tracker/pledge', async (req, res) => {
       meta,
       deadline: snapshot.deadline,
       dashboardUrl: fruitAuditDashboardUrl(req),
+      recipients: isD1FruitAuditQuietTestEmail(pledge.email) ? [AUDIT_REVIEWER_TYSON] : null,
     }).catch(err => console.error('Fruit audit tracker pledge notify:', err.message));
 
     res.json({
@@ -462,6 +469,7 @@ app.post('/api/fruit-audit-tracker/unclaim', async (req, res) => {
       pledge,
       meta,
       dashboardUrl: fruitAuditDashboardUrl(req),
+      recipients: isD1FruitAuditQuietTestEmail(pledge.email) ? [AUDIT_REVIEWER_TYSON] : null,
     }).catch(err => console.error('Fruit audit tracker release notify:', err.message));
     const notifiedOthers = notifyFruitAuditOpenings(req, snapshot, [pledge]);
 
@@ -489,6 +497,7 @@ app.post('/api/fruit-audit-tracker/opt-out', async (req, res) => {
         pledge,
         meta,
         dashboardUrl: fruitAuditDashboardUrl(req),
+        recipients: isD1FruitAuditQuietTestEmail(pledge.email) ? [AUDIT_REVIEWER_TYSON] : null,
       }).catch(err => console.error('Fruit audit tracker opt-out release notify:', err.message));
     });
     const notifiedOthers = notifyFruitAuditOpenings(req, snapshot, pledges);
