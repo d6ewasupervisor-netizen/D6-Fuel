@@ -50,6 +50,17 @@
       "id": "035",
       "district": "1",
       "sourceStore": "00035",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "11425 S. W. Beaverton-Hillsdale Hwy.",
+        "city": "Beaverton",
+        "state": "OR",
+        "postalCode": "97005",
+        "routeAddress": "11425 S. W. Beaverton-Hillsdale Hwy., Beaverton, OR, 97005",
+        "latitude": 45.4876286,
+        "longitude": -122.7940193,
+        "verified": true
+      },
       "sets": [
         {
           "id": "035-604-9201498-001-004",
@@ -117,6 +128,17 @@
       "id": "040",
       "district": "1",
       "sourceStore": "00040",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "7555 S. W. Barbur Blvd.",
+        "city": "Portland",
+        "state": "OR",
+        "postalCode": "97219",
+        "routeAddress": "7555 S. W. Barbur Blvd., Portland, OR, 97219",
+        "latitude": 45.4705538,
+        "longitude": -122.6904076,
+        "verified": true
+      },
       "sets": [
         {
           "id": "040-602-9233414-001-002",
@@ -184,6 +206,17 @@
       "id": "060",
       "district": "1",
       "sourceStore": "00060",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "2200 Baseline Rd.",
+        "city": "Cornelius",
+        "state": "OR",
+        "postalCode": "97113",
+        "routeAddress": "2200 Baseline Rd., Cornelius, OR, 97113",
+        "latitude": 45.521734,
+        "longitude": -123.0451492,
+        "verified": true
+      },
       "sets": [
         {
           "id": "060-604-9201503-001-004",
@@ -251,6 +284,17 @@
       "id": "063",
       "district": "1",
       "sourceStore": "00063",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "16301 S. E. 82nd Dr.",
+        "city": "Clackamas",
+        "state": "OR",
+        "postalCode": "97015",
+        "routeAddress": "16301 S. E. 82nd Dr., Clackamas, OR, 97015",
+        "latitude": 45.4051637,
+        "longitude": -122.5700466,
+        "verified": true
+      },
       "sets": [
         {
           "id": "063-604-9201503-001-004",
@@ -298,6 +342,17 @@
       "id": "143",
       "district": "1",
       "sourceStore": "00143",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "6495 SE Tualatin Valley Highway",
+        "city": "Hillsboro",
+        "state": "OR",
+        "postalCode": "97123",
+        "routeAddress": "6495 SE Tualatin Valley Highway, Hillsboro, OR, 97123",
+        "latitude": 45.49975329999999,
+        "longitude": -122.914551,
+        "verified": true
+      },
       "sets": [
         {
           "id": "143-604-9201490-001-004",
@@ -365,6 +420,17 @@
       "id": "153",
       "district": "1",
       "sourceStore": "00153",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "8955 S. E. 82nd Ave.",
+        "city": "Portland",
+        "state": "OR",
+        "postalCode": "97266",
+        "routeAddress": "8955 S. E. 82nd Ave., Portland, OR, 97266",
+        "latitude": 45.4584136,
+        "longitude": -122.5810477,
+        "verified": true
+      },
       "sets": [
         {
           "id": "153-602-9233387-001-002",
@@ -432,6 +498,17 @@
       "id": "218",
       "district": "1",
       "sourceStore": "00218",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "695 Hwy. 101",
+        "city": "Warrenton",
+        "state": "OR",
+        "postalCode": "97146",
+        "routeAddress": "695 Hwy. 101, Warrenton, OR, 97146",
+        "latitude": 46.160487,
+        "longitude": -123.902939,
+        "verified": true
+      },
       "sets": [
         {
           "id": "218-602-9233382-001-002",
@@ -499,6 +576,17 @@
       "id": "220",
       "district": "1",
       "sourceStore": "00220",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "3300 Portland Rd.",
+        "city": "Newberg",
+        "state": "OR",
+        "postalCode": "97132",
+        "routeAddress": "3300 Portland Rd., Newberg, OR, 97132",
+        "latitude": 45.3056214,
+        "longitude": -122.9439504,
+        "verified": true
+      },
       "sets": [
         {
           "id": "220-602-9233393-001-002",
@@ -566,6 +654,17 @@
       "id": "240",
       "district": "1",
       "sourceStore": "00240",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "14700 S. E. McLoughlin Blvd.",
+        "city": "Milwaukie",
+        "state": "OR",
+        "postalCode": "97267",
+        "routeAddress": "14700 S. E. McLoughlin Blvd., Milwaukie, OR, 97267",
+        "latitude": 45.4168995,
+        "longitude": -122.6304983,
+        "verified": true
+      },
       "sets": [
         {
           "id": "240-602-9233369-001-002",
@@ -633,6 +732,17 @@
       "id": "242",
       "district": "1",
       "sourceStore": "00242",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "1839 Molalla Ave",
+        "city": "Oregon City",
+        "state": "OR",
+        "postalCode": "97045",
+        "routeAddress": "1839 Molalla Ave, Oregon City, OR, 97045",
+        "latitude": 45.3312696,
+        "longitude": -122.5828241,
+        "verified": true
+      },
       "sets": [
         {
           "id": "242-604-9201503-001-004",
@@ -700,6 +810,17 @@
       "id": "285",
       "district": "1",
       "sourceStore": "00285",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "7700 S. W. Beaverton-Hillsdale Hwy.",
+        "city": "Portland",
+        "state": "OR",
+        "postalCode": "97225",
+        "routeAddress": "7700 S. W. Beaverton-Hillsdale Hwy., Portland, OR, 97225",
+        "latitude": 45.4854144,
+        "longitude": -122.7560568,
+        "verified": true
+      },
       "sets": [
         {
           "id": "285-604-9201499-001-004",
@@ -767,6 +888,17 @@
       "id": "375",
       "district": "1",
       "sourceStore": "00375",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "11565 S. W. Pacific Hwy.",
+        "city": "Tigard",
+        "state": "OR",
+        "postalCode": "97223",
+        "routeAddress": "11565 S. W. Pacific Hwy., Tigard, OR, 97223",
+        "latitude": 45.4412494,
+        "longitude": -122.7520442,
+        "verified": true
+      },
       "sets": [
         {
           "id": "375-604-9201499-001-004",
@@ -834,6 +966,17 @@
       "id": "377",
       "district": "1",
       "sourceStore": "00377",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "2500 N. Main St.",
+        "city": "Tillamook",
+        "state": "OR",
+        "postalCode": "97141",
+        "routeAddress": "2500 N. Main St., Tillamook, OR, 97141",
+        "latitude": 45.4746219,
+        "longitude": -123.8457765,
+        "verified": true
+      },
       "sets": [
         {
           "id": "377-604-9201489-001-004",
@@ -901,6 +1044,17 @@
       "id": "393",
       "district": "1",
       "sourceStore": "00393",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "19200 S. W. Martinazzi",
+        "city": "Tualatin",
+        "state": "OR",
+        "postalCode": "97062",
+        "routeAddress": "19200 S. W. Martinazzi, Tualatin, OR, 97062",
+        "latitude": 45.3809519,
+        "longitude": -122.7568168,
+        "verified": true
+      },
       "sets": [
         {
           "id": "393-604-9201499-001-004",
@@ -968,6 +1122,17 @@
       "id": "462",
       "district": "1",
       "sourceStore": "00462",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "51501 S. Columbia River Hwy.",
+        "city": "Scappoose",
+        "state": "OR",
+        "postalCode": "97056",
+        "routeAddress": "51501 S. Columbia River Hwy., Scappoose, OR, 97056",
+        "latitude": 45.7425966,
+        "longitude": -122.8786419,
+        "verified": true
+      },
       "sets": [
         {
           "id": "462-604-9201493-001-004",
@@ -1035,6 +1200,17 @@
       "id": "482",
       "district": "1",
       "sourceStore": "00482",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "15995 S. W. Walker Rd.",
+        "city": "Beaverton",
+        "state": "OR",
+        "postalCode": "97006",
+        "routeAddress": "15995 S. W. Walker Rd., Beaverton, OR, 97006",
+        "latitude": 45.5185927,
+        "longitude": -122.8419481,
+        "verified": true
+      },
       "sets": [
         {
           "id": "482-604-9201504-001-004",
@@ -1102,6 +1278,17 @@
       "id": "516",
       "district": "1",
       "sourceStore": "00516",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "30300 SW Boones Ferry Rd.",
+        "city": "Wilsonville",
+        "state": "OR",
+        "postalCode": "97070",
+        "routeAddress": "30300 SW Boones Ferry Rd., Wilsonville, OR, 97070",
+        "latitude": 45.30101130000001,
+        "longitude": -122.7708357,
+        "verified": true
+      },
       "sets": [
         {
           "id": "516-604-9201494-001-004",
@@ -1149,6 +1336,17 @@
       "id": "651",
       "district": "1",
       "sourceStore": "00651",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "1401 S. E. 1st",
+        "city": "Canby",
+        "state": "OR",
+        "postalCode": "97013",
+        "routeAddress": "1401 S. E. 1st, Canby, OR, 97013",
+        "latitude": 45.266677,
+        "longitude": -122.676751,
+        "verified": true
+      },
       "sets": [
         {
           "id": "651-604-9201493-001-004",
@@ -1216,6 +1414,17 @@
       "id": "661",
       "district": "1",
       "sourceStore": "00661",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "22075 N. W. Imbrie Dr.",
+        "city": "Hillsboro",
+        "state": "OR",
+        "postalCode": "97124",
+        "routeAddress": "22075 N. W. Imbrie Dr., Hillsboro, OR, 97124",
+        "latitude": 45.55141589999999,
+        "longitude": -122.9034094,
+        "verified": true
+      },
       "sets": [
         {
           "id": "661-604-9201502-001-004",
@@ -1283,6 +1492,17 @@
       "id": "694",
       "district": "1",
       "sourceStore": "00694",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "17005 SE Sunnyside Road",
+        "city": "Happy Valley",
+        "state": "OR",
+        "postalCode": "97086",
+        "routeAddress": "17005 SE Sunnyside Road, Happy Valley, OR, 97086",
+        "latitude": 45.42641829999999,
+        "longitude": -122.4858125,
+        "verified": true
+      },
       "sets": [
         {
           "id": "694-604-9201499-001-004",
@@ -1348,7 +1568,19 @@
     },
     {
       "id": "019",
+      "district": "8",
       "sourceStore": "00019",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "801 Auburn Way N.",
+        "city": "Auburn",
+        "state": "WA",
+        "postalCode": "98002",
+        "routeAddress": "801 Auburn Way N., Auburn, WA, 98002",
+        "latitude": 47.3153436,
+        "longitude": -122.2262674,
+        "verified": true
+      },
       "sets": [
         {
           "id": "019-604-9201498-001-004",
@@ -1410,12 +1642,23 @@
           "storeSegment": "MAINSTREAM",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "023",
+      "district": "8",
       "sourceStore": "00023",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "2041 148th N. E.",
+        "city": "Bellevue",
+        "state": "WA",
+        "postalCode": "98007",
+        "routeAddress": "2041 148th N. E., Bellevue, WA, 98007",
+        "latitude": 47.6289387,
+        "longitude": -122.1447488,
+        "verified": true
+      },
       "sets": [
         {
           "id": "023-604-9201504-001-004",
@@ -1477,12 +1720,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "028",
+      "district": "8",
       "sourceStore": "00028",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "14300 First Ave S.",
+        "city": "Burien",
+        "state": "WA",
+        "postalCode": "98168",
+        "routeAddress": "14300 First Ave S., Burien, WA, 98168",
+        "latitude": 47.4753774,
+        "longitude": -122.3320381,
+        "verified": true
+      },
       "sets": [
         {
           "id": "028-604-9201504-001-004",
@@ -1544,12 +1798,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "031",
+      "district": "8",
       "sourceStore": "00031",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "17801 108th Ave S. E.",
+        "city": "Renton",
+        "state": "WA",
+        "postalCode": "98055",
+        "routeAddress": "17801 108th Ave S. E., Renton, WA, 98055",
+        "latitude": 47.4428032,
+        "longitude": -122.1993295,
+        "verified": true
+      },
       "sets": [
         {
           "id": "031-604-9201504-001-004",
@@ -1611,12 +1876,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "053",
+      "district": "8",
       "sourceStore": "00053",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "16735 S. E. 272nd St.",
+        "city": "Covington",
+        "state": "WA",
+        "postalCode": "98042",
+        "routeAddress": "16735 S. E. 272nd St., Covington, WA, 98042",
+        "latitude": 47.3566472,
+        "longitude": -122.119067,
+        "verified": true
+      },
       "sets": [
         {
           "id": "053-604-9201499-001-004",
@@ -1658,12 +1934,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "215",
+      "district": "8",
       "sourceStore": "00215",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "25250 Pacific Hwy. South",
+        "city": "Kent",
+        "state": "WA",
+        "postalCode": "98032",
+        "routeAddress": "25250 Pacific Hwy. South, Kent, WA, 98032",
+        "latitude": 47.3742234,
+        "longitude": -122.2981239,
+        "verified": true
+      },
       "sets": [
         {
           "id": "215-604-9201499-001-004",
@@ -1725,12 +2012,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Pending"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "391",
+      "district": "8",
       "sourceStore": "00391",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "12221 120th Ave. N. E.",
+        "city": "Kirkland",
+        "state": "WA",
+        "postalCode": "98034",
+        "routeAddress": "12221 120th Ave. N. E., Kirkland, WA, 98034",
+        "latitude": 47.7076552,
+        "longitude": -122.184062,
+        "verified": true
+      },
       "sets": [
         {
           "id": "391-604-9201490-001-004",
@@ -1792,12 +2090,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "459",
+      "district": "8",
       "sourceStore": "00459",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "365 Renton Center Way S. W.",
+        "city": "Renton",
+        "state": "WA",
+        "postalCode": "98055",
+        "routeAddress": "365 Renton Center Way S. W., Renton, WA, 98055",
+        "latitude": 47.477812,
+        "longitude": -122.2177848,
+        "verified": true
+      },
       "sets": [
         {
           "id": "459-604-9201504-001-004",
@@ -1859,12 +2168,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "658",
+      "district": "8",
       "sourceStore": "00658",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "6100 E. Lake Sammamish Pkwy. S. E.",
+        "city": "Issaquah",
+        "state": "WA",
+        "postalCode": "98029",
+        "routeAddress": "6100 E. Lake Sammamish Pkwy. S. E., Issaquah, WA, 98029",
+        "latitude": 47.5487396,
+        "longitude": -122.0388692,
+        "verified": true
+      },
       "sets": [
         {
           "id": "658-604-9201504-001-004",
@@ -1926,12 +2246,23 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     },
     {
       "id": "682",
+      "district": "8",
       "sourceStore": "00682",
+      "address": {
+        "name": "Fred Meyer",
+        "addressLine": "26520 Maple Valley-Black Diamond Rd",
+        "city": "Maple Valley",
+        "state": "WA",
+        "postalCode": "98038",
+        "routeAddress": "26520 Maple Valley-Black Diamond Rd, Maple Valley, WA, 98038",
+        "latitude": 47.36343189999999,
+        "longitude": -122.0196454,
+        "verified": true
+      },
       "sets": [
         {
           "id": "682-604-9201499-001-004",
@@ -1993,8 +2324,7 @@
           "storeSegment": "UPSCALE",
           "fpStatus": "Live"
         }
-      ],
-      "district": "8"
+      ]
     }
   ]
 }

@@ -659,10 +659,14 @@ function showMsg(el, text, ok) {
 }
 
 function storeOptionLabel(store) {
-  return `FM ${store.id} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}`;
+  return `FM ${store.id}${store.address && store.address.city ? ` - ${store.address.city}` : ''} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}`;
 }
 
 function routeStoreQuery(store) {
+  const lat = Number(store && store.latitude);
+  const lon = Number(store && store.longitude);
+  if (Number.isFinite(lat) && Number.isFinite(lon)) return `${lat},${lon}`;
+  if (store && store.routeAddress) return store.routeAddress;
   return `Fred Meyer FM ${store.id} Oregon`;
 }
 
@@ -741,6 +745,7 @@ function renderRoutePlanner() {
         <div class="route-stop">
           <div><span class="step">${idx + 1}.</span><strong>FM ${store.id}</strong></div>
           <div>${routeStopStatus(store)} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}</div>
+          ${store.routeAddress ? `<div>${esc(store.routeAddress)}</div>` : ''}
           <button type="button" data-set-active-route="${idx}">Use as current stop</button>
           <button type="button" data-remove-route="${store.id}">Remove from route</button>
         </div>`).join('')
@@ -886,10 +891,12 @@ function render(data) {
     const selected = selectedRouteStoreIds.has(store.id);
     const canRoute = isRouteSelectableStore(store);
     const canClaim = store.status === 'open';
+    const address = store.routeAddress ? `<div class="loc">${esc(store.routeAddress)}</div>` : '';
     return `
       <div class="store-card ${store.status} ${canRoute ? 'visual-selectable' : ''} ${selected ? 'route-selected' : ''}" data-store-id="${store.id}">
         <div class="fm">${store.label}</div>
         <div class="loc">District 1 - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
+        ${address}
         <span class="badge ${store.status}">${statusLabel(store.status)}</span>
         <div class="who">${who}</div>
         ${canRoute ? `
