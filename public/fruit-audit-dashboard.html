@@ -250,6 +250,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 const $ = id => document.getElementById(id);
 let snapshot = null;
 let countdownTimer = null;
+let approvedEmails = new Set();
 
 function fmtDeadline(iso) {
   if (!iso) return '-';
@@ -284,6 +285,10 @@ function esc(s) {
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
+}
+
+function isApprovedUser(user) {
+  return !!(user && approvedEmails.has(normalizeEmail(user.email)));
 }
 
 function showMsg(el, text, ok) {
@@ -388,6 +393,27 @@ async function loadSnapshot() {
   return res.json();
 }
 
+async function loadApprovedUsers() {
+  const res = await fetch('/api/fruit-audit-tracker/approved-users', { cache: 'no-store' });
+  if (!res.ok) throw new Error('Could not load approved user list');
+  const data = await res.json();
+  approvedEmails = new Set((data.approvedEmails || []).map(normalizeEmail));
+}
+
+function renderAccessDenied() {
+  $('dashboard-root').hidden = false;
+  syncSignedInBar();
+  $('live-label').textContent = 'Restricted';
+  $('stats').innerHTML = '';
+  $('progress-pct').textContent = '0%';
+  $('progress-fill').style.width = '0%';
+  $('store-grid').innerHTML = '<div class="store-card open"><div class="fm">Access restricted</div><div class="who">This email is not approved for the District 1 fruit audit signup dashboard. Sign out and use an approved email.</div></div>';
+  $('pledge-store').innerHTML = '<option value="">No access</option>';
+  $('pledge-btn').disabled = true;
+  $('pledge-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
+  showMsg($('pledge-msg'), 'This email is not approved for District 1 fruit audit signup.', false);
+}
+
 function connectSSE() {
   const pill = $('live-pill');
   const label = $('live-label');
@@ -477,6 +503,12 @@ async function initDashboard() {
   $('dashboard-root').hidden = false;
   syncSignedInBar();
   try {
+    await loadApprovedUsers();
+    const user = D6Auth.getUser();
+    if (!isApprovedUser(user)) {
+      renderAccessDenied();
+      return;
+    }
     const data = await loadSnapshot();
     render(data);
     connectSSE();

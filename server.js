@@ -64,6 +64,51 @@ const DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS = [
   'tyson.gauthier@retailodyssey.com',
   'tyson.a.gauthier@gmail.com',
 ];
+const DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS = [
+  'amydawnhaertel@gmail.com',
+  'akafatamy46@gmail.com',
+  'kalleen.iniguezcarri@retailodyssey.com',
+  'cindi.griggs@retailodyssey.com',
+  'jasmine91959@hotmail.com',
+  'crystalhannon23@gmail.com',
+  'dlbrookens@outlook.com',
+  'bryndle.dev@gmail.com',
+  'witt53@gmail.com',
+  'geroldtinsley31@gmail.com',
+  'xrenlinn@gmail.com',
+  'hcsch@frontier.com',
+  'darkctm0@gmail.com',
+  'jahwitcher907@gmail.com',
+  'jennifer.russell@sasretailservices.com',
+  'niemijeremy001@gmail.com',
+  'julie.ferguson@retailodyssey.com',
+  'julie.slaughter@youradv.com',
+  '40ktaylor@gmail.com',
+  'karlagamroth@gmail.com',
+  'oneeightykaty@yahoo.com',
+  'thefifers@msn.com',
+  'kim.sanchezcanastuj@retailodyssey.com',
+  'laramie.oedell@retailodyssey.com',
+  'laurel.a.sv@gmail.com',
+  'pozaryckidianne63@gmail.com',
+  'missy7826@yahoo.com',
+  'michaelmcconnell007@comcast.net',
+  'michelle.sweet@youradv.com',
+  'olli.witt@gmx.de',
+  'omar.robles@retailodyssey.com',
+  'pamela.gardner@sasretailservices.com',
+  'patricia.marks@youradv.com',
+  'prscoppe315@gmail.com',
+  'robyn.bukowatzgrill@sasretailservices.com',
+  'royann.lund@gmail.com',
+  'rubdog622651@gmail.com',
+  'barajassaraeloisa@gmail.com',
+  'tamera.sandeno@retailodyssey.com',
+  'victor.trevino@retailodyssey.com',
+  'virlaineferrari@gmail.com',
+  'zmharrington01@gmail.com',
+  'zachary.house176@gmail.com',
+];
 const REQUIRED_FRUIT_AUDIT_SIDES = [
   { id: 'front', label: 'Front' },
   { id: 'right', label: 'Right Side' },
@@ -114,11 +159,22 @@ function normalizeEmail(email) {
 
 function fruitAuditApprovedEmails() {
   const configured = splitEmailList(process.env.FRUIT_AUDIT_APPROVED_EMAILS);
-  return new Set((configured.length ? configured : DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS).map(normalizeEmail));
+  const base = configured.length ? configured : DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS;
+  return new Set([...base, ...DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS].map(normalizeEmail));
 }
 
 function isFruitAuditApprovedUser(email) {
   return fruitAuditApprovedEmails().has(normalizeEmail(email));
+}
+
+function d1FruitAuditSignupEmails() {
+  const configured = splitEmailList(process.env.D1_FRUIT_AUDIT_SIGNUP_EMAILS);
+  const base = configured.length ? configured : DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS;
+  return new Set([...DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS, ...base].map(normalizeEmail));
+}
+
+function isD1FruitAuditSignupUser(email) {
+  return d1FruitAuditSignupEmails().has(normalizeEmail(email));
 }
 
 function addUniqueEmail(list, email) {
@@ -318,12 +374,21 @@ app.get('/api/fruit-audit-tracker', (req, res) => {
   res.json(fruitAuditTracker.getSnapshot());
 });
 
+app.get('/api/fruit-audit-tracker/approved-users', (req, res) => {
+  res.json({
+    approvedEmails: Array.from(d1FruitAuditSignupEmails()).sort(),
+  });
+});
+
 app.get('/api/fruit-audit-tracker/events', (req, res) => {
   fruitAuditTracker.subscribe(res);
 });
 
 app.post('/api/fruit-audit-tracker/pledge', async (req, res) => {
   try {
+    if (!isD1FruitAuditSignupUser(req.body && req.body.email)) {
+      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit signup dashboard.' });
+    }
     const { snapshot, pledge } = fruitAuditTracker.addPledge(req.body || {});
     const meta = fruitAuditTracker.getStoreMeta(pledge.storeId);
     fruitAuditTrackerNotify.sendPledgeSignedUp(resend, {
@@ -345,6 +410,9 @@ app.post('/api/fruit-audit-tracker/pledge', async (req, res) => {
 
 app.post('/api/fruit-audit-tracker/unclaim', async (req, res) => {
   try {
+    if (!isD1FruitAuditSignupUser(req.body && req.body.email)) {
+      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit signup dashboard.' });
+    }
     const { snapshot, pledge } = fruitAuditTracker.removePledge(req.body || {});
     const meta = fruitAuditTracker.getStoreMeta(pledge.storeId);
     fruitAuditTrackerNotify.sendPledgeReleased(resend, {
