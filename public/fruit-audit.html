@@ -398,6 +398,36 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 }
 .login-card h1, .confirm-card h1 { font-size: 24px; margin-bottom: 6px; }
 .login-sub, .confirm-sub { color: var(--sub); margin-bottom: 18px; }
+.confidence-emitter {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(83,216,106,0.16);
+  border: 3px solid var(--green);
+  color: var(--green-2);
+  font-size: 48px;
+  font-weight: 900;
+  box-shadow: 0 0 0 0 rgba(83,216,106,0.55), 0 0 32px rgba(83,216,106,0.35);
+  animation: confidencePulse 1.3s ease-out infinite;
+}
+@keyframes confidencePulse {
+  0% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(83,216,106,0.55), 0 0 28px rgba(83,216,106,0.35); }
+  70% { transform: scale(1); box-shadow: 0 0 0 18px rgba(83,216,106,0), 0 0 36px rgba(83,216,106,0.42); }
+  100% { transform: scale(0.96); box-shadow: 0 0 0 0 rgba(83,216,106,0), 0 0 28px rgba(83,216,106,0.35); }
+}
+.confirm-card.success {
+  text-align: center;
+  border-color: rgba(83,216,106,0.70);
+}
+.confirm-card.success h1 {
+  font-size: 30px;
+  line-height: 1.08;
+  margin-bottom: 10px;
+}
 .login-card label { display: block; color: var(--sub); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 6px; }
 .login-card input {
   width: 100%;
@@ -1170,14 +1200,15 @@ function showConfirm(data) {
     document.body.appendChild(overlay);
   }
   overlay.innerHTML = `
-    <div class="confirm-card">
-      <div class="badge">Submitted</div>
-      <h1>Store submitted</h1>
-      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} fruit audit photos were submitted successfully.</p>
+    <div class="confirm-card success">
+      <div class="confidence-emitter" aria-hidden="true">✓</div>
+      <div class="badge">Submission Complete</div>
+      <h1>Your photos have been successfully submitted</h1>
+      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} is complete. You can close this screen after reviewing the confirmation below.</p>
       <div class="confirm-detail">
         <div class="row"><span>Store</span><strong>FM ${escapeHtml(data.storeId)}</strong></div>
         <div class="row"><span>Sets included</span><strong>${data.setCount}</strong></div>
-        <div class="row"><span>Photos sent</span><strong>${data.photoCount}</strong></div>
+        <div class="row"><span>Photos submitted</span><strong>${data.photoCount}</strong></div>
       </div>
       <button class="confirm-btn" onclick="closeConfirm()">Done</button>
     </div>`;
