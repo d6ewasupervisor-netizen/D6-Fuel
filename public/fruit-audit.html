@@ -462,13 +462,17 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
   z-index: 1000;
   background: rgba(7,17,11,0.96);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: calc(20px + var(--safe-top)) 20px calc(20px + var(--safe-bottom));
+  padding: calc(16px + var(--safe-top)) 12px calc(28px + var(--safe-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .login-card, .confirm-card {
   width: 100%;
   max-width: 430px;
+  max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 44px);
+  overflow-y: auto;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -529,6 +533,13 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
   color: #061008;
   font-weight: 900;
   cursor: pointer;
+}
+.confirm-btn {
+  position: sticky;
+  bottom: 0;
+  min-height: 56px;
+  margin-top: 4px;
+  box-shadow: 0 -10px 24px rgba(20,35,26,0.88);
 }
 .login-submit:disabled { background: #223629; color: var(--dim); cursor: not-allowed; }
 .confirm-detail {
@@ -668,6 +679,16 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
   .facts { grid-template-columns: 1fr; }
   .set-head { grid-template-columns: 42px 1fr; }
   .set-head .status { grid-column: 1 / -1; justify-self: start; }
+  .login-card, .confirm-card { padding: 18px 16px; }
+  .confidence-emitter { width: 72px; height: 72px; font-size: 38px; margin-bottom: 12px; }
+  .confirm-card.success h1 { font-size: 24px; }
+  .confirm-sub { margin-bottom: 12px; }
+  .confirm-detail { margin-bottom: 10px; }
+}
+@media (max-height: 620px) {
+  .confidence-emitter { width: 64px; height: 64px; font-size: 34px; margin-bottom: 10px; }
+  .confirm-card.success h1 { font-size: 22px; }
+  .confirm-detail .row { padding: 2px 0; }
 }
 </style>
 </head>
