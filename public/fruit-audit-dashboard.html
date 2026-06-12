@@ -65,7 +65,6 @@ body {
   display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
   background: rgba(14,26,18,0.92); border: 1px solid var(--card-border);
   border-radius: var(--radius); padding: 10px 12px; margin-bottom: 14px;
-  position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px);
 }
 .view-controls .label { color: var(--text-secondary); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; }
 .view-controls .label strong { color: var(--accent-2); font-family: 'JetBrains Mono', monospace; }
@@ -77,6 +76,11 @@ body {
 }
 .view-btn.primary { background: var(--accent); border-color: var(--accent); color: #061008; }
 .view-btn:active { transform: scale(0.97); }
+.display-panel {
+  margin-bottom: 14px; padding: 12px;
+}
+.display-panel .view-controls { margin: 10px 0 0; padding: 0; border: 0; background: transparent; }
+.display-panel h2 { font-size: 16px; font-weight: 900; margin: 0; }
 .collapsible {
   background: var(--card); border: 1px solid var(--card-border);
   border-radius: var(--radius); overflow: auto;
@@ -302,7 +306,8 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 @media (max-width: 520px) {
   .wrap { padding: 12px 10px 34px; }
   .top-bar h1 { font-size: 23px; }
-  .view-controls { align-items: stretch; margin-left: -2px; margin-right: -2px; border-radius: 0 0 var(--radius) var(--radius); }
+  .display-panel { margin-left: -2px; margin-right: -2px; padding: 12px; }
+  .view-controls { align-items: stretch; }
   .view-control-actions { display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; }
   .view-btn { min-height: 42px; }
   .top-bar, .deadline-banner, .field-app-banner { margin-bottom: 14px; }
@@ -312,8 +317,11 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
   .grid { grid-template-columns: 1fr; }
   .pledge-list li { display: block; }
   .pledge-list .pledge-actions { align-items: stretch; margin-top: 8px; }
-  .route-planner { top: 112px; margin-left: -2px; margin-right: -2px; border-radius: 0 0 var(--radius) var(--radius); }
-  .route-planner, .resizable-card { max-height: 74vh; }
+  .route-planner {
+    position: static; top: auto; margin-left: -2px; margin-right: -2px;
+    border-radius: var(--radius); box-shadow: none; max-height: none; overflow: visible;
+  }
+  .resizable-card { resize: none; max-height: none; overflow: visible; }
   .route-controls { grid-template-columns: 1fr; }
   .route-controls .route-origin-wrap { grid-column: auto; }
   .route-help { grid-template-columns: 1fr; }
@@ -346,15 +354,25 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     </div>
   </div>
 
-  <div class="view-controls" aria-label="Dashboard display controls">
-    <div class="label">View size <strong id="zoom-label">100%</strong></div>
-    <div class="view-control-actions">
-      <button type="button" class="view-btn" id="zoom-out-btn">Smaller</button>
-      <button type="button" class="view-btn" id="zoom-in-btn">Larger</button>
-      <button type="button" class="view-btn" id="collapse-all-btn">Collapse all</button>
-      <button type="button" class="view-btn primary" id="expand-all-btn">Expand all</button>
+  <details class="display-panel collapsible" data-section="display" data-mobile-collapsed open>
+    <summary class="collapsible-summary">
+      <span>
+        <span class="section-kicker">Optional controls</span>
+        <h2>Display options</h2>
+        <span class="section-count">Pinch zoom also works</span>
+      </span>
+      <span class="toggle-icon" aria-hidden="true"></span>
+    </summary>
+    <div class="view-controls" aria-label="Dashboard display controls">
+      <div class="label">View size <strong id="zoom-label">100%</strong></div>
+      <div class="view-control-actions">
+        <button type="button" class="view-btn" id="zoom-out-btn">Smaller</button>
+        <button type="button" class="view-btn" id="zoom-in-btn">Larger</button>
+        <button type="button" class="view-btn" id="collapse-all-btn">Collapse all</button>
+        <button type="button" class="view-btn primary" id="expand-all-btn">Expand all</button>
+      </div>
     </div>
-  </div>
+  </details>
 
   <div class="deadline-banner" id="deadline-banner">
     <div>
@@ -377,10 +395,10 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   </div>
 
-  <details class="route-planner collapsible resizable-card" data-section="route" open>
+  <details class="route-planner collapsible resizable-card" data-section="route" data-mobile-collapsed open>
     <summary class="collapsible-summary">
       <span>
-        <span class="section-kicker">Sticky route tools</span>
+        <span class="section-kicker">Route tools</span>
         <h2>Route planner</h2>
       </span>
       <span class="toggle-icon" aria-hidden="true"></span>
@@ -492,7 +510,7 @@ const ROUTE_STOPS_CACHE_KEY = 'd1_fruit_audit_route_stops_v1';
 const ROUTE_ORIGIN_CACHE_KEY = 'd1_fruit_audit_route_origin_v1';
 const ROUTE_ACTIVE_INDEX_CACHE_KEY = 'd1_fruit_audit_route_active_index_v1';
 const DASHBOARD_ZOOM_CACHE_KEY = 'd1_fruit_audit_dashboard_zoom_v1';
-const DASHBOARD_SECTION_CACHE_KEY = 'd1_fruit_audit_dashboard_sections_v1';
+const DASHBOARD_SECTION_CACHE_KEY = 'd1_fruit_audit_dashboard_sections_v2';
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
@@ -586,6 +604,10 @@ function applySectionDefaults() {
   const states = savedSectionStates();
   const isSmallScreen = window.matchMedia('(max-width: 620px)').matches;
   document.querySelectorAll('details[data-section]').forEach(section => {
+    if (section.dataset.section === 'route' && selectedRouteStoreIds.size) {
+      section.open = true;
+      return;
+    }
     if (Object.prototype.hasOwnProperty.call(states, section.dataset.section)) {
       section.open = Boolean(states[section.dataset.section]);
       return;
@@ -1236,10 +1258,10 @@ $('pledge-form').addEventListener('submit', async e => {
 
 async function initDashboard() {
   $('dashboard-root').hidden = false;
+  loadRouteState();
   initDisplayControls();
   syncSignedInBar();
   updateOnlineStatus();
-  loadRouteState();
   try {
     await loadApprovedUsers();
     const user = D6Auth.getUser();
