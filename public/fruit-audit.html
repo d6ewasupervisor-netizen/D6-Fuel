@@ -266,6 +266,28 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 }
 .side-card.ready { border-color: rgba(255,209,102,0.50); }
 .side-card.sent { border-color: rgba(83,216,106,0.50); }
+.capture-flow {
+  background: rgba(83,216,106,0.10);
+  border: 1px solid rgba(83,216,106,0.35);
+  border-radius: 13px;
+  padding: 12px;
+  margin: 12px 0;
+}
+.capture-flow p {
+  color: var(--sub);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.capture-flow-btn {
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 13px;
+  background: var(--green);
+  color: #061008;
+  font-weight: 900;
+  cursor: pointer;
+}
 .side-head {
   display: flex;
   justify-content: space-between;
@@ -486,6 +508,103 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
   display: none;
 }
 .toast.show { display: block; }
+.capture-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #020604;
+  display: flex;
+  flex-direction: column;
+  padding: calc(10px + var(--safe-top)) 10px calc(12px + var(--safe-bottom));
+}
+.capture-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.capture-close {
+  min-height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--sub);
+  padding: 8px 12px;
+  font-weight: 800;
+}
+.capture-title { flex: 1; min-width: 0; }
+.capture-title h2 { font-size: 18px; line-height: 1.15; }
+.capture-title p { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.capture-video-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 260px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #000;
+}
+.capture-video-wrap video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.capture-prompt {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background: rgba(0,0,0,0.72);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 14px;
+  padding: 12px;
+}
+.capture-prompt .label {
+  color: var(--green-2);
+  font-weight: 900;
+  font-size: 20px;
+}
+.capture-prompt .hint {
+  color: #fff;
+  font-size: 13px;
+  margin-top: 3px;
+}
+.capture-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 10px 0;
+}
+.capture-step {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 4px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+.capture-step.done { color: var(--green-2); border-color: rgba(83,216,106,0.55); background: rgba(83,216,106,0.12); }
+.capture-step.active { color: #061008; background: var(--amber); border-color: var(--amber); }
+.capture-actions {
+  display: grid;
+  gap: 8px;
+}
+.capture-button {
+  min-height: 58px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--green);
+  color: #061008;
+  font-size: 16px;
+  font-weight: 950;
+}
+.capture-button.secondary {
+  background: var(--panel);
+  color: var(--sub);
+  border: 1px solid var(--border);
+}
 @media (max-width: 430px) {
   body { padding-left: 10px; padding-right: 10px; }
   .hero h1 { font-size: 23px; }
@@ -522,6 +641,9 @@ let selectedStoreId = localStorage.getItem(SELECTED_STORE_KEY) || null;
 let sending = false;
 let statusMessage = '';
 let photoDb = null;
+let captureStream = null;
+let captureFlow = null;
+let captureSaving = false;
 let state = {
   photos: {},
   sent: {},
@@ -714,6 +836,18 @@ function unsentPhotoCount(store) {
   }, 0);
 }
 
+function firstMissingSideIndex(storeId, setId) {
+  const idx = REQUIRED_SIDES.findIndex(side => getSidePhotos(storeId, setId, side.id).length === 0);
+  return idx >= 0 ? idx : 0;
+}
+
+function nextMissingSideIndex(storeId, setId, currentIdx) {
+  for (let idx = currentIdx + 1; idx < REQUIRED_SIDES.length; idx++) {
+    if (getSidePhotos(storeId, setId, REQUIRED_SIDES[idx].id).length === 0) return idx;
+  }
+  return -1;
+}
+
 function categoryShort(set) {
   if (set.commodity === '600') return 'APL';
   if (set.commodity === '602') return 'CIT';
@@ -800,7 +934,7 @@ function renderStore(store) {
     </section>
     <div class="quick-steps">
       <div class="quick-step"><div class="num">1</div><div class="txt"><strong>Match the set card</strong> to the correct fruit table or fixture using POG, table, and bay range.</div></div>
-      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Take all four side views:</strong> Front, Right Side, Back, and Left Side.</div></div>
+      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Tap Start 360 Capture.</strong> The camera stays open and prompts Front, Right Side, Back, then Left Side.</div></div>
       <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Add extra photos</strong> for blocked, wide, or unclear sides. Then submit the store once.</div></div>
     </div>
     <div class="set-list">
@@ -820,6 +954,12 @@ function renderStore(store) {
 function renderSetCard(store, set, idx) {
   const status = setStatus(store.id, set.id);
   const sideCards = REQUIRED_SIDES.map(side => renderSideCard(store, set, side, idx)).join('');
+  const missingSides = REQUIRED_SIDES.filter(side => getSidePhotos(store.id, set.id, side.id).length === 0);
+  const flowLabel = missingSides.length === REQUIRED_SIDES.length
+    ? 'Start 360 Capture'
+    : missingSides.length > 0
+      ? `Continue 360 Capture (${missingSides.length} side${missingSides.length === 1 ? '' : 's'} left)`
+      : 'Add Extra 360 Photo';
 
   return `
     <article class="set-card ${status.key}" id="set-${set.id}" data-set-id="${set.id}">
@@ -838,6 +978,10 @@ function renderSetCard(store, set, idx) {
         <div class="fact"><div class="k">Items</div><div class="v">${set.items}</div></div>
       </div>
       <div class="desc">${escapeHtml(set.description)}</div>
+      <div class="capture-flow">
+        <p>Tap once to open the camera. It will guide you through Front, Right Side, Back, and Left Side without returning here between photos.</p>
+        <button class="capture-flow-btn" onclick="start360Capture('${store.id}','${set.id}',${idx})">${flowLabel}</button>
+      </div>
       <div class="side-grid">${sideCards}</div>
     </article>
   `;
@@ -864,11 +1008,11 @@ function renderSideCard(store, set, side, setIndex) {
       <div class="side-hint">${escapeHtml(side.hint)}</div>
       ${photos.length ? `<div class="gallery">${thumbs}</div>` : ''}
       <div class="actions">
-        <button class="action-btn primary" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','camera')">Take Photo</button>
+        <button class="action-btn primary" onclick="start360CaptureAtSide('${store.id}','${set.id}','${side.id}',${setIndex})">Take Photo</button>
         <button class="action-btn" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','gallery')">Load Photo</button>
       </div>
-      <input type="file" id="input-camera-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" capture="environment" style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex})">
-      <input type="file" id="input-gallery-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" multiple style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex})">
+      <input type="file" id="input-camera-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" capture="environment" style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex},'camera')">
+      <input type="file" id="input-gallery-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" multiple style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex},'gallery')">
     </section>
   `;
 }
@@ -979,7 +1123,159 @@ function triggerPhoto(storeId, setId, sideId, source) {
   }
 }
 
-async function handleFiles(input, storeId, setId, sideId, setIndex) {
+function start360Capture(storeId, setId, setIndex) {
+  start360CaptureAtIndex(storeId, setId, firstMissingSideIndex(storeId, setId), setIndex);
+}
+
+function start360CaptureAtSide(storeId, setId, sideId, setIndex) {
+  const sideIndex = Math.max(0, REQUIRED_SIDES.findIndex(side => side.id === sideId));
+  start360CaptureAtIndex(storeId, setId, sideIndex, setIndex);
+}
+
+async function start360CaptureAtIndex(storeId, setId, sideIndex, setIndex) {
+  const store = getStore(storeId);
+  if (!store) return;
+  const set = store.sets.find(item => item.id === setId);
+  if (!set) return;
+
+  captureFlow = { storeId, setId, setIndex, sideIndex };
+  try {
+    captureStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: 'environment' },
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+      audio: false,
+    });
+    renderCaptureOverlay();
+  } catch (err) {
+    showToast('Could not keep camera open. Opening phone camera for this side.');
+    const side = REQUIRED_SIDES[sideIndex] || REQUIRED_SIDES[0];
+    triggerPhoto(storeId, setId, side.id, 'camera');
+  }
+}
+
+function stopCaptureStream() {
+  if (captureStream) {
+    captureStream.getTracks().forEach(track => track.stop());
+    captureStream = null;
+  }
+}
+
+function closeCaptureOverlay(shouldRender = true) {
+  stopCaptureStream();
+  captureFlow = null;
+  captureSaving = false;
+  const overlay = document.getElementById('capture-overlay');
+  if (overlay) overlay.remove();
+  if (shouldRender) render();
+}
+
+function renderCaptureOverlay() {
+  if (!captureFlow || !captureStream) return;
+  const store = getStore(captureFlow.storeId);
+  const set = store && store.sets.find(item => item.id === captureFlow.setId);
+  const side = REQUIRED_SIDES[captureFlow.sideIndex] || REQUIRED_SIDES[0];
+  if (!store || !set || !side) {
+    closeCaptureOverlay();
+    return;
+  }
+
+  let overlay = document.getElementById('capture-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'capture-overlay';
+    overlay.className = 'capture-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  overlay.innerHTML = `
+    <div class="capture-top">
+      <div class="capture-title">
+        <h2>Take ${escapeHtml(side.label)}</h2>
+        <p>FM ${escapeHtml(store.id)} - ${escapeHtml(displaySetName(set))}</p>
+      </div>
+      <button class="capture-close" onclick="closeCaptureOverlay()">Close</button>
+    </div>
+    <div class="capture-video-wrap">
+      <video id="capture-video" autoplay playsinline muted></video>
+      <div class="capture-prompt">
+        <div class="label">${escapeHtml(side.label)}</div>
+        <div class="hint">${escapeHtml(side.hint)}</div>
+      </div>
+    </div>
+    <div class="capture-steps">
+      ${REQUIRED_SIDES.map((step, idx) => {
+        const done = getSidePhotos(captureFlow.storeId, captureFlow.setId, step.id).length > 0;
+        const cls = idx === captureFlow.sideIndex ? 'active' : done ? 'done' : '';
+        return `<div class="capture-step ${cls}">${escapeHtml(step.label)}</div>`;
+      }).join('')}
+    </div>
+    <div class="capture-actions">
+      <button class="capture-button" onclick="captureCurrentSide()">Capture ${escapeHtml(side.label)}</button>
+      <button class="capture-button secondary" onclick="closeCaptureOverlay()">Pause 360 Capture</button>
+    </div>
+  `;
+
+  const video = document.getElementById('capture-video');
+  if (video) {
+    video.srcObject = captureStream;
+    video.play().catch(() => {});
+  }
+}
+
+async function captureCurrentSide() {
+  if (!captureFlow || captureSaving) return;
+  const video = document.getElementById('capture-video');
+  const side = REQUIRED_SIDES[captureFlow.sideIndex] || REQUIRED_SIDES[0];
+  if (!video || !video.videoWidth || !video.videoHeight) {
+    showToast('Camera is still starting. Try again in a second.');
+    return;
+  }
+
+  captureSaving = true;
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = compressCanvasToJpegDataUrl(canvas, 0.62, MAX_PHOTO_BYTES);
+    const record = {
+      id: `${captureFlow.storeId}-${captureFlow.setId}-${side.id}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      storeId: captureFlow.storeId,
+      setId: captureFlow.setId,
+      sideId: side.id,
+      dataUrl,
+      createdAt: new Date().toISOString(),
+    };
+    await savePhotoRecord(record);
+    getSidePhotos(captureFlow.storeId, captureFlow.setId, side.id).push(record);
+    markSetUnsent(captureFlow.storeId, captureFlow.setId);
+    saveState();
+
+    const nextIdx = nextMissingSideIndex(captureFlow.storeId, captureFlow.setId, captureFlow.sideIndex);
+    if (nextIdx >= 0) {
+      captureFlow.sideIndex = nextIdx;
+      captureSaving = false;
+      showToast(`${side.label} captured. Next: ${REQUIRED_SIDES[nextIdx].label}.`);
+      renderCaptureOverlay();
+      return;
+    }
+
+    const completedSetIndex = captureFlow.setIndex;
+    const completedStoreId = captureFlow.storeId;
+    closeCaptureOverlay(false);
+    render();
+    showToast('All four side views captured for this set.');
+    scrollToNextNeeded(completedStoreId, completedSetIndex, REQUIRED_SIDES[REQUIRED_SIDES.length - 1].id);
+  } catch (err) {
+    captureSaving = false;
+    showToast('Could not save this photo. Try again.');
+  }
+}
+
+async function handleFiles(input, storeId, setId, sideId, setIndex, source) {
   const files = Array.from(input.files || []);
   if (!files.length) return;
   saveComment(storeId);
@@ -1006,9 +1302,25 @@ async function handleFiles(input, storeId, setId, sideId, setIndex) {
     render();
     showToast(`Captured ${records.length} photo${records.length === 1 ? '' : 's'}.`);
     scrollToNextNeeded(storeId, setIndex, sideId);
+    if (source === 'camera') promptNextNativeCamera(storeId, setId, setIndex, sideId);
   } catch (err) {
     showToast(err.message || 'Could not read image. Try another photo.');
   }
+}
+
+function promptNextNativeCamera(storeId, setId, setIndex, sideId) {
+  const currentIdx = REQUIRED_SIDES.findIndex(side => side.id === sideId);
+  const nextIdx = nextMissingSideIndex(storeId, setId, currentIdx);
+  if (nextIdx < 0) return;
+  const nextSide = REQUIRED_SIDES[nextIdx];
+  setTimeout(() => {
+    showToast(`Next: ${nextSide.label}. Opening camera...`);
+    const input = document.getElementById(`input-camera-${setId}-${nextSide.id}`);
+    if (input) {
+      input.value = '';
+      input.click();
+    }
+  }, 700);
 }
 
 async function removePhoto(storeId, setId, sideId, photoIndex) {
@@ -1074,6 +1386,32 @@ function imageFileToJpegDataUrl(file) {
 function dataUrlBytes(dataUrl) {
   const base64 = String(dataUrl || '').split(',').pop() || '';
   return Math.ceil(base64.length * 3 / 4);
+}
+
+function compressCanvasToJpegDataUrl(canvas, quality, maxBytes) {
+  let output = canvas.toDataURL('image/jpeg', quality);
+  let nextQuality = quality;
+  let nextWidth = canvas.width;
+  let nextHeight = canvas.height;
+  const source = document.createElement('canvas');
+  source.width = canvas.width;
+  source.height = canvas.height;
+  source.getContext('2d').drawImage(canvas, 0, 0);
+
+  while (maxBytes && dataUrlBytes(output) > maxBytes && (nextWidth > 720 || nextQuality > 0.42)) {
+    if (nextQuality > 0.42) {
+      nextQuality = Math.max(0.42, nextQuality - 0.08);
+    } else {
+      nextWidth = Math.round(nextWidth * 0.86);
+      nextHeight = Math.round(nextHeight * 0.86);
+      canvas.width = nextWidth;
+      canvas.height = nextHeight;
+      canvas.getContext('2d').drawImage(source, 0, 0, nextWidth, nextHeight);
+    }
+    output = canvas.toDataURL('image/jpeg', nextQuality);
+  }
+
+  return output;
 }
 
 function resizeImage(fileOrBlob, maxDim, quality, maxBytes) {
