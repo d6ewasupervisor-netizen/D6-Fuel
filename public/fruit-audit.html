@@ -196,35 +196,92 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 .notice strong { color: var(--amber); }
 .set-list { display: grid; gap: 12px; }
 .set-card {
+  --set-accent: var(--green);
+  --set-accent-soft: rgba(83,216,106,0.13);
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 2px solid var(--set-accent);
   border-radius: var(--radius);
   padding: 15px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 10px 28px rgba(0,0,0,0.22);
   transition: transform 0.12s, border-color 0.12s;
 }
+.set-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 6px;
+  background: var(--set-accent);
+}
+.set-card.commodity-apples { --set-accent: #ff5d6c; --set-accent-soft: rgba(255,93,108,0.14); }
+.set-card.commodity-citrus { --set-accent: #ffd166; --set-accent-soft: rgba(255,209,102,0.16); }
+.set-card.commodity-berries { --set-accent: #a78bfa; --set-accent-soft: rgba(167,139,250,0.16); }
 .set-card.captured { border-color: rgba(255,209,102,0.60); }
 .set-card.sent { border-color: rgba(83,216,106,0.60); }
 .set-head {
   display: grid;
-  grid-template-columns: 46px 1fr auto;
+  grid-template-columns: 54px 1fr;
   gap: 12px;
   align-items: start;
-  margin-bottom: 10px;
+  margin: 4px 0 12px;
+  background: linear-gradient(135deg, var(--set-accent-soft), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 12px;
 }
 .set-icon {
-  width: 46px;
-  height: 46px;
+  width: 54px;
+  height: 54px;
   border-radius: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(83,216,106,0.13);
-  color: var(--green-2);
+  background: var(--set-accent);
+  color: #061008;
   font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  font-weight: 950;
+}
+.set-kicker {
+  color: var(--set-accent);
+  font-size: 11px;
+  font-weight: 950;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.set-title {
+  font-size: 21px;
+  font-weight: 950;
+  line-height: 1.1;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.set-sub { color: var(--sub); font-size: 12px; font-family: 'JetBrains Mono', monospace; overflow-wrap: anywhere; }
+.set-head .status {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+.set-target-callout {
+  background: var(--set-accent-soft);
+  border: 1px solid var(--set-accent);
+  border-left: 6px solid var(--set-accent);
+  border-radius: 14px;
+  padding: 13px 14px;
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 15px;
   font-weight: 800;
 }
-.set-title { font-size: 16px; font-weight: 800; line-height: 1.25; margin-bottom: 4px; }
-.set-sub { color: var(--muted); font-size: 12px; font-family: 'JetBrains Mono', monospace; overflow-wrap: anywhere; }
+.set-target-callout strong {
+  display: block;
+  color: var(--set-accent);
+  font-size: 12px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
 .status {
   border-radius: 99px;
   padding: 5px 9px;
@@ -610,7 +667,7 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
   .hero h1 { font-size: 23px; }
   .facts { grid-template-columns: 1fr; }
   .set-head { grid-template-columns: 42px 1fr; }
-  .set-head .status { grid-column: 2; justify-self: start; }
+  .set-head .status { grid-column: 1 / -1; justify-self: start; }
 }
 </style>
 </head>
@@ -855,6 +912,26 @@ function categoryShort(set) {
   return set.commodity || 'SET';
 }
 
+function commodityName(set) {
+  const group = String(set.commodityGroup || '').split('-').slice(1).join('-').trim();
+  if (group) return group;
+  if (set.commodity === '600') return 'APPLES';
+  if (set.commodity === '602') return 'CITRUS';
+  if (set.commodity === '604') return 'BERRIES';
+  return `C${set.commodity || 'FRUIT'}`;
+}
+
+function commodityClass(set) {
+  if (set.commodity === '600') return 'commodity-apples';
+  if (set.commodity === '602') return 'commodity-citrus';
+  if (set.commodity === '604') return 'commodity-berries';
+  return 'commodity-fruit';
+}
+
+function setHeaderTitle(set) {
+  return `${commodityName(set)} - ${set.aisleDesc}`;
+}
+
 function displaySetName(set) {
   return `${set.commodityGroup} - ${set.aisleDesc}`;
 }
@@ -962,14 +1039,19 @@ function renderSetCard(store, set, idx) {
       : 'Add Extra 360 Photo';
 
   return `
-    <article class="set-card ${status.key}" id="set-${set.id}" data-set-id="${set.id}">
+    <article class="set-card ${commodityClass(set)} ${status.key}" id="set-${set.id}" data-set-id="${set.id}">
       <div class="set-head">
         <div class="set-icon">${categoryShort(set)}</div>
         <div>
-          <div class="set-title">${escapeHtml(displaySetName(set))}</div>
-          <div class="set-sub">POG ${escapeHtml(set.pogDbKey)} - ${escapeHtml(set.pogName)}</div>
+          <div class="set-kicker">Photo target</div>
+          <div class="set-title">${escapeHtml(setHeaderTitle(set))}</div>
+          <div class="set-sub">C${escapeHtml(set.commodity)} | POG ${escapeHtml(set.pogDbKey)} | Bays ${escapeHtml(set.bayRange)}</div>
         </div>
         <div class="status ${status.key}">${status.label}</div>
+      </div>
+      <div class="set-target-callout">
+        <strong>Take pictures of this set</strong>
+        ${escapeHtml(commodityName(set))} on ${escapeHtml(set.aisleDesc)} - bays ${escapeHtml(set.bayRange)}
       </div>
       <div class="facts">
         <div class="fact"><div class="k">Aisle/Table</div><div class="v">${escapeHtml(set.aisle)} - ${escapeHtml(set.aisleDesc)}</div></div>
@@ -1342,6 +1424,7 @@ function scrollToNextNeeded(storeId, setIndex, sideId) {
   const currentSideIdx = REQUIRED_SIDES.findIndex(side => side.id === sideId);
   let targetSet = null;
   let targetSide = null;
+  let targetSetIndex = -1;
 
   for (let s = setIndex; s < store.sets.length && !targetSet; s++) {
     const startSide = s === setIndex ? currentSideIdx + 1 : 0;
@@ -1350,16 +1433,19 @@ function scrollToNextNeeded(storeId, setIndex, sideId) {
       if (!isSetSent(storeId, store.sets[s].id) && getSidePhotos(storeId, store.sets[s].id, side.id).length === 0) {
         targetSet = store.sets[s];
         targetSide = side;
+        targetSetIndex = s;
         break;
       }
     }
   }
   if (!targetSet) {
-    for (const set of store.sets) {
+    for (let s = 0; s < store.sets.length; s++) {
+      const set = store.sets[s];
       for (const side of REQUIRED_SIDES) {
         if (!isSetSent(storeId, set.id) && getSidePhotos(storeId, set.id, side.id).length === 0) {
           targetSet = set;
           targetSide = side;
+          targetSetIndex = s;
           break;
         }
       }
@@ -1368,8 +1454,16 @@ function scrollToNextNeeded(storeId, setIndex, sideId) {
   }
   if (!targetSet || !targetSide) return;
   setTimeout(() => {
-    const el = document.getElementById(`set-${targetSet.id}-${targetSide.id}`);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const targetId = targetSetIndex !== setIndex
+      ? `set-${targetSet.id}`
+      : `set-${targetSet.id}-${targetSide.id}`;
+    const el = document.getElementById(targetId);
+    if (el) {
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: targetSetIndex !== setIndex ? 'start' : 'center',
+      });
+    }
   }, 80);
 }
 
