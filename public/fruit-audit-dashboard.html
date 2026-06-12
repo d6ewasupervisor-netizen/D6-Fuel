@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <meta name="theme-color" content="#07110b">
 <title>District 1 Fruit Audit - Live Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,8 +26,10 @@
   --red: #ff5d6c;
   --radius: 14px;
   --radius-sm: 10px;
+  --dashboard-zoom: 1;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body {
   font-family: 'DM Sans', system-ui, sans-serif;
   background: radial-gradient(circle at 20% -10%, rgba(83,216,106,0.18), transparent 34%), var(--bg);
@@ -35,7 +37,10 @@ body {
   min-height: 100vh;
   line-height: 1.5;
 }
-.wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
+.wrap {
+  max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px;
+  zoom: var(--dashboard-zoom);
+}
 .top-bar {
   display: flex; justify-content: space-between; align-items: flex-start;
   gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
@@ -56,6 +61,50 @@ body {
   animation: pulse 2s infinite;
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+.view-controls {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  background: rgba(14,26,18,0.92); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 10px 12px; margin-bottom: 14px;
+  position: sticky; top: 0; z-index: 30; backdrop-filter: blur(12px);
+}
+.view-controls .label { color: var(--text-secondary); font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; }
+.view-controls .label strong { color: var(--accent-2); font-family: 'JetBrains Mono', monospace; }
+.view-control-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.view-btn {
+  border: 1px solid var(--card-border); background: var(--card); color: var(--text);
+  border-radius: 999px; padding: 8px 11px; font: inherit; font-size: 12px; font-weight: 900;
+  min-height: 36px; cursor: pointer;
+}
+.view-btn.primary { background: var(--accent); border-color: var(--accent); color: #061008; }
+.view-btn:active { transform: scale(0.97); }
+.collapsible {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); overflow: auto;
+}
+.collapsible-summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; min-height: 48px; touch-action: manipulation;
+}
+.collapsible-summary::-webkit-details-marker { display: none; }
+.collapsible-summary h2 { margin: 0; }
+.section-kicker {
+  display: block; color: var(--muted); font-size: 11px; font-weight: 900;
+  letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px;
+}
+.section-count { color: var(--text-secondary); font-size: 12px; font-weight: 800; }
+.toggle-icon {
+  flex: 0 0 auto; width: 30px; height: 30px; display: inline-grid; place-items: center;
+  border: 1px solid var(--card-border); border-radius: 999px; color: var(--accent-2);
+  font-size: 18px; font-weight: 900;
+}
+.toggle-icon::before { content: '+'; }
+details[open] > .collapsible-summary .toggle-icon::before { content: '-'; }
+.collapsible-body { margin-top: 14px; }
+.resizable-card {
+  resize: vertical;
+  min-height: 72px;
+  max-height: calc(100vh - 24px);
+}
 .app-nav {
   display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
 }
@@ -141,13 +190,12 @@ body {
 .mini-btn.active { border-color: var(--accent); color: var(--accent-2); }
 .mini-btn:disabled { opacity: 0.7; cursor: default; }
 .route-planner {
-  background: var(--card); border: 1px solid var(--card-border);
-  border-radius: var(--radius); padding: 20px; margin-bottom: 22px;
-  position: sticky; top: 10px; z-index: 20;
+  padding: 20px; margin-bottom: 22px;
+  position: sticky; top: 68px; z-index: 20;
   box-shadow: 0 12px 30px rgba(0,0,0,0.24);
-  max-height: calc(100vh - 20px); overflow-y: auto;
+  max-height: calc(100vh - 84px); overflow-y: auto;
 }
-.route-planner h2 { font-size: 18px; font-weight: 900; margin-bottom: 6px; }
+.route-planner h2, .store-section h2 { font-size: 18px; font-weight: 900; margin-bottom: 0; }
 .route-planner .sub { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
 .route-controls { display: grid; grid-template-columns: minmax(220px, 1fr) auto auto auto; gap: 10px; align-items: end; }
 @media (max-width: 860px) { .route-controls { grid-template-columns: 1fr 1fr; } .route-controls .route-origin-wrap { grid-column: 1 / -1; } }
@@ -195,13 +243,14 @@ body {
 .route-drive-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .route-drive-actions .btn { min-height: 44px; padding: 10px; font-size: 13px; }
 .route-drive-actions .secondary { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--card-border); }
+.store-section { padding: 18px; margin-bottom: 22px; }
+.store-section .grid { margin: 0; }
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 980px) { .panels { grid-template-columns: 1fr; } }
 .panel {
-  background: var(--card); border: 1px solid var(--card-border);
-  border-radius: var(--radius); padding: 20px;
+  padding: 20px;
 }
-.panel h2 { font-size: 17px; font-weight: 900; margin-bottom: 6px; }
+.panel h2 { font-size: 17px; font-weight: 900; margin-bottom: 0; }
 .panel .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
 label { display: block; font-size: 12px; font-weight: 800; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
 input, select {
@@ -253,14 +302,18 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 @media (max-width: 520px) {
   .wrap { padding: 12px 10px 34px; }
   .top-bar h1 { font-size: 23px; }
+  .view-controls { align-items: stretch; margin-left: -2px; margin-right: -2px; border-radius: 0 0 var(--radius) var(--radius); }
+  .view-control-actions { display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; }
+  .view-btn { min-height: 42px; }
   .top-bar, .deadline-banner, .field-app-banner { margin-bottom: 14px; }
-  .field-app-banner, .deadline-banner, .route-planner, .panel, .store-card { padding: 14px; }
+  .field-app-banner, .deadline-banner, .route-planner, .panel, .store-card, .store-section { padding: 14px; }
   .app-nav a, .field-app-banner a, .btn { width: 100%; min-height: 48px; }
   .store-actions { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
   .pledge-list li { display: block; }
   .pledge-list .pledge-actions { align-items: stretch; margin-top: 8px; }
-  .route-planner { top: 0; margin-left: -2px; margin-right: -2px; border-radius: 0 0 var(--radius) var(--radius); }
-  .route-planner { max-height: 72vh; }
+  .route-planner { top: 112px; margin-left: -2px; margin-right: -2px; border-radius: 0 0 var(--radius) var(--radius); }
+  .route-planner, .resizable-card { max-height: 74vh; }
   .route-controls { grid-template-columns: 1fr; }
   .route-controls .route-origin-wrap { grid-column: auto; }
   .route-help { grid-template-columns: 1fr; }
@@ -293,6 +346,16 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     </div>
   </div>
 
+  <div class="view-controls" aria-label="Dashboard display controls">
+    <div class="label">View size <strong id="zoom-label">100%</strong></div>
+    <div class="view-control-actions">
+      <button type="button" class="view-btn" id="zoom-out-btn">Smaller</button>
+      <button type="button" class="view-btn" id="zoom-in-btn">Larger</button>
+      <button type="button" class="view-btn" id="collapse-all-btn">Collapse all</button>
+      <button type="button" class="view-btn primary" id="expand-all-btn">Expand all</button>
+    </div>
+  </div>
+
   <div class="deadline-banner" id="deadline-banner">
     <div>
       <div class="label">Complete by</div>
@@ -314,65 +377,109 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   </div>
 
-  <section class="route-planner">
-    <h2>Route planner</h2>
-    <p class="sub">Build your course once and it will stay saved on this device while you work. Add open stores or your claimed stores, then open the optimized route in Google Maps.</p>
-    <div class="route-help">
-      <div><strong>1. Pick stops</strong>Tap store cards below or add your claimed stores.</div>
-      <div><strong>2. Set start</strong>Enter an address or share your current location.</div>
-      <div><strong>3. Follow route</strong>Open Google Maps and keep this dashboard for claims.</div>
-    </div>
-    <div class="route-controls">
-      <div class="route-origin-wrap">
-        <label for="route-origin">Start location</label>
-        <input id="route-origin" placeholder="Enter address, city, or use current location">
+  <details class="route-planner collapsible resizable-card" data-section="route" open>
+    <summary class="collapsible-summary">
+      <span>
+        <span class="section-kicker">Sticky route tools</span>
+        <h2>Route planner</h2>
+      </span>
+      <span class="toggle-icon" aria-hidden="true"></span>
+    </summary>
+    <div class="collapsible-body">
+      <p class="sub">Build your course once and it will stay saved on this device while you work. Add open stores or your claimed stores, then open the optimized route in Google Maps.</p>
+      <div class="route-help">
+        <div><strong>1. Pick stops</strong>Tap store cards below or add your claimed stores.</div>
+        <div><strong>2. Set start</strong>Enter an address or share your current location.</div>
+        <div><strong>3. Follow route</strong>Open Google Maps and keep this dashboard for claims.</div>
       </div>
-      <button type="button" class="btn" id="use-location-btn">Use my location</button>
-      <button type="button" class="btn" id="add-claimed-route-btn">Add my claims</button>
-      <button type="button" class="btn" id="open-route-btn">Open route</button>
+      <div class="route-controls">
+        <div class="route-origin-wrap">
+          <label for="route-origin">Start location</label>
+          <input id="route-origin" placeholder="Enter address, city, or use current location">
+        </div>
+        <button type="button" class="btn" id="use-location-btn">Use my location</button>
+        <button type="button" class="btn" id="add-claimed-route-btn">Add my claims</button>
+        <button type="button" class="btn" id="open-route-btn">Open route</button>
+      </div>
+      <div class="route-summary" id="route-summary"></div>
+      <div class="route-selected-list" id="route-selected-list"></div>
+      <div class="route-stop-list" id="route-stop-list"></div>
+      <div class="route-drive" id="route-drive-panel"></div>
+      <button type="button" class="unclaim-btn danger" id="clear-route-btn">Clear saved route</button>
+      <div class="msg" id="route-msg"></div>
     </div>
-    <div class="route-summary" id="route-summary"></div>
-    <div class="route-selected-list" id="route-selected-list"></div>
-    <div class="route-stop-list" id="route-stop-list"></div>
-    <div class="route-drive" id="route-drive-panel"></div>
-    <button type="button" class="unclaim-btn danger" id="clear-route-btn">Clear saved route</button>
-    <div class="msg" id="route-msg"></div>
-  </section>
+  </details>
 
-  <div class="grid" id="store-grid"></div>
+  <details class="store-section collapsible resizable-card" data-section="stores" data-mobile-collapsed open>
+    <summary class="collapsible-summary">
+      <span>
+        <span class="section-kicker">Visual store picker</span>
+        <h2>Store cards</h2>
+        <span class="section-count" id="store-section-summary">Tap to open store cards</span>
+      </span>
+      <span class="toggle-icon" aria-hidden="true"></span>
+    </summary>
+    <div class="collapsible-body">
+      <div class="grid" id="store-grid"></div>
+    </div>
+  </details>
 
   <div class="panels">
-    <div class="panel">
-      <h2>Claim a District 1 store</h2>
-      <p class="sub">Each open store can only be claimed once until it is submitted. Tyson is notified when you claim or release a store.</p>
-      <div class="signed-in-bar" id="signed-in-bar">
-        <span>Signed in as <strong id="signed-in-name"></strong> - <span id="signed-in-email"></span></span>
-        <button type="button" class="sign-out-btn" id="sign-out-btn">Sign out</button>
+    <details class="panel collapsible resizable-card" data-section="claim" open>
+      <summary class="collapsible-summary">
+        <span>
+          <span class="section-kicker">Signup</span>
+          <h2>Claim a District 1 store</h2>
+        </span>
+        <span class="toggle-icon" aria-hidden="true"></span>
+      </summary>
+      <div class="collapsible-body">
+        <p class="sub">Each open store can only be claimed once until it is submitted. Tyson is notified when you claim or release a store.</p>
+        <div class="signed-in-bar" id="signed-in-bar">
+          <span>Signed in as <strong id="signed-in-name"></strong> - <span id="signed-in-email"></span></span>
+          <button type="button" class="sign-out-btn" id="sign-out-btn">Sign out</button>
+        </div>
+        <form id="pledge-form">
+          <label for="pledge-store">Store</label>
+          <select id="pledge-store" required><option value="">Select a store...</option></select>
+          <button type="submit" class="btn" id="pledge-btn">I will complete this store</button>
+          <div class="msg" id="pledge-msg"></div>
+        </form>
+        <div class="my-pledges" id="my-pledges-wrap" style="display:none">
+          <h3>Your claimed stores</h3>
+          <p class="sub" style="margin-bottom:10px">Cannot make it? Release one store, or opt out to release all of your active claims so someone else can claim them.</p>
+          <ul class="pledge-list" id="my-pledge-list"></ul>
+          <button type="button" class="unclaim-btn danger" id="opt-out-btn">Opt out and release all my active claims</button>
+          <div class="msg" id="unclaim-msg"></div>
+        </div>
       </div>
-      <form id="pledge-form">
-        <label for="pledge-store">Store</label>
-        <select id="pledge-store" required><option value="">Select a store...</option></select>
-        <button type="submit" class="btn" id="pledge-btn">I will complete this store</button>
-        <div class="msg" id="pledge-msg"></div>
-      </form>
-      <div class="my-pledges" id="my-pledges-wrap" style="display:none">
-        <h3>Your claimed stores</h3>
-        <p class="sub" style="margin-bottom:10px">Cannot make it? Release one store, or opt out to release all of your active claims so someone else can claim them.</p>
-        <ul class="pledge-list" id="my-pledge-list"></ul>
-        <button type="button" class="unclaim-btn danger" id="opt-out-btn">Opt out and release all my active claims</button>
-        <div class="msg" id="unclaim-msg"></div>
+    </details>
+    <details class="panel collapsible resizable-card" data-section="claims" data-mobile-collapsed open>
+      <summary class="collapsible-summary">
+        <span>
+          <span class="section-kicker">Live list</span>
+          <h2>Active claims</h2>
+        </span>
+        <span class="toggle-icon" aria-hidden="true"></span>
+      </summary>
+      <div class="collapsible-body">
+        <p class="sub">Who has claimed which District 1 fruit store.</p>
+        <ul class="pledge-list" id="pledge-list"></ul>
       </div>
-    </div>
-    <div class="panel">
-      <h2>Active claims</h2>
-      <p class="sub">Who has claimed which District 1 fruit store.</p>
-      <ul class="pledge-list" id="pledge-list"></ul>
-    </div>
-    <div class="panel">
-      <h2>Hours earned</h2>
-      <p class="sub">Each completed District 1 store counts as one paid hour.</p>
-      <ul class="pledge-list" id="hours-list"></ul>
-    </div>
+    </details>
+    <details class="panel collapsible resizable-card" data-section="hours" data-mobile-collapsed open>
+      <summary class="collapsible-summary">
+        <span>
+          <span class="section-kicker">Pay tally</span>
+          <h2>Hours earned</h2>
+        </span>
+        <span class="toggle-icon" aria-hidden="true"></span>
+      </summary>
+      <div class="collapsible-body">
+        <p class="sub">Each completed District 1 store counts as one paid hour.</p>
+        <ul class="pledge-list" id="hours-list"></ul>
+      </div>
+    </details>
   </div>
 </div>
 
@@ -384,10 +491,13 @@ const DASHBOARD_APPROVED_CACHE_KEY = 'd1_fruit_audit_dashboard_approved_v1';
 const ROUTE_STOPS_CACHE_KEY = 'd1_fruit_audit_route_stops_v1';
 const ROUTE_ORIGIN_CACHE_KEY = 'd1_fruit_audit_route_origin_v1';
 const ROUTE_ACTIVE_INDEX_CACHE_KEY = 'd1_fruit_audit_route_active_index_v1';
+const DASHBOARD_ZOOM_CACHE_KEY = 'd1_fruit_audit_dashboard_zoom_v1';
+const DASHBOARD_SECTION_CACHE_KEY = 'd1_fruit_audit_dashboard_sections_v1';
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
 let activeRouteIndex = 0;
+let displayControlsReady = false;
 const selectedRouteStoreIds = new Set();
 
 function fmtDeadline(iso) {
@@ -438,6 +548,78 @@ function getCachedJson(key) {
   } catch (err) {
     return null;
   }
+}
+
+function setDashboardZoom(value, persist = true) {
+  const next = Math.max(0.85, Math.min(1.3, Number(value) || 1));
+  document.documentElement.style.setProperty('--dashboard-zoom', next.toFixed(2));
+  $('zoom-label').textContent = `${Math.round(next * 100)}%`;
+  if (persist) {
+    try {
+      localStorage.setItem(DASHBOARD_ZOOM_CACHE_KEY, String(next));
+    } catch (err) {}
+  }
+}
+
+function loadDashboardZoom() {
+  let saved = 1;
+  try {
+    saved = Number(localStorage.getItem(DASHBOARD_ZOOM_CACHE_KEY)) || 1;
+  } catch (err) {}
+  setDashboardZoom(saved, false);
+}
+
+function savedSectionStates() {
+  const states = getCachedJson(DASHBOARD_SECTION_CACHE_KEY);
+  return states && typeof states === 'object' ? states : {};
+}
+
+function saveSectionStates() {
+  const states = {};
+  document.querySelectorAll('details[data-section]').forEach(section => {
+    states[section.dataset.section] = section.open;
+  });
+  cacheJson(DASHBOARD_SECTION_CACHE_KEY, states);
+}
+
+function applySectionDefaults() {
+  const states = savedSectionStates();
+  const isSmallScreen = window.matchMedia('(max-width: 620px)').matches;
+  document.querySelectorAll('details[data-section]').forEach(section => {
+    if (Object.prototype.hasOwnProperty.call(states, section.dataset.section)) {
+      section.open = Boolean(states[section.dataset.section]);
+      return;
+    }
+    section.open = !(isSmallScreen && section.hasAttribute('data-mobile-collapsed'));
+  });
+}
+
+function setAllSections(open) {
+  document.querySelectorAll('details[data-section]').forEach(section => {
+    section.open = open;
+  });
+  saveSectionStates();
+}
+
+function initDisplayControls() {
+  loadDashboardZoom();
+  applySectionDefaults();
+  if (displayControlsReady) return;
+  displayControlsReady = true;
+
+  $('zoom-out-btn').addEventListener('click', () => {
+    const current = Number(getComputedStyle(document.documentElement).getPropertyValue('--dashboard-zoom')) || 1;
+    setDashboardZoom(current - 0.1);
+  });
+  $('zoom-in-btn').addEventListener('click', () => {
+    const current = Number(getComputedStyle(document.documentElement).getPropertyValue('--dashboard-zoom')) || 1;
+    setDashboardZoom(current + 0.1);
+  });
+  $('collapse-all-btn').addEventListener('click', () => setAllSections(false));
+  $('expand-all-btn').addEventListener('click', () => setAllSections(true));
+  document.querySelectorAll('details[data-section]').forEach(section => {
+    section.addEventListener('toggle', saveSectionStates);
+  });
 }
 
 function isApprovedUser(user) {
@@ -655,6 +837,7 @@ function render(data) {
   const remain = deadlineMs != null ? deadlineMs - nowMs : null;
   $('countdown-text').textContent = fmtCountdown(remain);
   $('deadline-banner').classList.toggle('urgent', remain != null && remain < 24 * 3600 * 1000);
+  $('store-section-summary').textContent = `${stats.remaining} open, ${stats.pledged} claimed, ${stats.complete} done`;
 
   $('stats').innerHTML = `
     <div class="stat done"><div class="num">${stats.complete}</div><div class="lbl">Done</div></div>
@@ -938,6 +1121,11 @@ $('store-grid').addEventListener('click', e => {
   const claimBtn = e.target.closest('[data-claim-store]');
   if (claimBtn) {
     $('pledge-store').value = claimBtn.dataset.claimStore;
+    const claimPanel = document.querySelector('details[data-section="claim"]');
+    if (claimPanel) {
+      claimPanel.open = true;
+      saveSectionStates();
+    }
     $('pledge-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
@@ -1048,6 +1236,7 @@ $('pledge-form').addEventListener('submit', async e => {
 
 async function initDashboard() {
   $('dashboard-root').hidden = false;
+  initDisplayControls();
   syncSignedInBar();
   updateOnlineStatus();
   loadRouteState();
