@@ -247,7 +247,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 
   <div class="deadline-banner" id="deadline-banner">
     <div>
-      <div class="label">Commit by</div>
+      <div class="label">Complete by</div>
       <div class="time" id="deadline-text">-</div>
     </div>
     <div style="text-align:right">
@@ -294,11 +294,11 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
       <form id="pledge-form">
         <label for="pledge-store">Store</label>
         <select id="pledge-store" required><option value="">Select a store...</option></select>
-        <button type="submit" class="btn" id="pledge-btn">I commit to audit this store</button>
+        <button type="submit" class="btn" id="pledge-btn">I will complete this store</button>
         <div class="msg" id="pledge-msg"></div>
       </form>
       <div class="my-pledges" id="my-pledges-wrap" style="display:none">
-        <h3>Your commitments</h3>
+        <h3>Your claimed stores</h3>
         <p class="sub" style="margin-bottom:10px">Cannot make it? Release the store so someone else can claim it.</p>
         <ul class="pledge-list" id="my-pledge-list"></ul>
         <div class="msg" id="unclaim-msg"></div>
@@ -633,7 +633,7 @@ async function unclaimPledge(pledgeId) {
       body: JSON.stringify({ pledgeId, email }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Could not release commitment');
+    if (!res.ok) throw new Error(data.error || 'Could not release claim');
     showMsg(msg, data.message || 'Store released.', true);
     if (data.snapshot) {
       cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
@@ -735,7 +735,7 @@ $('pledge-form').addEventListener('submit', async e => {
       }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Could not save commitment');
+    if (!res.ok) throw new Error(data.error || 'Could not save claim');
     showMsg(msg, data.message || 'You are signed up. Complete the fruit audit in the field app and submit photos.', true);
     $('pledge-store').value = '';
     if (data.snapshot) {
