@@ -573,9 +573,10 @@ app.post('/api/fruit-audit/send', async (req, res) => {
     }
 
     console.log(`Fruit audit email sent for D${storeDistrict} FM ${store.id} by ${userName || 'unknown'} (${userEmail || 'no email'}) - ${attachments.length} photo(s) - ID: ${data.id}`);
+    let trackerSnapshot = null;
     if (storeDistrict === '1') {
       try {
-        fruitAuditTracker.recordCompletion({
+        trackerSnapshot = fruitAuditTracker.recordCompletion({
           storeId: store.id,
           name: userName,
           email: userEmail,
@@ -586,7 +587,7 @@ app.post('/api/fruit-audit/send', async (req, res) => {
         console.warn('Fruit audit tracker: could not record completion:', trackErr.message);
       }
     }
-    res.json({
+    const response = {
       success: true,
       id: data.id,
       storeId: store.id,
@@ -595,7 +596,12 @@ app.post('/api/fruit-audit/send', async (req, res) => {
       totalSetCount: store.sets.length,
       photoCount: attachments.length,
       recipients: { to: toList, cc: ccList }
-    });
+    };
+    if (storeDistrict === '1') {
+      response.earnedHours = 1;
+      if (trackerSnapshot) response.trackerSnapshot = trackerSnapshot;
+    }
+    res.json(response);
   } catch (err) {
     console.error('Fruit audit server error:', err);
     res.status(500).json({ error: err.message });

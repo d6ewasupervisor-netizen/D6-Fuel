@@ -703,6 +703,9 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 const STATE_KEY = 'd8_fruit_audit_state_v2';
 const SELECTED_STORE_KEY = 'd8_fruit_audit_selected_store';
 const SELECTED_DISTRICT_KEY = 'fruit_audit_selected_district';
+const MANIFEST_CACHE_KEY = 'fruit_audit_manifest_cache_v1';
+const APPROVED_USERS_CACHE_KEY = 'fruit_audit_approved_users_cache_v1';
+const TRACKER_CACHE_KEY = 'd1_fruit_audit_tracker_cache_v1';
 const PHOTO_ACCEPT = 'image/*,.heic,.heif,image/heic,image/heif';
 const REQUIRED_SIDES = [
   { id: 'front', label: 'Front', hint: 'Stand on the main customer-facing side and capture the full side.' },
@@ -770,6 +773,21 @@ function saveState() {
     }));
   } catch (err) {
     showToast('Could not save photos on this device. Try sending now if possible.');
+  }
+}
+
+function cacheJson(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (err) {}
+}
+
+function getCachedJson(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    return null;
   }
 }
 
@@ -882,6 +900,15 @@ function canAccessStore(store) {
   if (getStoreDistrict(store) !== selectedDistrictId) return false;
   if (getStoreDistrict(store) !== '1') return true;
   return getClaimedD1StoreIds().has(store.id);
+}
+
+function isOffline() {
+  return typeof navigator !== 'undefined' && navigator.onLine === false;
+}
+
+function renderD1OfflineNotice() {
+  if (selectedDistrictId !== '1' || !isOffline()) return '';
+  return '<div class="notice"><strong>Offline mode:</strong> You can keep taking District 1 photos. They stay saved on this device, but final submission needs signal or Wi-Fi.</div>';
 }
 
 function ensureStoreState(storeId) {
@@ -1034,6 +1061,7 @@ function renderStorePicker() {
     <a class="guide-link" href="/fruit-audit-guide">Open User Guide</a>
     ${selectedDistrictId === '1' ? '<a class="guide-link" href="/fruit-audit-dashboard">Open District 1 Signup Dashboard</a>' : ''}
     ${selectedDistrictId === '1' ? '<button class="guide-link" style="border:0;width:100%;cursor:pointer" onclick="refreshFruitAuditTracker()">Refresh Signup Status</button>' : ''}
+    ${renderD1OfflineNotice()}
     <div class="quick-steps">
       <div class="quick-step"><div class="num">1</div><div class="txt"><strong>${selectedDistrictId === '1' ? 'Claim your store.' : 'Select your store.'}</strong> ${selectedDistrictId === '1' ? 'Use the signup dashboard first, then open only the store you claimed.' : 'Make sure the FM number matches where you are working.'}</div></div>
       <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Complete every set.</strong> Each set needs Front, Right Side, Back, and Left Side photos.</div></div>
@@ -1064,11 +1092,14 @@ function renderStorePicker() {
 function renderStore(store) {
   const counts = storeCounts(store);
   const districtLabel = getDistrictLabel(getStoreDistrict(store));
+  const isD1OfflineStore = getStoreDistrict(store) === '1' && isOffline();
   const pct = Math.round(((counts.captured + counts.sent) / counts.total) * 100);
-  const canSubmit = hasAllRequiredSets(store) && unsentPhotoCount(store) > 0 && !sending;
+  const canSubmit = hasAllRequiredSets(store) && unsentPhotoCount(store) > 0 && !sending && !isD1OfflineStore;
   const submitLabel = sending
     ? (statusMessage || 'Submitting photos...')
-    : !hasAllRequiredSets(store)
+    : isD1OfflineStore && hasAllRequiredSets(store) && unsentPhotoCount(store) > 0
+      ? 'Saved offline. Submit when online.'
+      : !hasAllRequiredSets(store)
       ? `${counts.needed} side view${counts.needed === 1 ? '' : 's'} still needed`
       : unsentPhotoCount(store) === 0
         ? `Submitted ${counts.sent}. No unsent photos.`
@@ -1090,6 +1121,7 @@ function renderStore(store) {
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="progress-text">Captured ${counts.captured} | Needed ${counts.needed} | Sent ${counts.sent}</div>
     </section>
+    ${renderD1OfflineNotice()}
     <div class="quick-steps">
       <div class="quick-step"><div class="num">1</div><div class="txt"><strong>Match the set card</strong> to the correct fruit table or fixture using POG, table, and bay range.</div></div>
       <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Tap Start 360 Capture.</strong> The camera stays open and prompts Front, Right Side, Back, then Left Side.</div></div>
@@ -1686,6 +1718,10 @@ async function submitStore(storeId) {
     showStorePicker();
     return;
   }
+  if (getStoreDistrict(store) === '1' && isOffline()) {
+    showToast('You are offline. District 1 photos are still saved on this device. Submit this store when you are back online.');
+    return;
+  }
   saveComment(storeId);
   if (!hasAllRequiredSets(store)) {
     showToast('Capture front, right, back, and left for every set before submitting.');
@@ -1730,6 +1766,11 @@ async function submitStore(storeId) {
     if (!res.ok || !data.success) {
       throw new Error((data && data.error) || 'Photo send failed.');
     }
+    if (data.trackerSnapshot) {
+      fruitAuditTrackerSnapshot = data.trackerSnapshot;
+      fruitAuditTrackerLoadError = null;
+      cacheJson(TRACKER_CACHE_KEY, data.trackerSnapshot);
+    }
     ensureStoreState(storeId);
     await Promise.all(setPhotos.map(entry => clearSetPhotoRecords(storeId, entry.setId)));
     setPhotos.forEach(entry => {
@@ -1757,17 +1798,19 @@ function showConfirm(data) {
     overlay.className = 'confirm-overlay';
     document.body.appendChild(overlay);
   }
+  const earnedHours = Number(data && data.earnedHours) || 0;
   overlay.innerHTML = `
     <div class="confirm-card success">
       <div class="confidence-emitter" aria-hidden="true">✓</div>
       <div class="badge">Submission Complete</div>
       <h1>Your photos have been successfully submitted</h1>
-      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} is complete. You can close this screen after reviewing the confirmation below.</p>
+      <p class="confirm-sub">FM ${escapeHtml(data.storeId)} is complete.${earnedHours ? ' One hour has been recorded for this District 1 store.' : ''} You can close this screen after reviewing the confirmation below.</p>
       <div class="confirm-detail">
         <div class="row"><span>Store</span><strong>FM ${escapeHtml(data.storeId)}</strong></div>
         <div class="row"><span>District</span><strong>${escapeHtml(data.district ? `District ${data.district}` : getDistrictLabel(selectedDistrictId))}</strong></div>
         <div class="row"><span>Sets included</span><strong>${data.setCount}</strong></div>
         <div class="row"><span>Photos submitted</span><strong>${data.photoCount}</strong></div>
+        ${earnedHours ? `<div class="row"><span>Hours earned</span><strong>${earnedHours}</strong></div>` : ''}
       </div>
       <button class="confirm-btn" onclick="closeConfirm()">Done</button>
     </div>`;
@@ -1786,15 +1829,30 @@ function showToast(message) {
   showToast.timer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
+function handleConnectivityChange() {
+  if (selectedDistrictId !== '1' || !manifest) return;
+  render();
+  showToast(isOffline()
+    ? 'Offline mode: District 1 photos stay saved here until you reconnect.'
+    : 'You are back online. You can submit saved District 1 photos now.');
+}
+
 async function loadFruitAuditTracker() {
   fruitAuditTrackerLoadError = null;
   try {
     const res = await fetch('/api/fruit-audit-tracker', { cache: 'no-store' });
     if (!res.ok) throw new Error('Could not load signup dashboard status.');
     fruitAuditTrackerSnapshot = await res.json();
+    cacheJson(TRACKER_CACHE_KEY, fruitAuditTrackerSnapshot);
   } catch (err) {
-    fruitAuditTrackerSnapshot = null;
-    fruitAuditTrackerLoadError = err.message || 'Could not load signup dashboard status.';
+    const cached = getCachedJson(TRACKER_CACHE_KEY);
+    if (cached && cached.stores) {
+      fruitAuditTrackerSnapshot = cached;
+      fruitAuditTrackerLoadError = 'Using the last saved District 1 signup status because live status is unavailable.';
+    } else {
+      fruitAuditTrackerSnapshot = null;
+      fruitAuditTrackerLoadError = err.message || 'Could not load signup dashboard status.';
+    }
   }
 }
 
@@ -1813,17 +1871,34 @@ async function boot() {
   currentUser = D6Auth.getUser();
   try {
     await loadPhotosFromDb();
-    const [manifestRes, approvedRes] = await Promise.all([
-      fetch('/api/fruit-audit/manifest', { cache: 'no-store' }),
-      fetch('/api/fruit-audit/approved-users', { cache: 'no-store' }),
-    ]);
-    const approvedData = approvedRes.ok ? await approvedRes.json() : { approvedEmails: [] };
-    approvedEmails = new Set((approvedData.approvedEmails || []).map(normalizeEmail));
-    const res = manifestRes;
-    if (!res.ok) throw new Error('Could not load manifest.');
-    manifest = await res.json();
-    await loadFruitAuditTracker();
     const requestedDistrict = new URLSearchParams(window.location.search).get('district');
+    const allowD1OfflineCache = requestedDistrict === '1' || selectedDistrictId === '1';
+    let approvedData = { approvedEmails: [] };
+    try {
+      const approvedRes = await fetch('/api/fruit-audit/approved-users', { cache: 'no-store' });
+      if (approvedRes.ok) {
+        approvedData = await approvedRes.json();
+        cacheJson(APPROVED_USERS_CACHE_KEY, approvedData);
+      } else if (allowD1OfflineCache) {
+        approvedData = getCachedJson(APPROVED_USERS_CACHE_KEY) || approvedData;
+      }
+    } catch (err) {
+      if (!allowD1OfflineCache) throw err;
+      approvedData = getCachedJson(APPROVED_USERS_CACHE_KEY) || approvedData;
+    }
+    approvedEmails = new Set((approvedData.approvedEmails || []).map(normalizeEmail));
+
+    try {
+      const res = await fetch('/api/fruit-audit/manifest', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Could not load manifest.');
+      manifest = await res.json();
+      cacheJson(MANIFEST_CACHE_KEY, manifest);
+    } catch (err) {
+      if (!allowD1OfflineCache) throw err;
+      manifest = getCachedJson(MANIFEST_CACHE_KEY);
+      if (!manifest) throw err;
+    }
+    await loadFruitAuditTracker();
     if (requestedDistrict && isValidDistrict(requestedDistrict)) {
       selectedDistrictId = requestedDistrict;
       selectedStoreId = null;
@@ -1848,6 +1923,8 @@ async function boot() {
 }
 
 boot();
+window.addEventListener('online', handleConnectivityChange);
+window.addEventListener('offline', handleConnectivityChange);
 </script>
 </body>
 </html>

@@ -35,7 +35,7 @@ body {
   min-height: 100vh;
   line-height: 1.5;
 }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 20px 16px 48px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 48px; }
 .top-bar {
   display: flex; justify-content: space-between; align-items: flex-start;
   gap: 12px; flex-wrap: wrap; margin-bottom: 24px;
@@ -89,9 +89,10 @@ body {
 .deadline-banner .time { font-size: 22px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
 .deadline-banner.urgent { border-color: var(--amber); background: var(--amber-bg); }
 .stats {
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px;
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px;
 }
-@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 920px) { .stats { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 560px) { .stats { grid-template-columns: repeat(2, 1fr); } }
 .stat {
   background: var(--card); border: 1px solid var(--card-border);
   border-radius: var(--radius-sm); padding: 14px; text-align: center;
@@ -108,7 +109,7 @@ body {
   border-radius: 999px; transition: width 0.4s ease;
 }
 .grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 12px; margin-bottom: 28px;
 }
 .store-card {
@@ -157,8 +158,8 @@ body {
 .route-chip button {
   border: 0; background: transparent; color: var(--red); font-weight: 900; margin-left: 6px; cursor: pointer;
 }
-.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 840px) { .panels { grid-template-columns: 1fr; } }
+.panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 980px) { .panels { grid-template-columns: 1fr; } }
 .panel {
   background: var(--card); border: 1px solid var(--card-border);
   border-radius: var(--radius); padding: 20px;
@@ -199,6 +200,25 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 .unclaim-btn:active { border-color: var(--red); color: var(--red); }
 .my-pledges { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border); }
 .my-pledges h3 { font-size: 14px; font-weight: 900; margin-bottom: 8px; }
+.offline-note {
+  background: var(--amber-bg); border: 1px solid rgba(255,209,102,0.35);
+  border-radius: var(--radius); padding: 12px 14px; margin-bottom: 16px;
+  color: var(--text-secondary); font-size: 13px;
+}
+@media (min-width: 1280px) {
+  .wrap { max-width: 1280px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+}
+@media (max-width: 520px) {
+  .wrap { padding: 12px 10px 34px; }
+  .top-bar h1 { font-size: 23px; }
+  .top-bar, .deadline-banner, .field-app-banner { margin-bottom: 14px; }
+  .field-app-banner, .deadline-banner, .route-planner, .panel, .store-card { padding: 14px; }
+  .app-nav a, .field-app-banner a, .btn { width: 100%; min-height: 48px; }
+  .store-actions { grid-template-columns: 1fr; }
+  .pledge-list li { display: block; }
+  .pledge-list .pledge-actions { align-items: stretch; margin-top: 8px; }
+}
 </style>
 </head>
 <body>
@@ -210,6 +230,9 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
   <div class="field-app-banner">
     <p>After you claim a District 1 store here, open the fruit photo app, choose District 1, capture all required 360-degree fruit set photos, and submit the store.</p>
     <a href="/fruit-audit?district=1">Go to fruit app</a>
+  </div>
+  <div class="offline-note" id="offline-note" hidden>
+    You appear to be offline. The dashboard may show the last loaded view, but claiming stores and opening live routes needs a connection.
   </div>
   <div class="top-bar">
     <div>
@@ -286,12 +309,19 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
       <p class="sub">Who has claimed which District 1 fruit store.</p>
       <ul class="pledge-list" id="pledge-list"></ul>
     </div>
+    <div class="panel">
+      <h2>Hours earned</h2>
+      <p class="sub">Each completed District 1 store counts as one paid hour.</p>
+      <ul class="pledge-list" id="hours-list"></ul>
+    </div>
   </div>
 </div>
 
 <script src="/auth.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+const DASHBOARD_SNAPSHOT_CACHE_KEY = 'd1_fruit_audit_dashboard_snapshot_v1';
+const DASHBOARD_APPROVED_CACHE_KEY = 'd1_fruit_audit_dashboard_approved_v1';
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
@@ -330,6 +360,21 @@ function esc(s) {
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
+}
+
+function cacheJson(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (err) {}
+}
+
+function getCachedJson(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    return null;
+  }
 }
 
 function isApprovedUser(user) {
@@ -401,7 +446,7 @@ function routeUrlForSelectedStores() {
 
 function render(data) {
   snapshot = data;
-  const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
+  const { stats, stores, pledges, hours, deadline, deadlineMs, nowMs } = data;
   syncRouteSelection(stores);
 
   $('deadline-text').textContent = fmtDeadline(deadline);
@@ -415,6 +460,7 @@ function render(data) {
     <div class="stat left"><div class="num">${stats.remaining}</div><div class="lbl">Left</div></div>
     <div class="stat"><div class="num">${stats.total}</div><div class="lbl">Stores</div></div>
     <div class="stat"><div class="num">${stats.totalSets}</div><div class="lbl">Fruit Sets</div></div>
+    <div class="stat done"><div class="num">${stats.earnedHours ?? stats.complete}</div><div class="lbl">Hours Earned</div></div>
   `;
 
   const pct = stats.total ? Math.round((stats.complete / stats.total) * 100) : 0;
@@ -466,6 +512,14 @@ function render(data) {
         </li>`).join('')
     : '<li style="color:var(--muted)">No active claims yet.</li>';
 
+  $('hours-list').innerHTML = hours && hours.length
+    ? hours.map(item => `
+        <li>
+          <span><strong>${esc(item.name)}</strong><br><span style="color:var(--muted);font-size:12px">${esc(item.email)}</span></span>
+          <span><span class="store">${item.hours} hr${item.hours === 1 ? '' : 's'}</span><br><span style="color:var(--muted);font-size:12px">FM ${item.stores.map(esc).join(', FM ')}</span></span>
+        </li>`).join('')
+    : '<li style="color:var(--muted)">No submitted stores yet.</li>';
+
   const sessionUser = D6Auth.getUser();
   const myEmail = sessionUser ? normalizeEmail(sessionUser.email) : '';
   const myPledges = myEmail
@@ -496,15 +550,30 @@ function render(data) {
 }
 
 async function loadSnapshot() {
-  const res = await fetch('/api/fruit-audit-tracker');
-  if (!res.ok) throw new Error('Could not load fruit tracker');
-  return res.json();
+  try {
+    const res = await fetch('/api/fruit-audit-tracker', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Could not load fruit tracker');
+    const data = await res.json();
+    cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data);
+    return data;
+  } catch (err) {
+    const cached = getCachedJson(DASHBOARD_SNAPSHOT_CACHE_KEY);
+    if (cached && cached.stores) return cached;
+    throw err;
+  }
 }
 
 async function loadApprovedUsers() {
-  const res = await fetch('/api/fruit-audit-tracker/approved-users', { cache: 'no-store' });
-  if (!res.ok) throw new Error('Could not load approved user list');
-  const data = await res.json();
+  let data;
+  try {
+    const res = await fetch('/api/fruit-audit-tracker/approved-users', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Could not load approved user list');
+    data = await res.json();
+    cacheJson(DASHBOARD_APPROVED_CACHE_KEY, data);
+  } catch (err) {
+    data = getCachedJson(DASHBOARD_APPROVED_CACHE_KEY);
+    if (!data) throw err;
+  }
   approvedEmails = new Set((data.approvedEmails || []).map(normalizeEmail));
 }
 
@@ -519,6 +588,7 @@ function renderAccessDenied() {
   $('pledge-store').innerHTML = '<option value="">No access</option>';
   $('pledge-btn').disabled = true;
   $('pledge-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
+  $('hours-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
   showMsg($('pledge-msg'), 'This email is not approved for District 1 fruit audit signup.', false);
 }
 
@@ -530,7 +600,9 @@ function connectSSE() {
   es.addEventListener('snapshot', e => {
     pill.classList.add('connected');
     label.textContent = 'Live';
-    render(JSON.parse(e.data));
+    const data = JSON.parse(e.data);
+    cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data);
+    render(data);
   });
 
   es.onerror = () => {
@@ -545,6 +617,10 @@ async function unclaimPledge(pledgeId) {
   const msg = $('unclaim-msg');
   const user = D6Auth.getUser();
   if (!user) return;
+  if (!navigator.onLine) {
+    showMsg(msg, 'You are offline. Reconnect before releasing a District 1 claim.', false);
+    return;
+  }
   const email = user.email;
   if (!confirm('Release this store? Tyson will be notified that it is open again.')) {
     return;
@@ -559,7 +635,10 @@ async function unclaimPledge(pledgeId) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Could not release commitment');
     showMsg(msg, data.message || 'Store released.', true);
-    if (data.snapshot) render(data.snapshot);
+    if (data.snapshot) {
+      cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
+      render(data.snapshot);
+    }
   } catch (err) {
     showMsg(msg, err.message, false);
   }
@@ -598,6 +677,10 @@ function syncSignedInBar() {
   $('signed-in-email').textContent = user.email;
 }
 
+function updateOnlineStatus() {
+  $('offline-note').hidden = navigator.onLine;
+}
+
 $('use-location-btn').addEventListener('click', () => {
   const msg = $('route-msg');
   msg.className = 'msg';
@@ -634,6 +717,10 @@ $('pledge-form').addEventListener('submit', async e => {
   if (!user) return;
   const btn = $('pledge-btn');
   const msg = $('pledge-msg');
+  if (!navigator.onLine) {
+    showMsg(msg, 'You are offline. Reconnect before claiming a District 1 store.', false);
+    return;
+  }
   btn.disabled = true;
   msg.className = 'msg';
 
@@ -651,7 +738,10 @@ $('pledge-form').addEventListener('submit', async e => {
     if (!res.ok) throw new Error(data.error || 'Could not save commitment');
     showMsg(msg, data.message || 'You are signed up. Complete the fruit audit in the field app and submit photos.', true);
     $('pledge-store').value = '';
-    if (data.snapshot) render(data.snapshot);
+    if (data.snapshot) {
+      cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
+      render(data.snapshot);
+    }
   } catch (err) {
     showMsg(msg, err.message, false);
   }
@@ -661,6 +751,7 @@ $('pledge-form').addEventListener('submit', async e => {
 async function initDashboard() {
   $('dashboard-root').hidden = false;
   syncSignedInBar();
+  updateOnlineStatus();
   try {
     await loadApprovedUsers();
     const user = D6Auth.getUser();
@@ -682,6 +773,9 @@ $('sign-out-btn').addEventListener('click', () => {
   $('dashboard-root').hidden = true;
   D6Auth.showLogin({ onSuccess: () => initDashboard() });
 });
+
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
 
 D6Auth.requireLogin({
   title: 'District 1 fruit audit',
