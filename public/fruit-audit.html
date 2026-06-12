@@ -708,10 +708,10 @@ const APPROVED_USERS_CACHE_KEY = 'fruit_audit_approved_users_cache_v1';
 const TRACKER_CACHE_KEY = 'd1_fruit_audit_tracker_cache_v1';
 const PHOTO_ACCEPT = 'image/*,.heic,.heif,image/heic,image/heif';
 const REQUIRED_SIDES = [
-  { id: 'front', label: 'Front', hint: 'Stand on the main customer-facing side and capture the full side.' },
-  { id: 'right', label: 'Right Side', hint: 'Move clockwise. Capture the full right side from edge to edge.' },
-  { id: 'back', label: 'Back', hint: 'Stand opposite the front. Capture the full back side.' },
-  { id: 'left', label: 'Left Side', hint: 'Complete the 360 view with the full left side.' },
+  { id: 'front', label: 'Front', hint: 'Capture the front in about four-foot sections. Take as many photos as needed to cover the full side from edge to edge.' },
+  { id: 'right', label: 'Right Side', hint: 'Move clockwise and capture the right side in about four-foot sections. Use multiple photos if needed to cover the full side.' },
+  { id: 'back', label: 'Back', hint: 'Stand opposite the front and capture the back in about four-foot sections. Take enough photos to show the full side clearly.' },
+  { id: 'left', label: 'Left Side', hint: 'Complete the 360 view by capturing the left side in about four-foot sections. Use more than one photo if needed.' },
 ];
 const PHOTO_DB_NAME = 'd8_fruit_audit_photos_v1';
 const PHOTO_DB_STORE = 'photos';
@@ -1064,7 +1064,7 @@ function renderStorePicker() {
     ${renderD1OfflineNotice()}
     <div class="quick-steps">
       <div class="quick-step"><div class="num">1</div><div class="txt"><strong>${selectedDistrictId === '1' ? 'Claim your store.' : 'Select your store.'}</strong> ${selectedDistrictId === '1' ? 'Use the signup dashboard first, then open only the store you claimed.' : 'Make sure the FM number matches where you are working.'}</div></div>
-      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Complete every set.</strong> Each set needs Front, Right Side, Back, and Left Side photos.</div></div>
+      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Complete every set.</strong> Each set needs Front, Right Side, Back, and Left Side coverage. You will likely need multiple photos per side, about four feet at a time.</div></div>
       <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Submit once.</strong> Use the green Submit button after all required side views are captured.</div></div>
     </div>
     ${needsD1Signup ? d1SignupMessage : ''}
@@ -1124,8 +1124,8 @@ function renderStore(store) {
     ${renderD1OfflineNotice()}
     <div class="quick-steps">
       <div class="quick-step"><div class="num">1</div><div class="txt"><strong>Match the set card</strong> to the correct fruit table or fixture using POG, table, and bay range.</div></div>
-      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Tap Start 360 Capture.</strong> The camera stays open and prompts Front, Right Side, Back, then Left Side.</div></div>
-      <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Add extra photos</strong> for blocked, wide, or unclear sides. Then submit the store once.</div></div>
+      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Tap Start 360 Capture.</strong> The camera stays open and prompts Front, Right Side, Back, then Left Side. For each side, capture about four-foot sections until the whole side is covered.</div></div>
+      <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Take extra photos as needed.</strong> Wide sides usually need more than one photo. Add extras for blocked, wide, or unclear sections, then submit the store once.</div></div>
     </div>
     <div class="set-list">
       ${store.sets.map((set, idx) => renderSetCard(store, set, idx)).join('')}
@@ -1174,7 +1174,7 @@ function renderSetCard(store, set, idx) {
       </div>
       <div class="desc">${escapeHtml(set.description)}</div>
       <div class="capture-flow">
-        <p>Tap once to open the camera. It will guide you through Front, Right Side, Back, and Left Side without returning here between photos.</p>
+        <p>Tap once to open the camera. It will guide you through Front, Right Side, Back, and Left Side. Take multiple photos per side when needed, working in about four-foot sections until the full side is covered.</p>
         <button class="capture-flow-btn" onclick="start360Capture('${store.id}','${set.id}',${idx})">${flowLabel}</button>
       </div>
       <div class="side-grid">${sideCards}</div>
@@ -1437,6 +1437,7 @@ function renderCaptureOverlay() {
       <div class="capture-prompt">
         <div class="label">${escapeHtml(side.label)}</div>
         <div class="hint">${escapeHtml(side.hint)}</div>
+        <div class="hint">If this side is wider than one shot, capture overlapping four-foot sections before moving on.</div>
       </div>
     </div>
     <div class="capture-steps">
