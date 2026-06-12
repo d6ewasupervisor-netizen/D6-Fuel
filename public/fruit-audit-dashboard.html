@@ -115,6 +115,8 @@ body {
   background: var(--card); border: 1px solid var(--card-border);
   border-radius: var(--radius); padding: 16px; transition: border-color 0.2s;
 }
+.store-card.visual-selectable { cursor: pointer; }
+.store-card.route-selected { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(83,216,106,0.35); }
 .store-card.complete { border-color: rgba(83,216,106,0.48); background: var(--green-bg); }
 .store-card.pledged { border-color: rgba(255,209,102,0.45); }
 .store-card.open { border-style: dashed; }
@@ -128,6 +130,33 @@ body {
 .badge.pledged { background: var(--amber-bg); color: var(--amber); }
 .badge.open { background: var(--bg-elevated); color: var(--muted); }
 .store-card .who { font-size: 13px; color: var(--text-secondary); margin-top: 10px; line-height: 1.45; }
+.store-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.mini-btn {
+  padding: 9px 10px; border-radius: 9px; border: 1px solid var(--card-border);
+  background: var(--bg-elevated); color: var(--text); font-size: 12px; font-weight: 800;
+  font-family: inherit; cursor: pointer;
+}
+.mini-btn.primary { background: var(--accent); border-color: var(--accent); color: #061008; }
+.mini-btn.active { border-color: var(--accent); color: var(--accent-2); }
+.route-planner {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: var(--radius); padding: 20px; margin-bottom: 22px;
+}
+.route-planner h2 { font-size: 18px; font-weight: 900; margin-bottom: 6px; }
+.route-planner .sub { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+.route-controls { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: end; }
+@media (max-width: 760px) { .route-controls { grid-template-columns: 1fr; } }
+.route-controls .btn { min-width: 140px; margin-bottom: 12px; }
+.route-selected-list {
+  display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 12px;
+}
+.route-chip {
+  border: 1px solid var(--card-border); background: var(--bg-elevated); color: var(--text-secondary);
+  border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 800;
+}
+.route-chip button {
+  border: 0; background: transparent; color: var(--red); font-weight: 900; margin-left: 6px; cursor: pointer;
+}
 .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 840px) { .panels { grid-template-columns: 1fr; } }
 .panel {
@@ -214,6 +243,21 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   </div>
 
+  <section class="route-planner">
+    <h2>Visual route planner</h2>
+    <p class="sub">Tap open store cards below to add them to a route, or use the list dropdown to claim one store. Enter a starting address or share your current location, then open the selected route in Google Maps.</p>
+    <div class="route-controls">
+      <div>
+        <label for="route-origin">Start location</label>
+        <input id="route-origin" placeholder="Enter address, city, or use current location">
+      </div>
+      <button type="button" class="btn" id="use-location-btn">Use my location</button>
+      <button type="button" class="btn" id="open-route-btn">Open route</button>
+    </div>
+    <div class="route-selected-list" id="route-selected-list"></div>
+    <div class="msg" id="route-msg"></div>
+  </section>
+
   <div class="grid" id="store-grid"></div>
 
   <div class="panels">
@@ -251,6 +295,7 @@ const $ = id => document.getElementById(id);
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
+const selectedRouteStoreIds = new Set();
 
 function fmtDeadline(iso) {
   if (!iso) return '-';
@@ -300,9 +345,64 @@ function storeOptionLabel(store) {
   return `FM ${store.id} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}`;
 }
 
+function routeStoreQuery(store) {
+  return `Fred Meyer FM ${store.id} Oregon`;
+}
+
+function selectedRouteStores() {
+  if (!snapshot) return [];
+  const stores = snapshot.stores || [];
+  return Array.from(selectedRouteStoreIds)
+    .map(id => stores.find(store => store.id === id))
+    .filter(Boolean);
+}
+
+function syncRouteSelection(stores) {
+  const openIds = new Set((stores || []).filter(store => store.status === 'open').map(store => store.id));
+  Array.from(selectedRouteStoreIds).forEach(id => {
+    if (!openIds.has(id)) selectedRouteStoreIds.delete(id);
+  });
+}
+
+function renderRoutePlanner() {
+  const selected = selectedRouteStores();
+  const list = $('route-selected-list');
+  list.innerHTML = selected.length
+    ? selected.map(store => `<span class="route-chip">FM ${store.id}<button type="button" data-remove-route="${store.id}" title="Remove">x</button></span>`).join('')
+    : '<span class="route-chip">No route stops selected</span>';
+}
+
+function selectStoreForRoute(storeId) {
+  if (selectedRouteStoreIds.has(storeId)) selectedRouteStoreIds.delete(storeId);
+  else selectedRouteStoreIds.add(storeId);
+  render(snapshot);
+}
+
+function routeUrlForSelectedStores() {
+  const origin = $('route-origin').value.trim();
+  const stops = selectedRouteStores();
+  if (!origin) throw new Error('Enter a start location or use your current location.');
+  if (!stops.length) throw new Error('Select at least one open store from the visual cards.');
+  if (stops.length > 10) throw new Error('Google Maps supports best with 10 or fewer stops. Remove a few stores and try again.');
+
+  const params = new URLSearchParams({
+    api: '1',
+    origin,
+    destination: routeStoreQuery(stops[stops.length - 1]),
+    travelmode: 'driving',
+  });
+  if (stops.length > 1) {
+    const waypoints = stops.slice(0, -1).map(routeStoreQuery);
+    if (waypoints.length > 1) waypoints.unshift('optimize:true');
+    params.set('waypoints', waypoints.join('|'));
+  }
+  return `https://www.google.com/maps/dir/?${params.toString()}`;
+}
+
 function render(data) {
   snapshot = data;
   const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
+  syncRouteSelection(stores);
 
   $('deadline-text').textContent = fmtDeadline(deadline);
   const remain = deadlineMs != null ? deadlineMs - nowMs : null;
@@ -330,12 +430,19 @@ function render(data) {
     } else {
       who = 'Available to claim';
     }
+    const selected = selectedRouteStoreIds.has(store.id);
+    const canSelect = store.status === 'open';
     return `
-      <div class="store-card ${store.status}">
+      <div class="store-card ${store.status} ${canSelect ? 'visual-selectable' : ''} ${selected ? 'route-selected' : ''}" data-store-id="${store.id}">
         <div class="fm">${store.label}</div>
         <div class="loc">District 1 - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
         <span class="badge ${store.status}">${statusLabel(store.status)}</span>
         <div class="who">${who}</div>
+        ${canSelect ? `
+          <div class="store-actions">
+            <button type="button" class="mini-btn ${selected ? 'active' : ''}" data-route-store="${store.id}">${selected ? 'Remove route' : 'Add to route'}</button>
+            <button type="button" class="mini-btn primary" data-claim-store="${store.id}">Claim store</button>
+          </div>` : ''}
       </div>`;
   }).join('');
 
@@ -385,6 +492,7 @@ function render(data) {
     if (!snapshot || snapshot.deadlineMs == null) return;
     $('countdown-text').textContent = fmtCountdown(snapshot.deadlineMs - Date.now());
   }, 1000);
+  renderRoutePlanner();
 }
 
 async function loadSnapshot() {
@@ -462,12 +570,63 @@ $('my-pledge-list').addEventListener('click', e => {
   if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId);
 });
 
+$('route-selected-list').addEventListener('click', e => {
+  const btn = e.target.closest('[data-remove-route]');
+  if (btn) selectStoreForRoute(btn.dataset.removeRoute);
+});
+
+$('store-grid').addEventListener('click', e => {
+  const routeBtn = e.target.closest('[data-route-store]');
+  if (routeBtn) {
+    selectStoreForRoute(routeBtn.dataset.routeStore);
+    return;
+  }
+  const claimBtn = e.target.closest('[data-claim-store]');
+  if (claimBtn) {
+    $('pledge-store').value = claimBtn.dataset.claimStore;
+    $('pledge-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  const card = e.target.closest('.store-card.visual-selectable');
+  if (card && card.dataset.storeId) selectStoreForRoute(card.dataset.storeId);
+});
+
 function syncSignedInBar() {
   const user = D6Auth.getUser();
   if (!user) return;
   $('signed-in-name').textContent = user.name;
   $('signed-in-email').textContent = user.email;
 }
+
+$('use-location-btn').addEventListener('click', () => {
+  const msg = $('route-msg');
+  msg.className = 'msg';
+  if (!navigator.geolocation) {
+    showMsg(msg, 'Current location is not available in this browser. Enter a start address instead.', false);
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const { latitude, longitude } = pos.coords;
+      $('route-origin').value = `${latitude.toFixed(6)},${longitude.toFixed(6)}`;
+      showMsg(msg, 'Current location added as route start.', true);
+    },
+    () => showMsg(msg, 'Could not get current location. Enter a start address instead.', false),
+    { enableHighAccuracy: true, timeout: 10000 }
+  );
+});
+
+$('open-route-btn').addEventListener('click', () => {
+  const msg = $('route-msg');
+  msg.className = 'msg';
+  try {
+    const url = routeUrlForSelectedStores();
+    showMsg(msg, 'Opening route in Google Maps.', true);
+    window.open(url, '_blank', 'noopener');
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+});
 
 $('pledge-form').addEventListener('submit', async e => {
   e.preventDefault();
