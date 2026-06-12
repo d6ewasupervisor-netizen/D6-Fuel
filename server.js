@@ -15,8 +15,10 @@ function trackerDashboardUrl(req) {
 }
 
 function fruitAuditDashboardUrl(req) {
-  const base = process.env.PUBLIC_APP_URL || `${req.protocol}://${req.get('host')}`;
-  return `${base.replace(/\/$/, '')}/fruit-audit-dashboard`;
+  if (process.env.D1_FRUIT_AUDIT_DASHBOARD_URL) {
+    return process.env.D1_FRUIT_AUDIT_DASHBOARD_URL;
+  }
+  return 'https://fuel.retail-odyssey.com/fruit-audit-dashboard';
 }
 
 const app = express();
@@ -182,6 +184,47 @@ function addUniqueEmail(list, email) {
   if (!trimmed) return;
   const exists = list.some(existing => existing.toLowerCase() === trimmed.toLowerCase());
   if (!exists) list.push(trimmed);
+}
+
+function fruitAuditInvolvedEmails(snapshot, excludedEmails = []) {
+  const excluded = new Set([
+    ...excludedEmails.map(normalizeEmail),
+    ...(snapshot.optedOutEmails || []).map(normalizeEmail),
+  ].filter(Boolean));
+  const emails = [];
+  (snapshot.pledges || []).forEach(pledge => {
+    const email = normalizeEmail(pledge.email);
+    if (!email || excluded.has(email)) return;
+    addUniqueEmail(emails, pledge.email);
+  });
+  Object.values(snapshot.completions || {}).forEach(completion => {
+    const email = normalizeEmail(completion.email);
+    if (!email || excluded.has(email)) return;
+    addUniqueEmail(emails, completion.email);
+  });
+  return emails;
+}
+
+function fruitAuditMetaByStore(pledges) {
+  return (pledges || []).reduce((acc, pledge) => {
+    acc[pledge.storeId] = fruitAuditTracker.getStoreMeta(pledge.storeId);
+    return acc;
+  }, {});
+}
+
+function notifyFruitAuditOpenings(req, snapshot, releasedPledges) {
+  const pledges = Array.isArray(releasedPledges) ? releasedPledges : [];
+  if (!pledges.length) return false;
+  const recipients = fruitAuditInvolvedEmails(snapshot, pledges.map(pledge => pledge.email));
+  if (!recipients.length) return false;
+  fruitAuditTrackerNotify.sendOpeningsAvailable(resend, {
+    releasedPledges: pledges,
+    metas: fruitAuditMetaByStore(pledges),
+    dashboardUrl: fruitAuditDashboardUrl(req),
+    recipients,
+    cc: fruitAuditTrackerNotify.notifyRecipients(),
+  }).catch(err => console.error('Fruit audit tracker opening notify:', err.message));
+  return true;
 }
 
 function fruitSetLabel(set) {
@@ -420,10 +463,42 @@ app.post('/api/fruit-audit-tracker/unclaim', async (req, res) => {
       meta,
       dashboardUrl: fruitAuditDashboardUrl(req),
     }).catch(err => console.error('Fruit audit tracker release notify:', err.message));
+    const notifiedOthers = notifyFruitAuditOpenings(req, snapshot, [pledge]);
 
     res.json({
       success: true,
-      message: `You released FM ${pledge.storeId}. Tyson has been notified.`,
+      message: notifiedOthers
+        ? `You released FM ${pledge.storeId}. Other signed-up auditors have been notified that it is open.`
+        : `You released FM ${pledge.storeId}. It is open on the dashboard again.`,
+      snapshot,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/fruit-audit-tracker/opt-out', async (req, res) => {
+  try {
+    if (!isD1FruitAuditSignupUser(req.body && req.body.email)) {
+      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit signup dashboard.' });
+    }
+    const { snapshot, pledges } = fruitAuditTracker.removePledgesForEmail(req.body || {});
+    pledges.forEach(pledge => {
+      const meta = fruitAuditTracker.getStoreMeta(pledge.storeId);
+      fruitAuditTrackerNotify.sendPledgeReleased(resend, {
+        pledge,
+        meta,
+        dashboardUrl: fruitAuditDashboardUrl(req),
+      }).catch(err => console.error('Fruit audit tracker opt-out release notify:', err.message));
+    });
+    const notifiedOthers = notifyFruitAuditOpenings(req, snapshot, pledges);
+
+    const stores = pledges.map(pledge => `FM ${pledge.storeId}`).join(', ');
+    res.json({
+      success: true,
+      message: notifiedOthers
+        ? `You opted out and released ${stores}. Other signed-up auditors have been notified about the opening${pledges.length === 1 ? '' : 's'}.`
+        : `You opted out and released ${stores}. ${pledges.length === 1 ? 'It is' : 'They are'} open on the dashboard again.`,
       snapshot,
     });
   } catch (err) {
@@ -583,6 +658,20 @@ app.post('/api/fruit-audit/send', async (req, res) => {
           photoCount: attachments.length,
           setCount: submittedSetIds.size,
         });
+        const completion = trackerSnapshot && trackerSnapshot.completions
+          ? trackerSnapshot.completions[store.id]
+          : null;
+        const hourEntry = trackerSnapshot && Array.isArray(trackerSnapshot.hours)
+          ? trackerSnapshot.hours.find(item => normalizeEmail(item.email) === normalizeEmail(userEmail))
+          : null;
+        fruitAuditTrackerNotify.sendCompletionHoursEarned(resend, {
+          completion,
+          meta: fruitAuditTracker.getStoreMeta(store.id),
+          totalHours: hourEntry ? hourEntry.hours : 1,
+          completedStores: hourEntry ? hourEntry.stores : [store.id],
+          dashboardUrl: fruitAuditDashboardUrl(req),
+          cc: fruitAuditTrackerNotify.notifyRecipients(),
+        }).catch(err => console.error('Fruit audit tracker completion notify:', err.message));
       } catch (trackErr) {
         console.warn('Fruit audit tracker: could not record completion:', trackErr.message);
       }

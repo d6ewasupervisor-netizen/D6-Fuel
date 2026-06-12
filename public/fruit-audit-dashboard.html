@@ -198,6 +198,10 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
   font-size: 12px; font-weight: 800; font-family: inherit; cursor: pointer;
 }
 .unclaim-btn:active { border-color: var(--red); color: var(--red); }
+.unclaim-btn.danger {
+  width: 100%; margin-top: 10px; padding: 10px 12px;
+  border-color: rgba(255,93,108,0.45); color: #ffd8dc;
+}
 .my-pledges { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--card-border); }
 .my-pledges h3 { font-size: 14px; font-weight: 900; margin-bottom: 8px; }
 .offline-note {
@@ -299,13 +303,14 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
       </form>
       <div class="my-pledges" id="my-pledges-wrap" style="display:none">
         <h3>Your claimed stores</h3>
-        <p class="sub" style="margin-bottom:10px">Cannot make it? Release the store so someone else can claim it.</p>
+        <p class="sub" style="margin-bottom:10px">Cannot make it? Release one store, or opt out to release all of your active claims so someone else can claim them.</p>
         <ul class="pledge-list" id="my-pledge-list"></ul>
+        <button type="button" class="unclaim-btn danger" id="opt-out-btn">Opt out and release all my active claims</button>
         <div class="msg" id="unclaim-msg"></div>
       </div>
     </div>
     <div class="panel">
-      <h2>Commitments</h2>
+      <h2>Active claims</h2>
       <p class="sub">Who has claimed which District 1 fruit store.</p>
       <ul class="pledge-list" id="pledge-list"></ul>
     </div>
@@ -644,10 +649,42 @@ async function unclaimPledge(pledgeId) {
   }
 }
 
+async function optOutChallenge() {
+  const msg = $('unclaim-msg');
+  const user = D6Auth.getUser();
+  if (!user) return;
+  if (!navigator.onLine) {
+    showMsg(msg, 'You are offline. Reconnect before opting out of District 1 claims.', false);
+    return;
+  }
+  if (!confirm('Opt out of the District 1 fruit audit challenge? This releases all of your active claimed stores so others can claim them.')) {
+    return;
+  }
+  msg.className = 'msg';
+  try {
+    const res = await fetch('/api/fruit-audit-tracker/opt-out', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not opt out');
+    showMsg(msg, data.message || 'You opted out and released your active claims.', true);
+    if (data.snapshot) {
+      cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
+      render(data.snapshot);
+    }
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+}
+
 $('my-pledge-list').addEventListener('click', e => {
   const btn = e.target.closest('.unclaim-btn');
   if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId);
 });
+
+$('opt-out-btn').addEventListener('click', optOutChallenge);
 
 $('route-selected-list').addEventListener('click', e => {
   const btn = e.target.closest('[data-remove-route]');
