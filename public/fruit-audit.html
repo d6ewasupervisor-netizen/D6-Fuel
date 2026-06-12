@@ -715,6 +715,8 @@ const PHOTO_DB_STORE = 'photos';
 const MAX_PHOTO_BYTES = 190 * 1024;
 
 let manifest = null;
+let fruitAuditTrackerSnapshot = null;
+let fruitAuditTrackerLoadError = null;
 let currentUser = null;
 let approvedEmails = new Set();
 let selectedStoreId = localStorage.getItem(SELECTED_STORE_KEY) || null;
@@ -856,11 +858,30 @@ function getDistrictLabel(districtId) {
 
 function getVisibleStores() {
   if (!selectedDistrictId) return [];
-  return (manifest && manifest.stores || []).filter(store => getStoreDistrict(store) === selectedDistrictId);
+  const stores = (manifest && manifest.stores || []).filter(store => getStoreDistrict(store) === selectedDistrictId);
+  if (selectedDistrictId !== '1') return stores;
+  const allowedStores = getClaimedD1StoreIds();
+  return stores.filter(store => allowedStores.has(store.id));
 }
 
 function isValidDistrict(districtId) {
   return getDistricts().some(district => district.id === String(districtId || ''));
+}
+
+function getClaimedD1StoreIds() {
+  const email = normalizeEmail(currentUser && currentUser.email);
+  if (!email || !fruitAuditTrackerSnapshot) return new Set();
+  const stores = Array.isArray(fruitAuditTrackerSnapshot.stores) ? fruitAuditTrackerSnapshot.stores : [];
+  return new Set(stores
+    .filter(store => store.status === 'pledged' && normalizeEmail(store.pledge && store.pledge.email) === email)
+    .map(store => store.id));
+}
+
+function canAccessStore(store) {
+  if (!store) return false;
+  if (getStoreDistrict(store) !== selectedDistrictId) return false;
+  if (getStoreDistrict(store) !== '1') return true;
+  return getClaimedD1StoreIds().has(store.id);
 }
 
 function ensureStoreState(storeId) {
@@ -999,20 +1020,26 @@ function renderStorePicker() {
   const stores = getVisibleStores();
   const totalSets = stores.reduce((sum, store) => sum + store.sets.length, 0);
   const districtLabel = getDistrictLabel(selectedDistrictId);
+  const needsD1Signup = selectedDistrictId === '1' && !stores.length;
+  const d1SignupMessage = fruitAuditTrackerLoadError
+    ? `<div class="notice"><strong>Could not verify your District 1 signup.</strong> ${escapeHtml(fruitAuditTrackerLoadError)} <button class="back-btn" style="margin-top:10px" onclick="refreshFruitAuditTracker()">Refresh signup status</button></div>`
+    : '<div class="notice"><strong>Claim a District 1 store first.</strong> The store list is hidden until this signed-in email has an active claim on the signup dashboard. After claiming a store, return here and refresh signup status.</div>';
   return `
     ${renderUserRow()}
     <section class="hero">
       <div class="badge">${escapeHtml(districtLabel)} Fruit Audit</div>
       <h1>Select a store</h1>
-      <p>Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.</p>
+      <p>${needsD1Signup ? 'Claim a District 1 store before opening the photo list.' : `Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.`}</p>
     </section>
     <a class="guide-link" href="/fruit-audit-guide">Open User Guide</a>
     ${selectedDistrictId === '1' ? '<a class="guide-link" href="/fruit-audit-dashboard">Open District 1 Signup Dashboard</a>' : ''}
+    ${selectedDistrictId === '1' ? '<button class="guide-link" style="border:0;width:100%;cursor:pointer" onclick="refreshFruitAuditTracker()">Refresh Signup Status</button>' : ''}
     <div class="quick-steps">
-      <div class="quick-step"><div class="num">1</div><div class="txt"><strong>Select your store.</strong> Make sure the FM number matches where you are working.</div></div>
+      <div class="quick-step"><div class="num">1</div><div class="txt"><strong>${selectedDistrictId === '1' ? 'Claim your store.' : 'Select your store.'}</strong> ${selectedDistrictId === '1' ? 'Use the signup dashboard first, then open only the store you claimed.' : 'Make sure the FM number matches where you are working.'}</div></div>
       <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Complete every set.</strong> Each set needs Front, Right Side, Back, and Left Side photos.</div></div>
       <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Submit once.</strong> Use the green Submit button after all required side views are captured.</div></div>
     </div>
+    ${needsD1Signup ? d1SignupMessage : ''}
     <div class="store-grid">
       ${stores.length ? stores.map(store => {
         const counts = storeCounts(store);
@@ -1028,7 +1055,7 @@ function renderStorePicker() {
             </div>
             <div class="chev">&gt;</div>
           </button>`;
-      }).join('') : '<div class="notice"><strong>No stores found.</strong> Switch districts or contact the project supervisor.</div>'}
+      }).join('') : (selectedDistrictId === '1' ? '' : '<div class="notice"><strong>No stores found.</strong> Switch districts or contact the project supervisor.</div>')}
     </div>
     <div class="footer">${escapeHtml(districtLabel)} fruit audit photo capture</div>
   `;
@@ -1179,7 +1206,7 @@ function render() {
     return;
   }
   const store = selectedStoreId ? getStore(selectedStoreId) : null;
-  app.innerHTML = store && getStoreDistrict(store) === selectedDistrictId ? renderStore(store) : renderStorePicker();
+  app.innerHTML = canAccessStore(store) ? renderStore(store) : renderStorePicker();
 }
 
 function renderLogin(errorMessage) {
@@ -1266,7 +1293,10 @@ function switchDistrict() {
 
 function openStore(storeId) {
   const store = getStore(storeId);
-  if (!store || getStoreDistrict(store) !== selectedDistrictId) return;
+  if (!canAccessStore(store)) {
+    if (selectedDistrictId === '1') showToast('Claim this District 1 store on the signup dashboard first.');
+    return;
+  }
   selectedStoreId = storeId;
   localStorage.setItem(SELECTED_STORE_KEY, storeId);
   render();
@@ -1651,6 +1681,11 @@ async function submitStore(storeId) {
   if (sending) return;
   const store = getStore(storeId);
   if (!store) return;
+  if (!canAccessStore(store)) {
+    showToast('Claim this District 1 store on the signup dashboard before submitting.');
+    showStorePicker();
+    return;
+  }
   saveComment(storeId);
   if (!hasAllRequiredSets(store)) {
     showToast('Capture front, right, back, and left for every set before submitting.');
@@ -1751,6 +1786,28 @@ function showToast(message) {
   showToast.timer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
 
+async function loadFruitAuditTracker() {
+  fruitAuditTrackerLoadError = null;
+  try {
+    const res = await fetch('/api/fruit-audit-tracker', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Could not load signup dashboard status.');
+    fruitAuditTrackerSnapshot = await res.json();
+  } catch (err) {
+    fruitAuditTrackerSnapshot = null;
+    fruitAuditTrackerLoadError = err.message || 'Could not load signup dashboard status.';
+  }
+}
+
+async function refreshFruitAuditTracker() {
+  await loadFruitAuditTracker();
+  if (selectedStoreId && !canAccessStore(getStore(selectedStoreId))) {
+    selectedStoreId = null;
+    localStorage.removeItem(SELECTED_STORE_KEY);
+  }
+  render();
+  showToast(fruitAuditTrackerLoadError ? 'Could not refresh signup status.' : 'Signup status refreshed.');
+}
+
 async function boot() {
   loadState();
   currentUser = D6Auth.getUser();
@@ -1765,6 +1822,7 @@ async function boot() {
     const res = manifestRes;
     if (!res.ok) throw new Error('Could not load manifest.');
     manifest = await res.json();
+    await loadFruitAuditTracker();
     const requestedDistrict = new URLSearchParams(window.location.search).get('district');
     if (requestedDistrict && isValidDistrict(requestedDistrict)) {
       selectedDistrictId = requestedDistrict;
@@ -1778,7 +1836,7 @@ async function boot() {
     }
     if (selectedStoreId) {
       const selectedStore = getStore(selectedStoreId);
-      if (!selectedStore || (selectedDistrictId && getStoreDistrict(selectedStore) !== selectedDistrictId)) {
+      if (!canAccessStore(selectedStore)) {
         selectedStoreId = null;
         localStorage.removeItem(SELECTED_STORE_KEY);
       }

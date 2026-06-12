@@ -80,6 +80,19 @@ function fruitAuditConfig(district) {
   return FRUIT_AUDIT_CONFIG_BY_DISTRICT[String(district || '')] || FRUIT_AUDIT_CONFIG_BY_DISTRICT['8'];
 }
 
+function isD1FruitStoreClaimedBySubmitter(storeId, email) {
+  const submitterEmail = normalizeEmail(email);
+  if (!submitterEmail) return false;
+  const snapshot = fruitAuditTracker.getSnapshot();
+  const store = (snapshot.stores || []).find(item => item.id === storeId);
+  return !!(
+    store
+    && store.status === 'pledged'
+    && store.pledge
+    && normalizeEmail(store.pledge.email) === submitterEmail
+  );
+}
+
 function escapeHtml(value) {
   return String(value || '')
     .replace(/&/g, '&amp;')
@@ -365,6 +378,9 @@ app.post('/api/fruit-audit/send', async (req, res) => {
   if (requestedDistrict && requestedDistrict !== storeDistrict) {
     return res.status(400).json({ error: `FM ${store.id} is assigned to District ${storeDistrict}, not District ${requestedDistrict}.` });
   }
+  if (storeDistrict === '1' && !isD1FruitStoreClaimedBySubmitter(store.id, userEmail)) {
+    return res.status(409).json({ error: 'Claim this District 1 store on the signup dashboard before submitting photos.' });
+  }
   if (!Array.isArray(setPhotos) || !setPhotos.length) {
     return res.status(400).json({ error: 'No photos provided.' });
   }
@@ -431,8 +447,14 @@ app.post('/api/fruit-audit/send', async (req, res) => {
   const ccList = splitEmailList(process.env.FRUIT_AUDIT_CC_EMAIL);
   const auditConfig = fruitAuditConfig(storeDistrict);
   addUniqueEmail(ccList, userEmail);
-  const submittedBy = userName
-    ? `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from <strong>${escapeHtml(userName)}</strong> at FM ${store.id}</p>`
+  const submitterName = String(userName || '').trim();
+  const submitterEmail = String(userEmail || '').trim();
+  const submitterLabel = [
+    submitterName ? `<strong>${escapeHtml(submitterName)}</strong>` : '',
+    submitterEmail ? `<a href="mailto:${escapeHtml(submitterEmail)}">${escapeHtml(submitterEmail)}</a>` : '',
+  ].filter(Boolean).join(' - ');
+  const submittedBy = submitterLabel
+    ? `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from ${submitterLabel} at FM ${store.id}</p>`
     : `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from FM ${store.id}</p>`;
 
   try {
@@ -448,6 +470,8 @@ app.post('/api/fruit-audit/send', async (req, res) => {
         'X-Fruit-Audit-Set-Count': String(store.sets.length),
         'X-Fruit-Audit-Photo-Count': String(attachments.length),
         'X-Fruit-Audit-Save-Root': auditConfig.saveRoot,
+        'X-Fruit-Audit-Submitter-Name': submitterName || 'Unknown',
+        'X-Fruit-Audit-Submitter-Email': submitterEmail || 'Unknown',
       },
       html: `
         <div style="font-family:sans-serif;max-width:680px">
