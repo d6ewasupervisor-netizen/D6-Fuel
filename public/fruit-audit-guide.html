@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07110b">
+<title>D8 Fruit Audit Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07110b;
+  --panel: #0e1a12;
+  --card: #14231a;
+  --border: #294434;
+  --text: #f4fff7;
+  --sub: #bfd8c6;
+  --muted: #7f9b89;
+  --green: #53d86a;
+  --amber: #ffd166;
+  --red: #ff5d6c;
+  --radius: 16px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% -10%, rgba(83,216,106,0.18), transparent 34%), var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  padding: calc(14px + var(--safe-top)) 12px calc(24px + var(--safe-bottom));
+}
+.wrap { max-width: 720px; margin: 0 auto; }
+.hero, .card, .callout {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  padding: 18px;
+  margin-bottom: 12px;
+}
+.hero { background: linear-gradient(135deg, #12351f, #172a1c 58%, #0c1a10); padding: 24px 20px; }
+.badge {
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+h1 { font-size: 28px; line-height: 1.1; margin-bottom: 8px; }
+h2 { font-size: 18px; margin-bottom: 10px; }
+p, li { color: var(--sub); font-size: 15px; }
+ul, ol { padding-left: 22px; display: grid; gap: 8px; }
+.button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  color: #061008;
+  background: var(--green);
+  border-radius: 14px;
+  padding: 15px;
+  font-weight: 900;
+  margin: 12px 0;
+}
+.mini {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.side {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+  font-weight: 900;
+  color: var(--text);
+  font-size: 13px;
+}
+.callout { border-left: 4px solid var(--amber); background: rgba(255,209,102,0.08); }
+.danger { border-left-color: var(--red); background: rgba(255,93,108,0.08); }
+.muted { color: var(--muted); font-size: 13px; }
+.code { font-family: 'JetBrains Mono', monospace; color: var(--text); overflow-wrap: anywhere; }
+@media (max-width: 460px) {
+  .mini { grid-template-columns: repeat(2, 1fr); }
+  h1 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="badge">District 8 Fruit Audit</div>
+    <h1>Field User Guide</h1>
+    <p>Use this guide while taking fruit audit photos. The goal is a complete 360-degree view of every listed fruit set in the store.</p>
+  </section>
+
+  <a class="button" href="/fruit-audit">Open the Fruit Audit App</a>
+
+  <section class="card">
+    <h2>Before You Start</h2>
+    <ol>
+      <li>Open the app on your phone and sign in with your approved email.</li>
+      <li>Select the correct FM store number.</li>
+      <li>Allow camera access if your phone asks.</li>
+      <li>Stay on the same phone until you submit. Photos are saved on that device.</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>For Each Fruit Set</h2>
+    <p>Each set card shows the commodity, POG, produce table, and bay range. Match that card to the fixture in the store, then take these four photos:</p>
+    <div class="mini">
+      <div class="side">1. Front</div>
+      <div class="side">2. Right Side</div>
+      <div class="side">3. Back</div>
+      <div class="side">4. Left Side</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>How To Take The Photos</h2>
+    <ol>
+      <li>Tap <strong>Take Photo</strong> under the side you are standing on.</li>
+      <li>Stand far enough back to show the full fixture side from edge to edge.</li>
+      <li>Keep the phone steady and make sure the picture is clear.</li>
+      <li>If one side is blocked, too wide, or hard to read, add an extra photo for that same side.</li>
+      <li>If you picked the wrong photo, tap the small <strong>x</strong> on the thumbnail and retake it.</li>
+    </ol>
+  </section>
+
+  <section class="callout">
+    <h2>Important Photo Rule</h2>
+    <p>Do not submit until every set shows all four side views captured. The app will keep the Submit button disabled until the store is complete.</p>
+  </section>
+
+  <section class="card">
+    <h2>Submitting The Store</h2>
+    <ol>
+      <li>When all required photos are captured, scroll to the bottom of the store screen.</li>
+      <li>Add notes if anything is unusual: missing fixture, blocked view, wrong POG, or damage.</li>
+      <li>Tap the green <strong>Submit</strong> button one time for the store.</li>
+      <li>Wait for the confirmation screen before closing the app.</li>
+    </ol>
+  </section>
+
+  <section class="callout danger">
+    <h2>If Signal Is Bad</h2>
+    <p>Your photos stay saved on the phone until they submit successfully. If Submit fails, do not clear browser data. Move to better signal or Wi-Fi and tap Submit again.</p>
+  </section>
+
+  <section class="card">
+    <h2>Where Photos Go</h2>
+    <p>Submitted photos are routed from the email subject <span class="code">[P5W3 D8 Fruit Photos]</span> into the District 8 fruit photo folders by store and set.</p>
+    <p class="muted">Need help? Contact the project supervisor before leaving the store if you cannot complete all four sides for a set.</p>
+  </section>
+</main>
+</body>
+</html>

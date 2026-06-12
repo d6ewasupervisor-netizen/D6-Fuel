@@ -71,6 +71,46 @@ button { -webkit-tap-highlight-color: rgba(83,216,106,0.18); touch-action: manip
 .badge::before { content: ''; width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 14px rgba(83,216,106,0.7); }
 .hero h1 { font-size: 27px; line-height: 1.1; margin-bottom: 8px; }
 .hero p { color: var(--sub); }
+.guide-link {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  background: var(--green);
+  color: #061008;
+  border-radius: 14px;
+  padding: 14px 16px;
+  font-weight: 900;
+  margin: 0 0 14px;
+}
+.quick-steps {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.quick-step {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  align-items: start;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 11px 12px;
+}
+.quick-step .num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(83,216,106,0.16);
+  color: var(--green-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+}
+.quick-step .txt { color: var(--sub); font-size: 13px; }
+.quick-step strong { color: var(--text); }
 .user-row, .top-nav {
   display: flex;
   align-items: center;
@@ -436,10 +476,10 @@ const STATE_KEY = 'd8_fruit_audit_state_v2';
 const SELECTED_STORE_KEY = 'd8_fruit_audit_selected_store';
 const PHOTO_ACCEPT = 'image/*,.heic,.heif,image/heic,image/heif';
 const REQUIRED_SIDES = [
-  { id: 'front', label: 'Front', hint: 'Stand at the main customer-facing side.' },
-  { id: 'right', label: 'Right Side', hint: 'Move clockwise and capture the right side.' },
-  { id: 'back', label: 'Back', hint: 'Capture the opposite side of the fixture.' },
-  { id: 'left', label: 'Left Side', hint: 'Complete the 360 view from the left side.' },
+  { id: 'front', label: 'Front', hint: 'Stand on the main customer-facing side and capture the full side.' },
+  { id: 'right', label: 'Right Side', hint: 'Move clockwise. Capture the full right side from edge to edge.' },
+  { id: 'back', label: 'Back', hint: 'Stand opposite the front. Capture the full back side.' },
+  { id: 'left', label: 'Left Side', hint: 'Complete the 360 view with the full left side.' },
 ];
 const PHOTO_DB_NAME = 'd8_fruit_audit_photos_v1';
 const PHOTO_DB_STORE = 'photos';
@@ -672,10 +712,13 @@ function renderStorePicker() {
     <section class="hero">
       <div class="badge">District 8 Fruit Audit</div>
       <h1>Select a store</h1>
-      <p>${stores.length} stores and ${totalSets} fruit sets loaded from Fruit Mapping.csv. Capture a full 360-degree view of each set: front, right side, back, and left side.</p>
+      <p>Pick the FM store you are auditing today. The app will show only the fruit sets that need photos for that store.</p>
     </section>
-    <div class="notice">
-      <strong>Field workflow:</strong> Pick your store, capture all four sides of every listed fruit table/set, then tap the store-level Submit button once.
+    <a class="guide-link" href="/fruit-audit-guide">Open User Guide</a>
+    <div class="quick-steps">
+      <div class="quick-step"><div class="num">1</div><div class="txt"><strong>Select your store.</strong> Make sure the FM number matches where you are working.</div></div>
+      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Complete every set.</strong> Each set needs Front, Right Side, Back, and Left Side photos.</div></div>
+      <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Submit once.</strong> Use the green Submit button after all required side views are captured.</div></div>
     </div>
     <div class="store-grid">
       ${stores.map(store => {
@@ -713,6 +756,7 @@ function renderStore(store) {
   return `
     <div class="top-nav">
       <button class="back-btn" onclick="showStorePicker()">&lt; Stores</button>
+      <a class="pill" href="/fruit-audit-guide">Guide</a>
       <button class="pill" onclick="signOut()">${escapeHtml(currentUser.name)}</button>
     </div>
     <section class="store-header">
@@ -724,8 +768,10 @@ function renderStore(store) {
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
       <div class="progress-text">Captured ${counts.captured} | Needed ${counts.needed} | Sent ${counts.sent}</div>
     </section>
-    <div class="notice">
-      <strong>360-degree requirement:</strong> Take at least four pictures of each set: one from the front, right side, back, and left side. Add extra images when a side is wide, blocked, or hard to see.
+    <div class="quick-steps">
+      <div class="quick-step"><div class="num">1</div><div class="txt"><strong>Match the set card</strong> to the correct fruit table or fixture using POG, table, and bay range.</div></div>
+      <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Take all four side views:</strong> Front, Right Side, Back, and Left Side.</div></div>
+      <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Add extra photos</strong> for blocked, wide, or unclear sides. Then submit the store once.</div></div>
     </div>
     <div class="set-list">
       ${store.sets.map((set, idx) => renderSetCard(store, set, idx)).join('')}
@@ -788,8 +834,8 @@ function renderSideCard(store, set, side, setIndex) {
       <div class="side-hint">${escapeHtml(side.hint)}</div>
       ${photos.length ? `<div class="gallery">${thumbs}</div>` : ''}
       <div class="actions">
-        <button class="action-btn primary" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','camera')">Take ${escapeHtml(side.label)}</button>
-        <button class="action-btn" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','gallery')">Load ${escapeHtml(side.label)}</button>
+        <button class="action-btn primary" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','camera')">Take Photo</button>
+        <button class="action-btn" onclick="triggerPhoto('${store.id}','${set.id}','${side.id}','gallery')">Load Photo</button>
       </div>
       <input type="file" id="input-camera-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" capture="environment" style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex})">
       <input type="file" id="input-gallery-${set.id}-${side.id}" accept="${PHOTO_ACCEPT}" multiple style="display:none" onchange="handleFiles(this,'${store.id}','${set.id}','${side.id}',${setIndex})">
