@@ -442,7 +442,7 @@ app.get('/api/fruit-audit-tracker/events', (req, res) => {
 app.post('/api/fruit-audit-tracker/pledge', async (req, res) => {
   try {
     if (!isD1FruitAuditSignupUser(req.body && req.body.email)) {
-      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit signup dashboard.' });
+      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit assignment dashboard.' });
     }
     const { snapshot, pledge } = fruitAuditTracker.addPledge(req.body || {});
     const meta = fruitAuditTracker.getStoreMeta(pledge.storeId);
@@ -467,7 +467,7 @@ app.post('/api/fruit-audit-tracker/pledge', async (req, res) => {
 app.post('/api/fruit-audit-tracker/unclaim', async (req, res) => {
   try {
     if (!isD1FruitAuditSignupUser(req.body && req.body.email)) {
-      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit signup dashboard.' });
+      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit assignment dashboard.' });
     }
     const { snapshot, pledge } = fruitAuditTracker.removePledge(req.body || {});
     const meta = fruitAuditTracker.getStoreMeta(pledge.storeId);
@@ -494,7 +494,7 @@ app.post('/api/fruit-audit-tracker/unclaim', async (req, res) => {
 app.post('/api/fruit-audit-tracker/opt-out', async (req, res) => {
   try {
     if (!isD1FruitAuditSignupUser(req.body && req.body.email)) {
-      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit signup dashboard.' });
+      return res.status(403).json({ error: 'This email is not approved for the District 1 fruit audit assignment dashboard.' });
     }
     const { snapshot, pledges } = fruitAuditTracker.removePledgesForEmail(req.body || {});
     pledges.forEach(pledge => {
@@ -537,7 +537,7 @@ app.post('/api/fruit-audit/send', async (req, res) => {
     return res.status(400).json({ error: `FM ${store.id} is assigned to District ${storeDistrict}, not District ${requestedDistrict}.` });
   }
   if (storeDistrict === '1' && !isD1FruitStoreClaimedBySubmitter(store.id, userEmail)) {
-    return res.status(409).json({ error: 'Claim this District 1 store on the signup dashboard before submitting photos.' });
+    return res.status(409).json({ error: 'This District 1 store must be assigned to your email before submitting photos.' });
   }
   if (!Array.isArray(setPhotos) || !setPhotos.length) {
     return res.status(400).json({ error: 'No photos provided.' });

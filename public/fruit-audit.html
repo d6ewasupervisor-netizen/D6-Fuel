@@ -858,6 +858,11 @@ function getStore(storeId) {
   return (manifest && manifest.stores || []).find(store => store.id === storeId) || null;
 }
 
+function normalizeStoreIdParam(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  return digits ? digits.padStart(3, '0') : '';
+}
+
 function getStoreDistrict(store) {
   return String((store && store.district) || (manifest && manifest.district) || '8');
 }
@@ -1049,21 +1054,21 @@ function renderStorePicker() {
   const districtLabel = getDistrictLabel(selectedDistrictId);
   const needsD1Signup = selectedDistrictId === '1' && !stores.length;
   const d1SignupMessage = fruitAuditTrackerLoadError
-    ? `<div class="notice"><strong>Could not verify your District 1 signup.</strong> ${escapeHtml(fruitAuditTrackerLoadError)} <button class="back-btn" style="margin-top:10px" onclick="refreshFruitAuditTracker()">Refresh signup status</button></div>`
-    : '<div class="notice"><strong>Claim a District 1 store first.</strong> The store list is hidden until this signed-in email has an active claim on the signup dashboard. After claiming a store, return here and refresh signup status.</div>';
+    ? `<div class="notice"><strong>Could not verify your District 1 assignment.</strong> ${escapeHtml(fruitAuditTrackerLoadError)} <button class="back-btn" style="margin-top:10px" onclick="refreshFruitAuditTracker()">Refresh assignment status</button></div>`
+    : '<div class="notice"><strong>Get assigned to a District 1 store first.</strong> The store list is hidden until this signed-in email has an active assignment on the assignment dashboard. After assignment, return here and refresh assignment status.</div>';
   return `
     ${renderUserRow()}
     <section class="hero">
       <div class="badge">${escapeHtml(districtLabel)} Fruit Audit</div>
       <h1>Select a store</h1>
-      <p>${needsD1Signup ? 'Claim a District 1 store before opening the photo list.' : `Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.`}</p>
+      <p>${needsD1Signup ? 'Get assigned to a District 1 store before opening the photo list.' : `Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.`}</p>
     </section>
     <a class="guide-link" href="/fruit-audit-guide">Open User Guide</a>
-    ${selectedDistrictId === '1' ? '<a class="guide-link" href="/fruit-audit-dashboard">Open District 1 Signup Dashboard</a>' : ''}
-    ${selectedDistrictId === '1' ? '<button class="guide-link" style="border:0;width:100%;cursor:pointer" onclick="refreshFruitAuditTracker()">Refresh Signup Status</button>' : ''}
+    ${selectedDistrictId === '1' ? '<a class="guide-link" href="/fruit-audit-dashboard">Open District 1 Assignment Dashboard</a>' : ''}
+    ${selectedDistrictId === '1' ? '<button class="guide-link" style="border:0;width:100%;cursor:pointer" onclick="refreshFruitAuditTracker()">Refresh Assignment Status</button>' : ''}
     ${renderD1OfflineNotice()}
     <div class="quick-steps">
-      <div class="quick-step"><div class="num">1</div><div class="txt"><strong>${selectedDistrictId === '1' ? 'Claim your store.' : 'Select your store.'}</strong> ${selectedDistrictId === '1' ? 'Use the signup dashboard first, then open only the store you claimed.' : 'Make sure the FM number matches where you are working.'}</div></div>
+      <div class="quick-step"><div class="num">1</div><div class="txt"><strong>${selectedDistrictId === '1' ? 'Use your assigned store.' : 'Select your store.'}</strong> ${selectedDistrictId === '1' ? 'Use the assignment dashboard first, then open only the store assigned to you.' : 'Make sure the FM number matches where you are working.'}</div></div>
       <div class="quick-step"><div class="num">2</div><div class="txt"><strong>Complete every set.</strong> Each set needs Front, Right Side, Back, and Left Side coverage. You will likely need multiple photos per side, about four feet at a time.</div></div>
       <div class="quick-step"><div class="num">3</div><div class="txt"><strong>Submit once.</strong> Use the green Submit button after all required side views are captured.</div></div>
     </div>
@@ -1326,7 +1331,7 @@ function switchDistrict() {
 function openStore(storeId) {
   const store = getStore(storeId);
   if (!canAccessStore(store)) {
-    if (selectedDistrictId === '1') showToast('Claim this District 1 store on the signup dashboard first.');
+    if (selectedDistrictId === '1') showToast('This District 1 store must be assigned to your email first.');
     return;
   }
   selectedStoreId = storeId;
@@ -1715,7 +1720,7 @@ async function submitStore(storeId) {
   const store = getStore(storeId);
   if (!store) return;
   if (!canAccessStore(store)) {
-    showToast('Claim this District 1 store on the signup dashboard before submitting.');
+    showToast('This District 1 store must be assigned to your email before submitting.');
     showStorePicker();
     return;
   }
@@ -1840,17 +1845,17 @@ async function loadFruitAuditTracker() {
   fruitAuditTrackerLoadError = null;
   try {
     const res = await fetch('/api/fruit-audit-tracker', { cache: 'no-store' });
-    if (!res.ok) throw new Error('Could not load signup dashboard status.');
+    if (!res.ok) throw new Error('Could not load assignment dashboard status.');
     fruitAuditTrackerSnapshot = await res.json();
     cacheJson(TRACKER_CACHE_KEY, fruitAuditTrackerSnapshot);
   } catch (err) {
     const cached = getCachedJson(TRACKER_CACHE_KEY);
     if (cached && cached.stores) {
       fruitAuditTrackerSnapshot = cached;
-      fruitAuditTrackerLoadError = 'Using the last saved District 1 signup status because live status is unavailable.';
+      fruitAuditTrackerLoadError = 'Using the last saved District 1 assignment status because live status is unavailable.';
     } else {
       fruitAuditTrackerSnapshot = null;
-      fruitAuditTrackerLoadError = err.message || 'Could not load signup dashboard status.';
+      fruitAuditTrackerLoadError = err.message || 'Could not load assignment dashboard status.';
     }
   }
 }
@@ -1862,7 +1867,7 @@ async function refreshFruitAuditTracker() {
     localStorage.removeItem(SELECTED_STORE_KEY);
   }
   render();
-  showToast(fruitAuditTrackerLoadError ? 'Could not refresh signup status.' : 'Signup status refreshed.');
+  showToast(fruitAuditTrackerLoadError ? 'Could not refresh assignment status.' : 'Assignment status refreshed.');
 }
 
 async function boot() {
@@ -1870,7 +1875,9 @@ async function boot() {
   currentUser = D6Auth.getUser();
   try {
     await loadPhotosFromDb();
-    const requestedDistrict = new URLSearchParams(window.location.search).get('district');
+    const params = new URLSearchParams(window.location.search);
+    const requestedDistrict = params.get('district');
+    const requestedStoreId = normalizeStoreIdParam(params.get('store') || params.get('storeId'));
     const allowD1OfflineCache = requestedDistrict === '1' || selectedDistrictId === '1';
     let approvedData = { approvedEmails: [] };
     try {
@@ -1907,6 +1914,16 @@ async function boot() {
     if (selectedDistrictId && !isValidDistrict(selectedDistrictId)) {
       selectedDistrictId = null;
       localStorage.removeItem(SELECTED_DISTRICT_KEY);
+    }
+    if (requestedStoreId && selectedDistrictId) {
+      const requestedStore = getStore(requestedStoreId);
+      if (requestedStore && getStoreDistrict(requestedStore) === selectedDistrictId && canAccessStore(requestedStore)) {
+        selectedStoreId = requestedStoreId;
+        localStorage.setItem(SELECTED_STORE_KEY, selectedStoreId);
+      } else {
+        selectedStoreId = null;
+        localStorage.removeItem(SELECTED_STORE_KEY);
+      }
     }
     if (selectedStoreId) {
       const selectedStore = getStore(selectedStoreId);

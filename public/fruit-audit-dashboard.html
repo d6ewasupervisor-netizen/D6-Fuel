@@ -169,6 +169,8 @@ details[open] > .collapsible-summary .toggle-icon::before { content: '-'; }
   background: var(--card); border: 1px solid var(--card-border);
   border-radius: var(--radius); padding: 16px; transition: border-color 0.2s;
 }
+.store-card.audit-ready { cursor: pointer; }
+.store-card.audit-ready:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .store-card.complete { border-color: rgba(83,216,106,0.48); background: var(--green-bg); }
 .store-card.pledged { border-color: rgba(255,209,102,0.45); }
 .store-card.open { border-style: dashed; }
@@ -273,16 +275,16 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <a href="/fruit-audit-guide">Fruit audit guide</a>
   </nav>
   <div class="field-app-banner">
-    <p>After you claim a District 1 store here, open the fruit photo app, choose District 1, capture all required 360-degree fruit set photos, and submit the store.</p>
+    <p>After you are assigned a District 1 store here, open the fruit photo app, choose District 1, capture all required 360-degree fruit set photos, and submit the store.</p>
     <a href="/fruit-audit?district=1">Go to fruit app</a>
   </div>
   <div class="offline-note" id="offline-note" hidden>
-    You appear to be offline. The dashboard may show the last loaded view, but claiming stores needs a connection.
+    You appear to be offline. The dashboard may show the last loaded view, but assigning stores needs a connection.
   </div>
   <div class="top-bar">
     <div>
       <h1>District 1 fruit audit tracker</h1>
-      <p>Live signup and completion status for the District 1 fruit audit stores.</p>
+      <p>Live assignment and completion status for the District 1 fruit audit stores.</p>
     </div>
     <div class="live-pill" id="live-pill">
       <span class="live-dot"></span>
@@ -349,13 +351,13 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <details class="panel collapsible resizable-card" data-section="claim" open>
       <summary class="collapsible-summary">
         <span>
-          <span class="section-kicker">Signup</span>
-          <h2>Claim a District 1 store</h2>
+          <span class="section-kicker">Assignment</span>
+          <h2>Assign a District 1 store</h2>
         </span>
         <span class="toggle-icon" aria-hidden="true"></span>
       </summary>
       <div class="collapsible-body">
-        <p class="sub">Each open store can only be claimed once until it is submitted. Tyson is notified when you claim or release a store.</p>
+        <p class="sub">Each open store can only be assigned once until it is submitted. Tyson is notified when you assign or release a store.</p>
         <div class="signed-in-bar" id="signed-in-bar">
           <span>Signed in as <strong id="signed-in-name"></strong> - <span id="signed-in-email"></span></span>
           <button type="button" class="sign-out-btn" id="sign-out-btn">Sign out</button>
@@ -367,10 +369,10 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
           <div class="msg" id="pledge-msg"></div>
         </form>
         <div class="my-pledges" id="my-pledges-wrap" style="display:none">
-          <h3>Your claimed stores</h3>
-          <p class="sub" style="margin-bottom:10px">Cannot make it? Release one store, or opt out to release all of your active claims so someone else can claim them.</p>
+          <h3>Your assigned stores</h3>
+          <p class="sub" style="margin-bottom:10px">Cannot make it? Release one store, or opt out to release all of your active assignments so someone else can be assigned.</p>
           <ul class="pledge-list" id="my-pledge-list"></ul>
-          <button type="button" class="unclaim-btn danger" id="opt-out-btn">Opt out and release all my active claims</button>
+          <button type="button" class="unclaim-btn danger" id="opt-out-btn">Opt out and release all my active assignments</button>
           <div class="msg" id="unclaim-msg"></div>
         </div>
       </div>
@@ -379,12 +381,12 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
       <summary class="collapsible-summary">
         <span>
           <span class="section-kicker">Live list</span>
-          <h2>Active claims</h2>
+          <h2>Active assignments</h2>
         </span>
         <span class="toggle-icon" aria-hidden="true"></span>
       </summary>
       <div class="collapsible-body">
-        <p class="sub">Who has claimed which District 1 fruit store.</p>
+        <p class="sub">Who is assigned to each District 1 fruit store.</p>
         <ul class="pledge-list" id="pledge-list"></ul>
       </div>
     </details>
@@ -418,7 +420,7 @@ let displayControlsReady = false;
 const LOGIN_OPTIONS = {
   badge: '',
   title: 'District One Fruit Table Audit',
-  subtitle: 'Enter your name and email to claim a District 1 fruit audit store.',
+  subtitle: 'Enter your name and email to manage a District 1 fruit audit store assignment.',
 };
 
 function fmtDeadline(iso) {
@@ -444,7 +446,7 @@ function fmtCountdown(ms) {
 
 function statusLabel(status) {
   if (status === 'complete') return 'Done';
-  if (status === 'pledged') return 'Claimed';
+  if (status === 'pledged') return 'Assigned';
   return 'Open';
 }
 
@@ -560,16 +562,18 @@ function render(data) {
   snapshot = data;
   const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
   const completedBy = data.completedBy || [];
+  const sessionUser = D6Auth.getUser();
+  const myEmail = sessionUser ? normalizeEmail(sessionUser.email) : '';
 
   $('deadline-text').textContent = fmtDeadline(deadline);
   const remain = deadlineMs != null ? deadlineMs - nowMs : null;
   $('countdown-text').textContent = fmtCountdown(remain);
   $('deadline-banner').classList.toggle('urgent', remain != null && remain < 24 * 3600 * 1000);
-  $('store-section-summary').textContent = `${stats.remaining} open, ${stats.pledged} claimed, ${stats.complete} done`;
+  $('store-section-summary').textContent = `${stats.remaining} open, ${stats.pledged} assigned, ${stats.complete} done`;
 
   $('stats').innerHTML = `
     <div class="stat done"><div class="num">${stats.complete}</div><div class="lbl">Done</div></div>
-    <div class="stat"><div class="num">${stats.pledged}</div><div class="lbl">Claimed</div></div>
+    <div class="stat"><div class="num">${stats.pledged}</div><div class="lbl">Assigned</div></div>
     <div class="stat left"><div class="num">${stats.remaining}</div><div class="lbl">Left</div></div>
     <div class="stat"><div class="num">${stats.total}</div><div class="lbl">Stores</div></div>
     <div class="stat"><div class="num">${stats.totalSets}</div><div class="lbl">Fruit Sets</div></div>
@@ -585,22 +589,28 @@ function render(data) {
     if (store.status === 'complete' && store.completion) {
       who = `Submitted by <strong>${esc(store.completion.name)}</strong> - ${store.completion.photoCount} photo${store.completion.photoCount === 1 ? '' : 's'}`;
     } else if (store.status === 'pledged' && store.pledge) {
-      who = `Claimed by <strong>${esc(store.pledge.name)}</strong>`;
+      who = `Assigned to <strong>${esc(store.pledge.name)}</strong>`;
     } else {
-      who = 'Available to claim';
+      who = 'Available to assign';
     }
+    const assignedToCurrentUser = store.status === 'pledged'
+      && store.pledge
+      && normalizeEmail(store.pledge.email) === myEmail;
     const canClaim = store.status === 'open';
     const address = store.routeAddress ? `<div class="loc">${esc(store.routeAddress)}</div>` : '';
     return `
-      <div class="store-card ${store.status}" data-store-id="${store.id}">
+      <div class="store-card ${store.status} ${assignedToCurrentUser ? 'audit-ready' : ''}" data-store-id="${store.id}" ${assignedToCurrentUser ? `data-audit-store="${store.id}" role="button" tabindex="0" aria-label="Open audit for FM ${store.id}"` : ''}>
         <div class="fm">${store.label}</div>
         <div class="loc">District 1 - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
         ${address}
         <span class="badge ${store.status}">${statusLabel(store.status)}</span>
         <div class="who">${who}</div>
-        ${canClaim ? `
+        ${assignedToCurrentUser ? `
           <div class="store-actions">
-            <button type="button" class="mini-btn primary" data-claim-store="${store.id}">Claim store</button>
+            <button type="button" class="mini-btn primary" data-audit-store="${store.id}">Open audit</button>
+          </div>` : canClaim ? `
+          <div class="store-actions">
+            <button type="button" class="mini-btn primary" data-claim-store="${store.id}">Assign store</button>
           </div>` : ''}
       </div>`;
   }).join('');
@@ -623,7 +633,7 @@ function render(data) {
           <span><span class="store">FM ${pledge.storeId}</span> - ${esc(pledge.name)}</span>
           <span style="color:var(--muted);font-size:12px">${fmtDeadline(pledge.pledgedAt).split(',')[0]}</span>
         </li>`).join('')
-    : '<li style="color:var(--muted)">No active claims yet.</li>';
+    : '<li style="color:var(--muted)">No active assignments yet.</li>';
 
   $('completion-list').innerHTML = completedBy && completedBy.length
     ? completedBy.map(item => `
@@ -633,8 +643,6 @@ function render(data) {
         </li>`).join('')
     : '<li style="color:var(--muted)">No submitted stores yet.</li>';
 
-  const sessionUser = D6Auth.getUser();
-  const myEmail = sessionUser ? normalizeEmail(sessionUser.email) : '';
   const myPledges = myEmail
     ? activePledges.filter(pledge => normalizeEmail(pledge.email) === myEmail)
     : [];
@@ -645,8 +653,9 @@ function render(data) {
       <li>
         <span><span class="store">FM ${pledge.storeId}</span></span>
         <div class="pledge-actions">
-          <span style="color:var(--muted);font-size:12px">Claimed ${fmtDeadline(pledge.pledgedAt).split(',')[0]}</span>
-          <button type="button" class="unclaim-btn" data-pledge-id="${esc(pledge.id)}">Release claim</button>
+          <span style="color:var(--muted);font-size:12px">Assigned ${fmtDeadline(pledge.pledgedAt).split(',')[0]}</span>
+          <button type="button" class="unclaim-btn" data-audit-store="${esc(pledge.storeId)}">Open audit</button>
+          <button type="button" class="unclaim-btn" data-pledge-id="${esc(pledge.id)}">Release assignment</button>
         </div>
       </li>`).join('');
   } else {
@@ -696,12 +705,12 @@ function renderAccessDenied() {
   $('stats').innerHTML = '';
   $('progress-pct').textContent = '0%';
   $('progress-fill').style.width = '0%';
-  $('store-grid').innerHTML = '<div class="store-card open"><div class="fm">Access restricted</div><div class="who">This email is not approved for the District 1 fruit audit signup dashboard. Sign out and use an approved email.</div></div>';
+  $('store-grid').innerHTML = '<div class="store-card open"><div class="fm">Access restricted</div><div class="who">This email is not approved for the District 1 fruit audit assignment dashboard. Sign out and use an approved email.</div></div>';
   $('pledge-store').innerHTML = '<option value="">No access</option>';
   $('pledge-btn').disabled = true;
   $('pledge-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
   $('completion-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
-  showMsg($('pledge-msg'), 'This email is not approved for District 1 fruit audit signup.', false);
+  showMsg($('pledge-msg'), 'This email is not approved for District 1 fruit audit assignments.', false);
 }
 
 function connectSSE() {
@@ -730,7 +739,7 @@ async function unclaimPledge(pledgeId) {
   const user = D6Auth.getUser();
   if (!user) return;
   if (!navigator.onLine) {
-    showMsg(msg, 'You are offline. Reconnect before releasing a District 1 claim.', false);
+    showMsg(msg, 'You are offline. Reconnect before releasing a District 1 assignment.', false);
     return;
   }
   const email = user.email;
@@ -745,7 +754,7 @@ async function unclaimPledge(pledgeId) {
       body: JSON.stringify({ pledgeId, email }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Could not release claim');
+    if (!res.ok) throw new Error(data.error || 'Could not release assignment');
     showMsg(msg, data.message || 'Store released.', true);
     if (data.snapshot) {
       cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
@@ -761,10 +770,10 @@ async function optOutChallenge() {
   const user = D6Auth.getUser();
   if (!user) return;
   if (!navigator.onLine) {
-    showMsg(msg, 'You are offline. Reconnect before opting out of District 1 claims.', false);
+    showMsg(msg, 'You are offline. Reconnect before opting out of District 1 assignments.', false);
     return;
   }
-  if (!confirm('Opt out of the District 1 fruit audit challenge? This releases all of your active claimed stores so others can claim them.')) {
+  if (!confirm('Opt out of the District 1 fruit audit challenge? This releases all of your active assigned stores so others can be assigned.')) {
     return;
   }
   msg.className = 'msg';
@@ -776,7 +785,7 @@ async function optOutChallenge() {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Could not opt out');
-    showMsg(msg, data.message || 'You opted out and released your active claims.', true);
+    showMsg(msg, data.message || 'You opted out and released your active assignments.', true);
     if (data.snapshot) {
       cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
       render(data.snapshot);
@@ -787,13 +796,28 @@ async function optOutChallenge() {
 }
 
 $('my-pledge-list').addEventListener('click', e => {
+  const auditTarget = e.target.closest('[data-audit-store]');
+  if (auditTarget) {
+    openAuditStore(auditTarget.dataset.auditStore);
+    return;
+  }
   const btn = e.target.closest('.unclaim-btn');
   if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId);
 });
 
 $('opt-out-btn').addEventListener('click', optOutChallenge);
 
+function openAuditStore(storeId) {
+  if (!storeId) return;
+  window.location.href = `/fruit-audit?district=1&store=${encodeURIComponent(storeId)}`;
+}
+
 $('store-grid').addEventListener('click', e => {
+  const auditTarget = e.target.closest('[data-audit-store]');
+  if (auditTarget) {
+    openAuditStore(auditTarget.dataset.auditStore);
+    return;
+  }
   const claimBtn = e.target.closest('[data-claim-store]');
   if (claimBtn) {
     $('pledge-store').value = claimBtn.dataset.claimStore;
@@ -805,6 +829,14 @@ $('store-grid').addEventListener('click', e => {
     $('pledge-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
+});
+
+$('store-grid').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const auditTarget = e.target.closest('[data-audit-store]');
+  if (!auditTarget) return;
+  e.preventDefault();
+  openAuditStore(auditTarget.dataset.auditStore);
 });
 
 function syncSignedInBar() {
@@ -825,7 +857,7 @@ $('pledge-form').addEventListener('submit', async e => {
   const btn = $('pledge-btn');
   const msg = $('pledge-msg');
   if (!navigator.onLine) {
-    showMsg(msg, 'You are offline. Reconnect before claiming a District 1 store.', false);
+    showMsg(msg, 'You are offline. Reconnect before assigning a District 1 store.', false);
     return;
   }
   btn.disabled = true;
@@ -842,7 +874,7 @@ $('pledge-form').addEventListener('submit', async e => {
       }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Could not save claim');
+    if (!res.ok) throw new Error(data.error || 'Could not save assignment');
     showMsg(msg, data.message || 'You are signed up. Complete the fruit audit in the field app and submit photos.', true);
     $('pledge-store').value = '';
     if (data.snapshot) {
