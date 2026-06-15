@@ -567,6 +567,12 @@ function storeOptionLabel(store) {
   return `FM ${store.id}${store.address && store.address.city ? ` - ${store.address.city}` : ''} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}`;
 }
 
+function assignmentScheduleText(pledge) {
+  return pledge && pledge.scheduledLabel
+    ? pledge.scheduledLabel
+    : fmtAssignmentDate(pledge && pledge.pledgedAt);
+}
+
 function render(data) {
   snapshot = data;
   const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
@@ -598,7 +604,7 @@ function render(data) {
     if (store.status === 'complete' && store.completion) {
       who = `Submitted by <strong>${esc(store.completion.name)}</strong> - ${store.completion.photoCount} photo${store.completion.photoCount === 1 ? '' : 's'}`;
     } else if (store.status === 'pledged' && store.pledge) {
-      who = `Assigned to <strong>${esc(store.pledge.name)}</strong>`;
+      who = `Assigned to <strong>${esc(store.pledge.name)}</strong>${store.pledge.scheduledLabel ? `<br><span style="color:var(--muted);font-size:12px">Scheduled ${esc(store.pledge.scheduledLabel)}</span>` : ''}`;
     } else {
       who = 'Available to assign';
     }
@@ -640,7 +646,7 @@ function render(data) {
     ? activePledges.map(pledge => `
         <li>
           <span><span class="store">FM ${pledge.storeId}</span> - ${esc(pledge.name)}</span>
-          <span style="color:var(--muted);font-size:12px">${fmtAssignmentDate(pledge.pledgedAt)}</span>
+          <span style="color:var(--muted);font-size:12px">${esc(assignmentScheduleText(pledge))}</span>
         </li>`).join('')
     : '<li style="color:var(--muted)">No active assignments yet.</li>';
 
@@ -662,7 +668,7 @@ function render(data) {
       <li>
         <span><span class="store">FM ${pledge.storeId}</span></span>
         <div class="pledge-actions">
-          <span style="color:var(--muted);font-size:12px">Assigned ${fmtAssignmentDate(pledge.pledgedAt)}</span>
+          <span style="color:var(--muted);font-size:12px">Scheduled ${esc(assignmentScheduleText(pledge))}</span>
           <button type="button" class="unclaim-btn" data-audit-store="${esc(pledge.storeId)}">Open audit</button>
           <button type="button" class="unclaim-btn" data-pledge-id="${esc(pledge.id)}">Release assignment</button>
         </div>
