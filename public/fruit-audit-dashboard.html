@@ -370,9 +370,9 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         </form>
         <div class="my-pledges" id="my-pledges-wrap" style="display:none">
           <h3>Your assigned stores</h3>
-          <p class="sub" style="margin-bottom:10px">Cannot make it? Release one store, or opt out to release all of your active assignments so someone else can be assigned.</p>
+          <p class="sub" style="margin-bottom:10px">Scheduled audit assignments cannot be released from this dashboard. Contact Tyson if the schedule needs to change.</p>
           <ul class="pledge-list" id="my-pledge-list"></ul>
-          <button type="button" class="unclaim-btn danger" id="opt-out-btn">Opt out and release all my active assignments</button>
+          <button type="button" class="unclaim-btn danger" id="opt-out-btn" hidden>Opt out and release all my active assignments</button>
           <div class="msg" id="unclaim-msg"></div>
         </div>
       </div>
@@ -670,7 +670,6 @@ function render(data) {
         <div class="pledge-actions">
           <span style="color:var(--muted);font-size:12px">Scheduled ${esc(assignmentScheduleText(pledge))}</span>
           <button type="button" class="unclaim-btn" data-audit-store="${esc(pledge.storeId)}">Open audit</button>
-          <button type="button" class="unclaim-btn" data-pledge-id="${esc(pledge.id)}">Release assignment</button>
         </div>
       </li>`).join('');
   } else {
