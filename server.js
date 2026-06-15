@@ -368,7 +368,10 @@ tracker.init({ dataPath: trackerDataPath });
 
 const fruitAuditTrackerDataPath = process.env.FRUIT_AUDIT_TRACKER_DATA_PATH
   || path.join(__dirname, 'data', 'fruit-audit-tracker-state.json');
-fruitAuditTracker.init({ dataPath: fruitAuditTrackerDataPath });
+fruitAuditTracker.init({
+  dataPath: fruitAuditTrackerDataPath,
+  completionRoot: fruitAuditConfig('1').saveRoot,
+});
 
 app.get('/api/tracker', (req, res) => {
   res.json(tracker.getSnapshot());
