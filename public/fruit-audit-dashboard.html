@@ -432,6 +432,15 @@ function fmtDeadline(iso) {
   });
 }
 
+function fmtAssignmentDate(iso) {
+  if (!iso) return '-';
+  return new Date(iso).toLocaleString('en-US', {
+    month: 'short', day: 'numeric',
+    hour: 'numeric', minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
+
 function fmtCountdown(ms) {
   if (ms == null || !Number.isFinite(ms)) return '-';
   if (ms <= 0) return 'Past deadline';
@@ -631,7 +640,7 @@ function render(data) {
     ? activePledges.map(pledge => `
         <li>
           <span><span class="store">FM ${pledge.storeId}</span> - ${esc(pledge.name)}</span>
-          <span style="color:var(--muted);font-size:12px">${fmtDeadline(pledge.pledgedAt).split(',')[0]}</span>
+          <span style="color:var(--muted);font-size:12px">${fmtAssignmentDate(pledge.pledgedAt)}</span>
         </li>`).join('')
     : '<li style="color:var(--muted)">No active assignments yet.</li>';
 
@@ -653,7 +662,7 @@ function render(data) {
       <li>
         <span><span class="store">FM ${pledge.storeId}</span></span>
         <div class="pledge-actions">
-          <span style="color:var(--muted);font-size:12px">Assigned ${fmtDeadline(pledge.pledgedAt).split(',')[0]}</span>
+          <span style="color:var(--muted);font-size:12px">Assigned ${fmtAssignmentDate(pledge.pledgedAt)}</span>
           <button type="button" class="unclaim-btn" data-audit-store="${esc(pledge.storeId)}">Open audit</button>
           <button type="button" class="unclaim-btn" data-pledge-id="${esc(pledge.id)}">Release assignment</button>
         </div>
