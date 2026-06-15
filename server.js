@@ -70,6 +70,7 @@ const DEFAULT_FRUIT_AUDIT_APPROVED_EMAILS = [
 const DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS = [
   'amydawnhaertel@gmail.com',
   'akafatamy46@gmail.com',
+  'amanda.mathews@retailodyssey.com',
   'kalleen.iniguezcarri@retailodyssey.com',
   'cindi.griggs@retailodyssey.com',
   'jasmine91959@hotmail.com',
@@ -83,6 +84,7 @@ const DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS = [
   'darkctm0@gmail.com',
   'jahwitcher907@gmail.com',
   'jennifer.russell@sasretailservices.com',
+  'james.carr@retailodyssey.com',
   'niemijeremy001@gmail.com',
   'julie.ferguson@retailodyssey.com',
   'julie.slaughter@youradv.com',
@@ -105,6 +107,7 @@ const DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS = [
   'robyn.bukowatzgrill@sasretailservices.com',
   'royann.lund@gmail.com',
   'rubdog622651@gmail.com',
+  'seth.newman@retailodyssey.com',
   'barajassaraeloisa@gmail.com',
   'tamera.sandeno@retailodyssey.com',
   'victor.trevino@retailodyssey.com',
