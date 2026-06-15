@@ -60,13 +60,16 @@ window.D6Auth = (function () {
 
     const existing = getUser();
     const title = opts.title || 'Welcome';
+    const badge = Object.prototype.hasOwnProperty.call(opts, 'badge')
+      ? opts.badge
+      : 'Fuel Cooler Project';
     const subtitle = opts.subtitle
       || 'Enter your name and email to get started.';
 
     overlay.style.display = 'flex';
     overlay.innerHTML = `
       <div class="login-card">
-        <div class="badge">Fuel Cooler Project</div>
+        ${badge ? `<div class="badge">${escapeHtml(badge)}</div>` : ''}
         <h1>${escapeHtml(title)}</h1>
         <p class="login-sub">${escapeHtml(subtitle)}</p>
         <label for="d6-login-name">Full name</label>

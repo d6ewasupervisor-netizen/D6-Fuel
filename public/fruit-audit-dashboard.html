@@ -169,8 +169,6 @@ details[open] > .collapsible-summary .toggle-icon::before { content: '-'; }
   background: var(--card); border: 1px solid var(--card-border);
   border-radius: var(--radius); padding: 16px; transition: border-color 0.2s;
 }
-.store-card.visual-selectable { cursor: pointer; }
-.store-card.route-selected { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(83,216,106,0.35); }
 .store-card.complete { border-color: rgba(83,216,106,0.48); background: var(--green-bg); }
 .store-card.pledged { border-color: rgba(255,209,102,0.45); }
 .store-card.open { border-style: dashed; }
@@ -184,7 +182,7 @@ details[open] > .collapsible-summary .toggle-icon::before { content: '-'; }
 .badge.pledged { background: var(--amber-bg); color: var(--amber); }
 .badge.open { background: var(--bg-elevated); color: var(--muted); }
 .store-card .who { font-size: 13px; color: var(--text-secondary); margin-top: 10px; line-height: 1.45; }
-.store-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.store-actions { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 12px; }
 .mini-btn {
   padding: 9px 10px; border-radius: 9px; border: 1px solid var(--card-border);
   background: var(--bg-elevated); color: var(--text); font-size: 12px; font-weight: 800;
@@ -193,60 +191,7 @@ details[open] > .collapsible-summary .toggle-icon::before { content: '-'; }
 .mini-btn.primary { background: var(--accent); border-color: var(--accent); color: #061008; }
 .mini-btn.active { border-color: var(--accent); color: var(--accent-2); }
 .mini-btn:disabled { opacity: 0.7; cursor: default; }
-.route-planner {
-  padding: 20px; margin-bottom: 22px;
-  position: sticky; top: 68px; z-index: 20;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.24);
-  max-height: calc(100vh - 84px); overflow-y: auto;
-}
-.route-planner h2, .store-section h2 { font-size: 18px; font-weight: 900; margin-bottom: 0; }
-.route-planner .sub { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
-.route-controls { display: grid; grid-template-columns: minmax(220px, 1fr) auto auto auto; gap: 10px; align-items: end; }
-@media (max-width: 860px) { .route-controls { grid-template-columns: 1fr 1fr; } .route-controls .route-origin-wrap { grid-column: 1 / -1; } }
-.route-controls .btn { min-width: 140px; margin-bottom: 12px; }
-.route-selected-list {
-  display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 12px;
-}
-.route-chip {
-  border: 1px solid var(--card-border); background: var(--bg-elevated); color: var(--text-secondary);
-  border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 800;
-}
-.route-chip button {
-  border: 0; background: transparent; color: var(--red); font-weight: 900; margin-left: 6px; cursor: pointer;
-}
-.route-help {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;
-}
-.route-help div {
-  background: var(--bg-elevated); border: 1px solid var(--card-border);
-  border-radius: 10px; padding: 9px 10px; color: var(--text-secondary); font-size: 12px;
-}
-.route-help strong { display: block; color: var(--accent-2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px; }
-.route-summary { color: var(--text-secondary); font-size: 13px; font-weight: 800; margin: 2px 0 10px; }
-.route-stop-list {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-  gap: 8px; margin: 6px 0 12px;
-}
-.route-stop {
-  border: 1px solid var(--card-border); background: var(--bg-elevated);
-  border-radius: 10px; padding: 9px 10px; font-size: 12px; color: var(--text-secondary);
-}
-.route-stop strong { color: var(--text); font-family: 'JetBrains Mono', monospace; }
-.route-stop .step { color: var(--accent-2); font-weight: 900; margin-right: 4px; }
-.route-stop button {
-  display: block; margin-top: 6px; border: 0; background: transparent; color: var(--red);
-  font-size: 12px; font-weight: 900; font-family: inherit; cursor: pointer;
-}
-.route-drive {
-  border: 1px solid rgba(83,216,106,0.35); background: rgba(83,216,106,0.08);
-  border-radius: var(--radius-sm); padding: 12px; margin: 10px 0 12px;
-}
-.route-drive h3 { font-size: 15px; font-weight: 900; margin-bottom: 4px; }
-.route-drive .current { color: var(--text); font-size: 14px; font-weight: 800; margin: 8px 0; }
-.route-drive .hint { color: var(--text-secondary); font-size: 12px; margin-bottom: 10px; }
-.route-drive-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.route-drive-actions .btn { min-height: 44px; padding: 10px; font-size: 13px; }
-.route-drive-actions .secondary { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--card-border); }
+.store-section h2 { font-size: 18px; font-weight: 900; margin-bottom: 0; }
 .store-section { padding: 18px; margin-bottom: 22px; }
 .store-section .grid { margin: 0; }
 .panels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
@@ -311,22 +256,13 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
   .view-control-actions { display: grid; grid-template-columns: repeat(2, 1fr); width: 100%; }
   .view-btn { min-height: 42px; }
   .top-bar, .deadline-banner, .field-app-banner { margin-bottom: 14px; }
-  .field-app-banner, .deadline-banner, .route-planner, .panel, .store-card, .store-section { padding: 14px; }
+  .field-app-banner, .deadline-banner, .panel, .store-card, .store-section { padding: 14px; }
   .app-nav a, .field-app-banner a, .btn { width: 100%; min-height: 48px; }
   .store-actions { grid-template-columns: 1fr; }
   .grid { grid-template-columns: 1fr; }
   .pledge-list li { display: block; }
   .pledge-list .pledge-actions { align-items: stretch; margin-top: 8px; }
-  .route-planner {
-    position: static; top: auto; margin-left: -2px; margin-right: -2px;
-    border-radius: var(--radius); box-shadow: none; max-height: none; overflow: visible;
-  }
   .resizable-card { resize: none; max-height: none; overflow: visible; }
-  .route-controls { grid-template-columns: 1fr; }
-  .route-controls .route-origin-wrap { grid-column: auto; }
-  .route-help { grid-template-columns: 1fr; }
-  .route-stop-list { grid-template-columns: 1fr; }
-  .route-drive-actions { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -341,7 +277,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     <a href="/fruit-audit?district=1">Go to fruit app</a>
   </div>
   <div class="offline-note" id="offline-note" hidden>
-    You appear to be offline. The dashboard may show the last loaded view, but claiming stores and opening live routes needs a connection.
+    You appear to be offline. The dashboard may show the last loaded view, but claiming stores needs a connection.
   </div>
   <div class="top-bar">
     <div>
@@ -394,39 +330,6 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   </div>
-
-  <details class="route-planner collapsible resizable-card" data-section="route" data-mobile-collapsed open>
-    <summary class="collapsible-summary">
-      <span>
-        <span class="section-kicker">Route tools</span>
-        <h2>Route planner</h2>
-      </span>
-      <span class="toggle-icon" aria-hidden="true"></span>
-    </summary>
-    <div class="collapsible-body">
-      <p class="sub">Build your course once and it will stay saved on this device while you work. Add open stores or your claimed stores, then open the optimized route in Google Maps.</p>
-      <div class="route-help">
-        <div><strong>1. Pick stops</strong>Tap store cards below or add your claimed stores.</div>
-        <div><strong>2. Set start</strong>Enter an address or share your current location.</div>
-        <div><strong>3. Follow route</strong>Open Google Maps and keep this dashboard for claims.</div>
-      </div>
-      <div class="route-controls">
-        <div class="route-origin-wrap">
-          <label for="route-origin">Start location</label>
-          <input id="route-origin" placeholder="Enter address, city, or use current location">
-        </div>
-        <button type="button" class="btn" id="use-location-btn">Use my location</button>
-        <button type="button" class="btn" id="add-claimed-route-btn">Add my claims</button>
-        <button type="button" class="btn" id="open-route-btn">Open route</button>
-      </div>
-      <div class="route-summary" id="route-summary"></div>
-      <div class="route-selected-list" id="route-selected-list"></div>
-      <div class="route-stop-list" id="route-stop-list"></div>
-      <div class="route-drive" id="route-drive-panel"></div>
-      <button type="button" class="unclaim-btn danger" id="clear-route-btn">Clear saved route</button>
-      <div class="msg" id="route-msg"></div>
-    </div>
-  </details>
 
   <details class="store-section collapsible resizable-card" data-section="stores" data-mobile-collapsed open>
     <summary class="collapsible-summary">
@@ -506,17 +409,17 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 const $ = id => document.getElementById(id);
 const DASHBOARD_SNAPSHOT_CACHE_KEY = 'd1_fruit_audit_dashboard_snapshot_v1';
 const DASHBOARD_APPROVED_CACHE_KEY = 'd1_fruit_audit_dashboard_approved_v1';
-const ROUTE_STOPS_CACHE_KEY = 'd1_fruit_audit_route_stops_v1';
-const ROUTE_ORIGIN_CACHE_KEY = 'd1_fruit_audit_route_origin_v1';
-const ROUTE_ACTIVE_INDEX_CACHE_KEY = 'd1_fruit_audit_route_active_index_v1';
 const DASHBOARD_ZOOM_CACHE_KEY = 'd1_fruit_audit_dashboard_zoom_v1';
 const DASHBOARD_SECTION_CACHE_KEY = 'd1_fruit_audit_dashboard_sections_v2';
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
-let activeRouteIndex = 0;
 let displayControlsReady = false;
-const selectedRouteStoreIds = new Set();
+const LOGIN_OPTIONS = {
+  badge: '',
+  title: 'District One Fruit Table Audit',
+  subtitle: 'Enter your name and email to claim a District 1 fruit audit store.',
+};
 
 function fmtDeadline(iso) {
   if (!iso) return '-';
@@ -604,10 +507,6 @@ function applySectionDefaults() {
   const states = savedSectionStates();
   const isSmallScreen = window.matchMedia('(max-width: 620px)').matches;
   document.querySelectorAll('details[data-section]').forEach(section => {
-    if (section.dataset.section === 'route' && selectedRouteStoreIds.size) {
-      section.open = true;
-      return;
-    }
     if (Object.prototype.hasOwnProperty.call(states, section.dataset.section)) {
       section.open = Boolean(states[section.dataset.section]);
       return;
@@ -648,11 +547,6 @@ function isApprovedUser(user) {
   return !!(user && approvedEmails.has(normalizeEmail(user.email)));
 }
 
-function currentUserEmail() {
-  const user = D6Auth.getUser();
-  return user ? normalizeEmail(user.email) : '';
-}
-
 function showMsg(el, text, ok) {
   el.textContent = text;
   el.className = 'msg show ' + (ok ? 'ok' : 'err');
@@ -662,204 +556,10 @@ function storeOptionLabel(store) {
   return `FM ${store.id}${store.address && store.address.city ? ` - ${store.address.city}` : ''} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}`;
 }
 
-function routeStoreQuery(store) {
-  const lat = Number(store && store.latitude);
-  const lon = Number(store && store.longitude);
-  if (Number.isFinite(lat) && Number.isFinite(lon)) return `${lat},${lon}`;
-  if (store && store.routeAddress) return store.routeAddress;
-  return `Fred Meyer FM ${store.id} Oregon`;
-}
-
-function routeOriginForLeg() {
-  const manual = $('route-origin').value.trim();
-  if (manual) return manual;
-  return 'Current Location';
-}
-
-function selectedRouteStores() {
-  if (!snapshot) return [];
-  const stores = snapshot.stores || [];
-  return Array.from(selectedRouteStoreIds)
-    .map(id => stores.find(store => store.id === id))
-    .filter(Boolean);
-}
-
-function isRouteSelectableStore(store) {
-  if (!store) return false;
-  if (store.status === 'open') return true;
-  if (store.status === 'complete') return selectedRouteStoreIds.has(store.id);
-  return store.status === 'pledged'
-    && store.pledge
-    && normalizeEmail(store.pledge.email) === currentUserEmail();
-}
-
-function saveRouteState() {
-  cacheJson(ROUTE_STOPS_CACHE_KEY, Array.from(selectedRouteStoreIds));
-  try {
-    localStorage.setItem(ROUTE_ORIGIN_CACHE_KEY, $('route-origin').value.trim());
-    localStorage.setItem(ROUTE_ACTIVE_INDEX_CACHE_KEY, String(activeRouteIndex));
-  } catch (err) {}
-}
-
-function loadRouteState() {
-  const ids = getCachedJson(ROUTE_STOPS_CACHE_KEY);
-  if (Array.isArray(ids)) {
-    ids.forEach(id => {
-      const clean = String(id || '').trim();
-      if (clean) selectedRouteStoreIds.add(clean);
-    });
-  }
-  try {
-    $('route-origin').value = localStorage.getItem(ROUTE_ORIGIN_CACHE_KEY) || '';
-    activeRouteIndex = Math.max(0, Number(localStorage.getItem(ROUTE_ACTIVE_INDEX_CACHE_KEY)) || 0);
-  } catch (err) {}
-}
-
-function syncRouteSelection(stores) {
-  const routeableIds = new Set((stores || []).filter(isRouteSelectableStore).map(store => store.id));
-  let changed = false;
-  Array.from(selectedRouteStoreIds).forEach(id => {
-    if (!routeableIds.has(id)) {
-      selectedRouteStoreIds.delete(id);
-      changed = true;
-    }
-  });
-  if (changed) saveRouteState();
-}
-
-function renderRoutePlanner() {
-  const selected = selectedRouteStores();
-  const list = $('route-selected-list');
-  if (selected.length && activeRouteIndex > selected.length - 1) {
-    activeRouteIndex = selected.length - 1;
-    saveRouteState();
-  }
-  $('route-summary').textContent = selected.length
-    ? `${selected.length} saved route stop${selected.length === 1 ? '' : 's'}${$('route-origin').value.trim() ? ' with a start location saved' : ''}. Drive mode is on stop ${activeRouteIndex + 1} of ${selected.length}.`
-    : 'No saved route yet. Tap store cards below to build one.';
-  list.innerHTML = selected.length
-    ? selected.map(store => `<span class="route-chip">FM ${store.id}<button type="button" data-remove-route="${store.id}" title="Remove">x</button></span>`).join('')
-    : '<span class="route-chip">No route stops selected</span>';
-  $('route-stop-list').innerHTML = selected.length
-    ? selected.map((store, idx) => `
-        <div class="route-stop">
-          <div><span class="step">${idx + 1}.</span><strong>FM ${store.id}</strong></div>
-          <div>${routeStopStatus(store)} - ${store.setCount} set${store.setCount === 1 ? '' : 's'}</div>
-          ${store.routeAddress ? `<div>${esc(store.routeAddress)}</div>` : ''}
-          <button type="button" data-set-active-route="${idx}">Use as current stop</button>
-          <button type="button" data-remove-route="${store.id}">Remove from route</button>
-        </div>`).join('')
-    : '';
-  renderDrivePanel(selected);
-}
-
-function selectStoreForRoute(storeId) {
-  if (selectedRouteStoreIds.has(storeId)) selectedRouteStoreIds.delete(storeId);
-  else selectedRouteStoreIds.add(storeId);
-  if (activeRouteIndex > selectedRouteStoreIds.size - 1) activeRouteIndex = Math.max(0, selectedRouteStoreIds.size - 1);
-  saveRouteState();
-  render(snapshot);
-}
-
-function routeStopStatus(store) {
-  if (store.status === 'complete') return 'Completed';
-  if (store.status === 'pledged') return 'Your claimed store';
-  return 'Open to claim';
-}
-
-function addClaimedStoresToRoute() {
-  if (!snapshot) return 0;
-  const email = currentUserEmail();
-  const claimed = (snapshot.stores || []).filter(store => (
-    store.status === 'pledged'
-    && store.pledge
-    && normalizeEmail(store.pledge.email) === email
-  ));
-  claimed.forEach(store => selectedRouteStoreIds.add(store.id));
-  saveRouteState();
-  render(snapshot);
-  return claimed.length;
-}
-
-function clearRoute() {
-  selectedRouteStoreIds.clear();
-  activeRouteIndex = 0;
-  $('route-origin').value = '';
-  saveRouteState();
-  render(snapshot);
-}
-
-function setActiveRouteIndex(idx) {
-  const selected = selectedRouteStores();
-  if (!selected.length) return;
-  activeRouteIndex = Math.max(0, Math.min(Number(idx) || 0, selected.length - 1));
-  saveRouteState();
-  renderRoutePlanner();
-}
-
-function advanceRouteStop(delta) {
-  setActiveRouteIndex(activeRouteIndex + delta);
-}
-
-function directionsUrlForStop(store) {
-  if (!store) throw new Error('No current route stop selected.');
-  const selected = selectedRouteStores();
-  const priorStop = activeRouteIndex > 0 ? selected[activeRouteIndex - 1] : null;
-  const params = new URLSearchParams({
-    api: '1',
-    origin: priorStop ? routeStoreQuery(priorStop) : routeOriginForLeg(),
-    destination: routeStoreQuery(store),
-    travelmode: 'driving',
-  });
-  return `https://www.google.com/maps/dir/?${params.toString()}`;
-}
-
-function renderDrivePanel(selected) {
-  const panel = $('route-drive-panel');
-  if (!selected.length) {
-    panel.innerHTML = `
-      <h3>Drive mode</h3>
-      <div class="hint">Add stops to your route, then use Drive mode to move store by store.</div>`;
-    return;
-  }
-  const current = selected[Math.min(activeRouteIndex, selected.length - 1)];
-  panel.innerHTML = `
-    <h3>Drive mode</h3>
-    <div class="hint">Keep this dashboard open. Use Google Maps for the live turn-by-turn leg, then come back here and tap "Arrived / next" after the store is done.</div>
-    <div class="current">Current stop: ${activeRouteIndex + 1} of ${selected.length} - FM ${current.id} (${routeStopStatus(current)})</div>
-    <div class="route-drive-actions">
-      <button type="button" class="btn secondary" id="prev-stop-btn" ${activeRouteIndex === 0 ? 'disabled' : ''}>Previous stop</button>
-      <button type="button" class="btn" id="next-directions-btn">Live directions</button>
-      <button type="button" class="btn secondary" id="arrived-next-btn">${activeRouteIndex >= selected.length - 1 ? 'Route complete' : 'Arrived / next'}</button>
-    </div>`;
-}
-
-function routeUrlForSelectedStores() {
-  const origin = $('route-origin').value.trim();
-  const stops = selectedRouteStores();
-  if (!origin) throw new Error('Enter a start location or use your current location.');
-  if (!stops.length) throw new Error('Select at least one store from the route planner cards.');
-  if (stops.length > 10) throw new Error('Google Maps supports best with 10 or fewer stops. Remove a few stores and try again.');
-
-  const params = new URLSearchParams({
-    api: '1',
-    origin,
-    destination: routeStoreQuery(stops[stops.length - 1]),
-    travelmode: 'driving',
-  });
-  if (stops.length > 1) {
-    const waypoints = stops.slice(0, -1).map(routeStoreQuery);
-    if (waypoints.length > 1) waypoints.unshift('optimize:true');
-    params.set('waypoints', waypoints.join('|'));
-  }
-  return `https://www.google.com/maps/dir/?${params.toString()}`;
-}
-
 function render(data) {
   snapshot = data;
   const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
   const completedBy = data.completedBy || [];
-  syncRouteSelection(stores);
 
   $('deadline-text').textContent = fmtDeadline(deadline);
   const remain = deadlineMs != null ? deadlineMs - nowMs : null;
@@ -889,21 +589,18 @@ function render(data) {
     } else {
       who = 'Available to claim';
     }
-    const selected = selectedRouteStoreIds.has(store.id);
-    const canRoute = isRouteSelectableStore(store);
     const canClaim = store.status === 'open';
     const address = store.routeAddress ? `<div class="loc">${esc(store.routeAddress)}</div>` : '';
     return `
-      <div class="store-card ${store.status} ${canRoute ? 'visual-selectable' : ''} ${selected ? 'route-selected' : ''}" data-store-id="${store.id}">
+      <div class="store-card ${store.status}" data-store-id="${store.id}">
         <div class="fm">${store.label}</div>
         <div class="loc">District 1 - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
         ${address}
         <span class="badge ${store.status}">${statusLabel(store.status)}</span>
         <div class="who">${who}</div>
-        ${canRoute ? `
+        ${canClaim ? `
           <div class="store-actions">
-            <button type="button" class="mini-btn ${selected ? 'active' : ''}" data-route-store="${store.id}">${selected ? 'Remove route' : 'Add to route'}</button>
-            ${canClaim ? `<button type="button" class="mini-btn primary" data-claim-store="${store.id}">Claim store</button>` : '<button type="button" class="mini-btn primary" disabled>Your claim</button>'}
+            <button type="button" class="mini-btn primary" data-claim-store="${store.id}">Claim store</button>
           </div>` : ''}
       </div>`;
   }).join('');
@@ -962,7 +659,6 @@ function render(data) {
     if (!snapshot || snapshot.deadlineMs == null) return;
     $('countdown-text').textContent = fmtCountdown(snapshot.deadlineMs - Date.now());
   }, 1000);
-  renderRoutePlanner();
 }
 
 async function loadSnapshot() {
@@ -1097,57 +793,7 @@ $('my-pledge-list').addEventListener('click', e => {
 
 $('opt-out-btn').addEventListener('click', optOutChallenge);
 
-$('route-selected-list').addEventListener('click', e => {
-  const btn = e.target.closest('[data-remove-route]');
-  if (btn) selectStoreForRoute(btn.dataset.removeRoute);
-});
-
-$('route-stop-list').addEventListener('click', e => {
-  const activeBtn = e.target.closest('[data-set-active-route]');
-  if (activeBtn) {
-    setActiveRouteIndex(activeBtn.dataset.setActiveRoute);
-    return;
-  }
-  const btn = e.target.closest('[data-remove-route]');
-  if (btn) selectStoreForRoute(btn.dataset.removeRoute);
-});
-
-$('route-drive-panel').addEventListener('click', e => {
-  const selected = selectedRouteStores();
-  const current = selected[Math.min(activeRouteIndex, selected.length - 1)];
-  const msg = $('route-msg');
-  if (e.target.closest('#prev-stop-btn')) {
-    advanceRouteStop(-1);
-    return;
-  }
-  if (e.target.closest('#arrived-next-btn')) {
-    if (!selected.length) return;
-    if (activeRouteIndex >= selected.length - 1) {
-      showMsg(msg, 'Route complete. Clear the saved route when you are done for the day.', true);
-      return;
-    }
-    advanceRouteStop(1);
-    showMsg(msg, `Advanced to stop ${activeRouteIndex + 1}.`, true);
-    return;
-  }
-  if (e.target.closest('#next-directions-btn')) {
-    try {
-      saveRouteState();
-      const url = directionsUrlForStop(current);
-      showMsg(msg, `Opening live directions to FM ${current.id}. Return here after the store is done.`, true);
-      window.open(url, '_blank', 'noopener');
-    } catch (err) {
-      showMsg(msg, err.message, false);
-    }
-  }
-});
-
 $('store-grid').addEventListener('click', e => {
-  const routeBtn = e.target.closest('[data-route-store]');
-  if (routeBtn) {
-    selectStoreForRoute(routeBtn.dataset.routeStore);
-    return;
-  }
   const claimBtn = e.target.closest('[data-claim-store]');
   if (claimBtn) {
     $('pledge-store').value = claimBtn.dataset.claimStore;
@@ -1159,8 +805,6 @@ $('store-grid').addEventListener('click', e => {
     $('pledge-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
-  const card = e.target.closest('.store-card.visual-selectable');
-  if (card && card.dataset.storeId) selectStoreForRoute(card.dataset.storeId);
 });
 
 function syncSignedInBar() {
@@ -1173,59 +817,6 @@ function syncSignedInBar() {
 function updateOnlineStatus() {
   $('offline-note').hidden = navigator.onLine;
 }
-
-$('use-location-btn').addEventListener('click', () => {
-  const msg = $('route-msg');
-  msg.className = 'msg';
-  if (!navigator.geolocation) {
-    showMsg(msg, 'Current location is not available in this browser. Enter a start address instead.', false);
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      const { latitude, longitude } = pos.coords;
-      $('route-origin').value = `${latitude.toFixed(6)},${longitude.toFixed(6)}`;
-      saveRouteState();
-      renderRoutePlanner();
-      showMsg(msg, 'Current location added as route start.', true);
-    },
-    () => showMsg(msg, 'Could not get current location. Enter a start address instead.', false),
-    { enableHighAccuracy: true, timeout: 10000 }
-  );
-});
-
-$('route-origin').addEventListener('input', () => {
-  saveRouteState();
-  renderRoutePlanner();
-});
-
-$('add-claimed-route-btn').addEventListener('click', () => {
-  const msg = $('route-msg');
-  msg.className = 'msg';
-  const count = addClaimedStoresToRoute();
-  showMsg(msg, count
-    ? `Added ${count} claimed store${count === 1 ? '' : 's'} to your saved route.`
-    : 'You do not have any active claimed stores to add yet.',
-    Boolean(count));
-});
-
-$('clear-route-btn').addEventListener('click', () => {
-  clearRoute();
-  showMsg($('route-msg'), 'Saved route cleared.', true);
-});
-
-$('open-route-btn').addEventListener('click', () => {
-  const msg = $('route-msg');
-  msg.className = 'msg';
-  try {
-    saveRouteState();
-    const url = routeUrlForSelectedStores();
-    showMsg(msg, 'Opening route in Google Maps.', true);
-    window.open(url, '_blank', 'noopener');
-  } catch (err) {
-    showMsg(msg, err.message, false);
-  }
-});
 
 $('pledge-form').addEventListener('submit', async e => {
   e.preventDefault();
@@ -1266,7 +857,6 @@ $('pledge-form').addEventListener('submit', async e => {
 
 async function initDashboard() {
   $('dashboard-root').hidden = false;
-  loadRouteState();
   initDisplayControls();
   syncSignedInBar();
   updateOnlineStatus();
@@ -1289,15 +879,14 @@ async function initDashboard() {
 $('sign-out-btn').addEventListener('click', () => {
   D6Auth.clearUser();
   $('dashboard-root').hidden = true;
-  D6Auth.showLogin({ onSuccess: () => initDashboard() });
+  D6Auth.showLogin({ ...LOGIN_OPTIONS, onSuccess: () => initDashboard() });
 });
 
 window.addEventListener('online', updateOnlineStatus);
 window.addEventListener('offline', updateOnlineStatus);
 
 D6Auth.requireLogin({
-  title: 'District 1 fruit audit',
-  subtitle: 'Enter your name and email to claim a District 1 fruit audit store.',
+  ...LOGIN_OPTIONS,
   onSuccess: () => initDashboard(),
 });
 </script>
