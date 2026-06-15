@@ -670,14 +670,14 @@ app.post('/api/fruit-audit/send', async (req, res) => {
         const completion = trackerSnapshot && trackerSnapshot.completions
           ? trackerSnapshot.completions[store.id]
           : null;
-        const hourEntry = trackerSnapshot && Array.isArray(trackerSnapshot.hours)
-          ? trackerSnapshot.hours.find(item => normalizeEmail(item.email) === normalizeEmail(userEmail))
+        const completedEntry = trackerSnapshot && Array.isArray(trackerSnapshot.completedBy)
+          ? trackerSnapshot.completedBy.find(item => normalizeEmail(item.email) === normalizeEmail(userEmail))
           : null;
-        fruitAuditTrackerNotify.sendCompletionHoursEarned(resend, {
+        fruitAuditTrackerNotify.sendCompletionReceived(resend, {
           completion,
           meta: fruitAuditTracker.getStoreMeta(store.id),
-          totalHours: hourEntry ? hourEntry.hours : 1,
-          completedStores: hourEntry ? hourEntry.stores : [store.id],
+          completedCount: completedEntry ? completedEntry.completed : 1,
+          completedStores: completedEntry ? completedEntry.stores : [store.id],
           dashboardUrl: fruitAuditDashboardUrl(req),
           cc: fruitAuditTrackerNotify.notifyRecipients(),
         }).catch(err => console.error('Fruit audit tracker completion notify:', err.message));
@@ -696,7 +696,6 @@ app.post('/api/fruit-audit/send', async (req, res) => {
       recipients: { to: toList, cc: ccList }
     };
     if (storeDistrict === '1') {
-      response.earnedHours = 1;
       if (trackerSnapshot) response.trackerSnapshot = trackerSnapshot;
     }
     res.json(response);

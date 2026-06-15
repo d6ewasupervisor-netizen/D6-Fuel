@@ -485,17 +485,17 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         <ul class="pledge-list" id="pledge-list"></ul>
       </div>
     </details>
-    <details class="panel collapsible resizable-card" data-section="hours" data-mobile-collapsed open>
+    <details class="panel collapsible resizable-card" data-section="completed" data-mobile-collapsed open>
       <summary class="collapsible-summary">
         <span>
-          <span class="section-kicker">Pay tally</span>
-          <h2>Hours earned</h2>
+          <span class="section-kicker">Completion list</span>
+          <h2>Completed stores</h2>
         </span>
         <span class="toggle-icon" aria-hidden="true"></span>
       </summary>
       <div class="collapsible-body">
-        <p class="sub">Each completed District 1 store counts as one paid hour.</p>
-        <ul class="pledge-list" id="hours-list"></ul>
+        <p class="sub">Submitted store count by person for District 1 completion tracking.</p>
+        <ul class="pledge-list" id="completion-list"></ul>
       </div>
     </details>
   </div>
@@ -857,7 +857,8 @@ function routeUrlForSelectedStores() {
 
 function render(data) {
   snapshot = data;
-  const { stats, stores, pledges, hours, deadline, deadlineMs, nowMs } = data;
+  const { stats, stores, pledges, deadline, deadlineMs, nowMs } = data;
+  const completedBy = data.completedBy || [];
   syncRouteSelection(stores);
 
   $('deadline-text').textContent = fmtDeadline(deadline);
@@ -872,7 +873,7 @@ function render(data) {
     <div class="stat left"><div class="num">${stats.remaining}</div><div class="lbl">Left</div></div>
     <div class="stat"><div class="num">${stats.total}</div><div class="lbl">Stores</div></div>
     <div class="stat"><div class="num">${stats.totalSets}</div><div class="lbl">Fruit Sets</div></div>
-    <div class="stat done"><div class="num">${stats.earnedHours ?? stats.complete}</div><div class="lbl">Hours Earned</div></div>
+    <div class="stat"><div class="num">${stats.totalPhotoTargets}</div><div class="lbl">Photo Views</div></div>
   `;
 
   const pct = stats.total ? Math.round((stats.complete / stats.total) * 100) : 0;
@@ -927,11 +928,11 @@ function render(data) {
         </li>`).join('')
     : '<li style="color:var(--muted)">No active claims yet.</li>';
 
-  $('hours-list').innerHTML = hours && hours.length
-    ? hours.map(item => `
+  $('completion-list').innerHTML = completedBy && completedBy.length
+    ? completedBy.map(item => `
         <li>
           <span><strong>${esc(item.name)}</strong><br><span style="color:var(--muted);font-size:12px">${esc(item.email)}</span></span>
-          <span><span class="store">${item.hours} hr${item.hours === 1 ? '' : 's'}</span><br><span style="color:var(--muted);font-size:12px">FM ${item.stores.map(esc).join(', FM ')}</span></span>
+          <span><span class="store">${item.completed} completed</span><br><span style="color:var(--muted);font-size:12px">FM ${item.stores.map(esc).join(', FM ')}</span></span>
         </li>`).join('')
     : '<li style="color:var(--muted)">No submitted stores yet.</li>';
 
@@ -1003,7 +1004,7 @@ function renderAccessDenied() {
   $('pledge-store').innerHTML = '<option value="">No access</option>';
   $('pledge-btn').disabled = true;
   $('pledge-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
-  $('hours-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
+  $('completion-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
   showMsg($('pledge-msg'), 'This email is not approved for District 1 fruit audit signup.', false);
 }
 
