@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 <meta name="theme-color" content="#07110b">
-<title>District 1 Fruit Audit - Live Dashboard</title>
+<title>Fruit Audit - Live Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/auth.css">
@@ -271,20 +271,20 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 <body>
 <div class="wrap" id="dashboard-root" hidden>
   <nav class="app-nav" aria-label="App navigation">
-    <a href="/fruit-audit?district=1" class="primary">Open fruit photo app</a>
+    <a href="/fruit-audit?district=1" class="primary" id="field-app-nav">Open fruit photo app</a>
     <a href="/fruit-audit-guide">Fruit audit guide</a>
   </nav>
   <div class="field-app-banner">
-    <p>After you are assigned a District 1 store here, open the fruit photo app, choose District 1, capture all required 360-degree fruit set photos, and submit the store.</p>
-    <a href="/fruit-audit?district=1">Go to fruit app</a>
+    <p id="field-app-banner-text">After you are assigned a store here, open the fruit photo app, capture all required 360-degree fruit set photos, and submit the store.</p>
+    <a href="/fruit-audit?district=1" id="field-app-banner-link">Go to fruit app</a>
   </div>
   <div class="offline-note" id="offline-note" hidden>
     You appear to be offline. The dashboard may show the last loaded view, but assigning stores needs a connection.
   </div>
   <div class="top-bar">
     <div>
-      <h1>District 1 fruit audit tracker</h1>
-      <p>Live assignment and completion status for the District 1 fruit audit stores.</p>
+      <h1 id="dashboard-title">Fruit audit tracker</h1>
+      <p id="dashboard-subtitle">Live assignment and completion status for fruit audit stores.</p>
     </div>
     <div class="live-pill" id="live-pill">
       <span class="live-dot"></span>
@@ -352,7 +352,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
       <summary class="collapsible-summary">
         <span>
           <span class="section-kicker">Assignment</span>
-          <h2>Assign a District 1 store</h2>
+          <h2 id="assign-heading">Assign a store</h2>
         </span>
         <span class="toggle-icon" aria-hidden="true"></span>
       </summary>
@@ -386,7 +386,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         <span class="toggle-icon" aria-hidden="true"></span>
       </summary>
       <div class="collapsible-body">
-        <p class="sub">Who is assigned to each District 1 fruit store.</p>
+        <p class="sub" id="active-assignments-sub">Who is assigned to each fruit store.</p>
         <ul class="pledge-list" id="pledge-list"></ul>
       </div>
     </details>
@@ -399,7 +399,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         <span class="toggle-icon" aria-hidden="true"></span>
       </summary>
       <div class="collapsible-body">
-        <p class="sub">Submitted store count by person for District 1 completion tracking.</p>
+        <p class="sub" id="completed-sub">Submitted store count by person for completion tracking.</p>
         <ul class="pledge-list" id="completion-list"></ul>
       </div>
     </details>
@@ -409,18 +409,22 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
 <script src="/auth.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-const DASHBOARD_SNAPSHOT_CACHE_KEY = 'd1_fruit_audit_dashboard_snapshot_v1';
-const DASHBOARD_APPROVED_CACHE_KEY = 'd1_fruit_audit_dashboard_approved_v1';
-const DASHBOARD_ZOOM_CACHE_KEY = 'd1_fruit_audit_dashboard_zoom_v1';
-const DASHBOARD_SECTION_CACHE_KEY = 'd1_fruit_audit_dashboard_sections_v2';
+const params = new URLSearchParams(window.location.search);
+const pathDistrictMatch = window.location.pathname.match(/(?:district\/|dashboard-d)(\d+)/i);
+const selectedDistrictId = String(params.get('district') || (pathDistrictMatch && pathDistrictMatch[1]) || '1');
+const districtLabel = `District ${selectedDistrictId}`;
+const DASHBOARD_SNAPSHOT_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboard_snapshot_v1`;
+const DASHBOARD_APPROVED_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboard_approved_v1`;
+const DASHBOARD_ZOOM_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboard_zoom_v1`;
+const DASHBOARD_SECTION_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboard_sections_v2`;
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
 let displayControlsReady = false;
 const LOGIN_OPTIONS = {
   badge: '',
-  title: 'District One Fruit Table Audit',
-  subtitle: 'Enter your name and email to manage a District 1 fruit audit store assignment.',
+  title: `${districtLabel} Fruit Table Audit`,
+  subtitle: `Enter your name and email to manage a ${districtLabel} fruit audit store assignment.`,
 };
 
 function fmtDeadline(iso) {
@@ -465,6 +469,27 @@ function esc(s) {
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
+}
+
+function trackerApi(path = '') {
+  return `/api/fruit-audit-tracker/${encodeURIComponent(selectedDistrictId)}${path}`;
+}
+
+function fieldAppUrl(storeId) {
+  const base = `/fruit-audit?district=${encodeURIComponent(selectedDistrictId)}`;
+  return storeId ? `${base}&store=${encodeURIComponent(storeId)}` : base;
+}
+
+function applyDistrictCopy() {
+  document.title = `${districtLabel} Fruit Audit - Live Dashboard`;
+  $('field-app-nav').href = fieldAppUrl();
+  $('field-app-banner-link').href = fieldAppUrl();
+  $('field-app-banner-text').textContent = `After you are assigned a ${districtLabel} store here, open the fruit photo app, choose ${districtLabel}, capture all required 360-degree fruit set photos, and submit the store.`;
+  $('dashboard-title').textContent = `${districtLabel} fruit audit tracker`;
+  $('dashboard-subtitle').textContent = `Live assignment and completion status for the ${districtLabel} fruit audit stores.`;
+  $('assign-heading').textContent = `Assign a ${districtLabel} store`;
+  $('active-assignments-sub').textContent = `Who is assigned to each ${districtLabel} fruit store.`;
+  $('completed-sub').textContent = `Submitted store count by person for ${districtLabel} completion tracking.`;
 }
 
 function cacheJson(key, value) {
@@ -600,23 +625,29 @@ function render(data) {
   $('progress-fill').style.width = `${pct}%`;
 
   $('store-grid').innerHTML = stores.map(store => {
+    const activePledges = Array.isArray(store.pledges) && store.pledges.length
+      ? store.pledges
+      : (store.pledge ? [store.pledge] : []);
     let who = '';
     if (store.status === 'complete' && store.completion) {
-      who = `Submitted by <strong>${esc(store.completion.name)}</strong> - ${store.completion.photoCount} photo${store.completion.photoCount === 1 ? '' : 's'}`;
-    } else if (store.status === 'pledged' && store.pledge) {
-      who = `Assigned to <strong>${esc(store.pledge.name)}</strong>${store.pledge.scheduledLabel ? `<br><span style="color:var(--muted);font-size:12px">Scheduled ${esc(store.pledge.scheduledLabel)}</span>` : ''}`;
+      const names = (store.completionRecords || [store.completion])
+        .map(item => esc(item.name))
+        .filter(Boolean);
+      who = `Submitted by <strong>${names.join('</strong>, <strong>')}</strong>`;
+    } else if (activePledges.length) {
+      who = activePledges.map(pledge => (
+        `Assigned to <strong>${esc(pledge.name)}</strong>${pledge.scheduledLabel ? ` <span style="color:var(--muted);font-size:12px">(${esc(pledge.scheduledLabel)})</span>` : ''}`
+      )).join('<br>');
     } else {
       who = 'Available to assign';
     }
-    const assignedToCurrentUser = store.status === 'pledged'
-      && store.pledge
-      && normalizeEmail(store.pledge.email) === myEmail;
+    const assignedToCurrentUser = activePledges.some(pledge => normalizeEmail(pledge.email) === myEmail);
     const canClaim = store.status === 'open';
     const address = store.routeAddress ? `<div class="loc">${esc(store.routeAddress)}</div>` : '';
     return `
       <div class="store-card ${store.status} ${assignedToCurrentUser ? 'audit-ready' : ''}" data-store-id="${store.id}" ${assignedToCurrentUser ? `data-audit-store="${store.id}" role="button" tabindex="0" aria-label="Open audit for FM ${store.id}"` : ''}>
         <div class="fm">${store.label}</div>
-        <div class="loc">District 1 - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
+        <div class="loc">${esc(districtLabel)} - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
         ${address}
         <span class="badge ${store.status}">${statusLabel(store.status)}</span>
         <div class="who">${who}</div>
@@ -639,7 +670,12 @@ function render(data) {
 
   const activePledges = pledges.filter(pledge => {
     const st = stores.find(store => store.id === pledge.storeId);
-    return st && st.status === 'pledged';
+    if (!st) return false;
+    if (st.status === 'pledged') return true;
+    return Array.isArray(st.pledges) && st.pledges.some(item => item.id === pledge.id || (
+      normalizeEmail(item.email) === normalizeEmail(pledge.email)
+      && item.storeId === pledge.storeId
+    ));
   });
 
   $('pledge-list').innerHTML = activePledges.length
@@ -686,7 +722,7 @@ function render(data) {
 
 async function loadSnapshot() {
   try {
-    const res = await fetch('/api/fruit-audit-tracker', { cache: 'no-store' });
+    const res = await fetch(trackerApi(), { cache: 'no-store' });
     if (!res.ok) throw new Error('Could not load fruit tracker');
     const data = await res.json();
     cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data);
@@ -701,7 +737,7 @@ async function loadSnapshot() {
 async function loadApprovedUsers() {
   let data;
   try {
-    const res = await fetch('/api/fruit-audit-tracker/approved-users', { cache: 'no-store' });
+    const res = await fetch(trackerApi('/approved-users'), { cache: 'no-store' });
     if (!res.ok) throw new Error('Could not load approved user list');
     data = await res.json();
     cacheJson(DASHBOARD_APPROVED_CACHE_KEY, data);
@@ -719,18 +755,18 @@ function renderAccessDenied() {
   $('stats').innerHTML = '';
   $('progress-pct').textContent = '0%';
   $('progress-fill').style.width = '0%';
-  $('store-grid').innerHTML = '<div class="store-card open"><div class="fm">Access restricted</div><div class="who">This email is not approved for the District 1 fruit audit assignment dashboard. Sign out and use an approved email.</div></div>';
+  $('store-grid').innerHTML = `<div class="store-card open"><div class="fm">Access restricted</div><div class="who">This email is not approved for the ${esc(districtLabel)} fruit audit assignment dashboard. Sign out and use an approved email.</div></div>`;
   $('pledge-store').innerHTML = '<option value="">No access</option>';
   $('pledge-btn').disabled = true;
   $('pledge-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
   $('completion-list').innerHTML = '<li style="color:var(--muted)">No access.</li>';
-  showMsg($('pledge-msg'), 'This email is not approved for District 1 fruit audit assignments.', false);
+  showMsg($('pledge-msg'), `This email is not approved for ${districtLabel} fruit audit assignments.`, false);
 }
 
 function connectSSE() {
   const pill = $('live-pill');
   const label = $('live-label');
-  const es = new EventSource('/api/fruit-audit-tracker/events');
+  const es = new EventSource(trackerApi('/events'));
 
   es.addEventListener('snapshot', e => {
     pill.classList.add('connected');
@@ -753,7 +789,7 @@ async function unclaimPledge(pledgeId) {
   const user = D6Auth.getUser();
   if (!user) return;
   if (!navigator.onLine) {
-    showMsg(msg, 'You are offline. Reconnect before releasing a District 1 assignment.', false);
+    showMsg(msg, `You are offline. Reconnect before releasing a ${districtLabel} assignment.`, false);
     return;
   }
   const email = user.email;
@@ -762,7 +798,7 @@ async function unclaimPledge(pledgeId) {
   }
   msg.className = 'msg';
   try {
-    const res = await fetch('/api/fruit-audit-tracker/unclaim', {
+    const res = await fetch(trackerApi('/unclaim'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ pledgeId, email }),
@@ -784,15 +820,15 @@ async function optOutChallenge() {
   const user = D6Auth.getUser();
   if (!user) return;
   if (!navigator.onLine) {
-    showMsg(msg, 'You are offline. Reconnect before opting out of District 1 assignments.', false);
+    showMsg(msg, `You are offline. Reconnect before opting out of ${districtLabel} assignments.`, false);
     return;
   }
-  if (!confirm('Opt out of the District 1 fruit audit challenge? This releases all of your active assigned stores so others can be assigned.')) {
+  if (!confirm(`Opt out of the ${districtLabel} fruit audit challenge? This releases all of your active assigned stores so others can be assigned.`)) {
     return;
   }
   msg.className = 'msg';
   try {
-    const res = await fetch('/api/fruit-audit-tracker/opt-out', {
+    const res = await fetch(trackerApi('/opt-out'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: user.email }),
@@ -823,7 +859,7 @@ $('opt-out-btn').addEventListener('click', optOutChallenge);
 
 function openAuditStore(storeId) {
   if (!storeId) return;
-  window.location.href = `/fruit-audit?district=1&store=${encodeURIComponent(storeId)}`;
+  window.location.href = fieldAppUrl(storeId);
 }
 
 $('store-grid').addEventListener('click', e => {
@@ -871,14 +907,14 @@ $('pledge-form').addEventListener('submit', async e => {
   const btn = $('pledge-btn');
   const msg = $('pledge-msg');
   if (!navigator.onLine) {
-    showMsg(msg, 'You are offline. Reconnect before assigning a District 1 store.', false);
+    showMsg(msg, `You are offline. Reconnect before assigning a ${districtLabel} store.`, false);
     return;
   }
   btn.disabled = true;
   msg.className = 'msg';
 
   try {
-    const res = await fetch('/api/fruit-audit-tracker/pledge', {
+    const res = await fetch(trackerApi('/pledge'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -903,6 +939,7 @@ $('pledge-form').addEventListener('submit', async e => {
 
 async function initDashboard() {
   $('dashboard-root').hidden = false;
+  applyDistrictCopy();
   initDisplayControls();
   syncSignedInBar();
   updateOnlineStatus();

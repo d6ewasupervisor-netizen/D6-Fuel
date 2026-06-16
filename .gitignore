@@ -1,7 +1,10 @@
 node_modules/
+.venv/
 .env
 .railway/
 data/tracker-state.json
+data/fruit-audit-tracker-state.live-backup.json
+data/Fruit Mapping (1).xlsx
 Fuel_Center_POG_Products.xlsx
 parse_planograms.py
 requirements.txt

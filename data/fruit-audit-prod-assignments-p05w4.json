@@ -1,0 +1,793 @@
+{
+  "generatedAt": "2026-06-16T15:53:35.465Z",
+  "fiscalWeek": "P05W4",
+  "dateFrom": "2026-06-14",
+  "dateTo": "2026-06-20",
+  "assignments": [
+    {
+      "district": "6",
+      "storeId": "049",
+      "sourceStore": "00049",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Saviya Hurley Joanne",
+          "email": "saviya.hurley@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800432058",
+          "employeeId": "182843",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-17",
+            "2026-06-18"
+          ],
+          "scheduledLabel": "Wed, 6/17, Thu, 6/18",
+          "visitIds": [
+            "26821068",
+            "26821076"
+          ],
+          "shiftIds": [
+            "43966787",
+            "43966795"
+          ],
+          "statuses": [
+            "active"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "163",
+      "sourceStore": "00163",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Patricia Magana",
+          "email": "patricia.magana@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800605782",
+          "employeeId": "381838",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-16",
+            "2026-06-17"
+          ],
+          "scheduledLabel": "Wed, 6/17, Tue, 6/16",
+          "visitIds": [
+            "26821116",
+            "26821124"
+          ],
+          "shiftIds": [
+            "43967163",
+            "43967171"
+          ],
+          "statuses": [
+            "active",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "214",
+      "sourceStore": "00214",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Vikanda Thiphakhinkeo Lily",
+          "email": "lily.thiphakhinkeo@sasretailservices.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800533202",
+          "employeeId": "226147",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-17"
+          ],
+          "scheduledLabel": "Wed, 6/17",
+          "visitIds": [
+            "26821100"
+          ],
+          "shiftIds": [
+            "44060045"
+          ],
+          "statuses": [
+            "active"
+          ]
+        },
+        {
+          "name": "Jennifer Hilderbrand Lynn",
+          "email": "jennifer.hilderbrand@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800657448",
+          "employeeId": "402097",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-18"
+          ],
+          "scheduledLabel": "Thu, 6/18",
+          "visitIds": [
+            "26821108"
+          ],
+          "shiftIds": [
+            "43966979"
+          ],
+          "statuses": [
+            "active"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "286",
+      "sourceStore": "00286",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Patricia Magana",
+          "email": "patricia.magana@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800605782",
+          "employeeId": "381838",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Mon, 6/15, Fri, 6/19",
+          "visitIds": [
+            "26821132",
+            "26821140"
+          ],
+          "shiftIds": [
+            "43967147",
+            "43967179",
+            "43967187",
+            "43967211"
+          ],
+          "statuses": [
+            "active",
+            "completed"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "351",
+      "sourceStore": "00351",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Saviya Hurley Joanne",
+          "email": "saviya.hurley@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800432058",
+          "employeeId": "182843",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Fri, 6/19",
+          "visitIds": [
+            "26821052"
+          ],
+          "shiftIds": [
+            "43966771"
+          ],
+          "statuses": [
+            "active"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "486",
+      "sourceStore": "00486",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Dennis Baker III Lloyd",
+          "email": "dennis.baker@sasretailservices.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800598775",
+          "employeeId": "378774",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-18"
+          ],
+          "scheduledLabel": "Mon, 6/15, Tue, 6/16, Thu, 6/18",
+          "visitIds": [
+            "26821148",
+            "26821156",
+            "26919311"
+          ],
+          "shiftIds": [
+            "43967323",
+            "43967331",
+            "43967355",
+            "43967387",
+            "43967420",
+            "43967452",
+            "44203248"
+          ],
+          "statuses": [
+            "active",
+            "completed",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "682",
+      "sourceStore": "00682",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "James Duchene Ryan",
+          "email": "james.duchene@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800627385",
+          "employeeId": "394407",
+          "supervisorName": "Tyson Gauthier A",
+          "supervisorWorkdayId": "800175315",
+          "scheduledDates": [
+            "2026-06-16"
+          ],
+          "scheduledLabel": "Tue, 6/16",
+          "visitIds": [
+            "26820915"
+          ],
+          "shiftIds": [
+            "43966041"
+          ],
+          "statuses": [
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "654",
+      "sourceStore": "00654",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Cindy Roth L",
+          "email": "cindy.roth@sasretailservices.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800576372",
+          "employeeId": "364367",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18"
+          ],
+          "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18",
+          "visitIds": [
+            "26821181",
+            "26821189",
+            "26821197",
+            "26821205"
+          ],
+          "shiftIds": [
+            "43967484",
+            "43967492",
+            "43967500",
+            "43967508",
+            "43967548"
+          ],
+          "statuses": [
+            "active",
+            "completed",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "6",
+      "storeId": "657",
+      "sourceStore": "00657",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Jennifer Hilderbrand Lynn",
+          "email": "jennifer.hilderbrand@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800657448",
+          "employeeId": "402097",
+          "supervisorName": "April Gauthier Nicole",
+          "supervisorWorkdayId": "100020332",
+          "scheduledDates": [
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Fri, 6/19",
+          "visitIds": [
+            "26821084"
+          ],
+          "shiftIds": [
+            "43966955"
+          ],
+          "statuses": [
+            "active"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "011",
+      "sourceStore": "00011",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Fetuao AhChee Marie",
+          "email": "starr.ahchee@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800595134",
+          "employeeId": "372034",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-15"
+          ],
+          "scheduledLabel": "Mon, 6/15",
+          "visitIds": [
+            "26804080"
+          ],
+          "shiftIds": [
+            "43929378",
+            "43929387",
+            "43929396",
+            "43929405",
+            "43929424",
+            "43929460",
+            "43966434"
+          ],
+          "statuses": [
+            "completed"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "017",
+      "sourceStore": "00017",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "David Davidson L",
+          "email": "david.davidson@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800181862",
+          "employeeId": "17440",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18"
+          ],
+          "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18",
+          "visitIds": [
+            "26820988",
+            "26820996",
+            "26821004",
+            "26821012"
+          ],
+          "shiftIds": [
+            "43966643",
+            "43966651",
+            "43966675",
+            "43966691"
+          ],
+          "statuses": [
+            "active",
+            "completed",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "018",
+      "sourceStore": "00018",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Fetuao AhChee Marie",
+          "email": "starr.ahchee@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800595134",
+          "employeeId": "372034",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-16",
+            "2026-06-17"
+          ],
+          "scheduledLabel": "Wed, 6/17, Tue, 6/16",
+          "visitIds": [
+            "26804102",
+            "26927990"
+          ],
+          "shiftIds": [
+            "43966451",
+            "44223596",
+            "44223597",
+            "44223725",
+            "44223737",
+            "44223847",
+            "44223850",
+            "44223852"
+          ],
+          "statuses": [
+            "active",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "071",
+      "sourceStore": "00071",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Shelly Peck Marie",
+          "email": "shelly.peck@retailodyssey.com",
+          "title": "Supervisor Retail",
+          "workdayId": "800587935",
+          "employeeId": "369342",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-16"
+          ],
+          "scheduledLabel": "Tue, 6/16",
+          "visitIds": [
+            "26804092"
+          ],
+          "shiftIds": [
+            "43929482"
+          ],
+          "statuses": [
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "158",
+      "sourceStore": "00158",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Brent Weathers Michael",
+          "email": "brent.weathers@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800553635",
+          "employeeId": "354502",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Tue, 6/16, Wed, 6/17, Thu, 6/18, Fri, 6/19",
+          "visitIds": [
+            "26804641",
+            "26829987",
+            "26829995",
+            "26830003"
+          ],
+          "shiftIds": [
+            "43931089",
+            "43985705",
+            "43985721",
+            "43985737"
+          ],
+          "statuses": [
+            "active"
+          ]
+        },
+        {
+          "name": "John Lefebvre P",
+          "email": "john.lefebvre@retailodyssey.com",
+          "title": "Retail Reset Merchandiser",
+          "workdayId": "800175139",
+          "employeeId": "15101",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18"
+          ],
+          "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18",
+          "visitIds": [
+            "26821020",
+            "26821028",
+            "26821036",
+            "26821044"
+          ],
+          "shiftIds": [
+            "43966707",
+            "43966723",
+            "43966739",
+            "43966755"
+          ],
+          "statuses": [
+            "active",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "224",
+      "sourceStore": "00224",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Zoie Granger Constance",
+          "email": "zoie.granger@retailodyssey.com",
+          "title": "Retail Reset Merchandiser",
+          "workdayId": "800625370",
+          "employeeId": "393637",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18, Fri, 6/19",
+          "visitIds": [
+            "26804259",
+            "26804268",
+            "26804277",
+            "26804286",
+            "26804295"
+          ],
+          "shiftIds": [
+            "43930469",
+            "43930478",
+            "43930505",
+            "43930532",
+            "43930559",
+            "43930586"
+          ],
+          "statuses": [
+            "active",
+            "completed",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "485",
+      "sourceStore": "00485",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Lillian Johnson",
+          "email": "lillian.johnson@retailodyssey.com",
+          "title": "Retail Reset Merchandiser",
+          "workdayId": "800614944",
+          "employeeId": "386882",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Mon, 6/15, Wed, 6/17, Fri, 6/19, Thu, 6/18, Tue, 6/16",
+          "visitIds": [
+            "26804304",
+            "26804331",
+            "26804340",
+            "26820980",
+            "26925563"
+          ],
+          "shiftIds": [
+            "43930597",
+            "43930606",
+            "43930651",
+            "43930669",
+            "43966627",
+            "44219105"
+          ],
+          "statuses": [
+            "active",
+            "completed",
+            "in-progress"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "649",
+      "sourceStore": "00649",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Kimberly Alvarez Jean",
+          "email": "kimberly.alvarez@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800666660",
+          "employeeId": "404742",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Wed, 6/17, Thu, 6/18, Fri, 6/19",
+          "visitIds": [
+            "26804183",
+            "26820972",
+            "26927663"
+          ],
+          "shiftIds": [
+            "43930197",
+            "43966587",
+            "44222444"
+          ],
+          "statuses": [
+            "active"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "653",
+      "sourceStore": "00653",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Kimberly Alvarez Jean",
+          "email": "kimberly.alvarez@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800666660",
+          "employeeId": "404742",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16"
+          ],
+          "scheduledLabel": "Mon, 6/15, Tue, 6/16",
+          "visitIds": [
+            "26804167",
+            "26820964"
+          ],
+          "shiftIds": [
+            "43930117",
+            "43966547"
+          ],
+          "statuses": [
+            "active"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "656",
+      "sourceStore": "00656",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Fetuao AhChee Marie",
+          "email": "starr.ahchee@retailodyssey.com",
+          "title": "Merchandiser Retail Team Lead",
+          "workdayId": "800595134",
+          "employeeId": "372034",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-18",
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Thu, 6/18, Fri, 6/19",
+          "visitIds": [
+            "26820956",
+            "26928347"
+          ],
+          "shiftIds": [
+            "43966539",
+            "44224060"
+          ],
+          "statuses": [
+            "active"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "7",
+      "storeId": "668",
+      "sourceStore": "00668",
+      "storeName": "Fred Meyer",
+      "leadAssignments": [
+        {
+          "name": "Alexandra Perdomo Yajaira",
+          "email": "alexandra.perdomo@retailodyssey.com",
+          "title": "Retail Reset Merchandiser",
+          "workdayId": "800621415",
+          "employeeId": "391847",
+          "supervisorName": "Seth Newman Conrad",
+          "supervisorWorkdayId": "800263453",
+          "scheduledDates": [
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19"
+          ],
+          "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18, Fri, 6/19",
+          "visitIds": [
+            "26804215",
+            "26900091",
+            "26900097",
+            "26900103",
+            "26900109"
+          ],
+          "shiftIds": [
+            "44154913",
+            "44154961",
+            "44154985",
+            "44155057",
+            "44155129",
+            "44155201"
+          ],
+          "statuses": [
+            "active",
+            "completed",
+            "in-progress"
+          ]
+        }
+      ]
+    }
+  ],
+  "missing": []
+}

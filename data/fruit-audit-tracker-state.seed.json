@@ -1,0 +1,289 @@
+{
+  "deadline": "2026-06-19T17:00:00-07:00",
+  "pledges": [
+    {
+      "id": "seeded_035_julie_ferguson_retailodyssey_com",
+      "storeId": "035",
+      "name": "Julie Ferguson",
+      "email": "julie.ferguson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Tue 6/16",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_040_julie_ferguson_retailodyssey_com",
+      "storeId": "040",
+      "name": "Julie Ferguson",
+      "email": "julie.ferguson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Thu 6/18",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_060_cindi_griggs_retailodyssey_com",
+      "storeId": "060",
+      "name": "Cindi Griggs",
+      "email": "cindi.griggs@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Tue 6/16",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_063_kalleen_iniguezcarri_retailodyssey_com",
+      "storeId": "063",
+      "name": "Angelina Iniguez Carrillo",
+      "email": "kalleen.iniguezcarri@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon 6/15",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_143_cindi_griggs_retailodyssey_com",
+      "storeId": "143",
+      "name": "Cindi Griggs",
+      "email": "cindi.griggs@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon 6/15",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_153_kalleen_iniguezcarri_retailodyssey_com",
+      "storeId": "153",
+      "name": "Angelina Iniguez Carrillo",
+      "email": "kalleen.iniguezcarri@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Tue 6/16",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_218_jennifer_russell_sasretailservices_com",
+      "storeId": "218",
+      "name": "Jennifer Russell",
+      "email": "jennifer.russell@sasretailservices.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16, Wed 6/17, Thu 6/18",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_240_kalleen_iniguezcarri_retailodyssey_com",
+      "storeId": "240",
+      "name": "Angelina Iniguez Carrillo",
+      "email": "kalleen.iniguezcarri@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Thu 6/18",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_242_michelle_sweet_youradv_com",
+      "storeId": "242",
+      "name": "Michelle Sweet",
+      "email": "michelle.sweet@youradv.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Wed 6/17, Thu 6/18",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_285_julie_ferguson_retailodyssey_com",
+      "storeId": "285",
+      "name": "Julie Ferguson",
+      "email": "julie.ferguson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon 6/15",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_375_victor_trevino_retailodyssey_com",
+      "storeId": "375",
+      "name": "Victor Trevino Gonzalez",
+      "email": "victor.trevino@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon 6/15",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_377_kim_sanchezcanastuj_retailodyssey_com",
+      "storeId": "377",
+      "name": "Kimberlee SanchezCanastuj",
+      "email": "kim.sanchezcanastuj@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16, Wed 6/17, Thu 6/18",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_393_victor_trevino_retailodyssey_com",
+      "storeId": "393",
+      "name": "Victor Trevino Gonzalez",
+      "email": "victor.trevino@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Thu 6/18",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_462_tamera_sandeno_retailodyssey_com",
+      "storeId": "462",
+      "name": "Tamera Sandeno",
+      "email": "tamera.sandeno@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16, Wed 6/17, Thu 6/18",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_482_julie_ferguson_retailodyssey_com",
+      "storeId": "482",
+      "name": "Julie Ferguson",
+      "email": "julie.ferguson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-17"
+      ],
+      "scheduledLabel": "Wed 6/17",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_516_victor_trevino_retailodyssey_com",
+      "storeId": "516",
+      "name": "Victor Trevino Gonzalez",
+      "email": "victor.trevino@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Tue 6/16",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_651_michelle_sweet_youradv_com",
+      "storeId": "651",
+      "name": "Michelle Sweet",
+      "email": "michelle.sweet@youradv.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_661_omar_robles_retailodyssey_com",
+      "storeId": "661",
+      "name": "Omar Robles",
+      "email": "omar.robles@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Tue 6/16",
+      "source": "default-assignment"
+    },
+    {
+      "id": "seeded_694_kalleen_iniguezcarri_retailodyssey_com",
+      "storeId": "694",
+      "name": "Angelina Iniguez Carrillo",
+      "email": "kalleen.iniguezcarri@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [
+        "2026-06-17"
+      ],
+      "scheduledLabel": "Wed 6/17",
+      "source": "default-assignment"
+    }
+  ],
+  "completions": {
+    "143": {
+      "storeId": "143",
+      "name": "Cindi griggs",
+      "email": "cindi.griggs@retailodyssey.com",
+      "photoCount": 13,
+      "setCount": 3,
+      "completedAt": "2026-06-16T15:57:40.534Z"
+    },
+    "153": {
+      "storeId": "153",
+      "name": "Angelina Iniguez carrillo",
+      "email": "kalleen.iniguezcarri@retailodyssey.com",
+      "photoCount": 28,
+      "setCount": 3,
+      "completedAt": "2026-06-16T14:07:56.224Z"
+    },
+    "220": {
+      "storeId": "220",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-15T21:33:55.460Z",
+      "source": "manual-seed"
+    },
+    "661": {
+      "storeId": "661",
+      "name": "Omar Robles",
+      "email": "omar.robles@retailodyssey.com",
+      "photoCount": 36,
+      "setCount": 3,
+      "completedAt": "2026-06-16T12:36:47.996Z"
+    },
+    "035": {
+      "storeId": "035",
+      "name": "Julie Ferguson",
+      "email": "julie.ferguson@retailodyssey.com",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-16T12:29:23.094Z"
+    }
+  },
+  "optedOutEmails": [],
+  "updatedAt": "2026-06-16T15:57:40.534Z"
+}
