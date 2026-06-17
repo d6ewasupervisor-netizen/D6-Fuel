@@ -1,0 +1,18 @@
+{
+  "deadline": "2026-06-19T17:00:00-07:00",
+  "pledges": [
+    {
+      "id": "seeded_023_aiyana_natarisalazar_retailodyssey_com",
+      "storeId": "023",
+      "name": "Aiyana Natarisalazar",
+      "email": "aiyana.natarisalazar@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [],
+      "scheduledLabel": "",
+      "source": "static-d8"
+    }
+  ],
+  "completions": {},
+  "optedOutEmails": [],
+  "updatedAt": "2026-06-16T20:00:00.000Z"
+}
