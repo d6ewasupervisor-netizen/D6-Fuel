@@ -357,7 +357,7 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         <span class="toggle-icon" aria-hidden="true"></span>
       </summary>
       <div class="collapsible-body">
-        <p class="sub">Each open store can only be assigned once until it is submitted. Tyson is notified when you assign or release a store.</p>
+        <p class="sub" id="assign-panel-sub">Each open store can only be assigned once until it is submitted. Tyson is notified when you assign or release a store.</p>
         <div class="signed-in-bar" id="signed-in-bar">
           <span>Signed in as <strong id="signed-in-name"></strong> - <span id="signed-in-email"></span></span>
           <button type="button" class="sign-out-btn" id="sign-out-btn">Sign out</button>
@@ -420,6 +420,7 @@ const DASHBOARD_SECTION_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboar
 let snapshot = null;
 let countdownTimer = null;
 let approvedEmails = new Set();
+let supervisorEmails = new Set();
 let displayControlsReady = false;
 const LOGIN_OPTIONS = {
   badge: '',
@@ -583,6 +584,10 @@ function isApprovedUser(user) {
   return !!(user && approvedEmails.has(normalizeEmail(user.email)));
 }
 
+function isSupervisorUser(user) {
+  return !!(user && supervisorEmails.has(normalizeEmail(user.email)));
+}
+
 function showMsg(el, text, ok) {
   el.textContent = text;
   el.className = 'msg show ' + (ok ? 'ok' : 'err');
@@ -604,12 +609,19 @@ function render(data) {
   const completedBy = data.completedBy || [];
   const sessionUser = D6Auth.getUser();
   const myEmail = sessionUser ? normalizeEmail(sessionUser.email) : '';
+  const supervisorMode = isSupervisorUser(sessionUser);
 
   $('deadline-text').textContent = fmtDeadline(deadline);
   const remain = deadlineMs != null ? deadlineMs - nowMs : null;
   $('countdown-text').textContent = fmtCountdown(remain);
   $('deadline-banner').classList.toggle('urgent', remain != null && remain < 24 * 3600 * 1000);
   $('store-section-summary').textContent = `${stats.remaining} open, ${stats.pledged} assigned, ${stats.complete} done`;
+  const assignSub = $('assign-panel-sub');
+  if (assignSub) {
+    assignSub.textContent = supervisorMode
+      ? 'Supervisor mode: assign open stores, release any active assignment (including scheduled), and open any store in the field app.'
+      : 'Each open store can only be assigned once until it is submitted. Tyson is notified when you assign or release a store.';
+  }
 
   $('stats').innerHTML = `
     <div class="stat done"><div class="num">${stats.complete}</div><div class="lbl">Done</div></div>
@@ -643,20 +655,28 @@ function render(data) {
     }
     const assignedToCurrentUser = activePledges.some(pledge => normalizeEmail(pledge.email) === myEmail);
     const canClaim = store.status === 'open';
+    const canSupervisorRelease = supervisorMode && activePledges.length && store.status !== 'complete';
+    const canSupervisorAudit = supervisorMode && store.status !== 'complete';
     const address = store.routeAddress ? `<div class="loc">${esc(store.routeAddress)}</div>` : '';
     return `
-      <div class="store-card ${store.status} ${assignedToCurrentUser ? 'audit-ready' : ''}" data-store-id="${store.id}" ${assignedToCurrentUser ? `data-audit-store="${store.id}" role="button" tabindex="0" aria-label="Open audit for FM ${store.id}"` : ''}>
+      <div class="store-card ${store.status} ${assignedToCurrentUser || canSupervisorAudit ? 'audit-ready' : ''}" data-store-id="${store.id}" ${assignedToCurrentUser || canSupervisorAudit ? `data-audit-store="${store.id}" role="button" tabindex="0" aria-label="Open audit for FM ${store.id}"` : ''}>
         <div class="fm">${store.label}</div>
         <div class="loc">${esc(districtLabel)} - ${store.setCount} set${store.setCount === 1 ? '' : 's'} - ${store.photoTargetCount} required side views</div>
         ${address}
         <span class="badge ${store.status}">${statusLabel(store.status)}</span>
         <div class="who">${who}</div>
-        ${assignedToCurrentUser ? `
+        ${assignedToCurrentUser || canSupervisorAudit ? `
           <div class="store-actions">
             <button type="button" class="mini-btn primary" data-audit-store="${store.id}">Open audit</button>
           </div>` : canClaim ? `
           <div class="store-actions">
             <button type="button" class="mini-btn primary" data-claim-store="${store.id}">Assign store</button>
+          </div>` : ''}
+        ${canSupervisorRelease ? `
+          <div class="store-actions">
+            ${activePledges.map(pledge => `
+              <button type="button" class="mini-btn danger supervisor-release-btn" data-pledge-id="${esc(pledge.id)}" data-store-id="${esc(store.id)}">Release ${esc(pledge.name)}</button>
+            `).join('')}
           </div>` : ''}
       </div>`;
   }).join('');
@@ -682,7 +702,10 @@ function render(data) {
     ? activePledges.map(pledge => `
         <li>
           <span><span class="store">FM ${pledge.storeId}</span> - ${esc(pledge.name)}</span>
-          <span style="color:var(--muted);font-size:12px">${esc(assignmentScheduleText(pledge))}</span>
+          <span class="pledge-actions">
+            <span style="color:var(--muted);font-size:12px">${esc(assignmentScheduleText(pledge))}</span>
+            ${supervisorMode ? `<button type="button" class="unclaim-btn supervisor-release-btn" data-pledge-id="${esc(pledge.id)}" data-store-id="${esc(pledge.storeId)}">Release</button>` : ''}
+          </span>
         </li>`).join('')
     : '<li style="color:var(--muted)">No active assignments yet.</li>';
 
@@ -746,6 +769,7 @@ async function loadApprovedUsers() {
     if (!data) throw err;
   }
   approvedEmails = new Set((data.approvedEmails || []).map(normalizeEmail));
+  supervisorEmails = new Set((data.supervisorEmails || []).map(normalizeEmail));
 }
 
 function renderAccessDenied() {
@@ -784,7 +808,7 @@ function connectSSE() {
   return es;
 }
 
-async function unclaimPledge(pledgeId) {
+async function unclaimPledge(pledgeId, storeId) {
   const msg = $('unclaim-msg');
   const user = D6Auth.getUser();
   if (!user) return;
@@ -793,7 +817,11 @@ async function unclaimPledge(pledgeId) {
     return;
   }
   const email = user.email;
-  if (!confirm('Release this store? Tyson will be notified that it is open again.')) {
+  const supervisorMode = isSupervisorUser(user);
+  const confirmText = supervisorMode
+    ? `Release FM ${storeId || 'this store'}? The assignment will open again on the dashboard.`
+    : 'Release this store? Tyson will be notified that it is open again.';
+  if (!confirm(confirmText)) {
     return;
   }
   msg.className = 'msg';
@@ -852,7 +880,13 @@ $('my-pledge-list').addEventListener('click', e => {
     return;
   }
   const btn = e.target.closest('.unclaim-btn');
-  if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId);
+  if (btn && btn.dataset.pledgeId) unclaimPledge(btn.dataset.pledgeId, btn.dataset.storeId);
+});
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.supervisor-release-btn');
+  if (!btn || !btn.dataset.pledgeId) return;
+  unclaimPledge(btn.dataset.pledgeId, btn.dataset.storeId);
 });
 
 $('opt-out-btn').addEventListener('click', optOutChallenge);

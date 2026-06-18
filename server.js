@@ -128,6 +128,9 @@ const DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS = [
   'zmharrington01@gmail.com',
   'zachary.house176@gmail.com',
 ];
+const DEFAULT_D1_FRUIT_AUDIT_SUPERVISOR_EMAILS = [
+  'james.carr@retailodyssey.com',
+];
 const REQUIRED_FRUIT_AUDIT_SIDES = [
   { id: 'front', label: 'Front' },
   { id: 'right', label: 'Right Side' },
@@ -151,6 +154,7 @@ function fruitAuditTrackerForDistrict(district) {
 function isFruitStoreClaimedBySubmitter(district, storeId, email) {
   const submitterEmail = normalizeEmail(email);
   if (!submitterEmail) return false;
+  if (isFruitAuditSupervisor(district, submitterEmail)) return true;
   const trackerForDistrict = fruitAuditTrackerForDistrict(district);
   if (trackerForDistrict.isCompletionCompleteForPledge(storeId, submitterEmail)) return false;
   const snapshot = trackerForDistrict.getSnapshot();
@@ -216,6 +220,23 @@ function fruitAuditSignupEmails(district = '1') {
 
 function isFruitAuditSignupUser(district, email) {
   return fruitAuditSignupEmails(district).has(normalizeEmail(email));
+}
+
+function fruitAuditSupervisorEmails(district = '1') {
+  const districtId = String(district || '1');
+  if (districtId !== '1') return new Set();
+  const configured = splitEmailList(
+    process.env.D1_FRUIT_AUDIT_SUPERVISOR_EMAILS || process.env.FRUIT_AUDIT_D1_SUPERVISOR_EMAILS || ''
+  );
+  const staticBase = DEFAULT_D1_FRUIT_AUDIT_SUPERVISOR_EMAILS;
+  return new Set([
+    ...staticBase,
+    ...configured,
+  ].map(normalizeEmail));
+}
+
+function isFruitAuditSupervisor(district, email) {
+  return fruitAuditSupervisorEmails(district).has(normalizeEmail(email));
 }
 
 function isD1FruitAuditQuietTestEmail(email) {
@@ -405,8 +426,12 @@ app.get('/api/fruit-audit/manifest', (req, res) => {
 });
 
 app.get('/api/fruit-audit/approved-users', (req, res) => {
+  const district = String(req.query.district || '').trim();
   res.json({
     approvedEmails: Array.from(fruitAuditApprovedEmails()).sort(),
+    supervisorEmails: district
+      ? Array.from(fruitAuditSupervisorEmails(district)).sort()
+      : [],
   });
 });
 
@@ -504,6 +529,7 @@ app.get('/api/fruit-audit-tracker/approved-users', (req, res) => {
   const district = fruitAuditTrackerDistrictFromRequest(req);
   res.json({
     approvedEmails: Array.from(fruitAuditSignupEmails(district)).sort(),
+    supervisorEmails: Array.from(fruitAuditSupervisorEmails(district)).sort(),
   });
 });
 
@@ -511,6 +537,7 @@ app.get('/api/fruit-audit-tracker/:district/approved-users', (req, res) => {
   const district = fruitAuditTrackerDistrictFromRequest(req);
   res.json({
     approvedEmails: Array.from(fruitAuditSignupEmails(district)).sort(),
+    supervisorEmails: Array.from(fruitAuditSupervisorEmails(district)).sort(),
   });
 });
 
@@ -560,11 +587,15 @@ app.post('/api/fruit-audit-tracker/:district/pledge', pledgeFruitAuditStore);
 async function unclaimFruitAuditStore(req, res) {
   try {
     const district = fruitAuditTrackerDistrictFromRequest(req);
-    if (!isFruitAuditSignupUser(district, req.body && req.body.email)) {
+    const actorEmail = req.body && req.body.email;
+    if (!isFruitAuditSignupUser(district, actorEmail)) {
       return res.status(403).json({ error: `This email is not approved for the District ${district} fruit audit assignment dashboard.` });
     }
     const trackerForDistrict = fruitAuditTrackerForDistrict(district);
-    const { snapshot, pledge } = trackerForDistrict.removePledge(req.body || {});
+    const supervisor = isFruitAuditSupervisor(district, actorEmail);
+    const { snapshot, pledge } = supervisor
+      ? trackerForDistrict.removePledgeAsSupervisor(req.body || {})
+      : trackerForDistrict.removePledge(req.body || {});
     const meta = trackerForDistrict.getStoreMeta(pledge.storeId);
     fruitAuditTrackerNotify.sendPledgeReleased(resend, {
       pledge,

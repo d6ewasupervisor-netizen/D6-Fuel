@@ -722,6 +722,7 @@ let fruitAuditTrackerSnapshot = null;
 let fruitAuditTrackerLoadError = null;
 let currentUser = null;
 let approvedEmails = new Set();
+let supervisorEmails = new Set();
 let selectedStoreId = localStorage.getItem(SELECTED_STORE_KEY) || null;
 let selectedDistrictId = localStorage.getItem(SELECTED_DISTRICT_KEY) || null;
 let sending = false;
@@ -758,6 +759,11 @@ function normalizeEmail(email) {
 
 function isApprovedUser(user) {
   return !!(user && approvedEmails.has(normalizeEmail(user.email)));
+}
+
+function isDistrictSupervisor() {
+  return selectedDistrictId === '1'
+    && !!(currentUser && supervisorEmails.has(normalizeEmail(currentUser.email)));
 }
 
 function loadState() {
@@ -915,6 +921,7 @@ function getVisibleStores() {
   if (!selectedDistrictId) return [];
   const stores = (manifest && manifest.stores || []).filter(store => getStoreDistrict(store) === selectedDistrictId);
   if (!isTrackedDistrict(selectedDistrictId)) return stores;
+  if (isDistrictSupervisor()) return stores;
   const allowedStores = getClaimedTrackedStoreIds();
   return stores.filter(store => allowedStores.has(store.id));
 }
@@ -942,6 +949,7 @@ function canAccessStore(store) {
   if (!store) return false;
   if (getStoreDistrict(store) !== selectedDistrictId) return false;
   if (!isTrackedDistrict(getStoreDistrict(store))) return true;
+  if (isDistrictSupervisor()) return true;
   return getClaimedTrackedStoreIds().has(store.id);
 }
 
@@ -1090,7 +1098,7 @@ function renderStorePicker() {
   const stores = getVisibleStores();
   const totalSets = stores.reduce((sum, store) => sum + store.sets.length, 0);
   const districtLabel = getDistrictLabel(selectedDistrictId);
-  const needsTrackedSignup = isTrackedDistrict(selectedDistrictId) && !stores.length;
+  const needsTrackedSignup = isTrackedDistrict(selectedDistrictId) && !stores.length && !isDistrictSupervisor();
   const trackedSignupMessage = fruitAuditTrackerLoadError
     ? `<div class="notice"><strong>Could not verify your ${escapeHtml(districtLabel)} assignment.</strong> ${escapeHtml(fruitAuditTrackerLoadError)} <button class="back-btn" style="margin-top:10px" onclick="refreshFruitAuditTracker()">Refresh assignment status</button></div>`
     : `<div class="notice"><strong>Get assigned to a ${escapeHtml(districtLabel)} store first.</strong> The store list is hidden until this signed-in email has an active assignment on the assignment dashboard. After assignment, return here and refresh assignment status.</div>`;
@@ -1099,7 +1107,7 @@ function renderStorePicker() {
     <section class="hero">
       <div class="badge">${escapeHtml(districtLabel)} Fruit Audit</div>
       <h1>Select a store</h1>
-      <p>${needsTrackedSignup ? `Get assigned to a ${escapeHtml(districtLabel)} store before opening the photo list.` : `Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.`}</p>
+      <p>${needsTrackedSignup ? `Get assigned to a ${escapeHtml(districtLabel)} store before opening the photo list.` : isDistrictSupervisor() ? `Supervisor view: all ${escapeHtml(districtLabel)} stores are available. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.` : `Pick the FM store you are auditing today. ${escapeHtml(districtLabel)} has ${stores.length} store${stores.length === 1 ? '' : 's'} and ${totalSets} listed fruit set${totalSets === 1 ? '' : 's'}.`}</p>
     </section>
     <a class="guide-link" href="/fruit-audit-guide">Open User Guide</a>
     ${isTrackedDistrict(selectedDistrictId) ? `<a class="guide-link" href="${dashboardUrl(selectedDistrictId)}">Open ${escapeHtml(districtLabel)} Assignment Dashboard</a>` : ''}
@@ -1897,14 +1905,22 @@ async function loadFruitAuditTracker() {
   fruitAuditTrackerLoadError = null;
   if (!isTrackedDistrict(selectedDistrictId)) {
     fruitAuditTrackerSnapshot = null;
+    supervisorEmails = new Set();
     return;
   }
   const districtId = selectedDistrictId;
   try {
-    const res = await fetch(`/api/fruit-audit-tracker/${encodeURIComponent(districtId)}`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Could not load assignment dashboard status.');
-    fruitAuditTrackerSnapshot = await res.json();
+    const [trackerRes, approvedRes] = await Promise.all([
+      fetch(`/api/fruit-audit-tracker/${encodeURIComponent(districtId)}`, { cache: 'no-store' }),
+      fetch(`/api/fruit-audit-tracker/${encodeURIComponent(districtId)}/approved-users`, { cache: 'no-store' }),
+    ]);
+    if (!trackerRes.ok) throw new Error('Could not load assignment dashboard status.');
+    fruitAuditTrackerSnapshot = await trackerRes.json();
     cacheJson(trackerCacheKey(districtId), fruitAuditTrackerSnapshot);
+    if (approvedRes.ok) {
+      const approvedData = await approvedRes.json();
+      supervisorEmails = new Set((approvedData.supervisorEmails || []).map(normalizeEmail));
+    }
   } catch (err) {
     const cached = getCachedJson(trackerCacheKey(districtId));
     if (cached && cached.stores) {
