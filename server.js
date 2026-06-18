@@ -651,10 +651,15 @@ async function pledgeFruitAuditStore(req, res) {
     }
     const { pledgeName, pledgeEmail, actorEmail, actorName } = resolveFruitAuditPledgeAssignee(district, body);
     const trackerForDistrict = fruitAuditTrackerForDistrict(district);
+    const supervisorAssign = isFruitAuditSupervisor(district, actorEmail) && Boolean(body.assigneeEmail);
+    if (supervisorAssign) {
+      trackerForDistrict.forceReleaseActivePledgesForStore(body.storeId);
+    }
     const { snapshot, pledge } = trackerForDistrict.addPledge({
       name: pledgeName,
       email: pledgeEmail,
       storeId: body.storeId,
+      force: supervisorAssign,
     });
     const meta = trackerForDistrict.getStoreMeta(pledge.storeId);
     fruitAuditTrackerNotify.sendPledgeSignedUp(resend, {
