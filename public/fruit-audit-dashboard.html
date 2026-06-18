@@ -192,7 +192,20 @@ details[open] > .collapsible-summary .toggle-icon::before { content: '-'; }
 }
 .mini-btn.primary { background: var(--accent); border-color: var(--accent); color: #061008; }
 .mini-btn.active { border-color: var(--accent); color: var(--accent-2); }
+.mini-btn.danger { border-color: rgba(255,93,108,0.45); color: var(--red); }
 .mini-btn:disabled { opacity: 0.7; cursor: default; }
+.request-card {
+  border: 1px solid rgba(255,209,102,0.45);
+  background: rgba(255,209,102,0.08);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.request-card.highlight {
+  box-shadow: 0 0 0 2px rgba(83,216,106,0.45);
+}
+.request-card .title { font-weight: 900; margin-bottom: 6px; }
+.request-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .store-section h2 { font-size: 18px; font-weight: 900; margin-bottom: 0; }
 .store-section { padding: 18px; margin-bottom: 22px; }
 .store-section .grid { margin: 0; }
@@ -371,6 +384,10 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         <form id="pledge-form">
           <label for="pledge-store">Store</label>
           <select id="pledge-store" required><option value="">Select a store...</option></select>
+          <div id="request-note-wrap" hidden>
+            <label for="request-note">Optional note for Tyson</label>
+            <input id="request-note" type="text" maxlength="240" placeholder="Why you need this store reassigned">
+          </div>
           <div id="supervisor-assign-wrap" hidden>
             <label for="assignee-name">Assignee name</label>
             <input id="assignee-name" type="text" autocomplete="name" placeholder="Auditor full name">
@@ -391,6 +408,20 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
           <button type="button" class="unclaim-btn danger" id="opt-out-btn" hidden>Opt out and release all my active assignments</button>
           <div class="msg" id="unclaim-msg"></div>
         </div>
+      </div>
+    </details>
+    <details class="panel collapsible resizable-card" data-section="requests" id="requests-panel" hidden>
+      <summary class="collapsible-summary">
+        <span>
+          <span class="section-kicker">Supervisor queue</span>
+          <h2>Pending assignment requests</h2>
+        </span>
+        <span class="toggle-icon" aria-hidden="true"></span>
+      </summary>
+      <div class="collapsible-body">
+        <p class="sub" id="requests-panel-sub">Approve to assign the requester and replace any incomplete assignment. Deny to keep the current assignment.</p>
+        <div id="pending-requests-list"></div>
+        <div class="msg" id="request-review-msg"></div>
       </div>
     </details>
     <details class="panel collapsible resizable-card" data-section="claims" data-mobile-collapsed open>
@@ -428,7 +459,9 @@ const $ = id => document.getElementById(id);
 const params = new URLSearchParams(window.location.search);
 const pathDistrictMatch = window.location.pathname.match(/(?:district\/|dashboard-d)(\d+)/i);
 const selectedDistrictId = String(params.get('district') || (pathDistrictMatch && pathDistrictMatch[1]) || '1');
+const highlightedRequestId = String(params.get('request') || '').trim();
 const districtLabel = `District ${selectedDistrictId}`;
+const usesAssignmentRequests = selectedDistrictId === '6';
 const DASHBOARD_SNAPSHOT_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboard_snapshot_v1`;
 const DASHBOARD_APPROVED_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboard_approved_v1`;
 const DASHBOARD_ZOOM_CACHE_KEY = `d${selectedDistrictId}_fruit_audit_dashboard_zoom_v1`;
@@ -501,12 +534,17 @@ function applyDistrictCopy() {
   document.title = `${districtLabel} Fruit Audit - Live Dashboard`;
   $('field-app-nav').href = fieldAppUrl();
   $('field-app-banner-link').href = fieldAppUrl();
-  $('field-app-banner-text').textContent = `After you are assigned a ${districtLabel} store here, open the fruit photo app, choose ${districtLabel}, capture all required 360-degree fruit set photos, and submit the store.`;
+  $('field-app-banner-text').textContent = usesAssignmentRequests
+    ? `Request your ${districtLabel} store on this dashboard. After Tyson approves your request, open the fruit photo app, capture the required side-view photos, and click Submit.`
+    : `After you are assigned a ${districtLabel} store here, open the fruit photo app, choose ${districtLabel}, capture all required 360-degree fruit set photos, and submit the store.`;
   $('dashboard-title').textContent = `${districtLabel} fruit audit tracker`;
-  $('dashboard-subtitle').textContent = `Live assignment and completion status for the ${districtLabel} fruit audit stores.`;
-  $('assign-heading').textContent = `Assign a ${districtLabel} store`;
+  $('dashboard-subtitle').textContent = usesAssignmentRequests
+    ? `Request store assignments and track completion for the ${districtLabel} fruit audit.`
+    : `Live assignment and completion status for the ${districtLabel} fruit audit stores.`;
+  $('assign-heading').textContent = usesAssignmentRequests ? `Request a ${districtLabel} store` : `Assign a ${districtLabel} store`;
   $('active-assignments-sub').textContent = `Who is assigned to each ${districtLabel} fruit store.`;
   $('completed-sub').textContent = `Submitted store count by person for ${districtLabel} completion tracking.`;
+  if ($('request-note-wrap')) $('request-note-wrap').hidden = !usesAssignmentRequests;
 }
 
 function cacheJson(key, value) {
@@ -635,13 +673,21 @@ function render(data) {
   const assignSub = $('assign-panel-sub');
   if (assignSub) {
     assignSub.textContent = supervisorMode
-      ? 'Supervisor mode: assign open stores to an approved auditor, optionally email the assignee, release any active assignment, and open any store in the field app.'
-      : 'Each open store can only be assigned once until it is submitted. Tyson is notified when you assign or release a store.';
+      ? (usesAssignmentRequests
+        ? 'Supervisor mode: approve or deny pending assignment requests, directly assign open stores, release assignments, and open any store in the field app.'
+        : 'Supervisor mode: assign open stores to an approved auditor, optionally email the assignee, release any active assignment, and open any store in the field app.')
+      : (usesAssignmentRequests
+        ? 'Request any store that is not done yet, even if someone else is currently assigned. Tyson reviews requests on this dashboard and you will get an email when approved or denied.'
+        : 'Each open store can only be assigned once until it is submitted. Tyson is notified when you assign or release a store.');
   }
   const supervisorAssignWrap = $('supervisor-assign-wrap');
   const pledgeBtn = $('pledge-btn');
   if (supervisorAssignWrap) supervisorAssignWrap.hidden = !supervisorMode;
-  if (pledgeBtn) pledgeBtn.textContent = supervisorMode ? 'Assign store' : 'I will complete this store';
+  if (pledgeBtn) {
+    pledgeBtn.textContent = supervisorMode
+      ? 'Assign store'
+      : (usesAssignmentRequests ? 'Request this store' : 'I will complete this store');
+  }
 
   $('stats').innerHTML = `
     <div class="stat done"><div class="num">${stats.complete}</div><div class="lbl">Done</div></div>
@@ -675,6 +721,7 @@ function render(data) {
     }
     const assignedToCurrentUser = activePledges.some(pledge => normalizeEmail(pledge.email) === myEmail);
     const canClaim = store.status === 'open';
+    const canRequest = usesAssignmentRequests && store.status !== 'complete';
     const canSupervisorRelease = supervisorMode && activePledges.length && store.status !== 'complete';
     const canSupervisorAudit = supervisorMode && store.status !== 'complete';
     const address = store.routeAddress ? `<div class="loc">${esc(store.routeAddress)}</div>` : '';
@@ -688,6 +735,9 @@ function render(data) {
         ${assignedToCurrentUser || canSupervisorAudit ? `
           <div class="store-actions">
             <button type="button" class="mini-btn primary" data-audit-store="${store.id}">Open audit</button>
+          </div>` : canRequest ? `
+          <div class="store-actions">
+            <button type="button" class="mini-btn primary" data-claim-store="${store.id}">${usesAssignmentRequests ? 'Request store' : 'Assign store'}</button>
           </div>` : canClaim ? `
           <div class="store-actions">
             <button type="button" class="mini-btn primary" data-claim-store="${store.id}">Assign store</button>
@@ -702,11 +752,21 @@ function render(data) {
   }).join('');
 
   const openStores = stores.filter(store => store.status === 'open');
+  const requestableStores = usesAssignmentRequests
+    ? stores.filter(store => store.status !== 'complete')
+    : openStores;
   const sel = $('pledge-store');
   const prev = sel.value;
   sel.innerHTML = '<option value="">Select a store...</option>' +
-    openStores.map(store => `<option value="${store.id}">${esc(storeOptionLabel(store))}</option>`).join('');
-  if (prev && openStores.some(store => store.id === prev)) sel.value = prev;
+    requestableStores.map(store => {
+      const suffix = store.status === 'open'
+        ? ' — open'
+        : (store.pledge ? ` — assigned to ${store.pledge.name}` : ' — assigned');
+      return `<option value="${store.id}">${esc(storeOptionLabel(store))}${esc(suffix)}</option>`;
+    }).join('');
+  if (prev && requestableStores.some(store => store.id === prev)) sel.value = prev;
+
+  renderPendingRequests(data, supervisorMode);
 
   const activePledges = pledges.filter(pledge => {
     const st = stores.find(store => store.id === pledge.storeId);
@@ -960,6 +1020,92 @@ function updateOnlineStatus() {
   $('offline-note').hidden = navigator.onLine;
 }
 
+function renderPendingRequests(data, supervisorMode) {
+  const panel = $('requests-panel');
+  const list = $('pending-requests-list');
+  if (!panel || !list) return;
+  const pending = (data.assignmentRequests || []).filter(request => request.status === 'pending');
+  if (!usesAssignmentRequests || !supervisorMode) {
+    panel.hidden = true;
+    list.innerHTML = '';
+    return;
+  }
+  panel.hidden = false;
+  if (!pending.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:13px">No pending assignment requests.</p>';
+    return;
+  }
+  list.innerHTML = pending.map(request => {
+    const assignees = (request.currentAssignees || []).length
+      ? request.currentAssignees.map(item => `${esc(item.name)} (${esc(item.email)})`).join('<br>')
+      : '<span style="color:var(--muted)">No active assignee</span>';
+    const highlight = highlightedRequestId && request.id === highlightedRequestId ? ' highlight' : '';
+    return `
+      <div class="request-card${highlight}" id="request-${esc(request.id)}" data-request-id="${esc(request.id)}">
+        <div class="title">FM ${esc(request.storeId)} — ${esc(request.name)}</div>
+        <div style="color:var(--text-secondary);font-size:13px;line-height:1.5">
+          <div><strong>Requester:</strong> ${esc(request.email)}</div>
+          <div><strong>Requested:</strong> ${esc(fmtAssignmentDate(request.requestedAt))}</div>
+          <div><strong>Current assignee(s):</strong><br>${assignees}</div>
+          ${request.note ? `<div><strong>Note:</strong> ${esc(request.note)}</div>` : ''}
+        </div>
+        <div class="request-actions">
+          <button type="button" class="mini-btn primary request-approve-btn" data-request-id="${esc(request.id)}">Approve</button>
+          <button type="button" class="mini-btn danger request-deny-btn" data-request-id="${esc(request.id)}">Deny</button>
+        </div>
+      </div>`;
+  }).join('');
+  if (highlightedRequestId) {
+    const target = document.getElementById(`request-${highlightedRequestId}`);
+    if (target) {
+      panel.open = true;
+      saveSectionStates();
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+}
+
+async function resolveAssignmentRequest(requestId, action) {
+  const msg = $('request-review-msg') || $('pledge-msg');
+  const user = D6Auth.getUser();
+  if (!user || !isSupervisorUser(user)) return;
+  if (!navigator.onLine) {
+    showMsg(msg, 'You are offline. Reconnect before reviewing assignment requests.', false);
+    return;
+  }
+  const label = action === 'approve' ? 'approve' : 'deny';
+  if (!confirm(`${action === 'approve' ? 'Approve' : 'Deny'} this assignment request?`)) return;
+  msg.className = 'msg';
+  try {
+    const res = await fetch(trackerApi(`/assignment-requests/${encodeURIComponent(requestId)}/resolve`), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email, action }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || `Could not ${label} assignment request`);
+    showMsg(msg, data.message || `Assignment request ${label}ed.`, true);
+    if (data.snapshot) {
+      cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
+      render(data.snapshot);
+    }
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+}
+
+document.addEventListener('click', e => {
+  const approveBtn = e.target.closest('.request-approve-btn');
+  if (approveBtn && approveBtn.dataset.requestId) {
+    resolveAssignmentRequest(approveBtn.dataset.requestId, 'approve');
+    return;
+  }
+  const denyBtn = e.target.closest('.request-deny-btn');
+  if (denyBtn && denyBtn.dataset.requestId) {
+    resolveAssignmentRequest(denyBtn.dataset.requestId, 'deny');
+  }
+});
+
 async function notifyAssignee(pledgeId) {
   const msg = $('pledge-msg');
   const user = D6Auth.getUser();
@@ -1011,15 +1157,24 @@ $('pledge-form').addEventListener('submit', async e => {
       }
       payload.notifyAssignee = $('notify-assignee').checked;
     }
-    const res = await fetch(trackerApi('/pledge'), {
+    const endpoint = (usesAssignmentRequests && !isSupervisorUser(user))
+      ? trackerApi('/request-assignment')
+      : trackerApi('/pledge');
+    if (usesAssignmentRequests && !isSupervisorUser(user)) {
+      payload.note = $('request-note') ? $('request-note').value.trim() : '';
+    }
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Could not save assignment');
-    showMsg(msg, data.message || 'You are signed up. Complete the fruit audit in the field app and submit photos.', true);
+    if (!res.ok) throw new Error(data.error || (usesAssignmentRequests ? 'Could not submit assignment request' : 'Could not save assignment'));
+    showMsg(msg, data.message || (usesAssignmentRequests
+      ? 'Your assignment request was sent to Tyson for review.'
+      : 'You are signed up. Complete the fruit audit in the field app and submit photos.'), true);
     $('pledge-store').value = '';
+    if ($('request-note')) $('request-note').value = '';
     if (isSupervisorUser(user)) {
       $('assignee-name').value = '';
       $('assignee-email').value = '';

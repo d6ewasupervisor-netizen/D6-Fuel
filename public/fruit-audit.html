@@ -1099,9 +1099,12 @@ function renderStorePicker() {
   const totalSets = stores.reduce((sum, store) => sum + store.sets.length, 0);
   const districtLabel = getDistrictLabel(selectedDistrictId);
   const needsTrackedSignup = isTrackedDistrict(selectedDistrictId) && !stores.length && !isDistrictSupervisor();
+  const requestAssignmentHint = selectedDistrictId === '6'
+    ? 'Request your store on the assignment dashboard (you can request even if someone else is assigned, as long as photos have not been submitted). After Tyson approves your request, return here and refresh assignment status.'
+    : 'The store list is hidden until this signed-in email has an active assignment on the assignment dashboard. After assignment, return here and refresh assignment status.';
   const trackedSignupMessage = fruitAuditTrackerLoadError
     ? `<div class="notice"><strong>Could not verify your ${escapeHtml(districtLabel)} assignment.</strong> ${escapeHtml(fruitAuditTrackerLoadError)} <button class="back-btn" style="margin-top:10px" onclick="refreshFruitAuditTracker()">Refresh assignment status</button></div>`
-    : `<div class="notice"><strong>Get assigned to a ${escapeHtml(districtLabel)} store first.</strong> The store list is hidden until this signed-in email has an active assignment on the assignment dashboard. After assignment, return here and refresh assignment status.</div>`;
+    : `<div class="notice"><strong>Get assigned to a ${escapeHtml(districtLabel)} store first.</strong> ${escapeHtml(requestAssignmentHint)}</div>`;
   return `
     ${renderUserRow()}
     <section class="hero">
