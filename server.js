@@ -24,6 +24,41 @@ function fruitAuditDashboardUrl(req, district = '1') {
   return `https://fuel.retail-odyssey.com/fruit-audit-dashboard?district=${encodeURIComponent(districtId)}`;
 }
 
+function fruitAuditFieldAppUrl(district = '1', storeId) {
+  const districtId = String(district || '1');
+  const base = `https://fuel.retail-odyssey.com/fruit-audit?district=${encodeURIComponent(districtId)}`;
+  const padded = storeId ? String(storeId).replace(/\D/g, '').padStart(3, '0') : '';
+  return padded ? `${base}&store=${encodeURIComponent(padded)}` : base;
+}
+
+function resolveFruitAuditPledgeAssignee(district, body) {
+  const actorEmail = normalizeEmail(body && body.email);
+  const actorName = String((body && body.name) || '').trim();
+  let pledgeName = actorName;
+  let pledgeEmail = String((body && body.email) || '').trim();
+  const assigneeEmail = String((body && body.assigneeEmail) || '').trim();
+  const assigneeName = String((body && body.assigneeName) || '').trim();
+  if (isFruitAuditSupervisor(district, actorEmail) && assigneeEmail) {
+    pledgeEmail = assigneeEmail;
+    pledgeName = assigneeName || assigneeEmail;
+    if (!isFruitAuditSignupUser(district, pledgeEmail)) {
+      throw new Error(`Assignee email is not approved for District ${district} fruit audit assignments.`);
+    }
+  }
+  return { pledgeName, pledgeEmail, actorEmail, actorName };
+}
+
+async function sendFruitAuditAssigneeNotice(req, district, { pledge, meta, deadline, assignedBy }) {
+  return fruitAuditTrackerNotify.sendAssigneeAssignmentNotice(resend, {
+    pledge,
+    meta,
+    deadline,
+    dashboardUrl: fruitAuditDashboardUrl(req, district),
+    fieldAppUrl: fruitAuditFieldAppUrl(district, pledge.storeId),
+    assignedBy,
+  });
+}
+
 const app = express();
 const resendApiKey = process.env.RESEND_API_KEY || process.env.RESEND_SIGNOFF_API_KEY;
 if (!resendApiKey) {
@@ -557,11 +592,17 @@ app.get('/api/fruit-audit-tracker/:district', sendFruitAuditTrackerSnapshot);
 async function pledgeFruitAuditStore(req, res) {
   try {
     const district = fruitAuditTrackerDistrictFromRequest(req);
-    if (!isFruitAuditSignupUser(district, req.body && req.body.email)) {
+    const body = req.body || {};
+    if (!isFruitAuditSignupUser(district, body.email)) {
       return res.status(403).json({ error: `This email is not approved for the District ${district} fruit audit assignment dashboard.` });
     }
+    const { pledgeName, pledgeEmail, actorEmail, actorName } = resolveFruitAuditPledgeAssignee(district, body);
     const trackerForDistrict = fruitAuditTrackerForDistrict(district);
-    const { snapshot, pledge } = trackerForDistrict.addPledge(req.body || {});
+    const { snapshot, pledge } = trackerForDistrict.addPledge({
+      name: pledgeName,
+      email: pledgeEmail,
+      storeId: body.storeId,
+    });
     const meta = trackerForDistrict.getStoreMeta(pledge.storeId);
     fruitAuditTrackerNotify.sendPledgeSignedUp(resend, {
       pledge,
@@ -571,9 +612,23 @@ async function pledgeFruitAuditStore(req, res) {
       recipients: isD1FruitAuditQuietTestEmail(pledge.email) ? [AUDIT_REVIEWER_TYSON] : null,
     }).catch(err => console.error('Fruit audit tracker pledge notify:', err.message));
 
+    let assigneeNotified = false;
+    if (body.notifyAssignee) {
+      const result = await sendFruitAuditAssigneeNotice(req, district, {
+        pledge,
+        meta,
+        deadline: snapshot.deadline,
+        assignedBy: { name: actorName, email: actorEmail },
+      });
+      assigneeNotified = !!(result && result.ok);
+    }
+
     res.json({
       success: true,
-      message: `You are signed up for FM ${pledge.storeId}. Complete the District ${district} fruit audit and submit photos from the field app.`,
+      message: assigneeNotified
+        ? `FM ${pledge.storeId} is assigned to ${pledge.name}. An assignment email was sent to ${pledge.email}.`
+        : `You are signed up for FM ${pledge.storeId}. Complete the District ${district} fruit audit and submit photos from the field app.`,
+      assigneeNotified,
       snapshot,
     });
   } catch (err) {
@@ -583,6 +638,45 @@ async function pledgeFruitAuditStore(req, res) {
 
 app.post('/api/fruit-audit-tracker/pledge', pledgeFruitAuditStore);
 app.post('/api/fruit-audit-tracker/:district/pledge', pledgeFruitAuditStore);
+
+async function notifyFruitAuditAssignee(req, res) {
+  try {
+    const district = fruitAuditTrackerDistrictFromRequest(req);
+    const body = req.body || {};
+    const actorEmail = body.email;
+    if (!isFruitAuditSupervisor(district, actorEmail)) {
+      return res.status(403).json({ error: `Only District ${district} fruit audit supervisors can email assignees.` });
+    }
+    const pledgeId = String(body.pledgeId || '').trim();
+    if (!pledgeId) return res.status(400).json({ error: 'Missing assignment id.' });
+    const trackerForDistrict = fruitAuditTrackerForDistrict(district);
+    const snapshot = trackerForDistrict.getSnapshot();
+    const pledge = (snapshot.pledges || []).find(item => item.id === pledgeId);
+    if (!pledge) return res.status(404).json({ error: 'Assignment not found.' });
+    if (trackerForDistrict.isCompletionCompleteForPledge(pledge.storeId, pledge.email)) {
+      return res.status(400).json({ error: `FM ${pledge.storeId} is already complete.` });
+    }
+    const meta = trackerForDistrict.getStoreMeta(pledge.storeId);
+    const result = await sendFruitAuditAssigneeNotice(req, district, {
+      pledge,
+      meta,
+      deadline: snapshot.deadline,
+      assignedBy: { name: String(body.name || '').trim(), email: actorEmail },
+    });
+    if (!result || !result.ok) {
+      return res.status(400).json({ error: (result && result.error) || 'Could not send assignment email.' });
+    }
+    res.json({
+      success: true,
+      message: `Assignment email sent to ${pledge.email}.`,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+app.post('/api/fruit-audit-tracker/notify-assignee', notifyFruitAuditAssignee);
+app.post('/api/fruit-audit-tracker/:district/notify-assignee', notifyFruitAuditAssignee);
 
 async function unclaimFruitAuditStore(req, res) {
   try {
@@ -739,6 +833,9 @@ app.post('/api/fruit-audit/send', async (req, res) => {
   const ccList = splitEmailList(process.env.FRUIT_AUDIT_CC_EMAIL);
   const auditConfig = fruitAuditConfig(storeDistrict);
   addUniqueEmail(ccList, userEmail);
+  if (String(storeDistrict) === '1') {
+    fruitAuditTrackerNotify.d1MonitorCcEmails().forEach(email => addUniqueEmail(ccList, email));
+  }
   const submitterName = String(userName || '').trim();
   const submitterEmail = String(userEmail || '').trim();
   const submitterLabel = [
@@ -748,6 +845,9 @@ app.post('/api/fruit-audit/send', async (req, res) => {
   const submittedBy = submitterLabel
     ? `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from ${submitterLabel} at FM ${store.id}</p>`
     : `<p style="margin:0 0 16px"><strong>${attachments.length} fruit audit photo${attachments.length === 1 ? '' : 's'}</strong> from FM ${store.id}</p>`;
+  const d1RoutingNotice = String(storeDistrict) === '1'
+    ? fruitAuditTrackerNotify.d1PhotoRoutingNoticeHtml()
+    : '';
 
   try {
     const { data, error } = await resend.emails.send({
@@ -769,6 +869,7 @@ app.post('/api/fruit-audit/send', async (req, res) => {
         <div style="font-family:sans-serif;max-width:680px">
           <h2 style="margin:0 0 8px">FM ${store.id} - District ${storeDistrict} Fruit Audit</h2>
           ${submittedBy}
+          ${d1RoutingNotice}
           <p style="color:#666;margin:0 0 16px">Source store ${escapeHtml(store.sourceStore)} - ${submittedSetIds.size} of ${store.sets.length} set${store.sets.length === 1 ? '' : 's'} from ${escapeHtml(fruitAuditManifest.source || 'Fruit Mapping')}. Each set has a required 360-degree view: front, right side, back, and left side.</p>
           <div style="margin:0 0 16px;background:#eefbf0;border-left:4px solid #53d86a;padding:12px;border-radius:6px;color:#1b3a24;font-size:13px">
             <p style="margin:0 0 8px"><strong>Gmail poller routing prompt:</strong></p>
@@ -818,7 +919,9 @@ app.post('/api/fruit-audit/send', async (req, res) => {
           completedCount: completedEntry ? completedEntry.completed : 1,
           completedStores: completedEntry ? completedEntry.stores : [store.id],
           dashboardUrl: fruitAuditDashboardUrl(req, storeDistrict),
-          cc: fruitAuditTrackerNotify.notifyRecipients(),
+          cc: storeDistrict === '1'
+            ? fruitAuditTrackerNotify.d1MonitorCcEmails()
+            : fruitAuditTrackerNotify.notifyRecipients(),
         }).catch(err => console.error('Fruit audit tracker completion notify:', err.message));
       } catch (trackErr) {
         console.warn('Fruit audit tracker: could not record completion:', trackErr.message);

@@ -210,6 +210,12 @@ input, select {
   color: var(--text); font-size: 15px; font-family: inherit; margin-bottom: 12px;
 }
 input:focus, select:focus { outline: none; border-color: var(--accent); }
+.checkbox-label {
+  display: flex; align-items: flex-start; gap: 10px;
+  text-transform: none; font-weight: 600; letter-spacing: 0;
+  margin-bottom: 12px; line-height: 1.4;
+}
+.checkbox-label input { width: auto; margin: 2px 0 0; flex: 0 0 auto; }
 .btn {
   width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm);
   background: var(--accent); color: #061008; font-size: 15px; font-weight: 900;
@@ -365,6 +371,16 @@ input:focus, select:focus { outline: none; border-color: var(--accent); }
         <form id="pledge-form">
           <label for="pledge-store">Store</label>
           <select id="pledge-store" required><option value="">Select a store...</option></select>
+          <div id="supervisor-assign-wrap" hidden>
+            <label for="assignee-name">Assignee name</label>
+            <input id="assignee-name" type="text" autocomplete="name" placeholder="Auditor full name">
+            <label for="assignee-email">Assignee email</label>
+            <input id="assignee-email" type="email" autocomplete="email" placeholder="name@retailodyssey.com">
+            <label class="checkbox-label" for="notify-assignee">
+              <input id="notify-assignee" type="checkbox">
+              Email assignment details to assignee
+            </label>
+          </div>
           <button type="submit" class="btn" id="pledge-btn">I will complete this store</button>
           <div class="msg" id="pledge-msg"></div>
         </form>
@@ -619,9 +635,13 @@ function render(data) {
   const assignSub = $('assign-panel-sub');
   if (assignSub) {
     assignSub.textContent = supervisorMode
-      ? 'Supervisor mode: assign open stores, release any active assignment (including scheduled), and open any store in the field app.'
+      ? 'Supervisor mode: assign open stores to an approved auditor, optionally email the assignee, release any active assignment, and open any store in the field app.'
       : 'Each open store can only be assigned once until it is submitted. Tyson is notified when you assign or release a store.';
   }
+  const supervisorAssignWrap = $('supervisor-assign-wrap');
+  const pledgeBtn = $('pledge-btn');
+  if (supervisorAssignWrap) supervisorAssignWrap.hidden = !supervisorMode;
+  if (pledgeBtn) pledgeBtn.textContent = supervisorMode ? 'Assign store' : 'I will complete this store';
 
   $('stats').innerHTML = `
     <div class="stat done"><div class="num">${stats.complete}</div><div class="lbl">Done</div></div>
@@ -704,6 +724,7 @@ function render(data) {
           <span><span class="store">FM ${pledge.storeId}</span> - ${esc(pledge.name)}</span>
           <span class="pledge-actions">
             <span style="color:var(--muted);font-size:12px">${esc(assignmentScheduleText(pledge))}</span>
+            ${supervisorMode ? `<button type="button" class="unclaim-btn notify-assignee-btn" data-pledge-id="${esc(pledge.id)}">Email assignee</button>` : ''}
             ${supervisorMode ? `<button type="button" class="unclaim-btn supervisor-release-btn" data-pledge-id="${esc(pledge.id)}" data-store-id="${esc(pledge.storeId)}">Release</button>` : ''}
           </span>
         </li>`).join('')
@@ -884,6 +905,11 @@ $('my-pledge-list').addEventListener('click', e => {
 });
 
 document.addEventListener('click', e => {
+  const notifyBtn = e.target.closest('.notify-assignee-btn');
+  if (notifyBtn && notifyBtn.dataset.pledgeId) {
+    notifyAssignee(notifyBtn.dataset.pledgeId);
+    return;
+  }
   const btn = e.target.closest('.supervisor-release-btn');
   if (!btn || !btn.dataset.pledgeId) return;
   unclaimPledge(btn.dataset.pledgeId, btn.dataset.storeId);
@@ -934,6 +960,29 @@ function updateOnlineStatus() {
   $('offline-note').hidden = navigator.onLine;
 }
 
+async function notifyAssignee(pledgeId) {
+  const msg = $('pledge-msg');
+  const user = D6Auth.getUser();
+  if (!user || !isSupervisorUser(user)) return;
+  if (!navigator.onLine) {
+    showMsg(msg, `You are offline. Reconnect before emailing the assignee.`, false);
+    return;
+  }
+  msg.className = 'msg';
+  try {
+    const res = await fetch(trackerApi('/notify-assignee'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pledgeId, email: user.email, name: user.name }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Could not email assignee');
+    showMsg(msg, data.message || 'Assignment email sent.', true);
+  } catch (err) {
+    showMsg(msg, err.message, false);
+  }
+}
+
 $('pledge-form').addEventListener('submit', async e => {
   e.preventDefault();
   const user = D6Auth.getUser();
@@ -948,19 +997,34 @@ $('pledge-form').addEventListener('submit', async e => {
   msg.className = 'msg';
 
   try {
+    const payload = {
+      name: user.name,
+      email: user.email,
+      storeId: $('pledge-store').value,
+    };
+    if (isSupervisorUser(user)) {
+      const assigneeEmail = $('assignee-email').value.trim();
+      const assigneeName = $('assignee-name').value.trim();
+      if (assigneeEmail) {
+        payload.assigneeEmail = assigneeEmail;
+        payload.assigneeName = assigneeName;
+      }
+      payload.notifyAssignee = $('notify-assignee').checked;
+    }
     const res = await fetch(trackerApi('/pledge'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: user.name,
-        email: user.email,
-        storeId: $('pledge-store').value,
-      }),
+      body: JSON.stringify(payload),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Could not save assignment');
     showMsg(msg, data.message || 'You are signed up. Complete the fruit audit in the field app and submit photos.', true);
     $('pledge-store').value = '';
+    if (isSupervisorUser(user)) {
+      $('assignee-name').value = '';
+      $('assignee-email').value = '';
+      $('notify-assignee').checked = false;
+    }
     if (data.snapshot) {
       cacheJson(DASHBOARD_SNAPSHOT_CACHE_KEY, data.snapshot);
       render(data.snapshot);
