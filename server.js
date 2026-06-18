@@ -304,6 +304,7 @@ function fruitAuditSupervisorEmails(district = '1') {
 
 function fruitAuditAssignmentRequestCcEmails() {
   return uniqueFruitAuditEmails([
+    AUDIT_REVIEWER_TYSON,
     AUDIT_REVIEWER_APRIL,
     process.env.FRUIT_AUDIT_ASSIGNMENT_REQUEST_CC_EMAIL,
   ]);
