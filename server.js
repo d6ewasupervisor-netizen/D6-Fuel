@@ -176,11 +176,13 @@ const DEFAULT_D6_FRUIT_AUDIT_SIGNUP_EMAILS = [
   'tinaloera1970@gmail.com',
   'jaxpond8@gmail.com',
   'russumj@cwu.edu',
+  'chris.metzger@retailodyssey.com',
 ];
 const DEFAULT_D6_FRUIT_AUDIT_SUPERVISOR_EMAILS = [
   'tyson.gauthier@retailodyssey.com',
   'tyson.a.gauthier@gmail.com',
   'd6ewa.supervisor@gmail.com',
+  'april.gauthier@retailodyssey.com',
 ];
 const REQUIRED_FRUIT_AUDIT_SIDES = [
   { id: 'front', label: 'Front' },
@@ -245,6 +247,7 @@ function fruitAuditApprovedEmails() {
   return new Set([
     ...base,
     ...DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS,
+    ...DEFAULT_D6_FRUIT_AUDIT_SIGNUP_EMAILS,
     ...fruitAuditDistrictTrackers.allAssignmentEmails(),
   ].map(normalizeEmail));
 }
