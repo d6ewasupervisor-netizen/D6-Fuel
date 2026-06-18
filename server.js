@@ -49,6 +49,9 @@ function resolveFruitAuditPledgeAssignee(district, body) {
 }
 
 async function sendFruitAuditAssigneeNotice(req, district, { pledge, meta, deadline, assignedBy }) {
+  const cc = String(district) === '6'
+    ? ['tyson.gauthier@retailodyssey.com', 'd6ewa.supervisor@gmail.com']
+    : undefined;
   return fruitAuditTrackerNotify.sendAssigneeAssignmentNotice(resend, {
     pledge,
     meta,
@@ -56,6 +59,7 @@ async function sendFruitAuditAssigneeNotice(req, district, { pledge, meta, deadl
     dashboardUrl: fruitAuditDashboardUrl(req, district),
     fieldAppUrl: fruitAuditFieldAppUrl(district, pledge.storeId),
     assignedBy,
+    cc,
   });
 }
 

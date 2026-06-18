@@ -310,23 +310,14 @@
       "storeName": "Fred Meyer",
       "leadAssignments": [
         {
-          "name": "Jennifer Hilderbrand Lynn",
-          "email": "jennifer.hilderbrand@retailodyssey.com",
+          "name": "Tina Loera Marie",
+          "email": "tinaloera1970@gmail.com",
           "title": "Merchandiser Retail Team Lead",
-          "workdayId": "800657448",
-          "employeeId": "402097",
           "supervisorName": "April Gauthier Nicole",
-          "supervisorWorkdayId": "100020332",
           "scheduledDates": [
             "2026-06-19"
           ],
           "scheduledLabel": "Fri, 6/19",
-          "visitIds": [
-            "26821084"
-          ],
-          "shiftIds": [
-            "43966955"
-          ],
           "statuses": [
             "active"
           ]
