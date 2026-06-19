@@ -865,6 +865,53 @@ async function notifyFruitAuditAssignee(req, res) {
 app.post('/api/fruit-audit-tracker/notify-assignee', notifyFruitAuditAssignee);
 app.post('/api/fruit-audit-tracker/:district/notify-assignee', notifyFruitAuditAssignee);
 
+async function recordFruitAuditCompletion(req, res) {
+  try {
+    const district = fruitAuditTrackerDistrictFromRequest(req);
+    const body = req.body || {};
+    const actorEmail = String(body.email || '').trim();
+    if (!isFruitAuditSupervisor(district, actorEmail)) {
+      return res.status(403).json({ error: `Only District ${district} fruit audit supervisors can record store completions.` });
+    }
+    const storeId = String(body.storeId || '').trim();
+    const assigneeEmail = String(body.assigneeEmail || body.submitterEmail || '').trim();
+    const assigneeName = String(body.assigneeName || body.submitterName || '').trim();
+    if (!storeId) return res.status(400).json({ error: 'Missing store id.' });
+    if (!assigneeEmail) return res.status(400).json({ error: 'Missing assignee email.' });
+
+    const trackerForDistrict = fruitAuditTrackerForDistrict(district);
+    const meta = trackerForDistrict.getStoreMeta(storeId);
+    if (!trackerForDistrict.padStoreId(storeId)) {
+      return res.status(400).json({ error: `Invalid District ${district} fruit store number.` });
+    }
+    if (trackerForDistrict.isCompletionCompleteForPledge(meta.id, assigneeEmail)) {
+      return res.json({
+        success: true,
+        message: `FM ${meta.id} is already complete for ${assigneeEmail}.`,
+        snapshot: trackerForDistrict.getSnapshot(),
+      });
+    }
+
+    const snapshot = trackerForDistrict.recordCompletion({
+      storeId: meta.id,
+      name: assigneeName || assigneeEmail,
+      email: assigneeEmail,
+      photoCount: Number(body.photoCount) || Number(meta.photoTargetCount) || 0,
+      setCount: Number(body.setCount) || Number(meta.setCount) || 0,
+    });
+    res.json({
+      success: true,
+      message: `FM ${meta.id} marked complete for ${assigneeEmail}.`,
+      snapshot,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+app.post('/api/fruit-audit-tracker/record-completion', recordFruitAuditCompletion);
+app.post('/api/fruit-audit-tracker/:district/record-completion', recordFruitAuditCompletion);
+
 async function unclaimFruitAuditStore(req, res) {
   try {
     const district = fruitAuditTrackerDistrictFromRequest(req);
