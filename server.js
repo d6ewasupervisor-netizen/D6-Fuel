@@ -168,6 +168,7 @@ const DEFAULT_D1_FRUIT_AUDIT_SIGNUP_EMAILS = [
   'zachary.house176@gmail.com',
 ];
 const DEFAULT_D1_FRUIT_AUDIT_SUPERVISOR_EMAILS = [
+  'tyson.gauthier@retailodyssey.com',
   'james.carr@retailodyssey.com',
 ];
 const DEFAULT_D6_FRUIT_AUDIT_SIGNUP_EMAILS = [
