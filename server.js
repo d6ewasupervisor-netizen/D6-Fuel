@@ -900,6 +900,36 @@ async function unclaimFruitAuditStore(req, res) {
 app.post('/api/fruit-audit-tracker/unclaim', unclaimFruitAuditStore);
 app.post('/api/fruit-audit-tracker/:district/unclaim', unclaimFruitAuditStore);
 
+async function openVolunteerFruitAuditStores(req, res) {
+  try {
+    const district = fruitAuditTrackerDistrictFromRequest(req);
+    if (district !== '1') {
+      return res.status(400).json({ error: 'Volunteer store opening is only configured for District 1.' });
+    }
+    const actorEmail = req.body && req.body.email;
+    if (!isFruitAuditSupervisor(district, actorEmail)) {
+      return res.status(403).json({ error: 'Only District 1 fruit audit supervisors can open volunteer stores.' });
+    }
+    const { runOpenD1VolunteerStores } = require('./scripts/open-d1-fruit-audit-remaining-stores');
+    const result = await runOpenD1VolunteerStores({
+      dryRun: Boolean(req.body && req.body.dryRun),
+      skipEmail: Boolean(req.body && req.body.skipEmail),
+      skipOpen: Boolean(req.body && req.body.skipOpen),
+    });
+    res.json({
+      success: true,
+      message: `Opened ${(result.targetStores || []).length} remaining D1 store(s) for volunteer signup.`,
+      ...result,
+    });
+  } catch (err) {
+    console.error('Fruit audit volunteer open failed:', err.message);
+    res.status(400).json({ error: err.message });
+  }
+}
+
+app.post('/api/fruit-audit-tracker/admin/open-volunteer-stores', openVolunteerFruitAuditStores);
+app.post('/api/fruit-audit-tracker/:district/admin/open-volunteer-stores', openVolunteerFruitAuditStores);
+
 async function optOutFruitAudit(req, res) {
   try {
     const district = fruitAuditTrackerDistrictFromRequest(req);
