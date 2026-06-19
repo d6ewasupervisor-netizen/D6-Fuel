@@ -910,16 +910,17 @@ async function openVolunteerFruitAuditStores(req, res) {
     if (!isFruitAuditSupervisor(district, actorEmail)) {
       return res.status(403).json({ error: 'Only District 1 fruit audit supervisors can open volunteer stores.' });
     }
-    const { runOpenD1VolunteerStores } = require('./scripts/open-d1-fruit-audit-remaining-stores');
-    const result = await runOpenD1VolunteerStores({
-      dryRun: Boolean(req.body && req.body.dryRun),
-      skipEmail: Boolean(req.body && req.body.skipEmail),
-      skipOpen: Boolean(req.body && req.body.skipOpen),
-    });
+    const { openRemainingVolunteerStores } = require('./lib/d1-volunteer-open-stores');
+    const trackerForDistrict = fruitAuditTrackerForDistrict(district);
+    const result = openRemainingVolunteerStores(trackerForDistrict);
     res.json({
       success: true,
-      message: `Opened ${(result.targetStores || []).length} remaining D1 store(s) for volunteer signup.`,
-      ...result,
+      message: `Opened ${(result.opened || []).length} remaining D1 store(s) for volunteer signup.`,
+      targetStores: result.targetStores,
+      opened: result.opened,
+      released: result.released,
+      skipped: result.skipped,
+      snapshot: result.snapshot,
     });
   } catch (err) {
     console.error('Fruit audit volunteer open failed:', err.message);

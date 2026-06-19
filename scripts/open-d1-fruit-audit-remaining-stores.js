@@ -5,26 +5,31 @@ require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') }
 const fs = require('fs');
 const path = require('path');
 const { Resend } = require('resend');
-const { loadSasSession } = require('C:/Users/tgaut/kompass-netcap/lib/sas-session');
 const { init, getTracker } = require('../lib/fruit-audit-district-trackers');
 const fruitAuditTrackerNotify = require('../lib/fruit-audit-tracker-notify');
 const fruitAuditManifest = require('../data/fruit-audit-manifest.json');
+const {
+  PHOTO_STORES,
+  targetStoreIdsFromTracker,
+} = require('../lib/d1-volunteer-open-stores');
 
 const DISTRICT = '1';
+const TODAY = '2026-06-19';
 const TYSON_EMAIL = 'tyson.gauthier@retailodyssey.com';
 const DASHBOARD_URL = 'https://fuel.retail-odyssey.com/fruit-audit-dashboard?district=1';
 const FIELD_APP_URL = 'https://fuel.retail-odyssey.com/fruit-audit?district=1';
-const PHOTO_STORES = new Set(['035', '040', '060', '143', '153', '220', '240', '482', '661', '694']);
-const TODAY = '2026-06-19';
+const PROD_TRACKER_URL = 'https://fuel.retail-odyssey.com/api/fruit-audit-tracker/1';
+const PROD_OPEN_URL = 'https://fuel.retail-odyssey.com/api/fruit-audit-tracker/1/admin/open-volunteer-stores';
 const SAS_PROJECTS = [1, 1668, 1715, 3568, 9293, 9295, 1366, 1364, 1367, 8081];
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const out = { dryRun: false, skipEmail: false, skipOpen: false };
+  const out = { dryRun: false, skipEmail: false, skipOpen: false, useProd: true };
   for (const arg of args) {
     if (arg === '--dry-run') out.dryRun = true;
     else if (arg === '--skip-email') out.skipEmail = true;
     else if (arg === '--skip-open') out.skipOpen = true;
+    else if (arg === '--local-state') out.useProd = false;
   }
   return out;
 }
@@ -42,14 +47,25 @@ function d1StoreIds() {
   return district && Array.isArray(district.storeIds) ? district.storeIds : [];
 }
 
+async function loadSasSessionPortable() {
+  const fs = require('fs');
+  const statePath = process.env.SAS_AUTH_STATE || 'C:/Users/tgaut/sas-auth/.sas-session/auth-state.json';
+  const sessionUrl = process.env.SAS_AUTH_SESSION_URL || 'http://127.0.0.1:7291/session';
+  if (fs.existsSync(statePath)) {
+    const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+    const token = state?.auth?.auth_token;
+    if (token) return { token: String(token), source: statePath };
+  }
+  const res = await fetch(sessionUrl);
+  if (!res.ok) throw new Error(`SAS auth-server ${res.status}`);
+  const body = await res.json();
+  const token = body?.auth?.auth_token;
+  if (!token) throw new Error('No auth_token in sas-auth session response');
+  return { token: String(token), source: sessionUrl };
+}
+
 function targetStoreIds(tracker) {
-  const snapshot = tracker.buildSnapshot();
-  const complete = new Set(
-    (snapshot.stores || [])
-      .filter(store => store.status === 'complete')
-      .map(store => store.id),
-  );
-  return d1StoreIds().filter(storeId => !PHOTO_STORES.has(storeId) && !complete.has(storeId));
+  return targetStoreIdsFromTracker(tracker);
 }
 
 function normalizeEmail(email) {
@@ -175,45 +191,92 @@ async function main() {
   }
 }
 
-async function runOpenD1VolunteerStores(options = {}) {
-  const { dryRun = false, skipEmail = false, skipOpen = false } = options;
-  const dataPath = trackerDataPath();
-  console.log(`Tracker state: ${dataPath}`);
+async function openStoresOnProduction(dryRun) {
+  if (dryRun) {
+    console.log(`DRY RUN: would POST ${PROD_OPEN_URL}`);
+    return null;
+  }
+  const res = await fetch(PROD_OPEN_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: TYSON_EMAIL }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || `Production open failed (${res.status})`);
+  console.log(`Production open: ${body.message || 'ok'}`);
+  if (body.released && body.released.length) {
+    console.log(`Released: ${body.released.map(p => `${p.name} @ FM ${p.storeId}`).join('; ')}`);
+  }
+  return body;
+}
 
-  init({ baseDataPath: dataPath });
-  const tracker = getTracker(DISTRICT);
-  const targetStores = targetStoreIds(tracker);
+async function fetchProductionSnapshot() {
+  const res = await fetch(PROD_TRACKER_URL);
+  if (!res.ok) throw new Error(`Could not fetch production tracker (${res.status})`);
+  return res.json();
+}
+
+async function runOpenD1VolunteerStores(options = {}) {
+  const { dryRun = false, skipEmail = false, skipOpen = false, useProd = true } = options;
+  let snapshot = null;
+  let targetStores = [];
+  let released = [];
+  let tracker = null;
+
+  if (useProd) {
+    if (!skipOpen) {
+      const openResult = await openStoresOnProduction(dryRun);
+      if (openResult) {
+        snapshot = openResult.snapshot;
+        released = openResult.released || [];
+      }
+    }
+    if (!snapshot) snapshot = await fetchProductionSnapshot();
+    const complete = new Set(
+      (snapshot.stores || []).filter(store => store.status === 'complete').map(store => store.id),
+    );
+    targetStores = d1StoreIds().filter(storeId => !PHOTO_STORES.has(storeId) && !complete.has(storeId));
+  } else {
+    const dataPath = trackerDataPath();
+    console.log(`Tracker state: ${dataPath}`);
+    init({ baseDataPath: dataPath });
+    tracker = getTracker(DISTRICT);
+    targetStores = targetStoreIds(tracker);
+    if (!targetStores.length) {
+      console.log('No remaining D1 stores to open (outside photo set and already complete).');
+      return { targetStores: [], released: [], emails: [] };
+    }
+    if (!skipOpen) {
+      if (dryRun) {
+        console.log(`DRY RUN: would open ${targetStores.length} store(s) and release current assignees.`);
+      } else {
+        const result = tracker.openStoresForVolunteerSignup(targetStores);
+        released = result.released || [];
+        snapshot = result.snapshot;
+        console.log(`Opened: ${(result.opened || []).join(', ')}`);
+      }
+    }
+    if (!snapshot) snapshot = tracker.buildSnapshot();
+  }
+
   if (!targetStores.length) {
-    console.log('No remaining D1 stores to open (outside photo set and already complete).');
+    console.log('No remaining D1 stores to email.');
     return { targetStores: [], released: [], emails: [] };
   }
   console.log(`Target stores: ${targetStores.join(', ')}`);
 
-  let snapshot = tracker.buildSnapshot();
-  let released = [];
-  if (!skipOpen) {
-    if (dryRun) {
-      console.log(`DRY RUN: would open ${targetStores.length} store(s) and release current assignees.`);
-    } else {
-      const result = tracker.openStoresForVolunteerSignup(targetStores);
-      released = result.released || [];
-      snapshot = result.snapshot;
-      console.log(`Opened: ${(result.opened || []).join(', ')}`);
-      if (released.length) {
-        console.log(`Released ${released.length} assignment(s): ${released.map(p => `${p.name} @ FM ${p.storeId}`).join('; ')}`);
-      }
-      if (result.skipped && result.skipped.length) {
-        console.log('Skipped:', result.skipped);
-      }
-    }
-  }
-
-  const { token } = await loadSasSession();
+  const { token } = await loadSasSessionPortable();
   const contactsByStore = await fetchStoreContacts(token, targetStores);
   const emails = [];
 
   for (const storeId of targetStores) {
-    const assignee = defaultAssigneeForStore(tracker, storeId);
+    const storeRow = (snapshot.stores || []).find(store => store.id === storeId) || {};
+    const assignee = tracker
+      ? defaultAssigneeForStore(tracker, storeId)
+      : {
+        email: (released.find(item => item.storeId === storeId) || {}).email || '',
+        scheduledLabel: storeRow.scheduledLabel || 'Fri 6/19',
+      };
     const sasContacts = contactsByStore[storeId] || [];
     const recipientMap = new Map();
     for (const contact of sasContacts) {
@@ -255,10 +318,8 @@ async function runOpenD1VolunteerStores(options = {}) {
   }
 
   let productionOpenStores = null;
-  if (!dryRun && !skipOpen) {
-    const verify = await fetch(`${DASHBOARD_URL.replace('fruit-audit-dashboard', 'fruit-audit-tracker')}/1`)
-      .then(r => r.json())
-      .catch(() => null);
+  if (!dryRun && useProd) {
+    const verify = await fetchProductionSnapshot().catch(() => null);
     if (verify && Array.isArray(verify.stores)) {
       productionOpenStores = verify.stores.filter(s => s.status === 'open').map(s => s.id);
     }
