@@ -238,26 +238,14 @@
       "storeName": "Fred Meyer",
       "leadAssignments": [
         {
-          "name": "James Duchene Ryan",
-          "email": "james.duchene@retailodyssey.com",
+          "name": "Chris Metzger S",
+          "email": "chris.metzger@retailodyssey.com",
           "title": "Merchandiser Retail Team Lead",
-          "workdayId": "800627385",
-          "employeeId": "394407",
           "supervisorName": "Tyson Gauthier A",
-          "supervisorWorkdayId": "800175315",
           "scheduledDates": [
-            "2026-06-16"
+            "2026-06-19"
           ],
-          "scheduledLabel": "Tue, 6/16",
-          "visitIds": [
-            "26820915"
-          ],
-          "shiftIds": [
-            "43966041"
-          ],
-          "statuses": [
-            "in-progress"
-          ]
+          "scheduledLabel": "Fri, 6/19"
         }
       ]
     },
