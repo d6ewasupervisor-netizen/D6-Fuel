@@ -1,0 +1,91 @@
+{
+  "deadline": "2026-06-19T17:00:00-07:00",
+  "pledges": [],
+  "completions": {
+    "163": {
+      "storeId": "163",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:09:31.641Z",
+      "source": "manual-seed"
+    },
+    "214": {
+      "storeId": "214",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:09:31.641Z",
+      "source": "manual-seed"
+    },
+    "286": {
+      "storeId": "286",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:09:31.641Z",
+      "source": "manual-seed"
+    },
+    "351": {
+      "storeId": "351",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 30,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:05:13.812Z",
+      "source": "destination-folder"
+    },
+    "486": {
+      "storeId": "486",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:09:31.641Z",
+      "source": "manual-seed"
+    },
+    "652": {
+      "storeId": "652",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 13,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:50:05.886Z",
+      "source": "destination-folder"
+    },
+    "654": {
+      "storeId": "654",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:55:05.217Z",
+      "source": "destination-folder"
+    },
+    "657": {
+      "storeId": "657",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:09:31.641Z",
+      "source": "manual-seed"
+    },
+    "049": {
+      "storeId": "049",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:09:31.641Z",
+      "source": "manual-seed"
+    }
+  },
+  "optedOutEmails": [],
+  "assignmentRequests": [],
+  "manualOpenStores": [],
+  "updatedAt": "2026-06-19T19:09:31.647Z"
+}

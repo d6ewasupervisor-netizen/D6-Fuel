@@ -1,0 +1,253 @@
+{
+  "deadline": "2026-06-19T17:00:00-07:00",
+  "pledges": [
+    {
+      "id": "seeded_049_saviya_hurley_retailodyssey_com",
+      "storeId": "049",
+      "name": "Saviya Hurley Joanne",
+      "email": "saviya.hurley@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Wed, 6/17, Thu, 6/18"
+    },
+    {
+      "id": "fp_mql8zi68_0xep8y",
+      "storeId": "163",
+      "name": "Jacqueline Pond",
+      "email": "jaxpond8@gmail.com",
+      "pledgedAt": "2026-06-19T18:13:53.984Z"
+    },
+    {
+      "id": "seeded_214_jennifer_hilderbrand_retailodyssey_com",
+      "storeId": "214",
+      "name": "Jennifer Hilderbrand Lynn",
+      "email": "jennifer.hilderbrand@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Thu, 6/18"
+    },
+    {
+      "id": "seeded_214_lily_thiphakhinkeo_sasretailservices_com",
+      "storeId": "214",
+      "name": "Vikanda Thiphakhinkeo Lily",
+      "email": "lily.thiphakhinkeo@sasretailservices.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-17"
+      ],
+      "scheduledLabel": "Wed, 6/17"
+    },
+    {
+      "id": "seeded_286_patricia_magana_retailodyssey_com",
+      "storeId": "286",
+      "name": "Patricia Magana",
+      "email": "patricia.magana@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Mon, 6/15, Fri, 6/19"
+    },
+    {
+      "id": "seeded_351_saviya_hurley_retailodyssey_com",
+      "storeId": "351",
+      "name": "Saviya Hurley Joanne",
+      "email": "saviya.hurley@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Fri, 6/19"
+    },
+    {
+      "id": "seeded_486_dennis_baker_sasretailservices_com",
+      "storeId": "486",
+      "name": "Dennis Baker III Lloyd",
+      "email": "dennis.baker@sasretailservices.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon, 6/15, Tue, 6/16, Thu, 6/18"
+    },
+    {
+      "id": "fp_mql9lk5l_npzlzo",
+      "storeId": "652",
+      "name": "Chris Metzger S",
+      "email": "chris.metzger@retailodyssey.com",
+      "pledgedAt": "2026-06-19T18:31:02.985Z",
+      "scheduledDates": [
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Fri, 6/19",
+      "source": "sas-prod"
+    },
+    {
+      "id": "seeded_654_cindy_roth_sasretailservices_com",
+      "storeId": "654",
+      "name": "Cindy Roth L",
+      "email": "cindy.roth@sasretailservices.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18"
+    },
+    {
+      "id": "seeded_657_jennifer_hilderbrand_retailodyssey_com",
+      "storeId": "657",
+      "name": "Jennifer Hilderbrand Lynn",
+      "email": "jennifer.hilderbrand@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Fri, 6/19"
+    }
+  ],
+  "completions": {
+    "163": {
+      "storeId": "163",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:25:04.617Z",
+      "source": "manual-seed"
+    },
+    "214": {
+      "storeId": "214",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:25:04.617Z",
+      "source": "manual-seed"
+    },
+    "286": {
+      "storeId": "286",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:25:04.617Z",
+      "source": "manual-seed"
+    },
+    "351": {
+      "storeId": "351",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 30,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:05:13.812Z",
+      "source": "destination-folder"
+    },
+    "486": {
+      "storeId": "486",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:25:04.617Z",
+      "source": "manual-seed"
+    },
+    "652": {
+      "storeId": "652",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 13,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:50:05.886Z",
+      "source": "destination-folder"
+    },
+    "654": {
+      "storeId": "654",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:55:05.217Z",
+      "source": "destination-folder"
+    },
+    "657": {
+      "storeId": "657",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:25:04.617Z",
+      "source": "manual-seed"
+    },
+    "049": {
+      "storeId": "049",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T18:25:04.617Z",
+      "source": "manual-seed"
+    }
+  },
+  "optedOutEmails": [],
+  "assignmentRequests": [
+    {
+      "id": "req_mql8qp0u_3chmyi",
+      "storeId": "163",
+      "name": "Jacqueline Pond",
+      "email": "jaxpond8@gmail.com",
+      "note": "",
+      "status": "approved",
+      "requestedAt": "2026-06-19T18:07:02.958Z",
+      "currentAssignees": [
+        {
+          "name": "Patricia Magana",
+          "email": "patricia.magana@retailodyssey.com",
+          "scheduledLabel": "Wed, 6/17, Tue, 6/16"
+        }
+      ],
+      "resolvedAt": "2026-06-19T18:13:53.984Z",
+      "resolvedBy": "d6ewa.supervisor@gmail.com",
+      "pledgeId": "fp_mql8zi68_0xep8y"
+    },
+    {
+      "id": "req_mqjz0u7d_6q8o49",
+      "storeId": "657",
+      "name": "Tina Loera Marie",
+      "email": "tinaloera1970@gmail.com",
+      "note": "Supervisor assignment for Fri 6/19 fruit audit",
+      "status": "approved",
+      "requestedAt": "2026-06-18T20:47:13.897Z",
+      "currentAssignees": [
+        {
+          "name": "Jennifer Hilderbrand Lynn",
+          "email": "jennifer.hilderbrand@retailodyssey.com",
+          "scheduledLabel": "Fri, 6/19"
+        }
+      ],
+      "resolvedAt": "2026-06-18T20:47:17.871Z",
+      "resolvedBy": "tyson.gauthier@retailodyssey.com",
+      "pledgeId": "fp_mqjz0x9r_y1d9th"
+    }
+  ],
+  "manualOpenStores": [],
+  "updatedAt": "2026-06-19T19:09:31.663Z"
+}

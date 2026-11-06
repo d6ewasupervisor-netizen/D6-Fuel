@@ -1,0 +1,75 @@
+{
+  "deadline": "2026-06-19T17:00:00-07:00",
+  "pledges": [
+    {
+      "id": "seeded_023_aiyana_natarisalazar_retailodyssey_com",
+      "storeId": "023",
+      "name": "Aiyana Natarisalazar",
+      "email": "aiyana.natarisalazar@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "scheduledDates": [],
+      "scheduledLabel": "",
+      "source": "static-d8"
+    }
+  ],
+  "completions": {
+    "215": {
+      "storeId": "215",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 28,
+      "setCount": 3,
+      "completedAt": "2026-06-13T00:37:01.917Z",
+      "source": "destination-folder"
+    },
+    "391": {
+      "storeId": "391",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 28,
+      "setCount": 3,
+      "completedAt": "2026-06-12T16:28:56.301Z",
+      "source": "destination-folder"
+    },
+    "658": {
+      "storeId": "658",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 30,
+      "setCount": 3,
+      "completedAt": "2026-06-12T18:08:57.692Z",
+      "source": "destination-folder"
+    },
+    "028": {
+      "storeId": "028",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 30,
+      "setCount": 3,
+      "completedAt": "2026-06-12T23:26:02.217Z",
+      "source": "destination-folder"
+    },
+    "031": {
+      "storeId": "031",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 30,
+      "setCount": 3,
+      "completedAt": "2026-06-12T21:56:01.871Z",
+      "source": "destination-folder"
+    },
+    "053": {
+      "storeId": "053",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 24,
+      "setCount": 2,
+      "completedAt": "2026-06-12T20:36:58.698Z",
+      "source": "destination-folder"
+    }
+  },
+  "optedOutEmails": [],
+  "assignmentRequests": [],
+  "manualOpenStores": [],
+  "updatedAt": "2026-06-19T19:09:31.656Z"
+}

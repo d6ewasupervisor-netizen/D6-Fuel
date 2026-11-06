@@ -1,0 +1,238 @@
+{
+  "deadline": "2026-06-19T17:00:00-07:00",
+  "pledges": [
+    {
+      "id": "seeded_040_julie_ferguson_retailodyssey_com",
+      "storeId": "040",
+      "name": "Julie Ferguson",
+      "email": "julie.ferguson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Thu 6/18"
+    },
+    {
+      "id": "seeded_063_kalleen_iniguezcarri_retailodyssey_com",
+      "storeId": "063",
+      "name": "Angelina Iniguez Carrillo",
+      "email": "kalleen.iniguezcarri@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon 6/15"
+    },
+    {
+      "id": "seeded_218_jennifer_russell_sasretailservices_com",
+      "storeId": "218",
+      "name": "Jennifer Russell",
+      "email": "jennifer.russell@sasretailservices.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16, Wed 6/17, Thu 6/18"
+    },
+    {
+      "id": "seeded_242_michelle_sweet_youradv_com",
+      "storeId": "242",
+      "name": "Michelle Sweet",
+      "email": "michelle.sweet@youradv.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Wed 6/17, Thu 6/18"
+    },
+    {
+      "id": "seeded_285_julie_ferguson_retailodyssey_com",
+      "storeId": "285",
+      "name": "Julie Ferguson",
+      "email": "julie.ferguson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon 6/15"
+    },
+    {
+      "id": "seeded_375_victor_trevino_retailodyssey_com",
+      "storeId": "375",
+      "name": "Victor Trevino Gonzalez",
+      "email": "victor.trevino@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon 6/15"
+    },
+    {
+      "id": "seeded_377_kim_sanchezcanastuj_retailodyssey_com",
+      "storeId": "377",
+      "name": "Kimberlee SanchezCanastuj",
+      "email": "kim.sanchezcanastuj@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16, Wed 6/17, Thu 6/18"
+    },
+    {
+      "id": "seeded_393_victor_trevino_retailodyssey_com",
+      "storeId": "393",
+      "name": "Victor Trevino Gonzalez",
+      "email": "victor.trevino@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Thu 6/18"
+    },
+    {
+      "id": "seeded_462_tamera_sandeno_retailodyssey_com",
+      "storeId": "462",
+      "name": "Tamera Sandeno",
+      "email": "tamera.sandeno@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16, Wed 6/17, Thu 6/18"
+    },
+    {
+      "id": "seeded_516_victor_trevino_retailodyssey_com",
+      "storeId": "516",
+      "name": "Victor Trevino Gonzalez",
+      "email": "victor.trevino@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Tue 6/16"
+    },
+    {
+      "id": "seeded_651_michelle_sweet_youradv_com",
+      "storeId": "651",
+      "name": "Michelle Sweet",
+      "email": "michelle.sweet@youradv.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Mon 6/15, Tue 6/16"
+    },
+    {
+      "id": "seeded_694_kalleen_iniguezcarri_retailodyssey_com",
+      "storeId": "694",
+      "name": "Angelina Iniguez Carrillo",
+      "email": "kalleen.iniguezcarri@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "static-d1",
+      "scheduledDates": [
+        "2026-06-17"
+      ],
+      "scheduledLabel": "Wed 6/17"
+    }
+  ],
+  "completions": {
+    "143": {
+      "storeId": "143",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 13,
+      "setCount": 3,
+      "completedAt": "2026-06-16T15:58:40.930Z",
+      "source": "destination-folder"
+    },
+    "153": {
+      "storeId": "153",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 28,
+      "setCount": 3,
+      "completedAt": "2026-06-16T14:08:45.922Z",
+      "source": "destination-folder"
+    },
+    "220": {
+      "storeId": "220",
+      "name": "Marked complete",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-19T19:09:31.628Z",
+      "source": "manual-seed"
+    },
+    "240": {
+      "storeId": "240",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 30,
+      "setCount": 3,
+      "completedAt": "2026-06-18T15:43:47.694Z",
+      "source": "destination-folder"
+    },
+    "482": {
+      "storeId": "482",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-17T12:35:25.135Z",
+      "source": "destination-folder"
+    },
+    "661": {
+      "storeId": "661",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 36,
+      "setCount": 3,
+      "completedAt": "2026-06-16T12:37:47.202Z",
+      "source": "destination-folder"
+    },
+    "035": {
+      "storeId": "035",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-16T12:29:39.644Z",
+      "source": "destination-folder"
+    },
+    "060": {
+      "storeId": "060",
+      "name": "Destination folder",
+      "email": "",
+      "photoCount": 12,
+      "setCount": 3,
+      "completedAt": "2026-06-17T15:19:26.128Z",
+      "source": "destination-folder"
+    }
+  },
+  "optedOutEmails": [],
+  "assignmentRequests": [],
+  "manualOpenStores": [],
+  "updatedAt": "2026-06-19T19:09:31.640Z"
+}

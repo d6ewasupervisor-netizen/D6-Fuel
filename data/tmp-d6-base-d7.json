@@ -1,0 +1,165 @@
+{
+  "deadline": "2026-06-19T17:00:00-07:00",
+  "pledges": [
+    {
+      "id": "seeded_011_starr_ahchee_retailodyssey_com",
+      "storeId": "011",
+      "name": "Fetuao AhChee Marie",
+      "email": "starr.ahchee@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15"
+      ],
+      "scheduledLabel": "Mon, 6/15"
+    },
+    {
+      "id": "seeded_017_david_davidson_retailodyssey_com",
+      "storeId": "017",
+      "name": "David Davidson L",
+      "email": "david.davidson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18"
+      ],
+      "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18"
+    },
+    {
+      "id": "seeded_018_starr_ahchee_retailodyssey_com",
+      "storeId": "018",
+      "name": "Fetuao AhChee Marie",
+      "email": "starr.ahchee@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-16",
+        "2026-06-17"
+      ],
+      "scheduledLabel": "Wed, 6/17, Tue, 6/16"
+    },
+    {
+      "id": "seeded_071_shelly_peck_retailodyssey_com",
+      "storeId": "071",
+      "name": "Shelly Peck Marie",
+      "email": "shelly.peck@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Tue, 6/16"
+    },
+    {
+      "id": "seeded_158_brent_weathers_retailodyssey_com",
+      "storeId": "158",
+      "name": "Brent Weathers Michael",
+      "email": "brent.weathers@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18",
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Tue, 6/16, Wed, 6/17, Thu, 6/18, Fri, 6/19"
+    },
+    {
+      "id": "seeded_224_zoie_granger_retailodyssey_com",
+      "storeId": "224",
+      "name": "Zoie Granger Constance",
+      "email": "zoie.granger@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18",
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18, Fri, 6/19"
+    },
+    {
+      "id": "seeded_485_lillian_johnson_retailodyssey_com",
+      "storeId": "485",
+      "name": "Lillian Johnson",
+      "email": "lillian.johnson@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18",
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Mon, 6/15, Wed, 6/17, Fri, 6/19, Thu, 6/18, Tue, 6/16"
+    },
+    {
+      "id": "seeded_649_kimberly_alvarez_retailodyssey_com",
+      "storeId": "649",
+      "name": "Kimberly Alvarez Jean",
+      "email": "kimberly.alvarez@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-17",
+        "2026-06-18",
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Wed, 6/17, Thu, 6/18, Fri, 6/19"
+    },
+    {
+      "id": "seeded_653_kimberly_alvarez_retailodyssey_com",
+      "storeId": "653",
+      "name": "Kimberly Alvarez Jean",
+      "email": "kimberly.alvarez@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16"
+      ],
+      "scheduledLabel": "Mon, 6/15, Tue, 6/16"
+    },
+    {
+      "id": "seeded_656_starr_ahchee_retailodyssey_com",
+      "storeId": "656",
+      "name": "Fetuao AhChee Marie",
+      "email": "starr.ahchee@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-18",
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Thu, 6/18, Fri, 6/19"
+    },
+    {
+      "id": "seeded_668_alexandra_perdomo_retailodyssey_com",
+      "storeId": "668",
+      "name": "Alexandra Perdomo Yajaira",
+      "email": "alexandra.perdomo@retailodyssey.com",
+      "pledgedAt": "2026-06-15T20:21:00.000Z",
+      "source": "sas-prod",
+      "scheduledDates": [
+        "2026-06-15",
+        "2026-06-16",
+        "2026-06-17",
+        "2026-06-18",
+        "2026-06-19"
+      ],
+      "scheduledLabel": "Mon, 6/15, Tue, 6/16, Wed, 6/17, Thu, 6/18, Fri, 6/19"
+    }
+  ],
+  "completions": {},
+  "optedOutEmails": [],
+  "assignmentRequests": [],
+  "manualOpenStores": [],
+  "updatedAt": "2026-06-19T19:09:31.649Z"
+}
